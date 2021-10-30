@@ -1,0 +1,23 @@
+
+BITS: "bit"
+
+int: NUMBER
+
+start: type
+
+type: typeprimary
+    | typeprimary "(" type ("," type)*  ")"
+
+typeprimary: typeide["#(" type  ("," type)* ")"]
+    | typenat
+    | BITS "[" typenat ":" typenat "]" -> bity
+
+typeide: WORD
+typenat: NUMBER
+
+%import common.CNAME -> NAME
+%import common.NUMBER
+%import common.WS_INLINE
+%import common.WORD
+
+%ignore WS_INLINE

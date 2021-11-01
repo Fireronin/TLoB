@@ -1,0 +1,25 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\title{LegendOfBluespec}
+\author{kr469 }
+\date{October 2021}
+
+
+\begin{document}
+
+\maketitle
+
+\section{11 / 1 / 2021}
+    I found a bug in bluespec reference guide
+    \hyperlink{https://github.com/BSVLang/Main/blob/master/Language_Spec/bsv-reference-guide.pdf}{Official pdf}
+    On page 30 method proto has $([ methodProtoFormals ])$ 
+    and it should have $[( methodProtoFormals)]$ 
+    otherwise you can't declare method without any round brackets like it's done in IntStack example bellow
+    as theirs nontaion assume $[]$ as zero or more. 
+
+    \subsection{Lark grammar}
+         I implemented grammar for parsing interfaces declatations written in bluespec (without support for subinteraces)
+         and parsing for Interfaces results of command Bluetcl type full \( Name of interface \)
+
+\end{document}

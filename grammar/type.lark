@@ -1,23 +1,72 @@
 
-BITS: "bit"
+BITS: "bit"i
+INT: "int"
 
 int: NUMBER
 
-start: type
+start: tcl_interface
 
 type: typeprimary
     | typeprimary "(" type ("," type)*  ")"
 
-typeprimary: typeide["#(" type  ("," type)* ")"]
+typeprimary: identifier_u["#(" type  ("," type)* ")"]
     | typenat
     | BITS "[" typenat ":" typenat "]" -> bity
+    | INT
+    | identifier_l
 
-typeide: WORD
+// typeide: WORD
 typenat: NUMBER
+
+identifier_l: /[a-z]\w*/ 
+identifier_u: /[A-Z]\w*/ 
+type_ide: identifier_u
+
+
+interface_decl: [atribute_instances] "interface" type_def_type ";" (interface_member_decl)* "endinterface" (":" type_ide)*
+
+type_def_type: type_ide (type_formals)*
+
+type_formals: "#(" type_formal ("," type_formal)* ")"
+
+type_formal: ["numeric"] "type" identifier_l
+
+interface_member_decl: method_proto
+
+method_proto: [atribute_instances] "method" type identifier_l ((("(" method_proto_formals ")")*) | "()") ";"
+
+method_proto_formals: (method_proto_formal ("," method_proto_formal)*)
+
+method_proto_formal: [atribute_instances] type identifier_l
+
+atribute_instances: "ATRIBUTE INSTANCES TODO"
+
+tcl_interface: "Interface" "{" identifier_u "::" type_def_type "}" tcl_polymorphic  tcl_postion 
+    | "Interface"  identifier_u "::" type_def_type  tcl_members tcl_postion
+tcl_postion: "{" "position" "{" tcl_path NUMBER NUMBER "}" "}"
+
+// todo check paths with spaces
+tcl_path: /\w+/ ["/" /\w+/ ] ".bsv"  
+
+
+tcl_polymorphic: "polymorphic" tcl_members 
+
+tcl_members: "{" "members" "{" ( "{" tcl_method "}"  )* "}" "}"
+
+tcl_method: "method" "{" type identifier_l tcl_method_input_types tcl_ports "}"
+
+tcl_method_input_types: (type | "{" type* "}" )
+
+tcl_ports: "{" "{" "(*" "ports =" "[" [tcl_port_name ( "," tcl_port_name )* ] "]" "*)" "}" "}"
+
+tcl_port_name: "\""  identifier_l "\""
 
 %import common.CNAME -> NAME
 %import common.NUMBER
 %import common.WS_INLINE
 %import common.WORD
+
+%import common.WS
+%ignore WS
 
 %ignore WS_INLINE

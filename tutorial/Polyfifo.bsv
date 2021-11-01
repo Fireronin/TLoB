@@ -2,8 +2,20 @@ package Polyfifo;
 
 interface FIFOIfc#(numeric type value_size);
     method Action enq(Bit#(value_size) value);
-    method Action deq();
+    method Action deq;
     method Bit#(value_size) first();
+endinterface
+
+interface FIFOIfc2#(numeric type value_size);
+    method Action enq(Bit#(value_size) value);
+    method Action deq(Bit#(value_size) value, Bit#(value_size) value2);
+    method Bit#(value_size) first();
+endinterface
+
+interface FIFOIfc3;
+    method Action enq(Bit#(4) value);
+    method Action deq(Bit#(4) value, Bit#(5) value2);
+    method Bit#(6) first();
 endinterface
 
 module mkPolyFIFO(FIFOIfc#(value_size));

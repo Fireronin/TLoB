@@ -4,7 +4,7 @@ INT: "int"
 
 int: NUMBER
 
-start: tcl_interface
+start: tcl_module
 
 type: typeprimary
     | typeprimary "(" type ("," type)*  ")"
@@ -41,13 +41,18 @@ method_proto_formal: [atribute_instances] type identifier_l
 
 atribute_instances: "ATRIBUTE INSTANCES TODO"
 
-tcl_interface: "Interface" "{" identifier_u "::" type_def_type "}" tcl_polymorphic  tcl_postion 
+tcl_interface_dec: "Interface" "{" identifier_u "::" type_def_type "}" tcl_polymorphic  tcl_postion 
     | "Interface"  identifier_u "::" type_def_type  tcl_members tcl_postion
 tcl_postion: "{" "position" "{" tcl_path NUMBER NUMBER "}" "}"
 
 // todo check paths with spaces
 tcl_path: /\w+/ ["/" /\w+/ ] ".bsv"  
 
+tcl_interface_use: "{" "interface" identifier_u "::" type "}"
+
+tcl_arguments: "{" "arguments" "{" type type* "}" "}"
+
+tcl_module: "{" "module" identifier_u "::" identifier_l tcl_interface_use [tcl_arguments] tcl_postion "}"
 
 tcl_polymorphic: "polymorphic" tcl_members 
 

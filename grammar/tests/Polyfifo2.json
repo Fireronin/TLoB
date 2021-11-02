@@ -1,0 +1,26 @@
+Interface {Polyfifo::FIFOIfc2#(numeric type value_size)
+} polymorphic {members {
+        {method {Action enq Bit#(value_size) {
+                    {(* ports = [
+                            "value"
+                        ] *)
+                    }
+                }
+            }
+        } {method {Action deq {Bit#(value_size) Bit#(value_size)} {
+                    {(* ports = [
+                            "value",
+                            "value2"
+                        ] *)
+                    }
+                }
+            }
+        } {method {Bit#(value_size) first {} {
+                    {(* ports = [] *)
+                    }
+                }
+            }
+        }
+    }
+} {position {tutorial/Polyfifo.bsv 9 11}
+}

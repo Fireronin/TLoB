@@ -1,0 +1,8 @@
+{module Polyfifo::mkPolyFIFO 
+    {interface Polyfifo::FIFOIfc#(value_size)} 
+    {arguments {Integer Bit#(32)}} 
+    {position {Polyfifo.bsv 16 8}}
+}
+{module Simplefifo::mkSimpleFIFO 
+    {interface Simplefifo::FIFOIfc} 
+    {position {Simplefifo.bsv 9 8}}}

@@ -1,8 +1,8 @@
 # Fdb version 3
-["pdflatex"] 1635953223 "/mnt/d/Mega/Documents/CS/TLoB/Latex/diary.tex" "/mnt/d/Mega/Documents/CS/TLoB/Latex/diary.pdf" "diary" 1635953224
+["pdflatex"] 1635953223 "/mnt/d/Mega/Documents/CS/TLoB/Latex/diary.tex" "/mnt/d/Mega/Documents/CS/TLoB/Latex/diary.pdf" "diary" 1635953260
   "/etc/texmf/web2c/texmf.cnf" 1635609237 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/mnt/d/Mega/Documents/CS/TLoB/Latex/diary.aux" 1635953224 1110 31c252e2f173ebcb059bfcf341dc9ac7 ""
-  "/mnt/d/Mega/Documents/CS/TLoB/Latex/diary.tex" 1635953223 1303 d55aacd6df3209be1ecf0ee90f31bd8d ""
+  "/mnt/d/Mega/Documents/CS/TLoB/Latex/diary.tex" 1635953260 1303 d55aacd6df3209be1ecf0ee90f31bd8d ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm" 1136768653 1524 4414a8315f39513458b80dfc63bff03a ""
@@ -57,11 +57,11 @@
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1635609329 8256554 2ab04062f283556d913d73f29945ab45 ""
   "diary.aux" 1635953224 1110 31c252e2f173ebcb059bfcf341dc9ac7 "pdflatex"
   "diary.out" 1635953224 204 7d2ca0c688dfd270837e6c65809445ed "pdflatex"
-  "diary.tex" 1635953223 1303 d55aacd6df3209be1ecf0ee90f31bd8d ""
+  "diary.tex" 1635953260 1303 d55aacd6df3209be1ecf0ee90f31bd8d ""
   (generated)
-  "diary.log"
-  "diary.pdf"
   "/mnt/d/Mega/Documents/CS/TLoB/Latex/diary.pdf"
   "diary.out"
-  "/mnt/d/Mega/Documents/CS/TLoB/Latex/diary.log"
+  "diary.pdf"
   "diary.aux"
+  "diary.log"
+  "/mnt/d/Mega/Documents/CS/TLoB/Latex/diary.log"

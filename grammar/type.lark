@@ -4,32 +4,33 @@ INT: "int"
 
 int: NUMBER
 
-start: tcl_module
+start: tcl_interface_dec
 
-type: typeprimary
-    | typeprimary "(" type ("," type)*  ")"
+type: typeprimary -> t_single
+    | typeprimary "(" type ("," type)*  ")" -> t_parametric
 
-typeprimary: identifier_u["#(" type  ("," type)* ")"]
+typeprimary: identifier_u["#(" type  ("," type)* ")"] -> tp_parametric
     | typenat
-    | BITS "[" typenat ":" typenat "]" -> bity
+    | BITS "[" typenat ":" typenat "]" -> bit
     | INT
-    | identifier_l
+    | identifier_l -> string_placeholder
 
 // typeide: WORD
 typenat: NUMBER
 
 identifier_l: /[a-z]\w*/ 
 identifier_u: /[A-Z]\w*/ 
-type_ide: identifier_u
+type_ide: identifier_u -> string_placeholder
 
 
 interface_decl: [atribute_instances] "interface" type_def_type ";" (interface_member_decl)* "endinterface" (":" type_ide)*
 
 type_def_type: type_ide (type_formals)*
 
-type_formals: "#(" type_formal ("," type_formal)* ")"
+type_formals: "#(" type_formal ("," type_formal)* ")" -> list_of
 
-type_formal: ["numeric"] "type" identifier_l
+type_formal: "numeric" "type" identifier_l -> numeric_type_formal
+            | "type" identifier_l
 
 interface_member_decl: method_proto
 
@@ -41,30 +42,31 @@ method_proto_formal: [atribute_instances] type identifier_l
 
 atribute_instances: "ATRIBUTE INSTANCES TODO"
 
-tcl_interface_dec: "Interface" "{" identifier_u "::" type_def_type "}" tcl_polymorphic  tcl_postion 
-    | "Interface"  identifier_u "::" type_def_type  tcl_members tcl_postion
-tcl_postion: "{" "position" "{" tcl_path NUMBER NUMBER "}" "}"
+tcl_interface_dec: "Interface" "{" identifier_u "::" type_def_type "}" tcl_polymorphic  tcl_position 
+    | "Interface"  identifier_u "::" type_def_type  tcl_members tcl_position
+tcl_position: "{" "position" "{" tcl_path NUMBER NUMBER "}" "}"
 
 // todo check paths with spaces
 tcl_path: /\w+/ ["/" /\w+/ ] ".bsv"  
+
 
 tcl_interface_use: "{" "interface" identifier_u "::" type "}"
 
 tcl_arguments: "{" "arguments" "{" type type* "}" "}"
 
-tcl_module: "{" "module" identifier_u "::" identifier_l tcl_interface_use [tcl_arguments] tcl_postion "}"
+tcl_module: "{" "module" identifier_u "::" identifier_l tcl_interface_use [tcl_arguments] tcl_position "}"
 
 tcl_polymorphic: "polymorphic" tcl_members 
 
-tcl_members: "{" "members" "{" ( "{" tcl_method "}"  )* "}" "}"
+tcl_members: "{" "members" "{" ( "{" tcl_method "}"  )* "}" "}" -> list_of
 
 tcl_method: "method" "{" type identifier_l tcl_method_input_types tcl_ports "}"
 
-tcl_method_input_types: (type | "{" type* "}" )
+tcl_method_input_types: (type | "{" type* "}" ) -> list_of
 
-tcl_ports: "{" "{" "(*" "ports =" "[" [tcl_port_name ( "," tcl_port_name )* ] "]" "*)" "}" "}"
+tcl_ports: "{" "{" "(*" "ports =" "[" [tcl_port_name ( "," tcl_port_name )* ] "]" "*)" "}" "}" -> list_of
 
-tcl_port_name: "\""  identifier_l "\""
+tcl_port_name: "\""  identifier_l "\"" -> string_placeholder
 
 %import common.CNAME -> NAME
 %import common.NUMBER

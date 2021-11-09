@@ -1,0 +1,16 @@
+Interface {FIFO: :FIFO#(type a)
+} polymorphic {members {
+        {method {Action enq a {}
+            }
+        } {method {Action deq {} {}
+            }
+        } {method {a first {} {}
+            }
+        } {method {Action clear {} {}
+            }
+        }
+    }
+} {position {%/Libraries/FIFO.bs 20 10 {Library FIFO
+        }
+    }
+}

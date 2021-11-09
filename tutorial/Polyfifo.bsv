@@ -13,7 +13,7 @@ interface FIFOIfc2#(numeric type value_size);
 endinterface
 
 
-module mkPolyFIFO#(Integer a,Bit#(32) lol) (FIFOIfc#(value_size));
+module mkPolyFIFO(FIFOIfc#(value_size));
     Reg#(Bit#(value_size)) data <- mkReg(0);
     Reg#(Bool) isFull <- mkReg(False);
 

@@ -1,6 +1,6 @@
 namespace import ::Bluetcl::*
 bpackage load Polyfifo
-
+bpackage load tutorial/Polyfifo 
 defs type Polyfifo
 
 defs module Polyfifo
@@ -19,4 +19,5 @@ bpackage clear
 
 bpackage load Polyfifo
 
-type full FIFOIfc3
+type full 
+flags set -p ./tutorial:+

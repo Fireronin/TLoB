@@ -1,0 +1,8 @@
+interface Server#(type req_type, type resp_type);
+interface Put#(req_type) request;
+interface Get#(resp_type) response;
+endinterface: Server
+You10:51
+http://wiki.bluespec.com/Home/Experienced-Users/Stored-Test-Patterns
+Alexandre Joannou10:59
+https://github.com/gameboo/elfmanip

@@ -49,10 +49,9 @@ class Position:
     def __repr__(self) -> str:
         return f"{self.file}:{self.line}:{self.column}"
 
-class Interface:
-    def __init__(self,name,type_def,members,position) -> None:
-        self.name = name
-        self.type_def = type_def
+class Interface(Type):
+    def __init__(self,name,package,members,position) -> None:
+        self.__super__.__init__(self,name,package)
         self.is_poly = False
         if type(members) == tuple:
             self.members = members[0]
@@ -61,7 +60,6 @@ class Interface:
             self.memers = members
         self.position = position
     
-
 class Method:
     def __init__(self,kind,name,input_types,port_names):
         self.kind = kind
@@ -71,6 +69,15 @@ class Method:
 
     def __repr__(self) -> str:
         return f"Method({self.kind},{self.name},{self.input_types},{self.port_names})"
+
+class Type:
+    def __init__(self,name,package):
+        self.name = name
+        self.package = package
+
+
+
+    
 
 class ModuleTransformer(Transformer):
     def tcl_module(self,args):

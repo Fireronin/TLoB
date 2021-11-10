@@ -1,0 +1,526 @@
+Typeclass {Monad#(type m)
+} {members {
+        {
+            {function m#(b) f(m#(a) x1, function m#(b) x2(a x1))
+            } bind
+        } {
+            {function m#(a) f(a x1)
+            } return
+        }
+    }
+} {instances {Monad#(ActionValue) Monad#(List) Monad#(Maybe) Monad#(Module)
+    }
+} {position {%/Libraries/Prelude.bs 316 6 {Library Prelude
+        }
+    }
+}
+Typeclass {MonadFix#(type m)
+} {superclasses Monad#(m)
+} {members {
+        {
+            {function m#(a) f(function m#(a) x1(a x1))
+            } mfix
+        }
+    }
+} {instances {MonadFix#(ActionValue) MonadFix#(Module)
+    }
+} {position {%/Libraries/Prelude.bs 329 19 {Library Prelude
+        }
+    }
+}
+
+Typeclass {Eq#(type a)
+} {members {
+        {
+            {function Bool f(a x1, a x2)
+            } ==
+        } {
+            {function Bool f(a x1, a x2)
+            } /=
+        }
+    }
+} {instances {
+        {Eq#(Array#(a))   provisos (Eq#(a))
+        } Eq#(Bit#(n)) Eq#(Bool) Eq#(BufferMode) Eq#(Char) Eq#(Clock) {Eq#(Either#(a, b))   provisos (Eq#(b), Eq#(a))
+        } Eq#(File) Eq#(IOMode) Eq#(Int#(n)) Eq#(Integer) {Eq#(List#(a))   provisos (Eq#(a))
+        } {Eq#(List_$Cons#(a))   provisos (Eq#(a))
+        } {Eq#(Maybe#(a))   provisos (Eq#(a))
+        } Eq#(Ordering) Eq#(Real) Eq#(Reset) Eq#(SaturationMode) Eq#(String) {Eq#(Tuple2#(a, b))   provisos (Eq#(b), Eq#(a))
+        } Eq#(Type) Eq#(UInt#(n)) Eq#(void)
+    }
+} {position {%/Libraries/Prelude.bs 363 6 {Library Prelude
+        }
+    }
+}
+Typeclass {Literal#(type a)
+} {members {
+        {
+            {function a f(Integer x1)
+            } fromInteger
+        } {
+            {function Bool f(a x1, Integer x2)
+            } inLiteralRange
+        }
+    }
+} {instances {Literal#(Bit#(n)) Literal#(Fmt) Literal#(Int#(n)) Literal#(Integer) Literal#(Real) Literal#(String) Literal#(UInt#(n))
+    }
+} {position {%/Libraries/Prelude.bs 382 6 {Library Prelude
+        }
+    }
+}
+Typeclass {RealLiteral#(type a)
+} {members {
+        {
+            {function a f(Real x1)
+            } fromReal
+        }
+    }
+} {instances RealLiteral#(Real)
+} {position {%/Libraries/Prelude.bs 386 6 {Library Prelude
+        }
+    }
+}
+
+Typeclass {StringLiteral#(type a)
+} {members {
+        {
+            {function a f(String x1)
+            } fromString
+        }
+    }
+} {instances {StringLiteral#(Char) StringLiteral#(String)
+    }
+} {position {%/Libraries/Prelude.bs 394 6 {Library Prelude
+        }
+    }
+}
+Enum Ordering {members {LT EQ GT
+    }
+} {width 2
+} {position {%/Libraries/Prelude.bs 398 5 {Library Prelude
+        }
+    }
+}
+Typeclass {Ord#(type a)
+} {members {
+        {
+            {function Bool f(a x1, a x2)
+            } <
+        } {
+            {function Bool f(a x1, a x2)
+            } <=
+        } {
+            {function Bool f(a x1, a x2)
+            } >
+        } {
+            {function Bool f(a x1, a x2)
+            } >=
+        } {
+            {function Ordering f(a x1, a x2)
+            } compare
+        } {
+            {function a f(a x1, a x2)
+            } min
+        } {
+            {function a f(a x1, a x2)
+            } max
+        }
+    }
+} {instances {Ord#(Bit#(n)) Ord#(Char) Ord#(Int#(n)) Ord#(Integer) Ord#(Real) {Ord#(Tuple2#(a, b))   provisos (Eq#(a), Ord#(b), Ord#(a))
+        } Ord#(UInt#(n))
+    }
+} {position {%/Libraries/Prelude.bs 421 6 {Library Prelude
+        }
+    }
+}
+Typeclass {Bounded#(type a)
+} {members {
+        {a minBound
+        } {a maxBound
+        }
+    }
+} {instances {Bounded#(Bit#(n)) Bounded#(Bool) Bounded#(Int#(n)) Bounded#(Ordering) {Bounded#(Tuple2#(a, b))   provisos (Bounded#(b), Bounded#(a))
+        } Bounded#(UInt#(n)) Bounded#(void)
+    }
+} {position {%/Libraries/Prelude.bs 454 6 {Library Prelude
+        }
+    }
+}
+Typeclass {Bitwise#(type a)
+} {members {
+        {
+            {function a f(a x1, a x2)
+            } &
+        } {
+            {function a f(a x1, a x2)
+            } |
+        } {
+            {function a f(a x1, a x2)
+            } ^
+        } {
+            {function a f(a x1, a x2)
+            } ~^
+        } {
+            {function a f(a x1, a x2)
+            } ^~
+        } {
+            {function a f(a x1)
+            } invert
+        } {
+            {function a f(a x1, b x2)   provisos (PrimShiftIndex#(b, c))
+            } <<
+        } {
+            {function a f(a x1, b x2)   provisos (PrimShiftIndex#(b, c))
+            } >>
+        } {
+            {function Bit#(1) f(a x1)
+            } msb
+        } {
+            {function Bit#(1) f(a x1)
+            } lsb
+        }
+    }
+} {instances {Bitwise#(Bit#(n)) Bitwise#(File) Bitwise#(Int#(n)) Bitwise#(UInt#(n))
+    }
+} {position {%/Libraries/Prelude.bs 482 6 {Library Prelude
+        }
+    }
+}
+
+
+Typeclass {Arith#(type a)
+} {superclasses Literal#(a)
+} {members {
+        {
+            {function a f(a x1, a x2)
+            } +
+        } {
+            {function a f(a x1, a x2)
+            } -
+        } {
+            {function a f(a x1)
+            } negate
+        } {
+            {function a f(a x1, a x2)
+            } *
+        } {
+            {function a f(a x1, a x2)
+            } /
+        } {
+            {function a f(a x1, a x2)
+            } %
+        } {
+            {function a f(a x1)
+            } abs
+        } {
+            {function a f(a x1)
+            } signum
+        } {
+            {function a f(a x1, a x2)
+            } **
+        } {
+            {function a f(a x1)
+            } exp_e
+        } {
+            {function a f(a x1)
+            } log
+        } {
+            {function a f(a x1, a x2)
+            } logb
+        } {
+            {function a f(a x1)
+            } log2
+        } {
+            {function a f(a x1)
+            } log10
+        }
+    }
+} {instances {Arith#(Bit#(n)) Arith#(Fmt) Arith#(Int#(n)) Arith#(Integer) Arith#(Real) Arith#(String) Arith#(UInt#(n))
+    }
+} {position {%/Libraries/Prelude.bs 528 21 {Library Prelude
+        }
+    }
+}
+
+Primary {Id__#(type a)
+} polymorphic
+Primary SchedPragma
+Enum ActionWorld {members ActionWorld
+} {position {%/Libraries/Prelude.bs 769 5 {Library Prelude
+        }
+    }
+}
+Struct {AVStruct#(type a)
+} polymorphic {members {
+        {a avValue
+        } {PrimAction avAction
+        } {ActionWorld avWorld
+        }
+    }
+} {position {%/Libraries/Prelude.bs 774 7 {Library Prelude
+        }
+    }
+}
+
+
+Alias Action_ ActionValue_#(0) {position {%/Libraries/Prelude.bs 911 5 {Library Prelude
+        }
+    }
+}
+Struct {ActionValue_#(numeric type n)
+} polymorphic {members {
+        {Bit#(n) avValue_
+        } {PrimAction avAction_
+        }
+    }
+} {position {%/Libraries/Prelude.bs 932 7 {Library Prelude
+        }
+    }
+}
+Primary {Bit#(numeric type a)
+} polymorphic
+Enum Bool {members {False True
+    }
+} {width 1
+} {position {%/Libraries/Prelude.bs 1259 5 {Library Prelude
+        }
+    }
+}
+Interface Empty {members {}
+} {position {%/Libraries/Prelude.bs 1296 10 {Library Prelude
+        }
+    }
+}
+Primary Integer
+Primary Real
+TaggedUnion {Maybe#(type a)
+} polymorphic {members {
+        {void Invalid {width 0
+            }
+        } {a Valid
+        }
+    }
+} {position {%/Libraries/Prelude.bs 1465 5 {Library Prelude
+        }
+    }
+}
+Alias {Perhaps#(type a)
+} Maybe#(a) {position {%/Libraries/Prelude.bs 1467 5 {Library Prelude
+        }
+    }
+}
+Primary {Int#(numeric type n)
+} polymorphic
+Primary {UInt#(numeric type n)
+} polymorphic
+Alias Nat Bit#(32) {position {%/Libraries/Prelude.bs 1773 5 {Library Prelude
+        }
+    }
+}
+
+Interface {Reg#(type a)
+} polymorphic {members {
+        {method {Action _write a {}
+            }
+        } {method {a _read {} {}
+            }
+        }
+    }
+} {position {%/Libraries/Prelude.bs 1836 10 {Library Prelude
+        }
+    }
+}
+Interface {VReg#(numeric type n)
+} polymorphic {members {
+        {method {PrimAction write Bit#(n) {}
+            }
+        } {method {Bit#(n) read {} {}
+            }
+        }
+    }
+} {position {%/Libraries/Prelude.bs 1840 10 {Library Prelude
+        }
+    }
+}
+Primary Rules
+Primary String
+Primary Char
+Primary Fmt
+Primary {Module#(type a)
+} polymorphic
+Primary Name__
+Primary Attributes__
+Primary Position__
+Primary Type
+Primary Clock
+Primary Power
+Primary Reset
+Primary {Inout#(type a)
+} polymorphic
+Primary {Inout_#(numeric type a)
+} polymorphic
+Primary {SizeOf#(type a)
+} polymorphic
+
+
+
+
+Primary {TLog#(numeric type a)
+} polymorphic
+Primary {TExp#(numeric type a)
+} polymorphic
+
+
+Enum StringProxy {members StringProxy
+} {position {%/Libraries/Prelude.bs 2880 6 {Library Prelude
+        }
+    }
+}
+Primary Pred__
+TaggedUnion SvaParam {members {
+        {Bool SvaBool {width 1
+            }
+        } {UInt#(32) SvaNumber {width 32
+            }
+        }
+    }
+} {width 33
+} {position {%/Libraries/Prelude.bs 3119 5 {Library Prelude
+        }
+    }
+}
+Primary File {width 32
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+List {List#(type element_type)
+} polymorphic {elem a
+}
+Primary {Array#(type a)
+} polymorphic
+Primary Handle
+Enum IOMode {members {ReadMode WriteMode AppendMode
+    }
+} {position {%/Libraries/Prelude.bs 4042 5 {Library Prelude
+        }
+    }
+}
+TaggedUnion BufferMode {members {
+        {void NoBuffering {width 0
+            }
+        } {void LineBuffering {width 0
+            }
+        } {Maybe#(Integer) BlockBuffering
+        }
+    }
+} {position {%/Libraries/Prelude.bs 4085 5 {Library Prelude
+        }
+    }
+}
+Typeclass {FShow#(type t)
+} {members {
+        {
+            {function Fmt f(t x1)
+            } fshow
+        }
+    }
+} {instances {FShow#(Bit#(n)) FShow#(Bool) FShow#(Char) FShow#(ConArg) {FShow#(Conc#(a))   provisos (FShow#(a))
+        } {FShow#(ConcPoly#(a))   provisos (FShow#(a))
+        } {FShow#(ConcPrim#(a))   provisos (FShow#(a))
+        } {FShow#(Either#(a, b))   provisos (FShow#(b), FShow#(a))
+        } FShow#(Fmt) FShow#(Int#(n)) {FShow#(List#(a))   provisos (FShow#(a))
+        } {FShow#(Maybe#(a))   provisos (FShow#(a))
+        } {FShow#(Meta#(m, r))   provisos (FShow#(r))
+        } {FShow#(MetaConsAnon#(name, idx, nfields))
+        } {FShow#(MetaConsNamed#(name, idx, nfields))
+        } {FShow#(MetaData#(name, pkg, tyargs, ncons))
+        } {FShow#(MetaField#(name, idx))
+        } FShow#(NumArg#(i)) FShow#(StarArg#(i)) FShow#(StrArg#(i)) FShow#(String) {FShow#(Tuple2#(a, b))   provisos (FShow#(b), FShow#(a))
+        } {FShow#(Tuple3#(a, b, c))   provisos (FShow#(c), FShow#(b), FShow#(a))
+        } {FShow#(Tuple4#(a, b, c, d))   provisos (FShow#(d), FShow#(c), FShow#(b), FShow#(a))
+        } {FShow#(Tuple5#(a, b, c, d, e))   provisos (FShow#(e), FShow#(d), FShow#(c), FShow#(b), FShow#(a))
+        } {FShow#(Tuple6#(a, b, c, d, e, f))   provisos (FShow#(f), FShow#(e), FShow#(d), FShow#(c), FShow#(b), FShow#(a))
+        } {FShow#(Tuple7#(a, b, c, d, e, f, g))   provisos (FShow#(g), FShow#(f), FShow#(e), FShow#(d), FShow#(c), FShow#(b), FShow#(a))
+        } {FShow#(Tuple8#(a, b, c, d, e, f, g, h))   provisos (FShow#(h), FShow#(g), FShow#(f), FShow#(e), FShow#(d), FShow#(c), FShow#(b), FShow#(a))
+        } FShow#(UInt#(n)) FShow#(void)
+    }
+} {position {%/Libraries/Prelude.bs 4165 6 {Library Prelude
+        }
+    }
+}
+Typeclass {DefaultValue#(type a)
+} coherent {members {
+        {a defaultValue
+        }
+    }
+} {instances {DefaultValue#(Bool) DefaultValue#(Maybe#(a)) {DefaultValue#(Tuple2#(a, b))   provisos (DefaultValue#(b), DefaultValue#(a))
+        } {DefaultValue#(t)   provisos (Literal#(t))
+        } DefaultValue#(void)
+    }
+} {position {%/Libraries/Prelude.bs 4268 15 {Library Prelude
+        }
+    }
+}
+
+TaggedUnion {Conc#(type a)
+} polymorphic {members {
+        {a Conc
+        }
+    }
+} {position {%/Libraries/Prelude.bs 4317 5 {Library Prelude
+        }
+    }
+}
+TaggedUnion {ConcPrim#(type a)
+} polymorphic {members {
+        {a ConcPrim
+        }
+    }
+} {position {%/Libraries/Prelude.bs 4323 5 {Library Prelude
+        }
+    }
+}
+TaggedUnion {ConcPoly#(type a)
+} polymorphic {members {
+        {a ConcPoly
+        }
+    }
+} {position {%/Libraries/Prelude.bs 4330 5 {Library Prelude
+        }
+    }
+}
+
+
+Enum StarArg {members StarArg
+} {position {%/Libraries/Prelude.bs 4346 6 {Library Prelude
+        }
+    }
+}
+Enum NumArg {members NumArg
+} {position {%/Libraries/Prelude.bs 4348 6 {Library Prelude
+        }
+    }
+}
+Enum StrArg {members StrArg
+} {position {%/Libraries/Prelude.bs 4350 6 {Library Prelude
+        }
+    }
+}
+Enum ConArg {members ConArg
+} {position {%/Libraries/Prelude.bs 4352 5 {Library Prelude
+        }
+    }
+}

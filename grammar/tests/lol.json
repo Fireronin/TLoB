@@ -1,16 +1,62 @@
-Interface {FIFO: :FIFO#(type a)
-} polymorphic {members {
-        {method {Action enq a {}
-            }
-        } {method {Action deq {} {}
-            }
-        } {method {a first {} {}
-            }
-        } {method {Action clear {} {}
+{function GetPut::peekGet {result a
+    } {arguments GetPut::Get#(a)
+    } {position {%/Libraries/GetPut.bs 142 0 {Library GetPut
             }
         }
     }
-} {position {%/Libraries/FIFO.bs 20 10 {Library FIFO
+} {function GetPut::fifoToGet {result GetPut: :Get#(a)
+    } {arguments FIFO: :FIFO#(a)
+    } {position {%/Libraries/GetPut.bs 162 0 {Library GetPut
+            }
+        }
+    }
+} {function GetPut:fifoToGetS {result GetPut: :GetS#(a)
+    } {arguments FIFO: :FIFO#(a)
+    } {position {%/Libraries/GetPut.bs 169 0 {Library GetPut
+            }
+        }
+    }
+} {function GetPut: :fifoToPut {result GetPut: :Put#(a)
+    } {arguments FIFO: :FIFO#(a)
+    } {position {%/Libraries/GetPut.bs 229 0 {Library GetPut
+            }
+        }
+    }
+} {module GetPut: :mkGetPut {interface GetPut: :GetPut#(a)
+    } {provisos {
+            {Bits#(a, sa)
+            }
+        }
+    } {position {%/Libraries/GetPut.bs 241 0 {Library GetPut
+            }
+        }
+    }
+} {module GetPut: :mkGPFIFO {interface GetPut: :GetPut#(a)
+    } {provisos {
+            {Bits#(a, sa)
+            }
+        }
+    } {position {%/Libraries/GetPut.bs 272 0 {Library GetPut
+            }
+        }
+    }
+} {module GetPut: :mkGPFIFO1 {interface GetPut: :GetPut#(a)
+    } {provisos {
+            {Bits#(a, sa)
+            }
+        }
+    } {position {%/Libraries/GetPut.bs 284 0 {Library GetPut
+            }
+        }
+    }
+} {module GetPut: :mkGPSizedFIFO {interface GetPut: :GetPut#(a)
+    } {arguments Integer
+    } {provisos {
+            {Bits#(a, sa)
+            }
+        }
+    } {position {%/Libraries/GetPut.bs 296 0 {Library GetPut
+            }
         }
     }
 }

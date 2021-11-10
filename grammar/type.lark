@@ -1,36 +1,46 @@
 
-BITS: "bit"i
+BITS: "bit"
 INT: "int"
 
 int: NUMBER
 
-start: tcl_interface_dec
+start: tcl_type_full_list
+
+tcl_type_full_list: tcl_type_full*
+//tcl_func_list: tcl_func*
+
+//tcl_func: tcl_module
+   // | tcl_function
 
 type: typeprimary -> t_single
     | typeprimary "(" type ("," type)*  ")" -> t_parametric
 
-typeprimary: identifier_u["#(" type  ("," type)* ")"] -> tp_parametric
-    | typenat
-    | BITS "[" typenat ":" typenat "]" -> bit
-    | INT
-    | identifier_l -> string_placeholder
+typeprimary: (identifier_u | identifier_l)["#(" type  ("," type)* ")"] -> tp_parametric
+    | "bit" "[" typenat ":" typenat "]" -> bit
+    | "int" -> int
+    //| identifier_l -> string_placeholder
+    | typenat -> int_value
 
 // typeide: WORD
 typenat: NUMBER
 
-identifier_l: /[a-z]\w*/ 
-identifier_u: /[A-Z]\w*/ 
+identifier_l: /[a-z_][\w$_]*/ 
+identifier_u: /[A-Z][\w$_]*/ 
 type_ide: identifier_u -> string_placeholder
+type_ide_poly: identifier_l -> string_placeholder
+
 
 
 interface_decl: [atribute_instances] "interface" type_def_type ";" (interface_member_decl)* "endinterface" (":" type_ide)*
 
-type_def_type: type_ide (type_formals)*
+type_def_type: [identifier_u":"":"] type_ide (type_formals)* 
+            | type_ide_poly (type_formals)*
 
 type_formals: "#(" type_formal ("," type_formal)* ")" -> list_of
 
 type_formal: "numeric" "type" identifier_l -> numeric_type_formal
             | "type" identifier_l
+            | identifier_l
 
 interface_member_decl: method_proto
 
@@ -40,34 +50,120 @@ method_proto_formals: (method_proto_formal ("," method_proto_formal)*)
 
 method_proto_formal: [atribute_instances] type identifier_l
 
+
+tcl_position: "{" "position" "{" tcl_path NUMBER NUMBER ["{" "Library" identifier_u "}"] "}" "}"
+// todo check paths with spaces
+tcl_path: ["%/"] /\w+/ ["/" /\w+\.\w+/ ]  
+
+tcl_type_full: tcl_interface_dec
+            | tcl_typeclass
+            | tcl_struct
+            | tcl_enum
+            | tcl_tagged_union
+            | tcl_primary
+            | tcl_alias
+            | tcl_list
+            | tcl_function
+
+tcl_width: "{" "width" NUMBER "}"
+
+// Typeclass grammar
+tcl_typeclass: "Typeclass" "{" type_def_type "}" [tcl_tc_superclasses] ["coherent"] tcl_tc_members tcl_tc_instances tcl_position
+
+tcl_tc_superclasses: "{" "superclasses" type_def_type* "}"
+
+tcl_tc_instances: "{" "instances" "{" (tcl_tc_i_instance)*  "}" "}"
+               |  "{" "instances" tcl_tc_i_instance "}"
+               
+tcl_tc_i_instance: type
+                | "{" type [tcl_tc_provisos] "}"
+
+tcl_tc_provisos: "provisos" "(" type ("," type)* ")"
+
+tcl_tc_members: "{" "members" "{" (tcl_tc_m_value | tcl_tc_m_function)* "}" "}"
+
+tcl_tc_m_value: "{" type_def_type identifier_l "}"
+
+tcl_tc_m_function: "{" "{" tcl_tc_m_f_function [tcl_tc_provisos] "}" (identifier_l | /\S/ | /\S\S/ ) "}"
+
+tcl_tc_m_f_function: "function" type identifier_l "("  tcl_tc_m_f_argument ("," tcl_tc_m_f_argument )* ")"
+
+tcl_tc_m_f_argument: type_def_type identifier_l
+                | tcl_tc_m_f_function
+// Primary 
+tcl_primary: "Primary" type [tcl_width]
+    | "Primary" "{" type_def_type "}" "polymorphic" [tcl_width]
+
+// Enum
+tcl_enum: "Enum" identifier_u tcl_e_members [tcl_width] tcl_position
+tcl_e_members: "{" "members" "{" identifier_u* "}" "}"
+            | "{" "members" identifier_u "}"
+// Alias
+tcl_alias: "Alias" identifier_u type tcl_position
+        | "Alias" "{" type_def_type "}" type tcl_position
+
+// List this is type on it's own weird ??
+tcl_list: "List" "{" type_def_type "}" "polymorphic" "{" type identifier_l "}" 
+// Struct and TaggedUnion
+tcl_struct: "Struct" identifier_u tcl_stu_members tcl_position
+        | "Struct" "{" type_def_type "}" "polymorphic" tcl_stu_members tcl_position
+
+tcl_tagged_union: "TaggedUnion" identifier_u tcl_stu_members [tcl_width] tcl_position
+        | "TaggedUnion" "{" type_def_type "}" "polymorphic"  tcl_stu_members  [tcl_width] tcl_position
+
+tcl_stu_members: "{" "members" "{" tcl_stu_member* "}" "}"
+
+tcl_stu_member: "{" (type |"void") (identifier_u|identifier_l) [tcl_width] "}"
+
+// Interface
 atribute_instances: "ATRIBUTE INSTANCES TODO"
 
-tcl_interface_dec: "Interface" "{" identifier_u "::" type_def_type "}" tcl_polymorphic  tcl_position 
-    | "Interface"  identifier_u "::" type_def_type  tcl_members tcl_position
-tcl_position: "{" "position" "{" tcl_path NUMBER NUMBER "}" "}"
+tcl_interface_dec: "Interface" "{" type_def_type "}" tcl_i_members tcl_position 
+        | "Interface" "{" type_def_type "}" "polymorphic"  tcl_i_members  tcl_position
+        | "Interface" type_def_type tcl_i_members tcl_position
+   // | "Interface"  identifier_u ":"":" type_def_type  tcl_members tcl_position
 
-// todo check paths with spaces
-tcl_path: /\w+/ ["/" /\w+/ ] ".bsv"  
+tcl_i_members:  "{" "members" "{" ( "{" tcl_im_method "}"  )* "}" "}" -> list_of
 
+tcl_im_method: "method" "{" type identifier_l tcl_imm_input_types tcl_imm_ports "}"
 
-tcl_interface_use: "{" "interface" identifier_u "::" type "}"
+tcl_imm_input_types: (type | "{" type* "}" ) -> list_of
+
+tcl_imm_ports: "{" "{" "(*" "ports =" "[" [tcl_immp_name ( "," tcl_immp_name )* ] "]" "*)" "}" "}" -> list_of
+            | "{" "}"
+
+tcl_immp_name: "\""  identifier_l "\"" -> string_placeholder
+
+// Functions via defs func package_name
+
+tcl_function: "{" "function" [identifier_u ":" ":"] identifier_l tcl_f_result [tcl_provisos] tcl_f_arguments tcl_position "}"
+
+tcl_f_result: "{" "result" [identifier_u ":"":"] type "}" -> complex_result
+    //| "{" "result" type "}" -> simple_result
+
+tcl_f_arguments: "{" "arguments" ([ identifier_u ":"":"] type  "}"
+            | "{" "arguments" "{" ([ identifier_u ":"":"] type)* "}"  "}"
+
+tcl_fa_argument: 
+
+//////// Other crap
+tcl_interface_use: "{" "interface" identifier_u ":"":" type "}"
 
 tcl_arguments: "{" "arguments" "{" type type* "}" "}"
 
-tcl_module: "{" "module" identifier_u "::" identifier_l tcl_interface_use [tcl_arguments] tcl_position "}"
+//tcl_module: "{" "module" identifier_u ":" ":" identifier_l tcl_interface_use [tcl_func_arguments] [tcl_provisos] tcl_position "}"
 
-tcl_polymorphic: "polymorphic" tcl_members 
 
-tcl_members: "{" "members" "{" ( "{" tcl_method "}"  )* "}" "}" -> list_of
 
-tcl_method: "method" "{" type identifier_l tcl_method_input_types tcl_ports "}"
 
-tcl_method_input_types: (type | "{" type* "}" ) -> list_of
 
-tcl_ports: "{" "{" "(*" "ports =" "[" [tcl_port_name ( "," tcl_port_name )* ] "]" "*)" "}" "}" -> list_of
 
-tcl_port_name: "\""  identifier_l "\"" -> string_placeholder
+ 
 
+tcl_provisos: "{" "provisos" "{" ("{" type "}")* "}" "}"
+
+
+//// flags imports
 %import common.CNAME -> NAME
 %import common.NUMBER
 %import common.WS_INLINE

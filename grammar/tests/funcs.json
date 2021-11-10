@@ -1,0 +1,2070 @@
+{function fmap {result m#(b)
+    } {arguments {
+            {function b f(a x1)
+            } m#(a)
+        }
+    } {provisos Monad#(m)
+    } {position {%/Libraries/Prelude.bs 332 0 {Library Prelude
+            }
+        }
+    }
+} {function add {result a
+    } {arguments {a a
+        }
+    } {provisos Arith#(a)
+    } {position {%/Libraries/Prelude.bs 570 0 {Library Prelude
+            }
+        }
+    }
+} {function indexableToBits {result Bit#(n)
+    } {arguments a
+    } {provisos {
+            {PrimShiftIndex#(a, n)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 596 0 {Library Prelude
+            }
+        }
+    }
+} {module addModuleRules {interface a
+    } {arguments {Rules a
+        }
+    } {position {%/Libraries/Prelude.bs 745 0 {Library Prelude
+            }
+        }
+    }
+} {module addRules {interface Empty
+    } {arguments Rules
+    } {position {%/Libraries/Prelude.bs 749 0 {Library Prelude
+            }
+        }
+    }
+} {function toPrimAction {result PrimAction
+    } {arguments ActionValue#(a)
+    } {position {%/Libraries/Prelude.bs 892 0 {Library Prelude
+            }
+        }
+    }
+} {function fromPrimAction {result ActionValue#(a)
+    } {arguments PrimAction
+    } {position {%/Libraries/Prelude.bs 900 0 {Library Prelude
+            }
+        }
+    }
+} {function noAction {result Action
+    } {position {%/Libraries/Prelude.bs 918 0 {Library Prelude
+            }
+        }
+    }
+} {function :<- {result Action
+    } {arguments {Reg#(a) ActionValue#(a)
+        }
+    } {position {%/Libraries/Prelude.bs 925 1 {Library Prelude
+            }
+        }
+    }
+} {function toActionValue_ {result ActionValue_#(n)
+    } {arguments ActionValue#(a)
+    } {provisos {
+            {Bits#(a, n)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 937 0 {Library Prelude
+            }
+        }
+    }
+} {function fromActionValue_ {result ActionValue#(a)
+    } {arguments ActionValue_#(n)
+    } {provisos {
+            {Bits#(a, n)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 942 0 {Library Prelude
+            }
+        }
+    }
+} {function isBitArray {result Bool
+    } {arguments Bit#(n)
+    } {position {%/Libraries/Prelude.bs 959 0 {Library Prelude
+            }
+        }
+    }
+} {function === {result Bool
+    } {arguments {Bit#(n) Bit#(n)
+        }
+    } {position {%/Libraries/Prelude.bs 994 1 {Library Prelude
+            }
+        }
+    }
+} {function !== {result Bool
+    } {arguments {Bit#(n) Bit#(n)
+        }
+    } {position {%/Libraries/Prelude.bs 1004 1 {Library Prelude
+            }
+        }
+    }
+} {function ++ {result Bit#(k)
+    } {arguments {Bit#(n) Bit#(m)
+        }
+    } {provisos {
+            {Add#(n, m, k)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 1117 1 {Library Prelude
+            }
+        }
+    }
+} {function bitconcat {result Bit#(k)
+    } {arguments {Bit#(n) Bit#(m)
+        }
+    } {provisos {
+            {Add#(n, m, k)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 1120 0 {Library Prelude
+            }
+        }
+    }
+} {function split {result {
+            {Tuple2#(Bit#(n), Bit#(m))
+            }
+        }
+    } {arguments Bit#(k)
+    } {provisos {
+            {Add#(n, m, k)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 1129 0 {Library Prelude
+            }
+        }
+    }
+} {function signedLT {result Bool
+    } {arguments {Bit#(n) Bit#(n)
+        }
+    } {position {%/Libraries/Prelude.bs 1169 0 {Library Prelude
+            }
+        }
+    }
+} {function signedLE {result Bool
+    } {arguments {Bit#(n) Bit#(n)
+        }
+    } {position {%/Libraries/Prelude.bs 1176 0 {Library Prelude
+            }
+        }
+    }
+} {function signedGT {result Bool
+    } {arguments {Bit#(n) Bit#(n)
+        }
+    } {position {%/Libraries/Prelude.bs 1183 0 {Library Prelude
+            }
+        }
+    }
+} {function signedGE {result Bool
+    } {arguments {Bit#(n) Bit#(n)
+        }
+    } {position {%/Libraries/Prelude.bs 1190 0 {Library Prelude
+            }
+        }
+    }
+} {function signedShiftRight {result Bit#(n)
+    } {arguments {Bit#(n) ix
+        }
+    } {provisos {
+            {PrimShiftIndex#(ix, dx)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 1197 0 {Library Prelude
+            }
+        }
+    }
+} {function flatN {result Bit#(m)
+    } {arguments {Integer List#(Bit#(k))
+        }
+    } {position {%/Libraries/Prelude.bs 1202 0 {Library Prelude
+            }
+        }
+    }
+} {function grabN {result List#(Bit#(k))
+    } {arguments {Integer Integer Bit#(m)
+        }
+    } {position {%/Libraries/Prelude.bs 1206 0 {Library Prelude
+            }
+        }
+    }
+} {function map1 {result List#(b)
+    } {arguments {
+            {function b f(a x1)
+            } List#(a)
+        }
+    } {position {%/Libraries/Prelude.bs 1217 0 {Library Prelude
+            }
+        }
+    }
+} {function zipwith1 {result List#(c)
+    } {arguments {
+            {function c f(a x1, b x2)
+            } List#(a) List#(b)
+        }
+    } {position {%/Libraries/Prelude.bs 1221 0 {Library Prelude
+            }
+        }
+    }
+} {function upto1 {result List#(Integer)
+    } {arguments {Integer Integer
+        }
+    } {position {%/Libraries/Prelude.bs 1225 0 {Library Prelude
+            }
+        }
+    }
+} {function num1 {result {
+            {List#(Tuple2#(a, Integer))
+            }
+        }
+    } {arguments {List#(a) Integer
+        }
+    } {position {%/Libraries/Prelude.bs 1228 0 {Library Prelude
+            }
+        }
+    }
+} {function replaceBit {result Bit#(n)
+    } {arguments {Position__ Bit#(n) ix Bit#(1)
+        }
+    } {provisos {
+            {PrimIndex#(ix, dx)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 1232 0 {Library Prelude
+            }
+        }
+    }
+} {function isStaticBool {result Bool
+    } {arguments Bool
+    } {position {%/Libraries/Prelude.bs 1262 0 {Library Prelude
+            }
+        }
+    }
+} {function ! {result Bool
+    } {arguments Bool
+    } {position {%/Libraries/Prelude.bs 1268 0 {Library Prelude
+            }
+        }
+    }
+} {function && {result Bool
+    } {arguments {Bool Bool
+        }
+    } {position {%/Libraries/Prelude.bs 1274 1 {Library Prelude
+            }
+        }
+    }
+} {function || {result Bool
+    } {arguments {Bool Bool
+        }
+    } {position {%/Libraries/Prelude.bs 1280 1 {Library Prelude
+            }
+        }
+    }
+} {function _if {result a
+    } {arguments {Bool a a
+        }
+    } {position {%/Libraries/Prelude.bs 1283 0 {Library Prelude
+            }
+        }
+    }
+} {function div {result Integer
+    } {arguments {Integer Integer
+        }
+    } {position {%/Libraries/Prelude.bs 1365 0 {Library Prelude
+            }
+        }
+    }
+} {function mod {result Integer
+    } {arguments {Integer Integer
+        }
+    } {position {%/Libraries/Prelude.bs 1371 0 {Library Prelude
+            }
+        }
+    }
+} {function quot {result Integer
+    } {arguments {Integer Integer
+        }
+    } {position {%/Libraries/Prelude.bs 1377 0 {Library Prelude
+            }
+        }
+    }
+} {function rem {result Integer
+    } {arguments {Integer Integer
+        }
+    } {position {%/Libraries/Prelude.bs 1383 0 {Library Prelude
+            }
+        }
+    }
+} {function exp {result Integer
+    } {arguments {Integer Integer
+        }
+    } {position {%/Libraries/Prelude.bs 1390 0 {Library Prelude
+            }
+        }
+    }
+} {function realToString {result String
+    } {arguments Real
+    } {position {%/Libraries/Prelude.bs 1397 0 {Library Prelude
+            }
+        }
+    }
+} {function {$realtobits
+    } {result Bit#(64)
+    } {arguments Real
+    } {position {%/Libraries/Prelude.bs 1438 0 {Library Prelude
+            }
+        }
+    }
+} {function {$bitstoreal
+    } {result Real
+    } {arguments Bit#(64)
+    } {position {%/Libraries/Prelude.bs 1441 0 {Library Prelude
+            }
+        }
+    }
+} {function fromMaybe {result a
+    } {arguments {a Maybe#(a)
+        }
+    } {position {%/Libraries/Prelude.bs 1484 0 {Library Prelude
+            }
+        }
+    }
+} {function validValue {result a
+    } {arguments Maybe#(a)
+    } {position {%/Libraries/Prelude.bs 1494 0 {Library Prelude
+            }
+        }
+    }
+} {function unJust {result a
+    } {arguments Maybe#(a)
+    } {position {%/Libraries/Prelude.bs 1505 0 {Library Prelude
+            }
+        }
+    }
+} {function isValid {result Bool
+    } {arguments Maybe#(a)
+    } {position {%/Libraries/Prelude.bs 1513 0 {Library Prelude
+            }
+        }
+    }
+} {function isJust {result Bool
+    } {arguments Maybe#(a)
+    } {position {%/Libraries/Prelude.bs 1522 0 {Library Prelude
+            }
+        }
+    }
+} {function fromSigned {result {
+            {Tuple2#(Bool, UInt#(n))
+            }
+        }
+    } {arguments Int#(n)
+    } {position {%/Libraries/Prelude.bs 1559 0 {Library Prelude
+            }
+        }
+    }
+} {function toSigned {result Int#(n)
+    } {arguments {
+            {Tuple2#(Bool, UInt#(n))
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 1569 0 {Library Prelude
+            }
+        }
+    }
+} {function signedQuot {result Int#(n)
+    } {arguments {Int#(n) Int#(k)
+        }
+    } {position {%/Libraries/Prelude.bs 1572 0 {Library Prelude
+            }
+        }
+    }
+} {function signedRem {result Int#(n)
+    } {arguments {Int#(n) Int#(n)
+        }
+    } {position {%/Libraries/Prelude.bs 1579 0 {Library Prelude
+            }
+        }
+    }
+} {function signedMul {result Int#(m)
+    } {arguments {Int#(n) Int#(k)
+        }
+    } {provisos {
+            {Add#(n, k, m)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 1585 0 {Library Prelude
+            }
+        }
+    }
+} {function unsignedMul {result UInt#(m)
+    } {arguments {UInt#(n) UInt#(k)
+        }
+    } {provisos {
+            {Add#(n, k, m)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 1593 0 {Library Prelude
+            }
+        }
+    }
+} {function unsignedQuot {result UInt#(k)
+    } {arguments {UInt#(k) UInt#(n)
+        }
+    } {position {%/Libraries/Prelude.bs 1596 0 {Library Prelude
+            }
+        }
+    }
+} {function isLeft {result Bool
+    } {arguments {
+            {Either#(a, b)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 1795 0 {Library Prelude
+            }
+        }
+    }
+} {function isRight {result Bool
+    } {arguments {
+            {Either#(a, b)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 1804 0 {Library Prelude
+            }
+        }
+    }
+} {function either {result c
+    } {arguments {
+            {function c f(a x1)
+            } {function c f(b x1)
+            } {Either#(a, b)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 1815 0 {Library Prelude
+            }
+        }
+    }
+} {function vMkReg {result Module#(VReg#(n))
+    } {arguments Bit#(n)
+    } {position {%/Libraries/Prelude.bs 1845 0 {Library Prelude
+            }
+        }
+    }
+} {module mkReg {interface Reg#(a)
+    } {arguments a
+    } {provisos {
+            {Bits#(a, sa)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 1864 0 {Library Prelude
+            }
+        }
+    }
+} {function vMkRegU {result Module#(VReg#(n))
+    } {position {%/Libraries/Prelude.bs 1885 0 {Library Prelude
+            }
+        }
+    }
+} {module mkRegU {interface Reg#(a)
+    } {provisos {
+            {Bits#(a, sa)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 1899 0 {Library Prelude
+            }
+        }
+    }
+} {function vMkRegA {result Module#(VReg#(n))
+    } {arguments Bit#(n)
+    } {position {%/Libraries/Prelude.bs 1920 0 {Library Prelude
+            }
+        }
+    }
+} {module mkRegA {interface Reg#(a)
+    } {arguments a
+    } {provisos {
+            {Bits#(a, sa)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 1934 0 {Library Prelude
+            }
+        }
+    }
+} {function asReg {result Reg#(a)
+    } {arguments Reg#(a)
+    } {position {%/Libraries/Prelude.bs 1959 0 {Library Prelude
+            }
+        }
+    }
+} {function asIfc {result a
+    } {arguments a
+    } {position {%/Libraries/Prelude.bs 1963 0 {Library Prelude
+            }
+        }
+    }
+} {function readReg {result a
+    } {arguments Reg#(a)
+    } {position {%/Libraries/Prelude.bs 1971 0 {Library Prelude
+            }
+        }
+    }
+} {function writeReg {result Action
+    } {arguments {Reg#(a) a
+        }
+    } {position {%/Libraries/Prelude.bs 1979 0 {Library Prelude
+            }
+        }
+    }
+} {function rJoin {result Rules
+    } {arguments {Rules Rules
+        }
+    } {position {%/Libraries/Prelude.bs 2011 0 {Library Prelude
+            }
+        }
+    }
+} {function rJoinPreempts {result Rules
+    } {arguments {Rules Rules
+        }
+    } {position {%/Libraries/Prelude.bs 2020 0 {Library Prelude
+            }
+        }
+    }
+} {function preempts {result Rules
+    } {arguments {Rules Rules
+        }
+    } {position {%/Libraries/Prelude.bs 2024 0 {Library Prelude
+            }
+        }
+    }
+} {function <+ {result Rules
+    } {arguments {Rules Rules
+        }
+    } {position {%/Libraries/Prelude.bs 2026 1 {Library Prelude
+            }
+        }
+    }
+} {function <+> {result Rules
+    } {arguments {Rules Rules
+        }
+    } {position {%/Libraries/Prelude.bs 2028 1 {Library Prelude
+            }
+        }
+    }
+} {function rJoinDescendingUrgency {result Rules
+    } {arguments {Rules Rules
+        }
+    } {position {%/Libraries/Prelude.bs 2039 0 {Library Prelude
+            }
+        }
+    }
+} {function rJoinExecutionOrder {result Rules
+    } {arguments {Rules Rules
+        }
+    } {position {%/Libraries/Prelude.bs 2042 0 {Library Prelude
+            }
+        }
+    }
+} {function rJoinMutuallyExclusive {result Rules
+    } {arguments {Rules Rules
+        }
+    } {position {%/Libraries/Prelude.bs 2045 0 {Library Prelude
+            }
+        }
+    }
+} {function rJoinConflictFree {result Rules
+    } {arguments {Rules Rules
+        }
+    } {position {%/Libraries/Prelude.bs 2048 0 {Library Prelude
+            }
+        }
+    }
+} {function preempted {result Rules
+    } {arguments {Rules Rules
+        }
+    } {position {%/Libraries/Prelude.bs 2058 0 {Library Prelude
+            }
+        }
+    }
+} {function +> {result Rules
+    } {arguments {Rules Rules
+        }
+    } {position {%/Libraries/Prelude.bs 2060 1 {Library Prelude
+            }
+        }
+    }
+} {function emptyRules {result Rules
+    } {position {%/Libraries/Prelude.bs 2069 0 {Library Prelude
+            }
+        }
+    }
+} {function +++ {result String
+    } {arguments {String String
+        }
+    } {position {%/Libraries/Prelude.bs 2088 1 {Library Prelude
+            }
+        }
+    }
+} {function strConcat {result String
+    } {arguments {String String
+        }
+    } {position {%/Libraries/Prelude.bs 2090 0 {Library Prelude
+            }
+        }
+    }
+} {function quote {result String
+    } {arguments String
+    } {position {%/Libraries/Prelude.bs 2130 0 {Library Prelude
+            }
+        }
+    }
+} {function doubleQuote {result String
+    } {arguments String
+    } {position {%/Libraries/Prelude.bs 2133 0 {Library Prelude
+            }
+        }
+    }
+} {function stringSplit {result {
+            {Maybe#(Tuple2#(Char, String))
+            }
+        }
+    } {arguments String
+    } {position {%/Libraries/Prelude.bs 2138 0 {Library Prelude
+            }
+        }
+    }
+} {function stringHead {result Char
+    } {arguments String
+    } {position {%/Libraries/Prelude.bs 2142 0 {Library Prelude
+            }
+        }
+    }
+} {function stringTail {result String
+    } {arguments String
+    } {position {%/Libraries/Prelude.bs 2150 0 {Library Prelude
+            }
+        }
+    }
+} {function stringToCharList {result List#(Char)
+    } {arguments String
+    } {position {%/Libraries/Prelude.bs 2157 0 {Library Prelude
+            }
+        }
+    }
+} {function stringCons {result String
+    } {arguments {Char String
+        }
+    } {position {%/Libraries/Prelude.bs 2165 0 {Library Prelude
+            }
+        }
+    }
+} {function charListToString {result String
+    } {arguments List#(Char)
+    } {position {%/Libraries/Prelude.bs 2168 0 {Library Prelude
+            }
+        }
+    }
+} {function charToString {result String
+    } {arguments Char
+    } {position {%/Libraries/Prelude.bs 2205 0 {Library Prelude
+            }
+        }
+    }
+} {function charToInteger {result Integer
+    } {arguments Char
+    } {position {%/Libraries/Prelude.bs 2211 0 {Library Prelude
+            }
+        }
+    }
+} {function integerToChar {result Char
+    } {arguments Integer
+    } {position {%/Libraries/Prelude.bs 2214 0 {Library Prelude
+            }
+        }
+    }
+} {function isSpace {result Bool
+    } {arguments Char
+    } {position {%/Libraries/Prelude.bs 2217 0 {Library Prelude
+            }
+        }
+    }
+} {function isLower {result Bool
+    } {arguments Char
+    } {position {%/Libraries/Prelude.bs 2226 0 {Library Prelude
+            }
+        }
+    }
+} {function isUpper {result Bool
+    } {arguments Char
+    } {position {%/Libraries/Prelude.bs 2229 0 {Library Prelude
+            }
+        }
+    }
+} {function isAlpha {result Bool
+    } {arguments Char
+    } {position {%/Libraries/Prelude.bs 2232 0 {Library Prelude
+            }
+        }
+    }
+} {function isAlphaNum {result Bool
+    } {arguments Char
+    } {position {%/Libraries/Prelude.bs 2235 0 {Library Prelude
+            }
+        }
+    }
+} {function isDigit {result Bool
+    } {arguments Char
+    } {position {%/Libraries/Prelude.bs 2238 0 {Library Prelude
+            }
+        }
+    }
+} {function isOctDigit {result Bool
+    } {arguments Char
+    } {position {%/Libraries/Prelude.bs 2241 0 {Library Prelude
+            }
+        }
+    }
+} {function isHexDigit {result Bool
+    } {arguments Char
+    } {position {%/Libraries/Prelude.bs 2244 0 {Library Prelude
+            }
+        }
+    }
+} {function toUpper {result Char
+    } {arguments Char
+    } {position {%/Libraries/Prelude.bs 2248 0 {Library Prelude
+            }
+        }
+    }
+} {function toLower {result Char
+    } {arguments Char
+    } {position {%/Libraries/Prelude.bs 2254 0 {Library Prelude
+            }
+        }
+    }
+} {function digitToInteger {result Integer
+    } {arguments Char
+    } {position {%/Libraries/Prelude.bs 2260 0 {Library Prelude
+            }
+        }
+    }
+} {function digitToBits {result Bit#(n)
+    } {arguments Char
+    } {position {%/Libraries/Prelude.bs 2268 0 {Library Prelude
+            }
+        }
+    }
+} {function integerToDigit {result Char
+    } {arguments Integer
+    } {position {%/Libraries/Prelude.bs 2271 0 {Library Prelude
+            }
+        }
+    }
+} {function bitsToDigit {result Char
+    } {arguments Bit#(n)
+    } {position {%/Libraries/Prelude.bs 2279 0 {Library Prelude
+            }
+        }
+    }
+} {function hexDigitToInteger {result Integer
+    } {arguments Char
+    } {position {%/Libraries/Prelude.bs 2282 0 {Library Prelude
+            }
+        }
+    }
+} {function hexDigitToBits {result Bit#(n)
+    } {arguments Char
+    } {position {%/Libraries/Prelude.bs 2294 0 {Library Prelude
+            }
+        }
+    }
+} {function integerToHexDigit {result Char
+    } {arguments Integer
+    } {position {%/Libraries/Prelude.bs 2297 0 {Library Prelude
+            }
+        }
+    }
+} {function bitsToHexDigit {result Char
+    } {arguments Bit#(n)
+    } {position {%/Libraries/Prelude.bs 2307 0 {Library Prelude
+            }
+        }
+    }
+} {function {$format
+    } {result Bit#(1)
+    } {position {%/Libraries/Prelude.bs 2318 8 {Library Prelude
+            }
+        }
+    }
+} {module forceIsModule {interface a
+    } {arguments m#(a)
+    } {position {%/Libraries/Prelude.bs 2372 0 {Library Prelude
+            }
+        }
+    }
+} {module setStateName {interface a
+    } {arguments {Name__ m#(a)
+        }
+    } {position {%/Libraries/Prelude.bs 2401 0 {Library Prelude
+            }
+        }
+    }
+} {module setStateAttrib {interface a
+    } {arguments {Attributes__ m#(a)
+        }
+    } {position {%/Libraries/Prelude.bs 2410 0 {Library Prelude
+            }
+        }
+    }
+} {function noPosition {result Position__
+    } {position {%/Libraries/Prelude.bs 2419 0 {Library Prelude
+            }
+        }
+    }
+} {function printPosition {result String
+    } {arguments Position__
+    } {position {%/Libraries/Prelude.bs 2426 0 {Library Prelude
+            }
+        }
+    }
+} {function getStringPosition {result Position__
+    } {arguments String
+    } {position {%/Libraries/Prelude.bs 2431 0 {Library Prelude
+            }
+        }
+    }
+} {function setStringPosition {result String
+    } {arguments {String Position__
+        }
+    } {position {%/Libraries/Prelude.bs 2436 0 {Library Prelude
+            }
+        }
+    }
+} {function typeOf {result Type
+    } {arguments a
+    } {position {%/Libraries/Prelude.bs 2449 0 {Library Prelude
+            }
+        }
+    }
+} {function printType {result String
+    } {arguments Type
+    } {position {%/Libraries/Prelude.bs 2452 0 {Library Prelude
+            }
+        }
+    }
+} {function isInterfaceType {result Bool
+    } {arguments Type
+    } {position {%/Libraries/Prelude.bs 2463 0 {Library Prelude
+            }
+        }
+    }
+} {function error {result a
+    } {arguments String
+    } {position {%/Libraries/Prelude.bs 2484 0 {Library Prelude
+            }
+        }
+    }
+} {function errorM {result m#(void)
+    } {arguments String
+    } {provisos Monad#(m)
+    } {position {%/Libraries/Prelude.bs 2493 0 {Library Prelude
+            }
+        }
+    }
+} {function warning {result a
+    } {arguments {String a
+        }
+    } {position {%/Libraries/Prelude.bs 2502 0 {Library Prelude
+            }
+        }
+    }
+} {function warningM {result m#(void)
+    } {arguments String
+    } {provisos Monad#(m)
+    } {position {%/Libraries/Prelude.bs 2511 0 {Library Prelude
+            }
+        }
+    }
+} {function message {result a
+    } {arguments {String a
+        }
+    } {position {%/Libraries/Prelude.bs 2524 0 {Library Prelude
+            }
+        }
+    }
+} {function messageM {result m#(void)
+    } {arguments String
+    } {provisos Monad#(m)
+    } {position {%/Libraries/Prelude.bs 2533 0 {Library Prelude
+            }
+        }
+    }
+} {function {$
+    } {result b
+    } {arguments {
+            {function b f(a x1)
+            } a
+        }
+    } {position {%/Libraries/Prelude.bs 2551 1 {Library Prelude
+            }
+        }
+    }
+} {function · {result c
+    } {arguments {
+            {function c f(b x1)
+            } {function b f(a x1)
+            } a
+        }
+    } {position {%/Libraries/Prelude.bs 2564 1 {Library Prelude
+            }
+        }
+    }
+} {function id {result a
+    } {arguments a
+    } {position {%/Libraries/Prelude.bs 2574 0 {Library Prelude
+            }
+        }
+    }
+} {function curry {result c
+    } {arguments {
+            {function c f(Tuple2#(a, b) x1)
+            } a b
+        }
+    } {position {%/Libraries/Prelude.bs 2580 0 {Library Prelude
+            }
+        }
+    }
+} {function uncurry {result c
+    } {arguments {
+            {function c f(a x1, b x2)
+            } {Tuple2#(a, b)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 2586 0 {Library Prelude
+            }
+        }
+    }
+} {function const {result a
+    } {arguments {a b
+        }
+    } {position {%/Libraries/Prelude.bs 2596 0 {Library Prelude
+            }
+        }
+    }
+} {function constFn {result a
+    } {arguments {a b
+        }
+    } {position {%/Libraries/Prelude.bs 2598 0 {Library Prelude
+            }
+        }
+    }
+} {function flip {result c
+    } {arguments {
+            {function c f(a x1, b x2)
+            } b a
+        }
+    } {position {%/Libraries/Prelude.bs 2604 0 {Library Prelude
+            }
+        }
+    }
+} {function while {result a
+    } {arguments {
+            {function Bool f(a x1)
+            } {function a f(a x1)
+            } a
+        }
+    } {position {%/Libraries/Prelude.bs 2614 0 {Library Prelude
+            }
+        }
+    }
+} {function asTypeOf {result a
+    } {arguments {a a
+        }
+    } {position {%/Libraries/Prelude.bs 2624 0 {Library Prelude
+            }
+        }
+    }
+} {function liftM {result m#(b)
+    } {arguments {
+            {function b f(a x1)
+            } m#(a)
+        }
+    } {provisos Monad#(m)
+    } {position {%/Libraries/Prelude.bs 2633 0 {Library Prelude
+            }
+        }
+    }
+} {function liftM2 {result m#(c)
+    } {arguments {
+            {function c f(a x1, b x2)
+            } m#(a) m#(b)
+        }
+    } {provisos Monad#(m)
+    } {position {%/Libraries/Prelude.bs 2636 0 {Library Prelude
+            }
+        }
+    }
+} {function bindM {result m#(b)
+    } {arguments {m#(a) {function m#(b) f(a x1)
+            }
+        }
+    } {provisos Monad#(m)
+    } {position {%/Libraries/Prelude.bs 2644 0 {Library Prelude
+            }
+        }
+    }
+} {module exposeCurrentClock {interface Clock
+    } {position {%/Libraries/Prelude.bs 2682 0 {Library Prelude
+            }
+        }
+    }
+} {module exposeCurrentReset {interface Reset
+    } {position {%/Libraries/Prelude.bs 2687 0 {Library Prelude
+            }
+        }
+    }
+} {module changeSpecialWires {interface a
+    } {arguments {Maybe#(Clock) Maybe#(Reset) Maybe#(Power) m#(a)
+        }
+    } {position {%/Libraries/Prelude.bs 2709 0 {Library Prelude
+            }
+        }
+    }
+} {function clockOf {result Clock
+    } {arguments a
+    } {position {%/Libraries/Prelude.bs 2719 0 {Library Prelude
+            }
+        }
+    }
+} {function clocksOf {result List#(Clock)
+    } {arguments a
+    } {position {%/Libraries/Prelude.bs 2722 0 {Library Prelude
+            }
+        }
+    }
+} {function sameFamily {result Bool
+    } {arguments {Clock Clock
+        }
+    } {position {%/Libraries/Prelude.bs 2725 0 {Library Prelude
+            }
+        }
+    }
+} {function isAncestor {result Bool
+    } {arguments {Clock Clock
+        }
+    } {position {%/Libraries/Prelude.bs 2728 0 {Library Prelude
+            }
+        }
+    }
+} {function noClock {result Clock
+    } {position {%/Libraries/Prelude.bs 2733 0 {Library Prelude
+            }
+        }
+    }
+} {function noReset {result Reset
+    } {position {%/Libraries/Prelude.bs 2747 0 {Library Prelude
+            }
+        }
+    }
+} {function resetOf {result Reset
+    } {arguments a
+    } {position {%/Libraries/Prelude.bs 2750 0 {Library Prelude
+            }
+        }
+    }
+} {function resetsOf {result List#(Reset)
+    } {arguments a
+    } {position {%/Libraries/Prelude.bs 2753 0 {Library Prelude
+            }
+        }
+    }
+} {module chkClockDomain {interface void
+    } {arguments {Name__ String a
+        }
+    } {provisos {
+            {Bits#(a, sa)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 2822 0 {Library Prelude
+            }
+        }
+    }
+} {function isStaticInteger {result Bool
+    } {arguments Integer
+    } {position {%/Libraries/Prelude.bs 2842 0 {Library Prelude
+            }
+        }
+    }
+} {function areStaticBits {result Bool
+    } {arguments Bit#(n)
+    } {position {%/Libraries/Prelude.bs 2847 0 {Library Prelude
+            }
+        }
+    }
+} {function _when_ {result a
+    } {arguments {Bool a
+        }
+    } {position {%/Libraries/Prelude.bs 2889 0 {Library Prelude
+            }
+        }
+    }
+} {function bind_ {result m#(b)
+    } {arguments {m#(a) m#(b)
+        }
+    } {provisos Monad#(m)
+    } {position {%/Libraries/Prelude.bs 3039 0 {Library Prelude
+            }
+        }
+    }
+} {function splitIf {result Action
+    } {arguments {Bool Action Action
+        }
+    } {position {%/Libraries/Prelude.bs 3044 0 {Library Prelude
+            }
+        }
+    }
+} {function nosplitIf {result Action
+    } {arguments {Bool Action Action
+        }
+    } {position {%/Libraries/Prelude.bs 3049 0 {Library Prelude
+            }
+        }
+    }
+} {function nosplitDeepAV {result ActionValue#(a)
+    } {arguments ActionValue#(a)
+    } {position {%/Libraries/Prelude.bs 3054 0 {Library Prelude
+            }
+        }
+    }
+} {function nosplitDeepIf {result Action
+    } {arguments {Bool Action Action
+        }
+    } {position {%/Libraries/Prelude.bs 3062 0 {Library Prelude
+            }
+        }
+    }
+} {function splitDeepAV {result ActionValue#(a)
+    } {arguments ActionValue#(a)
+    } {position {%/Libraries/Prelude.bs 3069 0 {Library Prelude
+            }
+        }
+    }
+} {function splitDeepIf {result Action
+    } {arguments {Bool Action Action
+        }
+    } {position {%/Libraries/Prelude.bs 3077 0 {Library Prelude
+            }
+        }
+    }
+} {module moduleFix {interface a
+    } {arguments {
+            {function m#(a) f(a x1)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 3084 0 {Library Prelude
+            }
+        }
+    }
+} {function impCondOf {result Bool
+    } {arguments a
+    } {position {%/Libraries/Prelude.bs 3096 0 {Library Prelude
+            }
+        }
+    }
+} {function {$display
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3103 8 {Library Prelude
+            }
+        }
+    }
+} {function {$displayb
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3104 8 {Library Prelude
+            }
+        }
+    }
+} {function {$displayh
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3105 8 {Library Prelude
+            }
+        }
+    }
+} {function {$displayo
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3106 8 {Library Prelude
+            }
+        }
+    }
+} {function {$write
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3107 8 {Library Prelude
+            }
+        }
+    }
+} {function {$writeb
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3108 8 {Library Prelude
+            }
+        }
+    }
+} {function {$writeh
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3109 8 {Library Prelude
+            }
+        }
+    }
+} {function {$writeo
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3110 8 {Library Prelude
+            }
+        }
+    }
+} {function {$error
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3112 8 {Library Prelude
+            }
+        }
+    }
+} {function {$warning
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3113 8 {Library Prelude
+            }
+        }
+    }
+} {function {$info
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3114 8 {Library Prelude
+            }
+        }
+    }
+} {function {$fatal
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3115 8 {Library Prelude
+            }
+        }
+    }
+} {function {$SVA
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3117 8 {Library Prelude
+            }
+        }
+    }
+} {function displayHex {result Action
+    } {arguments a
+    } {provisos {
+            {Bits#(a, sa)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 3121 0 {Library Prelude
+            }
+        }
+    }
+} {function displayDec {result Action
+    } {arguments a
+    } {provisos {
+            {Bits#(a, sa)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 3124 0 {Library Prelude
+            }
+        }
+    }
+} {function displayOct {result Action
+    } {arguments a
+    } {provisos {
+            {Bits#(a, sa)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 3127 0 {Library Prelude
+            }
+        }
+    }
+} {function displayBin {result Action
+    } {arguments a
+    } {provisos {
+            {Bits#(a, sa)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 3130 0 {Library Prelude
+            }
+        }
+    }
+} {function {$finish
+    } {result Action
+    } {arguments Bit#(2)
+    } {position {%/Libraries/Prelude.bs 3133 0 {Library Prelude
+            }
+        }
+    }
+} {function {$stop
+    } {result Action
+    } {arguments Bit#(2)
+    } {position {%/Libraries/Prelude.bs 3136 0 {Library Prelude
+            }
+        }
+    }
+} {function _finish_ {result PrimAction
+    } {arguments Bit#(32)
+    } {position {%/Libraries/Prelude.bs 3139 8 {Library Prelude
+            }
+        }
+    }
+} {function _stop_ {result PrimAction
+    } {arguments Bit#(32)
+    } {position {%/Libraries/Prelude.bs 3140 8 {Library Prelude
+            }
+        }
+    }
+} {function {$dumpon
+    } {result Action
+    } {position {%/Libraries/Prelude.bs 3142 0 {Library Prelude
+            }
+        }
+    }
+} {function {$dumpoff
+    } {result Action
+    } {position {%/Libraries/Prelude.bs 3146 0 {Library Prelude
+            }
+        }
+    }
+} {function {$dumpvars
+    } {result Action
+    } {position {%/Libraries/Prelude.bs 3150 0 {Library Prelude
+            }
+        }
+    }
+} {function {$dumpall
+    } {result Action
+    } {position {%/Libraries/Prelude.bs 3154 0 {Library Prelude
+            }
+        }
+    }
+} {function {$dumpflush
+    } {result Action
+    } {position {%/Libraries/Prelude.bs 3158 0 {Library Prelude
+            }
+        }
+    }
+} {function {$dumpfile
+    } {result Action
+    } {arguments String
+    } {position {%/Libraries/Prelude.bs 3162 0 {Library Prelude
+            }
+        }
+    }
+} {function {$dumplimit
+    } {result Action
+    } {arguments Bit#(64)
+    } {position {%/Libraries/Prelude.bs 3166 0 {Library Prelude
+            }
+        }
+    }
+} {function {$signed
+    } {result Bit#(n)
+    } {arguments Bit#(n)
+    } {position {%/Libraries/Prelude.bs 3170 8 {Library Prelude
+            }
+        }
+    }
+} {function {$unsigned
+    } {result Bit#(n)
+    } {arguments Bit#(n)
+    } {position {%/Libraries/Prelude.bs 3171 8 {Library Prelude
+            }
+        }
+    }
+} {function {$time
+    } {result ActionValue#(Bit#(64))
+    } {position {%/Libraries/Prelude.bs 3175 0 {Library Prelude
+            }
+        }
+    }
+} {function {$stime
+    } {result ActionValue#(Bit#(32))
+    } {position {%/Libraries/Prelude.bs 3178 0 {Library Prelude
+            }
+        }
+    }
+} {function mcdFilePack {result Bit#(31)
+    } {arguments File
+    } {position {%/Libraries/Prelude.bs 3204 0 {Library Prelude
+            }
+        }
+    }
+} {function mcdFileUnpack {result File
+    } {arguments Bit#(31)
+    } {position {%/Libraries/Prelude.bs 3209 0 {Library Prelude
+            }
+        }
+    }
+} {function {$fflush
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3232 8 {Library Prelude
+            }
+        }
+    }
+} {function {$fopen
+    } {result ActionValue_#(32)
+    } {position {%/Libraries/Prelude.bs 3237 8 {Library Prelude
+            }
+        }
+    }
+} {function {$fwrite
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3241 8 {Library Prelude
+            }
+        }
+    }
+} {function {$fwriteb
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3242 8 {Library Prelude
+            }
+        }
+    }
+} {function {$fwriteo
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3243 8 {Library Prelude
+            }
+        }
+    }
+} {function {$fwriteh
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3244 8 {Library Prelude
+            }
+        }
+    }
+} {function {$swriteAV
+    } {result ActionValue_#(n)
+    } {position {%/Libraries/Prelude.bs 3246 8 {Library Prelude
+            }
+        }
+    }
+} {function {$swrite
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3247 8 {Library Prelude
+            }
+        }
+    }
+} {function {$swritebAV
+    } {result ActionValue_#(n)
+    } {position {%/Libraries/Prelude.bs 3248 8 {Library Prelude
+            }
+        }
+    }
+} {function {$swriteb
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3249 8 {Library Prelude
+            }
+        }
+    }
+} {function {$swriteoAV
+    } {result ActionValue_#(n)
+    } {position {%/Libraries/Prelude.bs 3250 8 {Library Prelude
+            }
+        }
+    }
+} {function {$swriteo
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3251 8 {Library Prelude
+            }
+        }
+    }
+} {function {$swritehAV
+    } {result ActionValue_#(n)
+    } {position {%/Libraries/Prelude.bs 3252 8 {Library Prelude
+            }
+        }
+    }
+} {function {$swriteh
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3253 8 {Library Prelude
+            }
+        }
+    }
+} {function {$sformatAV
+    } {result ActionValue_#(n)
+    } {position {%/Libraries/Prelude.bs 3255 8 {Library Prelude
+            }
+        }
+    }
+} {function {$sformat
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3256 8 {Library Prelude
+            }
+        }
+    }
+} {function {$fdisplay
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3258 8 {Library Prelude
+            }
+        }
+    }
+} {function {$fdisplayb
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3259 8 {Library Prelude
+            }
+        }
+    }
+} {function {$fdisplayo
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3260 8 {Library Prelude
+            }
+        }
+    }
+} {function {$fdisplayh
+    } {result PrimAction
+    } {position {%/Libraries/Prelude.bs 3261 8 {Library Prelude
+            }
+        }
+    }
+} {function {$random
+    } {result ActionValue_#(32)
+    } {position {%/Libraries/Prelude.bs 3263 8 {Library Prelude
+            }
+        }
+    }
+} {function {$fgetc
+    } {result ActionValue#(Int#(32))
+    } {arguments File
+    } {position {%/Libraries/Prelude.bs 3265 0 {Library Prelude
+            }
+        }
+    }
+} {function {$fclose
+    } {result Action
+    } {arguments File
+    } {position {%/Libraries/Prelude.bs 3269 0 {Library Prelude
+            }
+        }
+    }
+} {function {$ungetc
+    } {result ActionValue#(Int#(32))
+    } {arguments {Bit#(8) File
+        }
+    } {position {%/Libraries/Prelude.bs 3273 0 {Library Prelude
+            }
+        }
+    }
+} {function stdin {result File
+    } {position {%/Libraries/Prelude.bs 3279 0 {Library Prelude
+            }
+        }
+    }
+} {function stdout {result File
+    } {position {%/Libraries/Prelude.bs 3281 0 {Library Prelude
+            }
+        }
+    }
+} {function stderr {result File
+    } {position {%/Libraries/Prelude.bs 3283 0 {Library Prelude
+            }
+        }
+    }
+} {function stdout_mcd {result File
+    } {position {%/Libraries/Prelude.bs 3286 0 {Library Prelude
+            }
+        }
+    }
+} {function {$test$plusargs
+    } {result ActionValue#(Bool)
+    } {arguments String
+    } {position {%/Libraries/Prelude.bs 3289 0 {Library Prelude
+            }
+        }
+    }
+} {function tuple2 {result {
+            {Tuple2#(a, b)
+            }
+        }
+    } {arguments {a b
+        }
+    } {position {%/Libraries/Prelude.bs 3357 0 {Library Prelude
+            }
+        }
+    }
+} {function tuple3 {result {
+            {Tuple3#(a, b, c)
+            }
+        }
+    } {arguments {a b c
+        }
+    } {position {%/Libraries/Prelude.bs 3359 0 {Library Prelude
+            }
+        }
+    }
+} {function tuple4 {result {
+            {Tuple4#(a, b, c, d)
+            }
+        }
+    } {arguments {a b c d
+        }
+    } {position {%/Libraries/Prelude.bs 3361 0 {Library Prelude
+            }
+        }
+    }
+} {function tuple5 {result {
+            {Tuple5#(a, b, c, d, e)
+            }
+        }
+    } {arguments {a b c d e
+        }
+    } {position {%/Libraries/Prelude.bs 3363 0 {Library Prelude
+            }
+        }
+    }
+} {function tuple6 {result {
+            {Tuple6#(a, b, c, d, e, f)
+            }
+        }
+    } {arguments {a b c d e f
+        }
+    } {position {%/Libraries/Prelude.bs 3365 0 {Library Prelude
+            }
+        }
+    }
+} {function tuple7 {result {
+            {Tuple7#(a, b, c, d, e, f, g)
+            }
+        }
+    } {arguments {a b c d e f g
+        }
+    } {position {%/Libraries/Prelude.bs 3367 0 {Library Prelude
+            }
+        }
+    }
+} {function tuple8 {result {
+            {Tuple8#(a, b, c, d, e, f, g, h)
+            }
+        }
+    } {arguments {a b c d e f g h
+        }
+    } {position {%/Libraries/Prelude.bs 3369 0 {Library Prelude
+            }
+        }
+    }
+} {function compose {result c
+    } {arguments {
+            {function c f(b x1)
+            } {function b f(a x1)
+            } a
+        }
+    } {position {%/Libraries/Prelude.bs 3374 0 {Library Prelude
+            }
+        }
+    }
+} {function composeM {result m#(c)
+    } {arguments {
+            {function m#(b) f(a x1)
+            } {function m#(c) f(b x1)
+            } a
+        }
+    } {provisos Monad#(m)
+    } {position {%/Libraries/Prelude.bs 3377 0 {Library Prelude
+            }
+        }
+    }
+} {function nil {result List#(a)
+    } {position {%/Libraries/Prelude.bs 3392 0 {Library Prelude
+            }
+        }
+    }
+} {function cons {result List#(a)
+    } {arguments {a List#(a)
+        }
+    } {position {%/Libraries/Prelude.bs 3395 0 {Library Prelude
+            }
+        }
+    }
+} {function isCons {result Bool
+    } {arguments List#(a)
+    } {position {%/Libraries/Prelude.bs 3398 0 {Library Prelude
+            }
+        }
+    }
+} {function isNil {result Bool
+    } {arguments List#(a)
+    } {position {%/Libraries/Prelude.bs 3402 0 {Library Prelude
+            }
+        }
+    }
+} {function decodeList {result {
+            {Maybe#(Tuple2#(a, List#(a)))
+            }
+        }
+    } {arguments List#(a)
+    } {position {%/Libraries/Prelude.bs 3406 0 {Library Prelude
+            }
+        }
+    }
+} {function listPrimAppend {result List#(a)
+    } {arguments {List#(a) List#(a)
+        }
+    } {position {%/Libraries/Prelude.bs 3413 0 {Library Prelude
+            }
+        }
+    }
+} {function listPrimConcat {result List#(a)
+    } {arguments List#(List#(a))
+    } {position {%/Libraries/Prelude.bs 3417 0 {Library Prelude
+            }
+        }
+    }
+} {function listMessage {result String
+    } {arguments {Integer String
+        }
+    } {position {%/Libraries/Prelude.bs 3439 0 {Library Prelude
+            }
+        }
+    }
+} {function listPrimSelect {result a
+    } {arguments {Position__ List#(a) ix
+        }
+    } {provisos {
+            {PrimIndex#(ix, dx)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 3444 0 {Library Prelude
+            }
+        }
+    }
+} {function listDrop {result List#(a)
+    } {arguments {Integer List#(a)
+        }
+    } {position {%/Libraries/Prelude.bs 3450 0 {Library Prelude
+            }
+        }
+    }
+} {function listNullOrUndef {result Bool
+    } {arguments List#(a)
+    } {position {%/Libraries/Prelude.bs 3455 0 {Library Prelude
+            }
+        }
+    }
+} {function listLength {result Integer
+    } {arguments List#(a)
+    } {position {%/Libraries/Prelude.bs 3460 0 {Library Prelude
+            }
+        }
+    }
+} {function listLength' {result Integer
+    } {arguments {List#(a) Integer
+        }
+    } {position {%/Libraries/Prelude.bs 3468 0 {Library Prelude
+            }
+        }
+    }
+} {function listStaticSelect {result a
+    } {arguments {Position__ List#(a) Integer
+        }
+    } {position {%/Libraries/Prelude.bs 3476 0 {Library Prelude
+            }
+        }
+    }
+} {function listPrimNum {result {
+            {List#(Tuple2#(e, Integer))
+            }
+        }
+    } {arguments List#(e)
+    } {position {%/Libraries/Prelude.bs 3489 0 {Library Prelude
+            }
+        }
+    }
+} {function listDynamicSelect {result a
+    } {arguments {Position__ List#(a) ix
+        }
+    } {provisos {
+            {PrimIndex#(ix, dx)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 3497 0 {Library Prelude
+            }
+        }
+    }
+} {function listPrimLength {result Integer
+    } {arguments List#(a)
+    } {position {%/Libraries/Prelude.bs 3504 0 {Library Prelude
+            }
+        }
+    }
+} {function listPrimUpdate {result List#(a)
+    } {arguments {Position__ List#(a) ix a
+        }
+    } {provisos {
+            {PrimIndex#(ix, dx)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 3508 0 {Library Prelude
+            }
+        }
+    }
+} {function listPrimSomeBitsToList {result List#(Bit#(k))
+    } {arguments {Integer Integer Bit#(m)
+        }
+    } {position {%/Libraries/Prelude.bs 3523 0 {Library Prelude
+            }
+        }
+    }
+} {function listPrimMap {result List#(d)
+    } {arguments {
+            {function d f(c x1)
+            } List#(c)
+        }
+    } {position {%/Libraries/Prelude.bs 3532 0 {Library Prelude
+            }
+        }
+    }
+} {function listPrimFoldL {result b
+    } {arguments {
+            {function b f(b x1, a x2)
+            } b List#(a)
+        }
+    } {position {%/Libraries/Prelude.bs 3536 0 {Library Prelude
+            }
+        }
+    }
+} {function listPrimFoldR {result b
+    } {arguments {
+            {function b f(a x1, b x2)
+            } b List#(a)
+        }
+    } {position {%/Libraries/Prelude.bs 3540 0 {Library Prelude
+            }
+        }
+    }
+} {function constantWithAllBitsSet {result Bit#(sa)
+    } {position {%/Libraries/Prelude.bs 3544 0 {Library Prelude
+            }
+        }
+    }
+} {function constantWithAllBitsUnset {result Bit#(sa)
+    } {position {%/Libraries/Prelude.bs 3547 0 {Library Prelude
+            }
+        }
+    }
+} {function integerToString {result String
+    } {arguments Integer
+    } {position {%/Libraries/Prelude.bs 3550 0 {Library Prelude
+            }
+        }
+    }
+} {function bitToString {result String
+    } {arguments Bit#(n)
+    } {position {%/Libraries/Prelude.bs 3554 0 {Library Prelude
+            }
+        }
+    }
+} {function stringLength {result Integer
+    } {arguments String
+    } {position {%/Libraries/Prelude.bs 3559 0 {Library Prelude
+            }
+        }
+    }
+} {function arrayLength {result Integer
+    } {arguments Array#(a)
+    } {position {%/Libraries/Prelude.bs 3578 0 {Library Prelude
+            }
+        }
+    }
+} {function reverseBits {result Bit#(n)
+    } {arguments Bit#(n)
+    } {position {%/Libraries/Prelude.bs 3678 0 {Library Prelude
+            }
+        }
+    }
+} {function countOnes {result UInt#(lgn1)
+    } {arguments Bit#(n)
+    } {provisos {
+            {Add#(1, xx, lgn1)
+            } {Log#(n1, lgn1)
+            } {Add#(1, n, n1)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 3688 0 {Library Prelude
+            }
+        }
+    }
+} {function countZerosLSB {result UInt#(lgn1)
+    } {arguments Bit#(n)
+    } {provisos {
+            {Log#(n1, lgn1)
+            } {Add#(1, n, n1)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 3697 0 {Library Prelude
+            }
+        }
+    }
+} {function countZerosMSB {result UInt#(lgn1)
+    } {arguments Bit#(n)
+    } {provisos {
+            {Log#(n1, lgn1)
+            } {Add#(1, n, n1)
+            }
+        }
+    } {position {%/Libraries/Prelude.bs 3709 0 {Library Prelude
+            }
+        }
+    }
+} {function iuNotUsed {result Integer
+    } {position {%/Libraries/Prelude.bs 3834 0 {Library Prelude
+            }
+        }
+    }
+} {function iuDontCare {result Integer
+    } {position {%/Libraries/Prelude.bs 3837 0 {Library Prelude
+            }
+        }
+    }
+} {function iuNoMatch {result Integer
+    } {position {%/Libraries/Prelude.bs 3840 0 {Library Prelude
+            }
+        }
+    }
+} {function isRawUndefined {result Bool
+    } {arguments a
+    } {position {%/Libraries/Prelude.bs 3850 0 {Library Prelude
+            }
+        }
+    }
+} {function genC {result Bool
+    } {position {%/Libraries/Prelude.bs 3975 0 {Library Prelude
+            }
+        }
+    }
+} {function genVerilog {result Bool
+    } {position {%/Libraries/Prelude.bs 3985 0 {Library Prelude
+            }
+        }
+    }
+} {function genPackageName {result String
+    } {position {%/Libraries/Prelude.bs 3988 0 {Library Prelude
+            }
+        }
+    }
+} {function genModuleName {result String
+    } {position {%/Libraries/Prelude.bs 3993 0 {Library Prelude
+            }
+        }
+    }
+} {function compilerVersion {result String
+    } {position {%/Libraries/Prelude.bs 4001 0 {Library Prelude
+            }
+        }
+    }
+} {function date {result String
+    } {position {%/Libraries/Prelude.bs 4009 0 {Library Prelude
+            }
+        }
+    }
+} {function epochTime {result Bit#(32)
+    } {position {%/Libraries/Prelude.bs 4017 0 {Library Prelude
+            }
+        }
+    }
+} {function buildVersion {result Bit#(32)
+    } {position {%/Libraries/Prelude.bs 4025 0 {Library Prelude
+            }
+        }
+    }
+} {function testAssert {result Bool
+    } {position {%/Libraries/Prelude.bs 4033 0 {Library Prelude
+            }
+        }
+    }
+} {module openFile {interface Handle
+    } {arguments {String IOMode
+        }
+    } {position {%/Libraries/Prelude.bs 4047 0 {Library Prelude
+            }
+        }
+    }
+} {module hClose {interface Empty
+    } {arguments Handle
+    } {position {%/Libraries/Prelude.bs 4052 0 {Library Prelude
+            }
+        }
+    }
+} {module hIsEOF {interface Bool
+    } {arguments Handle
+    } {position {%/Libraries/Prelude.bs 4058 0 {Library Prelude
+            }
+        }
+    }
+} {module hIsOpen {interface Bool
+    } {arguments Handle
+    } {position {%/Libraries/Prelude.bs 4067 0 {Library Prelude
+            }
+        }
+    }
+} {module hIsClosed {interface Bool
+    } {arguments Handle
+    } {position {%/Libraries/Prelude.bs 4071 0 {Library Prelude
+            }
+        }
+    }
+} {module hIsReadable {interface Bool
+    } {arguments Handle
+    } {position {%/Libraries/Prelude.bs 4075 0 {Library Prelude
+            }
+        }
+    }
+} {module hIsWritable {interface Bool
+    } {arguments Handle
+    } {position {%/Libraries/Prelude.bs 4079 0 {Library Prelude
+            }
+        }
+    }
+} {module hSetBuffering {interface Empty
+    } {arguments {Handle BufferMode
+        }
+    } {position {%/Libraries/Prelude.bs 4094 0 {Library Prelude
+            }
+        }
+    }
+} {module hGetBuffering {interface BufferMode
+    } {arguments Handle
+    } {position {%/Libraries/Prelude.bs 4099 0 {Library Prelude
+            }
+        }
+    }
+} {module hFlush {interface Empty
+    } {arguments Handle
+    } {position {%/Libraries/Prelude.bs 4102 0 {Library Prelude
+            }
+        }
+    }
+} {module hPutStr {interface Empty
+    } {arguments {Handle String
+        }
+    } {position {%/Libraries/Prelude.bs 4111 0 {Library Prelude
+            }
+        }
+    }
+} {module hPutStrLn {interface Empty
+    } {arguments {Handle String
+        }
+    } {position {%/Libraries/Prelude.bs 4115 0 {Library Prelude
+            }
+        }
+    }
+} {module hPutChar {interface Empty
+    } {arguments {Handle Char
+        }
+    } {position {%/Libraries/Prelude.bs 4118 0 {Library Prelude
+            }
+        }
+    }
+} {module hGetChar {interface Char
+    } {arguments Handle
+    } {position {%/Libraries/Prelude.bs 4126 0 {Library Prelude
+            }
+        }
+    }
+} {module hGetLine {interface String
+    } {arguments Handle
+    } {position {%/Libraries/Prelude.bs 4129 0 {Library Prelude
+            }
+        }
+    }
+}

@@ -12,6 +12,32 @@ interface FIFOIfc2#(numeric type value_size);
     method Bit#(value_size) first();
 endinterface
 
+typedef enum { False, True } Bool2 deriving (Bits, Eq);
+
+typedef enum {
+    Foo[2],
+    Bar[5:7],
+    Quux[3:2]
+} Glurph;
+
+typedef struct { int x; int y; } Coord;
+typedef struct { Bit#(7) pc; Bit#(3) rf; Bit#(8) mem; } Proc;
+
+typedef union tagged {
+    bit [4:0] Register;
+    bit [21:0] Literal;
+    struct { bit [4:0] regAddr; bit [4:0] regIndex;} Indexed;
+} InstrOperand;
+
+typedef union tagged {
+    struct { Bit#(4) op; Reg#(Bit#(4)) rs; Bit#(5) rt; UInt#(16) imm;} Immediate;
+    struct {
+        Bit#(4) op; 
+        UInt#(26) target;
+    } Jump;
+} Instruction deriving (Bits);
+
+
 
 module mkPolyFIFO(FIFOIfc#(value_size));
     Reg#(Bit#(value_size)) data <- mkReg(0);

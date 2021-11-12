@@ -37,7 +37,7 @@ def fancy_call(command):
         command = bytes(command, encoding= "raw_unicode_escape")
     child.sendline(command)
     child.expect(re.escape(command)+b"\r\n",timeout=2)
-    child.expect(b"\r\r\n%",timeout=2)
+    child.expect(b"\r\r\n%",timeout=5)
     s = child.before
     if s.find(b"Error")!=-1:
         raise Exception("Error:",s)
@@ -76,13 +76,13 @@ def read_type(type_string=b"Polyfifo::FIFOIfc"):
     return type_full
 #%%
 print(list_packages())
-print(list_types(package_name="Prelude"))
+print(list_types(package_name="Polyfifo"))
 all_types = b""
-for type_name in list_types(package_name="Prelude"):
+for type_name in list_types(package_name="Polyfifo"):
     all_types += read_type(type_name)
     all_types += b"\n"
 
 """samve all_types to json file"""
-with open("../src/types.json","w") as f:
+with open("../src/types2.json","w") as f:
     f.write(all_types.decode("utf-8"))
 # %%

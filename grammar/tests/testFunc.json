@@ -1,0 +1,8 @@
+{function flatN {result Bit#(m)
+    } {arguments {Integer List#(Bit#(k))
+        }
+    } {position {%/Libraries/Prelude.bs 1202 0 {Library Prelude
+            }
+        }
+    }
+}

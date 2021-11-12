@@ -53,7 +53,7 @@ method_proto_formal: [atribute_instances] type identifier_l
 
 tcl_position: "{" "position" "{" tcl_path NUMBER NUMBER ["{" "Library" identifier_u "}"] "}" "}"
 // todo check paths with spaces
-tcl_path: ["%/"] /\w+/ ["/" /\w+/ ]  /.\w+/
+tcl_path: ["%/"] /\w+/ ["/" /\w+/ ]*  "." /\w+/
 
 tcl_type_full: tcl_interface_dec
             | tcl_typeclass
@@ -66,7 +66,9 @@ tcl_type_full: tcl_interface_dec
             | tcl_function
             | tcl_module
 
-tcl_width: "{" "width" NUMBER "}"
+tcl_width: "{" "width" NUMBER "}" -> 
+
+tcl_package_name: identifier_u ":"":"
 
 // Typeclass grammar
 tcl_typeclass: "Typeclass" "{" type_def_type "}" [tcl_tc_superclasses] ["coherent"] tcl_tc_members tcl_tc_instances tcl_position
@@ -137,7 +139,7 @@ tcl_immp_name: "\""  identifier_l "\"" -> string_placeholder
 
 // Functions via defs func package_name
 
-tcl_function: "{" "function" [identifier_u ":" ":"] tcl_f_identifier [tcl_f_result] [tcl_f_arguments] [tcl_provisos] tcl_position "}"
+tcl_function: "{" "function" [tcl_package_name] tcl_f_identifier [tcl_f_result] [tcl_f_arguments] [tcl_provisos] tcl_position "}"
 
 
 tcl_f_identifier: "{" identifier_l "}" ->string_placeholder
@@ -146,8 +148,8 @@ tcl_f_identifier: "{" identifier_l "}" ->string_placeholder
 
 
 
-tcl_f_result: "{" "result" [identifier_u ":"":"] type "}" -> complex_result
-            | "{" "result" "{" "{" [identifier_u ":"":"] type "}" "}" "}" -> simple_result
+tcl_f_result: "{" "result" [identifier_u ":"":"] type "}" 
+            | "{" "result" "{" "{" [identifier_u ":"":"] type "}" "}" "}" 
 
 tcl_f_arguments: "{" "arguments" tcl_fa_argument  "}"
             | "{" "arguments" "{" tcl_fa_argument* "}"  "}"
@@ -157,7 +159,7 @@ tcl_fa_argument: "{" tcl_tc_m_f_function "}"
             | "{" type "}"
 
 //// module
-tcl_module: "{" "module" [identifier_u ":" ":"] identifier_l  tcl_m_interface [tcl_f_arguments] [tcl_provisos] tcl_position "}"
+tcl_module: "{" "module" [tcl_package_name] identifier_l tcl_m_interface [tcl_f_arguments] [tcl_provisos] tcl_position "}"
 
 tcl_m_interface: "{" "interface" [identifier_u ":"":"] type "}"
 

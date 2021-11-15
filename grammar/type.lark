@@ -26,20 +26,20 @@ typenat: NUMBER
 
 identifier_l: /[a-z_$][\w$_']*/ 
 identifier_u: /[A-Z][\w$_]*/ 
-type_ide: identifier_u -> string_placeholder
-type_ide_poly: identifier_l -> string_placeholder
+type_ide: identifier_u
+type_ide_poly: identifier_l
 
 
 
 interface_decl: [atribute_instances] "interface" type_def_type ";" (interface_member_decl)* "endinterface" (":" type_ide)*
 
-type_def_type: [identifier_u":"":"] type_ide (type_formals)* 
+type_def_type: tcl_package_name (type_formals)* 
             | type_ide_poly (type_formals)*
 
 type_formals: "#(" type_formal ("," type_formal)* ")" -> list_of
 
 type_formal: "numeric" "type" identifier_l -> numeric_type_formal
-            | "type" identifier_l
+            | "type" identifier_l -> type_type_formal
             | identifier_l
 
 interface_member_decl: method_proto
@@ -66,9 +66,11 @@ tcl_type_full: tcl_interface_dec
             | tcl_function
             | tcl_module
 
-tcl_width: "{" "width" NUMBER "}" -> 
+tcl_width: "{" "width" NUMBER "}" 
 
-tcl_package_name: identifier_u ":"":"
+
+tcl_package_name: identifier_u ":"":" identifier_u  -> package_name
+        | identifier_u -> name_only
 
 // Typeclass grammar
 tcl_typeclass: "Typeclass" "{" type_def_type "}" [tcl_tc_superclasses] ["coherent"] tcl_tc_members tcl_tc_instances tcl_position
@@ -94,24 +96,24 @@ tcl_tc_m_f_function: "function" type identifier_l "("  tcl_tc_m_f_argument ("," 
 tcl_tc_m_f_argument: type_def_type identifier_l
                 | tcl_tc_m_f_function
 // Primary 
-tcl_primary: "Primary" type [tcl_width]
+tcl_primary: "Primary" type_def_type [tcl_width]
     | "Primary" "{" type_def_type "}" "polymorphic" [tcl_width]
 
 // Enum
-tcl_enum: "Enum" identifier_u tcl_e_members [tcl_width] tcl_position
-tcl_e_members: "{" "members" "{" identifier_u* "}" "}"
-            | "{" "members" identifier_u "}"
+tcl_enum: "Enum" tcl_package_name tcl_e_members [tcl_width] tcl_position
+tcl_e_members: "{" "members" "{" identifier_u* "}" "}" -> to_list
+            | "{" "members" identifier_u "}" -> to_list
 // Alias
-tcl_alias: "Alias" identifier_u type tcl_position
+tcl_alias: "Alias" type_def_type type tcl_position
         | "Alias" "{" type_def_type "}" type tcl_position
 
 // List this is type on it's own weird ??
 tcl_list: "List" "{" type_def_type "}" "polymorphic" "{" type identifier_l "}" 
 // Struct and TaggedUnion
-tcl_struct: "Struct" identifier_u tcl_stu_members tcl_position
-        | "Struct" "{" type_def_type "}" "polymorphic" tcl_stu_members tcl_position
+tcl_struct: "Struct" tcl_package_name tcl_stu_members tcl_position -> struct
+        | "Struct" "{" type_def_type "}" "polymorphic" tcl_stu_members tcl_position -> poly_struct
 
-tcl_tagged_union: "TaggedUnion" identifier_u tcl_stu_members [tcl_width] tcl_position
+tcl_tagged_union: "TaggedUnion" tcl_package_name tcl_stu_members [tcl_width] tcl_position
         | "TaggedUnion" "{" type_def_type "}" "polymorphic"  tcl_stu_members  [tcl_width] tcl_position
 
 tcl_stu_members: "{" "members" "{" tcl_stu_member* "}" "}"

@@ -6,7 +6,7 @@ int: NUMBER
 
 start: tcl_type_full_list
 
-tcl_type_full_list: tcl_type_full*
+tcl_type_full_list: tcl_type_full* -> list_of
 //tcl_func_list: tcl_func*
 
 //tcl_func: tcl_module
@@ -15,7 +15,8 @@ tcl_type_full_list: tcl_type_full*
 type: typeprimary -> t_single
     | typeprimary "(" type ("," type)*  ")" -> t_parametric
 
-typeprimary: (identifier_u | identifier_l)["#(" type  ("," type)* ")"] -> tp_parametric
+
+typeprimary: [package_name_solo](identifier_u | identifier_l)["#(" type  ("," type)* ")"] -> tp_parametric
     | "bit" "[" typenat ":" typenat "]" -> bit
     | "int" -> int
     //| identifier_l -> string_placeholder
@@ -29,7 +30,7 @@ identifier_u: /[A-Z][\w$_]*/
 type_ide: identifier_u
 type_ide_poly: identifier_l
 
-
+package_name_solo: identifier_u ":"":"
 
 interface_decl: [atribute_instances] "interface" type_def_type ";" (interface_member_decl)* "endinterface" (":" type_ide)*
 
@@ -141,7 +142,7 @@ tcl_immp_name: "\""  identifier_l "\"" -> string_placeholder
 
 // Functions via defs func package_name
 
-tcl_function: "{" "function" [tcl_package_name] tcl_f_identifier [tcl_f_result] [tcl_f_arguments] [tcl_provisos] tcl_position "}"
+tcl_function: "{" "function" [package_name_solo] tcl_f_identifier [tcl_f_result] [tcl_f_arguments] [tcl_provisos] tcl_position "}"
 
 
 tcl_f_identifier: "{" identifier_l "}" ->string_placeholder
@@ -150,8 +151,8 @@ tcl_f_identifier: "{" identifier_l "}" ->string_placeholder
 
 
 
-tcl_f_result: "{" "result" [identifier_u ":"":"] type "}" 
-            | "{" "result" "{" "{" [identifier_u ":"":"] type "}" "}" "}" 
+tcl_f_result: "{" "result"  type "}" 
+            | "{" "result" "{" "{" type "}" "}" "}" 
 
 tcl_f_arguments: "{" "arguments" tcl_fa_argument  "}"
             | "{" "arguments" "{" tcl_fa_argument* "}"  "}"
@@ -161,9 +162,9 @@ tcl_fa_argument: "{" tcl_tc_m_f_function "}"
             | "{" type "}"
 
 //// module
-tcl_module: "{" "module" [tcl_package_name] identifier_l tcl_m_interface [tcl_f_arguments] [tcl_provisos] tcl_position "}"
+tcl_module: "{" "module" [package_name_solo] tcl_f_identifier tcl_m_interface [tcl_f_arguments] [tcl_provisos] tcl_position "}"
 
-tcl_m_interface: "{" "interface" [identifier_u ":"":"] type "}"
+tcl_m_interface: "{" "interface" type "}"
 
 //////// Other crap
 

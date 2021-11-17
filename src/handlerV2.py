@@ -1,16 +1,8 @@
 #%%
 import pexpect
 import re
-child = pexpect.spawn('bluetcl',cwd='..')
-child.sendline('namespace import ::Bluetcl::*')
-child.sendline('flags set -p ./tutorial:+')
-child.sendline('bpackage load Polyfifo')
-s = child.read_nonblocking( size=10000,timeout=1)
-lines = s.split(b"\r\n")
-lines = list(filter( lambda x: not x.startswith(b"%"),lines))
-# %%
 
-
+child = None
 
 def create_bluetcl():
     global child
@@ -21,7 +13,7 @@ def create_bluetcl():
 def add_folder(folder_path="./tutorial"):
     fancy_call("flags set -p "+folder_path+":+")
 
-def load_package(package_name):
+def load_package(package_name="Polyfifo"):
     fancy_call("bpackage load "+package_name)
 
 def clean_response(s):
@@ -41,8 +33,6 @@ def fancy_call(command):
     s = child.before
     if s.find(b"Error")!=-1:
         raise Exception("Error:",s)
-    #s = s.replace(command,b"")
-    #s = clean_response(s)
     return s
 
 def list_packages():
@@ -52,13 +42,16 @@ def list_packages():
 
 def list_types(package_name="Polyfifo"):
     s = fancy_call("defs type " + package_name )
-    print(s)
     types = s.split()
     return types
 
+def list_funcs(package_name="Polyfifo"):
+    funcs = fancy_call("defs func " + package_name )
+    return funcs
+
 def read_type(type_string=b"Polyfifo::FIFOIfc"):
     type_name = type_string.split(b"::")[-1]
-    print(b"type constr "+type_name)
+    print(b"Currently reading: type constr "+type_name)
     if type_name in [b"Bits",b"SizedLiteral"]:
         return b""
     try:
@@ -66,23 +59,34 @@ def read_type(type_string=b"Polyfifo::FIFOIfc"):
     except Exception as e:
         print(b"Warrning:" + type_name + b"is probably a keyword")
         return b""
-    #print(b"Constructor extracted: "+ constr)
     try:
         type_full = fancy_call(b"type full "+constr)
     except Exception as e:
         print(b"Warrning: Type "+ type_name + b" failed to load")
         return b""
-    #print(b"Type full extracted: " + type_full)
     return type_full
-#%%
-print(list_packages())
-print(list_types(package_name="Polyfifo"))
-all_types = b""
-for type_name in list_types(package_name="Polyfifo"):
-    all_types += read_type(type_name)
-    all_types += b"\n"
 
-"""samve all_types to json file"""
-with open("../src/types2.json","w") as f:
-    f.write(all_types.decode("utf-8"))
+def read_all_types(package_name="Polyfifo"):
+    types = list_types(package_name)
+    type_strings = []
+    for type_name in types:
+        type_strings.append(read_type(type_name))
+    return type_strings
+
+
+#%%
+if __name__ == "__main__":
+    create_bluetcl()
+    add_folder()
+    load_package()
+    print(list_packages())
+    print(list_types(package_name="Polyfifo"))
+    all_types = b""
+    for type_name in list_types(package_name="Polyfifo"):
+        all_types += read_type(type_name)
+        all_types += b"\n"
+
+    """samve all_types to json file"""
+    with open("../src/types2.json","w") as f:
+        f.write(all_types.decode("utf-8"))
 # %%

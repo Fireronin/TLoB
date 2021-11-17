@@ -1,5 +1,12 @@
-List {List#(type element_type)
-    } polymorphic {elem a
+{module <-> {interface Empty
+    } {arguments {a b
+        }
+    } {provisos {
+            {Connectable: :Connectable#(a, b)
+            }
+        }
+    } {position {%/Libraries/Connectable.bs 25 1 {Library Connectable
+            }
+        }
     }
-Primary {Array#(type a)
-} polymorphic
+}

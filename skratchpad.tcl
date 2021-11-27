@@ -1,7 +1,13 @@
 namespace import ::Bluetcl::*
 flags set -p ./tutorial:+
+flags set -p ./BlueStuff/build/bdir:+
 bpackage load Polyfifo
-bpackage load tutorial/Polyfifo 
+bpackage load SourceSink
+
+
+type constr SourceSink::ToSource
+type full SourceSink::ToSource#(a,b)
+
 defs type Polyfifo
 
 defs module Polyfifo

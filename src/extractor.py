@@ -50,6 +50,10 @@ class Type:
     def __repr__(self) -> str:
         return f"{self.package}.{self.name}"
 
+    @property
+    def full_name(self) -> str:
+        return f"{self.package}.{self.name}"
+
 class Struct(Type):
     def __init__(self,name,members,package=None,position=None) -> None:
         super().__init__(name,package,position)
@@ -82,8 +86,9 @@ class Enum(Type):
         self.width = width
 
 class Type_ide:
-    def __init__(self,name,package=None,formals=None,is_polymorphic=False,is_primary=False) -> None:
+    def __init__(self,name,package=None,formals=None,is_polymorphic=False,is_primary=False,used_name=None) -> None:
         self.name = name
+        self.used_name = used_name
         self.package = package
         self.formals = formals
         self.is_polymorphic = is_polymorphic
@@ -94,7 +99,6 @@ class Type_ide:
     
     def __repr__(self) -> str:
         return self.__str__()
-
 
 class Type_formal:
     def __init__(self,name,type_tag=False,numeric_tag=False) -> None:
@@ -123,7 +127,7 @@ class Module(Type):
         return self.__str__()
 
 class Function(Type):
-    def __init__(self,name,package=None,arguments=[],result=None,provisos=[],position=None) -> None:
+    def __init__(self,name,package=None,arguments=[],result=None,provisos=[],position=None,argument_names=None) -> None:
         Type.__init__(self,name=name,package=package,position=position)
         self.arguments = arguments
         self.result = result
@@ -135,10 +139,93 @@ class Function(Type):
     def __repr__(self) -> str:
         return self.__str__()
 
+class Typeclass():
+    def __init__(self,type_ide,position=None,members=None,superclasses=None,dependencies=None,instances=None) -> None:
+        self.type_ide = type_ide
+        self.position = position
+        self.members = members
+        self.superclasses = superclasses
+        self.dependencies = dependencies
+        self.instances = instances
+        
+
+
 #endregion
 
 #trnasforemr
 class ModuleTransformer(Transformer):
+    #region Typeclass workin progress
+
+    def tcl_typeclass(self,args):
+        type_ide = args[0]
+        # find in args ("supercalsses",x)
+        superclasses = None
+        for i,arg in enumerate(args):
+            if isinstance(arg,str) and arg == "superclasses":
+                superclasses = args[i]
+                break
+        # find in args ("dependencies",x)
+        dependencies = None
+        for i,arg in enumerate(args):
+            if isinstance(arg,str) and arg == "dependencies":
+                dependencies = args[i]
+                break
+        # find in args ("members",x)
+        members = None
+        for i,arg in enumerate(args):
+            if isinstance(arg,str) and arg == "members":
+                members = args[i]
+                break
+        # find in args ("instances",x)
+        instances = None
+        for i,arg in enumerate(args):
+            if isinstance(arg,str) and arg == "instances":
+                instances = args[i]
+                break
+        return Typeclass(type_ide,members=members,superclasses=superclasses,dependencies=dependencies,instances=instances,position=args[-1])
+
+    
+    def tcl_tc_superclasses(self,args):
+        return ("superclasses",args)
+
+    def tcl_tc_dependencies(self,args):
+        return ("dependencies",args)
+
+    def tcl_tc_dependency(self,args):
+        return (args[0],args[1])
+
+    def tcl_tc_instances(self,args):
+        return ("instances",args)
+    
+    def tcl_tc_i_instance(self,args):
+        if len(args) == 1:
+            return (args[0],None)
+        return (args[0], args[1])
+    
+    def tcl_tc_members(self,args):
+        return ("members",args)
+    
+    def tcl_tc_m_value(self,args):
+        args[0].used_name = args[1]
+        return ("value",args[0])
+
+    def tcl_tc_m_function(self,args):
+        if len(args) == 2:
+            return ("function",args[0],args[1],None)
+        return ("function",args[0],args[2],args[1])
+
+    def tcl_tc_provisos(self,args):
+        return ("provisos",args)
+
+    def tcl_tc_m_f_function(self, args):
+        return Function(name=args[1],result=args[0],arguments=args[2:])
+
+    def tcl_tc_m_f_argument(self, args):
+        if len(args) == 2:
+            return ("argument",args[0],args[1]) 
+        return ("function",args[0])
+    #endregion
+    
     #region func and module
     #new func
     

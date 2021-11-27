@@ -6,7 +6,7 @@ child = None
 
 def create_bluetcl():
     global child
-    child = pexpect.spawn('bluetcl',cwd='..')
+    child = pexpect.spawn('bluetcl',cwd='/mnt/d/Mega/Documents/CS/TLoB')
     child.sendline('namespace import ::Bluetcl::*')
     return child
 
@@ -28,8 +28,8 @@ def fancy_call(command):
     if type(command) == str:
         command = bytes(command, encoding= "raw_unicode_escape")
     child.sendline(command)
-    child.expect(re.escape(command)+b"\r\n",timeout=2)
-    child.expect(b"\r\r\n%",timeout=5)
+    child.expect(re.escape(command)+b"\r\n",timeout=5)
+    child.expect(b"\r\r\n%",timeout=7)
     s = child.before
     if s.find(b"Error")!=-1:
         raise Exception("Error:",s)
@@ -60,6 +60,8 @@ def read_type(type_string=b"Polyfifo::FIFOIfc"):
         print(b"Warrning:" + type_name + b"is probably a keyword")
         return b""
     try:
+        #remove spaces
+        constr = constr.replace(b" ",b"")
         type_full = fancy_call(b"type full "+constr)
     except Exception as e:
         print(b"Warrning: Type "+ type_name + b" failed to load")
@@ -71,7 +73,8 @@ def read_all_types(package_name="Polyfifo"):
     type_strings = []
     for type_name in types:
         type_strings.append(read_type(type_name))
-    return type_strings
+    return b"\n".join(type_strings)
+
 
 
 #%%

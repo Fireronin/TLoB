@@ -1,0 +1,73 @@
+{module TwoWayBus: :mkTwoWayBus {interface Empty
+    } {arguments {
+            {function Vector: :Vector#(nSlvs, Bool) f(r_up_t x1)
+            } {function Vector: :Vector#(nMsts, Bool) f(r_down_t x1)
+            } {MasterSlave: :Slave#(req_fat_t, rsp_fat_t)
+            } {function _m__#(MasterSlave: :Master#(inner_req, inner_rsp)) f(MasterSlave: :Master#(req_t, rsp_t) x1, Integer x2)
+            } {function _m__#(MasterSlave: :Slave#(inner_req, inner_rsp)) f(MasterSlave: :Slave#(req_fat_t, rsp_fat_t) x1)
+            } {Vector: :Vector#(nMsts, MasterSlave: :Master#(req_t, rsp_t))
+            } {Vector: :Vector#(nSlvs, MasterSlave: :Slave#(req_fat_t, rsp_fat_t))
+            }
+        }
+    } {provisos {
+            {Add#(1, _b, nSlvs)
+            } {Add#(1, _a, nMsts)
+            } {Routable: :Has_routingField#(inner_rsp, r_down_t)
+            } Routable: :Has_isLast#(inner_rsp) {Routable: :Has_routingField#(inner_req, r_up_t)
+            } Routable: :Has_isLast#(inner_req) {Bits#(rsp_fat_t, rsp_fat_sz)
+            } {Bits#(req_fat_t, req_fat_sz)
+            } {Bits#(inner_rsp, inner_rsp_sz)
+            } {Bits#(inner_req, inner_req_sz)
+            } {Bits#(rsp_t, rsp_sz)
+            } {Bits#(req_t, req_sz)
+            }
+        }
+    } {position {TwoWayBus.bsv 56 8
+        }
+    }
+} {module TwoWayBus: :mkRelaxedTwoWayBus {interface Empty
+    } {arguments {
+            {function Vector: :Vector#(n_slaves, Bool) f(r_up_t x1)
+            } {Vector: :Vector#(n_masters, MasterSlave: :Master#(req_t, rsp_t))
+            } {Vector: :Vector#(n_slaves, MasterSlave: :Slave#(req_fat_t, rsp_fat_t))
+            }
+        }
+    } {provisos {
+            {Bits#(rsp_t, rsp_sz)
+            } {Add#(rsp_sz, TLog#(n_masters), inner_rsp_sz)
+            } {Add#(1, _b, n_slaves)
+            } {Add#(1, _a, n_masters)
+            } Routable: :Has_isLast#(req_t) {Routable: :Has_routingField#(req_t, r_up_t)
+            } {Bits#(req_fat_t, req_fat_sz)
+            } {Bits#(rsp_fat_t, rsp_fat_sz)
+            } {Routable: :FallibleRoute#(req_fat_t, rsp_fat_t)
+            } {Routable: :ExpandableReqRsp#(req_t, req_fat_t, rsp_fat_t, rsp_t, n_masters)
+            } Routable: :Has_isLast#(rsp_t) {Add#(req_sz, TLog#(n_masters), inner_req_sz)
+            } {Bits#(req_t, req_sz)
+            }
+        }
+    } {position {TwoWayBus.bsv 108 8
+        }
+    }
+} {module TwoWayBus: :mkInOrderTwoWayBus {interface Empty
+    } {arguments {
+            {function Vector: :Vector#(n_slaves, Bool) f(r_up_t x1)
+            } {Vector: :Vector#(n_masters, MasterSlave: :Master#(req_t, rsp_t))
+            } {Vector: :Vector#(n_slaves, MasterSlave: :Slave#(req_t, rsp_t))
+            }
+        }
+    } {provisos {
+            {Bits#(rsp_t, rsp_sz)
+            } {Add#(rsp_sz, TLog#(n_masters), inner_rsp_sz)
+            } {Add#(1, b__, n_slaves)
+            } {Add#(1, a__, n_masters)
+            } {Routable: :FallibleRoute#(req_t, rsp_t)
+            } Routable: :Has_isLast#(rsp_t) {Routable: :Has_routingField#(req_t, r_up_t)
+            } Routable: :Has_isLast#(req_t) {Add#(req_sz, TLog#(n_masters), inner_req_sz)
+            } {Bits#(req_t, req_sz)
+            }
+        }
+    } {position {TwoWayBus.bsv 184 8
+        }
+    }
+}

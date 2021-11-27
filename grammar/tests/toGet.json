@@ -1,0 +1,81 @@
+Typeclass {GetPut: :ToGet#(type a, type b)
+} {dependencies {
+        {a determines b
+        }
+    }
+} {members {
+        {
+            {function GetPut: :Get#(b) f(a x1)
+            } toGet
+        }
+    }
+} {instances {
+        {GetPut: :ToGet#(ActionValue#(a), a)
+        } {GetPut: :ToGet#(Clocks: :SyncFIFOIfc#(a), a)
+        } {GetPut: :ToGet#(FIFO: :FIFO#(a), a)
+        } {GetPut: :ToGet#(FIFOF: :FIFOF#(a), a)
+        } {GetPut: :ToGet#(FIFOLevel: :FIFOCountIfc#(a, n), a)
+        } {GetPut: :ToGet#(FIFOLevel: :FIFOLevelIfc#(a, n), a)
+        } {GetPut: :ToGet#(FIFOLevel: :SyncFIFOCountIfc#(a, n), a)
+        } {GetPut: :ToGet#(FIFOLevel: :SyncFIFOLevelIfc#(a, n), a)
+        } {GetPut: :ToGet#(GetPut: :Get#(a), a)
+        } {GetPut: :ToGet#(RWire#(a), a)
+        } {GetPut: :ToGet#(ReadOnly#(a), a)
+        } {GetPut: :ToGet#(Reg#(a), a)
+        } {GetPut: :ToGet#(SourceSink: :Source#(t), t)
+        } {GetPut: :ToGet#(a, a)
+        }
+    }
+} {position {%/Libraries/GetPut.bs 417 6 {Library GetPut
+        }
+    }
+}
+Typeclass {SourceSink: :ToSource#(type a, type b)
+} {dependencies {
+        {a determines b
+        }
+    }
+} {members {
+        {
+            {function SourceSink: :Source#(b) f(a x1)
+            } toSource
+        }
+    }
+} {instances {
+        {SourceSink: :ToSource#(FIFOF: :FIFOF#(t), t)
+        } {SourceSink: :ToSource#(SourceSink: :Source#(t), t)
+        }
+    }
+} {position {BlueBasics/SourceSink.bsv 76 11
+    }
+}
+Typeclass {GetPut: :ToPut#(type a, type b)
+} {dependencies {
+        {a determines b
+        }
+    }
+} {members {
+        {
+            {function GetPut: :Put#(b) f(a x1)
+            } toPut
+        }
+    }
+} {instances {
+        {GetPut: :ToPut#(Clocks: :SyncFIFOIfc#(a), a)
+        } {GetPut: :ToPut#(FIFO: :FIFO#(a), a)
+        } {GetPut: :ToPut#(FIFOF: :FIFOF#(a), a)
+        } {GetPut: :ToPut#(FIFOLevel: :FIFOCountIfc#(a, n), a)
+        } {GetPut: :ToPut#(FIFOLevel: :FIFOLevelIfc#(a, n), a)
+        } {GetPut: :ToPut#(FIFOLevel: :SyncFIFOCountIfc#(a, n), a)
+        } {GetPut: :ToPut#(FIFOLevel: :SyncFIFOLevelIfc#(a, n), a)
+        } {GetPut: :ToPut#(GetPut: :Put#(a), a)
+        } {GetPut: :ToPut#(RWire#(a), a)
+        } {GetPut: :ToPut#(Reg#(a), a)
+        } {GetPut: :ToPut#(SourceSink: :Sink#(t), t)
+        } {GetPut: :ToPut#(function Action f(a x1), a)
+        }
+    }
+} {position {%/Libraries/GetPut.bs 420 6 {Library GetPut
+        }
+    }
+}

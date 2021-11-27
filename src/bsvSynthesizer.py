@@ -1,4 +1,5 @@
 import os
+from re import S
 name_counter = 0
 def get_name():
     global name_counter
@@ -10,6 +11,7 @@ class ModuleInstance():
         self.creator_func = creator_func
         self.inteface_args = inteface_args
         self.func_args = func_args
+        self.interface = creator_func.interface
         if(len(inteface_args) != len(creator_func.interface.fields)):
             raise Exception("Interface arguments do not match the interface")
         if(len(func_args) != len(creator_func.arguments)):
@@ -20,15 +22,24 @@ class ModuleInstance():
 
 class TopLevelModule():
     
-    def __init__(self,name) -> None:
-        self.modules = set()
-        self.connections = set()
+    def __init__(self,name,db) -> None:
+        self.modules = {}
+        self.connections = {}
         self.name = name
+        self.db = db
 
-    def add_module(self,creator_func,inteface_args=[],func_args=[],instance_name=None):
-        self.modules.add(ModuleInstance(creator_func,inteface_args,func_args,instance_name))
+    def add_module(self,creator_func,instance_name,inteface_args=[],func_args=[]):
+        self.modules[instance_name] = ModuleInstance(creator_func,inteface_args,func_args,instance_name)
 
     def add_connection(self,source,sink):
+        if not self.db.checkToXMembership(\
+            self.modules[source].interface,\
+            self.db.getTypeclassByName("GetPut::ToPut")):
+            raise Exception("Source is not a instace of ToPut")
+        if not self.db.checkToXMembership(\
+            self.modules[sink].interface,\
+            self.db.getTypeclassByName("GetPut::ToGet")):
+            raise Exception("Sink is not a instace of ToGet")
         self.connections.add((source,sink))
 
     def to_string(self):

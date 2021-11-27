@@ -1,0 +1,6 @@
+1. Typeclasses, check if it's and istance of typeclass:
+    Typeclasses of intrest: Connectable(get and put), ToSink, ToSource, toget, ToPut
+
+2. Routing , Routable has a routable field and we get it via routingField(duck)
+
+3. Rounting maps to function -> oneHot vector of size of number of slaves

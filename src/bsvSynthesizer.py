@@ -24,7 +24,7 @@ class TopLevelModule():
     
     def __init__(self,name,db) -> None:
         self.modules = {}
-        self.connections = {}
+        self.connections = set()
         self.name = name
         self.db = db
 
@@ -48,13 +48,13 @@ class TopLevelModule():
         packages = set()
         packages.add("Connectable")
         packages.add("GetPut")
-        for m in self.modules:
+        for m in self.modules.values():
             packages.add(m.creator_func.package)
         for p in packages:
             s.append("import "+p+"::*;\n")
         s.append("\n")
         s.append("module mk"+self.name+"();\n \n")
-        for m in self.modules:
+        for m in self.modules.values():
             if m.creator_func.interface.fields!=0:
                 arguments = ""
                 for i in range(len(m.inteface_args)):

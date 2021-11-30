@@ -35,7 +35,7 @@ package_name_solo: identifier_u ":"":"
 
 interface_decl: [atribute_instances] "interface" type_def_type ";" (interface_member_decl)* "endinterface" (":" type_ide)*
 
-type_def_type: tcl_package_name (type_formals)* 
+type_def_type: tcl_package_name (type_formals)*
             | type_ide_poly (type_formals)*
 
 type_formals: "#(" type_formal ("," type_formal)* ")" -> list_of

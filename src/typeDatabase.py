@@ -22,9 +22,9 @@ class typeDatabase():
         return self.typeclasses[name]
 
     def addUnparsedTypes(self,types):
-        trasformed_types = parse_and_transform(types)
-        for t_type in trasformed_types:
-            if isinstance(type,Typeclass):
+        transformed_types = parse_and_transform(types)
+        for t_type in transformed_types:
+            if type(t_type)== Typeclass:
                 self.typeclasses[t_type.full_name] = t_type
             else:
                 if type(t_type) == str:
@@ -47,14 +47,14 @@ class typeDatabase():
         self.addUnparsedFunctions(funcs)
         
 
-    def checkToXMembership(self,type,typeclass):
+    def checkToXMembership(self,t_type,typeclass):
         for instance in typeclass.instances:
-            if type.name != instance.fields[0].name or type.package != instance.fields[0].package:
+            if t_type.name != instance[0].fields[0].name or t_type.package != instance[0].fields[0].package:
                 continue
-            accesed_type = instance.fields[1].type.name  
-            for i,field in enumerate(instance.fields[0].type.fields):
+            accesed_type = instance[0].fields[1].name  
+            for i,field in enumerate(instance[0].fields[0].fields):
                 if field.name == accesed_type:
-                    return type.fields[i].type
+                    return t_type.fields[i]
         return None
 
     def printTypes(self):

@@ -70,10 +70,14 @@ class Interface(Type):
         self.members = members
 
     def __str__(self) -> str:
-        return f"{self.package}.{self.type_ide}"
+        return f"{self.type_ide}"
     
     def __repr__(self) -> str:
-        return f"{self.package}.{self.type_ide}"
+        return f"{self.type_ide}"
+
+    @property
+    def full_name(self) -> str:
+        return f"{self.type_ide}"
 
 class Interface_method:
     def __init__(self,name,type,input_types,ports) -> None:
@@ -99,7 +103,7 @@ class Type_ide:
         self.is_primary = is_primary
 
     def __str__(self) -> str:
-        return f"{self.package}.{self.name}#({', '.join(self.formals)})"
+        return f"{self.package}.{self.name}"# #({', '.join(self.formals)})"
     
     def __repr__(self) -> str:
         return self.__str__()
@@ -183,26 +187,26 @@ class ModuleTransformer(Transformer):
         # find in args ("supercalsses",x)
         superclasses = None
         for i,arg in enumerate(args):
-            if isinstance(arg,str) and arg == "superclasses":
-                superclasses = args[i]
+            if type(arg)==tuple and isinstance(arg[0],str) and arg[0] == "superclasses":
+                superclasses = args[i][1]
                 break
         # find in args ("dependencies",x)
         dependencies = None
         for i,arg in enumerate(args):
-            if isinstance(arg,str) and arg == "dependencies":
-                dependencies = args[i]
+            if type(arg)==tuple and isinstance(arg[0],str) and arg[0] == "dependencies":
+                dependencies = args[i][1]
                 break
         # find in args ("members",x)
         members = None
         for i,arg in enumerate(args):
-            if isinstance(arg,str) and arg == "members":
-                members = args[i]
+            if type(arg)==tuple and isinstance(arg[0],str) and arg[0] == "members":
+                members = args[i][1]
                 break
         # find in args ("instances",x)
         instances = None
         for i,arg in enumerate(args):
-            if isinstance(arg,str) and arg == "instances":
-                instances = args[i]
+            if type(arg)==tuple and isinstance(arg[0],str) and arg[0] == "instances":
+                instances = args[i][1]
                 break
         return Typeclass(type_ide,members=members,superclasses=superclasses,dependencies=dependencies,instances=instances,position=args[-1])
 
@@ -379,15 +383,12 @@ class ModuleTransformer(Transformer):
         args_len = len(args)
         name_len = 1
         if type(args[0]) == tuple:
-            if args[0][0] == "type_ide":
-                name = args[0][1]
-            else:
+            if args[0][0] == "type_ide_poly":
                 name = args[0][1]
                 poly = True
-        else:
-            name_len = 2
-            package = args[0]
-            name = args[1][1]
+            else:
+                name = args[0][1]
+                package = args[0][0]
         return Type_ide(name=name,package=package,formals=args[name_len:],is_polymorphic=poly)
         
     def type_formal(self, args):
@@ -464,8 +465,8 @@ class ModuleTransformer(Transformer):
     def list_of(self,args):
         return args
 
-    def type_def_type(self, args):
-        return Type(name="type_def",fields=args)
+    # def type_def_type(self, args):
+    #     return Type(name="type_def",fields=args)
 
     def tcl_polymorphic(self, args):
         return (args[0],"polyTAG")

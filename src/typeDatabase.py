@@ -7,9 +7,13 @@ class typeDatabase():
         self.types = {}
         self.typeclasses = {}
         self.parser = initalize_parser(start="tcl_type_full_list") 
+        self.logged_funcs = b""
+        self.logged_types = b""
 
     def getFunctionByName(self,name):
-        return self.functions[name]
+        if name in self.functions:
+            return self.functions[name]
+        raise Exception("Function not found")
     
     def getTypeByName(self,name):
         return self.types[name]
@@ -19,11 +23,13 @@ class typeDatabase():
 
     def addUnparsedTypes(self,types):
         trasformed_types = parse_and_transform(types)
-        for type in trasformed_types:
+        for t_type in trasformed_types:
             if isinstance(type,Typeclass):
-                self.typeclasses[type.full_name] = type
+                self.typeclasses[t_type.full_name] = t_type
             else:
-                self.types[type.full_name] = type
+                if type(t_type) == str:
+                    continue
+                self.types[t_type.full_name] = t_type
 
     def addUnparsedFunctions(self,functions):
         trasformed_functions = parse_and_transform(functions)
@@ -34,8 +40,12 @@ class typeDatabase():
         load_package(package_name=package_name)
         funcs = list_funcs(package_name=package_name)
         types = read_all_types(package_name=package_name)
-        self.addUnparsedTypes(funcs)
-        self.addUnparsedFunctions(types)
+        self.logged_funcs += funcs + b"\n"
+        self.logged_types += types + b"\n"
+        self.writeToFile()
+        self.addUnparsedTypes(types)
+        self.addUnparsedFunctions(funcs)
+        
 
     def checkToXMembership(self,type,typeclass):
         for instance in typeclass.instances:
@@ -71,3 +81,13 @@ class typeDatabase():
         print(len(self.typeclasses))
         print("Functions:")
         print(len(self.functions))
+
+    def writeToFile(self):
+        with open("typeDatabaseFuncs.txt","w") as f:
+            # convert to string
+            f.write(self.logged_funcs.decode("utf-8"))
+            f.close()
+        with open("typeDatabaseTypes.txt","w") as f:
+            # convert to string
+            f.write(self.logged_types.decode("utf-8"))
+            f.close()

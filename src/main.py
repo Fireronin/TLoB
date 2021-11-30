@@ -15,15 +15,15 @@ packages_to_load = ["FIFO","Connectable","GetPut","SourceSink","Routable"]
 for package in packages_to_load:
     db.addPackage(package_name=package)
 
-
+db.writeToFile()
 
 # todo read json file
 # %% Build bluespcefile
 
 
 topLevel = TopLevelModule("FIFOChain",db)
-topLevel.add_module(db.getFunctionByName("mkFIFO"),["Bit#(8)"],[],"ff1")
-topLevel.add_module(db.getFunctionByName("mkFIFO"),["Bit#(8)"],[],"ff2")
+topLevel.add_module(db.getFunctionByName("FIFO.mkFIFO"),"ff1",["Bit#(8)"],[])
+topLevel.add_module(db.getFunctionByName("FIFO.mkFIFO"),"ff2",["Bit#(8)"],[])
 
 topLevel.add_connection("ff1","ff2")
 

@@ -34,6 +34,10 @@ class Alias:
 
     def __repr__(self) -> str:
         return f"alias {self.name} {self.type}"
+    
+    @property
+    def full_name(self) -> str:
+        return f"Alias {self.name}"
 
 class Type:
     def __init__(self,name,package=None,position=None,fields=None) -> None:
@@ -125,6 +129,10 @@ class Module(Type):
     
     def __repr__(self) -> str:
         return self.__str__()
+    
+    @property
+    def full_name(self) -> str:
+        return f"{self.package}.{self.name}"
 
 class Function(Type):
     def __init__(self,name,package=None,arguments=[],result=None,provisos=[],position=None,argument_names=None) -> None:
@@ -138,6 +146,10 @@ class Function(Type):
     
     def __repr__(self) -> str:
         return self.__str__()
+    
+    @property
+    def full_name(self) -> str:
+        return f"{self.package}.{self.name}"
 
 class Typeclass():
     def __init__(self,type_ide,position=None,members=None,superclasses=None,dependencies=None,instances=None) -> None:
@@ -147,7 +159,17 @@ class Typeclass():
         self.superclasses = superclasses
         self.dependencies = dependencies
         self.instances = instances
-        
+    
+    def __str__(self) -> str:
+        return f"{self.type_ide}"
+
+    def __repr__(self) -> str:
+        return self.__str__()
+    
+    @property
+    def full_name(self) -> str:
+        return f"{self.type_ide.package}.{self.type_ide.name}"
+
 
 
 #endregion
@@ -329,7 +351,7 @@ class ModuleTransformer(Transformer):
         return Enum(name=args[0],members=args[1],width=width,position=position)
         
     def tcl_alias(self, args):
-        return Alias(name=args[0],package=args[1],position=args[2])
+        return Alias(name=args[0],type=args[1],position=args[2])
 
     def tcl_interface_dec(self, args):
         return Interface(type_ide=args[0],members=args[1],position=args[2])
@@ -340,8 +362,8 @@ class ModuleTransformer(Transformer):
 
     def tcl_tagged_union(self, args):
         return "Not Implemented"
-
-    def tcl_typeclass(self, args):
+    
+    def poly_struct(self, args):
         return "Not Implemented"
 
     # type_def_type

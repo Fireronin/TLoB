@@ -34,11 +34,11 @@ class TopLevelModule():
     def add_connection(self,source,sink):
         if not self.db.checkToXMembership(\
             self.modules[source].interface,\
-            self.db.getTypeclassByName("GetPut::ToPut")):
+            self.db.getTypeclassByName("GetPut.ToPut")):
             raise Exception("Source is not a instace of ToPut")
         if not self.db.checkToXMembership(\
             self.modules[sink].interface,\
-            self.db.getTypeclassByName("GetPut::ToGet")):
+            self.db.getTypeclassByName("GetPut.ToGet")):
             raise Exception("Sink is not a instace of ToGet")
         self.connections.add((source,sink))
 

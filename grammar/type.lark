@@ -14,6 +14,7 @@ tcl_type_full_list: tcl_type_full* -> list_of
 
 type: typeprimary -> t_single
     | typeprimary "(" type ("," type)*  ")" -> t_parametric
+    | "{" typeprimary "}" -> t_single
 
 
 typeprimary: [package_name_solo](identifier_u | identifier_l)["#(" type  ("," type)* ")"] -> tp_parametric
@@ -123,8 +124,8 @@ tcl_alias: "Alias" ( type_def_type | "{" type_def_type "}") (type |"{" type "}")
 // List this is type on it's own weird ??
 tcl_list: "List" "{" type_def_type "}" "polymorphic" "{" type identifier_l "}" 
 // Struct and TaggedUnion
-tcl_struct: "Struct" tcl_package_name tcl_stu_members tcl_position -> struct
-        | "Struct" "{" type_def_type "}" "polymorphic" tcl_stu_members tcl_position -> poly_struct
+tcl_struct: "Struct" tcl_package_name tcl_stu_members [tcl_width] tcl_position -> struct
+        | "Struct" "{" type_def_type "}" "polymorphic" tcl_stu_members [tcl_width] tcl_position -> poly_struct
 
 tcl_tagged_union: "TaggedUnion" tcl_package_name tcl_stu_members [tcl_width] tcl_position
         | "TaggedUnion" "{" type_def_type "}" "polymorphic"  tcl_stu_members  [tcl_width] tcl_position
@@ -136,16 +137,16 @@ tcl_stu_member: "{" (type |"void") (identifier_u|identifier_l) [tcl_width] "}"
 // Interface
 atribute_instances: "ATRIBUTE INSTANCES TODO"
 
-tcl_interface_dec: "Interface" "{" type_def_type "}" tcl_i_members tcl_position 
-        | "Interface" "{" type_def_type "}" "polymorphic"  tcl_i_members  tcl_position
-        | "Interface" type_def_type tcl_i_members tcl_position
+tcl_interface_dec: "Interface" "{" type_def_type "}" tcl_i_members tcl_position [tcl_i_attributes]
+        | "Interface" "{" type_def_type "}" "polymorphic"  tcl_i_members  tcl_position [tcl_i_attributes]
+        | "Interface" type_def_type tcl_i_members tcl_position [tcl_i_attributes]
    // | "Interface"  identifier_u ":"":" type_def_type  tcl_members tcl_position
 
 tcl_i_members:  "{" "members" "{" ( "{" (tcl_im_method | tcl_im_subinterface) "}"  )* "}" "}" -> list_of
 
-tcl_im_subinterface: "interface" type identifier_l tcl_imm_input_types
+tcl_im_subinterface: "interface" type identifier_l [tcl_imm_input_types] "{"  ([tcl_imm_prefix] | [tcl_imm_result] | [tcl_imm_ports] | [tcl_imm_other])*  "}"
 
-tcl_im_method: "method" "{" type identifier_l tcl_imm_input_types "{"  [tcl_imm_prefix] [tcl_imm_result] [tcl_imm_ports] [tcl_imm_other] "}" "}"
+tcl_im_method: "method" "{" type identifier_l tcl_imm_input_types "{"  ([tcl_imm_prefix] | [tcl_imm_result] | [tcl_imm_ports] | [tcl_imm_other])* "}" "}"
 
 tcl_imm_other: "{" "(" "*" identifier_l "*" ")" "}" -> string_placeholder
 
@@ -158,6 +159,10 @@ tcl_imm_input_types: (type | "{" type* "}" ) -> list_of
 tcl_imm_ports: "{" "(*" "ports =" "[" [tcl_immp_name ( "," tcl_immp_name )* ] "]" "*)" "}" -> list_of
 
 tcl_immp_name: "\""  identifier_l "\"" -> string_placeholder
+
+tcl_i_attributes: "{" "attributes" "{" tcl_ia_attribute* "}" "}"
+
+tcl_ia_attribute: "{" "(" "*" identifier_l "*" ")" "}"
 
 // Functions via defs func package_name
 

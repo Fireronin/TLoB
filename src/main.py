@@ -11,7 +11,7 @@ add_folder("BlueStuff/build/bdir")
 # initalize tdb
 db = tdb()
 # Read contents of package
-packages_to_load = ["FIFO","Connectable","GetPut","SourceSink","Routable"]
+packages_to_load = ["FIFO","Connectable","GetPut","AXI4_Types","SourceSink","Routable"]
 for package in packages_to_load:
     db.addPackage(package_name=package)
 

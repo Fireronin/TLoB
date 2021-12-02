@@ -29,8 +29,12 @@ def fancy_call(command):
         command = bytes(command, encoding= "raw_unicode_escape")
     child.sendline(command)
     child.expect(re.escape(command)+b"\r\n",timeout=5)
-    child.expect(b"\r\r\n%",timeout=7)
-    s = child.before
+    try:
+        child.expect(b"\r\r\n%",timeout=7)
+        s = child.before
+    except pexpect.TIMEOUT:
+        print("Warrning: TIMEOUT or lack of functions")
+        s = b""
     if s.find(b"Error")!=-1:
         raise Exception("Error:",s)
     return s

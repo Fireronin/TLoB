@@ -64,10 +64,11 @@ class Struct(Type):
         self.members = members
 
 class Interface(Type):
-    def __init__(self,type_ide,members,position=None) -> None:
+    def __init__(self,type_ide,members,position=None,attributes=None) -> None:
         super().__init__(type_ide.name,type_ide.package,position)
         self.type_ide = type_ide
         self.members = members
+        self.attributes = attributes
 
     def __str__(self) -> str:
         return f"{self.type_ide}"
@@ -358,10 +359,13 @@ class ModuleTransformer(Transformer):
         return Alias(name=args[0],type=args[1],position=args[2])
 
     def tcl_interface_dec(self, args):
-        return Interface(type_ide=args[0],members=args[1],position=args[2])
+        attributes = None
+        if len(args)==4:
+            attributes = args[3]
+        return Interface(type_ide=args[0],members=args[1],position=args[2],attributes=attributes)
 
 
-    def tcl_struct(self, args):
+    def struct(self, args):
         return "Not Implemented"
 
     def tcl_tagged_union(self, args):

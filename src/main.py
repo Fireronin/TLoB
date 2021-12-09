@@ -28,7 +28,7 @@ topLevel.add_module(db.getFunctionByName("FIFO.mkFIFO"),"ff2",["Bit#(8)"],[])
 topLevel.add_connection("ff1","ff2")
 
 print(topLevel.to_string())
-topLevel.to_file("FIFOChain.bsv","/mnt/d/Mega/Documents/CS/TLoB/tutorial/")
+topLevel.to_file("FIFOChain.bsv","/mnt/e/Mega/Documents/CS/TLoB/tutorial/")
 
 # %%
 

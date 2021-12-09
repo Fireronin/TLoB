@@ -6,7 +6,7 @@ child = None
 
 def create_bluetcl():
     global child
-    child = pexpect.spawn('bluetcl',cwd='/mnt/d/Mega/Documents/CS/TLoB')
+    child = pexpect.spawn('bluetcl',cwd='/mnt/e/Mega/Documents/CS/TLoB')
     child.sendline('namespace import ::Bluetcl::*')
     return child
 

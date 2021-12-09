@@ -428,7 +428,9 @@ class ModuleTransformer(Transformer):
         return Position(args[0],args[1],args[2])
 
     def tcl_path(self, args):
-        return os.path.join(*args)+".bsv"
+        # remove None from args, this is to avoid bugs comming from parser
+        args = [x for x in args if x is not None]
+        return os.path.join(*args)#+".bsv"
 
     def tp_parametric(self, args):
         ct = 0

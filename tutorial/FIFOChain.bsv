@@ -1,7 +1,7 @@
 package FIFOChain;
+import Connectable::*;
 import GetPut::*;
 import FIFO::*;
-import Connectable::*;
 
 module mkFIFOChain();
  

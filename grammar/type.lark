@@ -69,6 +69,7 @@ tcl_type_full: tcl_interface_dec
             | tcl_list
             | tcl_function
             | tcl_module
+            | tcl_vector
 
 tcl_width: "{" "width" NUMBER "}" 
 
@@ -119,7 +120,10 @@ tcl_e_members: "{" "members" "{" identifier_u* "}" "}" -> to_list
 // Alias
 tcl_alias: "Alias" ( type_def_type | "{" type_def_type "}") (type |"{" type "}") tcl_position
 
-
+// Vector
+tcl_vector: "Vector" "{"type_def_type "}" "polymorphic" tcl_v_length tcl_v_elem
+tcl_v_length: "{" "length" identifier_l "}"
+tcl_v_elem: "{" "elem" identifier_l "}"
 
 // List this is type on it's own weird ??
 tcl_list: "List" "{" type_def_type "}" "polymorphic" "{" type identifier_l "}" 

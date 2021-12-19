@@ -373,6 +373,9 @@ class ModuleTransformer(Transformer):
     
     def poly_struct(self, args):
         return "Not Implemented"
+    
+    def tcl_vectr(self, args):
+        return "Not Implemented"
 
     # type_def_type
     def type_ide(self, args):

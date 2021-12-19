@@ -4,3 +4,17 @@
 2. Routing , Routable has a routable field and we get it via routingField(duck)
 
 3. Rounting maps to function -> oneHot vector of size of number of slaves
+
+
+-----------------------------
+
+1. Selecting sub interface for source / sink 
+
+2. Create bus , Selecting type of bus ( detect if we are axi4 then do special function)
+
+3. 
+
+
+Generated function should use size from number of connected components
+Formalize AFlit
+Add test with AFlit

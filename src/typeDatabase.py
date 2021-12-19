@@ -37,7 +37,6 @@ class typeDatabase():
             self.functions[function.full_name] = function
 
     def addPackage(self,package_name):
-        load_package(package_name=package_name)
         funcs = list_funcs(package_name=package_name)
         types = read_all_types(package_name=package_name)
         self.logged_funcs += funcs + b"\n"
@@ -46,6 +45,11 @@ class typeDatabase():
         self.addUnparsedTypes(types)
         self.addUnparsedFunctions(funcs)
         
+    def addPackages(self,packages):
+        for package in packages:
+            load_package(package_name=package)
+        for package in packages:
+            self.addPackage(package)
 
     def checkToXMembership(self,t_type,typeclass):
         for instance in typeclass.instances:

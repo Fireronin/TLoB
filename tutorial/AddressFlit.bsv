@@ -1,3 +1,7 @@
+package AddressFlit;
+
+import Routable :: *;
+
 typedef struct {
   Bit#(d) data;
   Bit#(o) dest;
@@ -6,9 +10,11 @@ instance FShow#(AFlit#(a,b));
   function fshow(x) =
     $format("[data = %b, dest = %b]", x.data, x.dest);
 endinstance
-instance Has_routingField #(Flit#(i,o), Bit#(o));
+instance Has_routingField #(AFlit#(i,o), Bit#(o));
   function routingField (x) = x.dest;
 endinstance
-instance Has_isLast #(Flit#(i,o));
+instance Has_isLast #(AFlit#(i,o));
   function isLast = constFn(True);
 endinstance
+
+endpackage

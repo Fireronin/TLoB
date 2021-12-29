@@ -25,7 +25,7 @@ typeprimary: [package_name_solo](identifier_u | identifier_l)["#(" type  ("," ty
     | tcl_tc_m_f_function
 
 // typeide: WORD
-typenat: NUMBER
+typenat: NUMBER -> int_value
 
 identifier_l: /[a-z_$][\w$_']*/ 
 identifier_u: /[A-Z][\w$_]*/ 

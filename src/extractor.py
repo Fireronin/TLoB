@@ -184,6 +184,7 @@ class ModuleTransformer(Transformer):
     #region Typeclass workin progress
 
     def tcl_typeclass(self,args):
+        args = [x for x in args if x is not None]
         type_ide = args[0]
         # find in args ("supercalsses",x)
         superclasses = None
@@ -225,6 +226,7 @@ class ModuleTransformer(Transformer):
         return ("instances",args)
     
     def tcl_tc_i_instance(self,args):
+        args = [x for x in args if x is not None]
         if len(args) == 1:
             return (args[0],None)
         return (args[0], args[1])
@@ -237,6 +239,7 @@ class ModuleTransformer(Transformer):
         return ("value",args[0])
 
     def tcl_tc_m_function(self,args):
+        args = [x for x in args if x is not None]
         if len(args) == 2:
             return ("function",args[0],args[1],None)
         return ("function",args[0],args[2],args[1])
@@ -248,6 +251,7 @@ class ModuleTransformer(Transformer):
         return Function(name=args[1],result=args[0],arguments=args[2:])
 
     def tcl_tc_m_f_argument(self, args):
+        args = [x for x in args if x is not None]
         if len(args) == 2:
             return ("argument",args[0],args[1]) 
         return ("function",args[0])
@@ -258,6 +262,7 @@ class ModuleTransformer(Transformer):
     
 
     def tcl_function(self, args):
+        args = [x for x in args if x is not None]
         package = None
         arguments = []
         provisos = []
@@ -287,6 +292,7 @@ class ModuleTransformer(Transformer):
         return (None,args[0])
 
     def tcl_f_result(self,args):
+        args = [x for x in args if x is not None]
         if len(args) == 2:
             args[1].package = args[0]
             return args[1]       
@@ -301,6 +307,7 @@ class ModuleTransformer(Transformer):
     # module
 
     def tcl_module(self, args):
+        args = [x for x in args if x is not None]
         package = None
         interface = None
         arguments = []
@@ -324,6 +331,7 @@ class ModuleTransformer(Transformer):
         return Module(name=module_name,package=package,interface=interface,arguments=arguments,provisos=provisos,position=position)
     
     def tcl_m_interface(self, args):
+        args = [x for x in args if x is not None]
         if len(args) == 2:
             args[1].package = args[0]
             return args[1]     
@@ -333,7 +341,11 @@ class ModuleTransformer(Transformer):
 
     #region types
 
+    def typeprimary(self,args):
+        return args[0]
+
     def tcl_primary(self,args):
+        args = [x for x in args if x is not None]
         #TODO: check what to do
         args[0].is_primary = True
         if len(args) == 2:
@@ -347,6 +359,7 @@ class ModuleTransformer(Transformer):
         return ("list",args)
 
     def tcl_enum(self, args):
+        args = [x for x in args if x is not None]
         if len(args) == 4:
             width = args[2][1]
             position = args[3]
@@ -359,6 +372,7 @@ class ModuleTransformer(Transformer):
         return Alias(name=args[0],type=args[1],position=args[2])
 
     def tcl_interface_dec(self, args):
+        args = [x for x in args if x is not None]
         attributes = None
         if len(args)==4:
             attributes = args[3]
@@ -385,6 +399,7 @@ class ModuleTransformer(Transformer):
         return ("type_ide_poly",args[0])
 
     def type_def_type(self, args):
+        args = [x for x in args if x is not None]
         poly = False
         package = None
         args_len = len(args)
@@ -396,7 +411,7 @@ class ModuleTransformer(Transformer):
             else:
                 name = args[0][1]
                 package = args[0][0]
-        return Type_ide(name=name,package=package,formals=args[name_len:],is_polymorphic=poly)
+        return Type_ide(name=name,package=package,formals=(None if len(args)==1 else args[name_len]),is_polymorphic=poly)
         
     def type_formal(self, args):
         return Type_formal(name=args[0])
@@ -436,6 +451,10 @@ class ModuleTransformer(Transformer):
         return os.path.join(*args)#+".bsv"
 
     def tp_parametric(self, args):
+        # remove None from args, this is to avoid bugs comming from parser
+        args = [x for x in args if x is not None]
+        if len(args)==1 and type(args[0]) == str and (args[0][0].islower() or args[0][0] == "_" or args[0][0] == "$"):
+            return args[0]
         ct = 0
         package = None
         if type(args[0]) == tuple:
@@ -462,13 +481,18 @@ class ModuleTransformer(Transformer):
     def string_placeholder(self, name):
         return name[0]
 
-    def NUMBER(self, number):
+    def int_value(self,number):
         return int(number[0])
 
+    def NUMBER(self, number):
+        return int(number.value)
+
     def numeric_type_formal(self, args):
+        args = [x for x in args if x is not None]
         return Type(name="numeric",fields=args)
 
     def type_formal(self, args):
+        args = [x for x in args if x is not None]
         return Type(name="type_formal",fields=args)
 
     def list_of(self,args):

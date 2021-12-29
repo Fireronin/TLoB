@@ -49,32 +49,84 @@ class BusInstace():
 
 class TopLevelModule():
     
-    def __init__(self,name,db) -> None:
+    def __init__(self,name,db,package_name=None) -> None:
         self.modules = {}
         self.connections = set()
         self.name = name
+        if package_name is None:
+            self.package_name = name
+        else:
+            self.package_name = package_name
         self.db = db
         self.buses = set()
         self.packages = set()
+        self.typedefs = {}
 
     def add_module(self,creator_func,instance_name,interface_args=[],func_args=[]):
         self.modules[instance_name] = ModuleInstance(creator_func,interface_args,func_args,instance_name)
         return self.modules[instance_name]
+
+    def add_typedef(self,name,type):
+        self.typedefs[name] = type
+        return name
 
     def add_connection(self,source,sink):
         if type(source) is str:
             source = self.modules[source]
         if type(sink) is str:
             sink = self.modules[sink]
-        if not self.db.checkToXMembership(\
-            source.interface,\
-            self.db.getTypeclassByName("GetPut.ToPut")):
-            raise Exception("Source is not a instace of ToPut")
-        if not self.db.checkToXMembership(\
-            sink.interface,\
-            self.db.getTypeclassByName("GetPut.ToGet")):
-            raise Exception("Sink is not a instace of ToGet")
-        self.connections.add((source,sink))
+        #check if connection is possible
+        # this will simplify code
+        inputs = [source,sink] 
+        possible = False
+        connectableTypeclass = self.db.getTypeclassByName("Connectable.Connectable")
+        for instance in connectableTypeclass.instances:
+            instanceFields = instance[0].fields
+            variables = [{},{}]
+            namesAreMatching = True
+            # check name and package
+            for i in range(len(instanceFields)):
+                if type(instanceFields[i]) == str:
+                    continue
+                else:
+                    if not ( instanceFields[i].name == inputs[i].interface.name and instanceFields[i].package == inputs[i].interface.package):
+                        namesAreMatching = False
+                        break
+            if not namesAreMatching:
+                continue
+            # check if all fields are matching
+            for i in range(len(instanceFields)):
+                if type(instanceFields[i]) == str:
+                    variables[i][instanceFields[i]] = inputs[i].interface_args[i]
+                else:
+                    for j in range(len(instanceFields[i].fields)):
+                        variables[i][instanceFields[i].fields[j]] = inputs[i].interface_args[j]
+            #compare sets of variables
+            matching = True
+
+            for i in variables[0]:
+                if i not in variables[1]:
+                    continue
+                if variables[0][i] != variables[1][i]:
+                    matching = False
+                    break
+            if matching:
+                possible = True
+                break
+
+        if not possible: 
+            print("No direct connection is possible falling back to GetPut")
+            if not self.db.checkToXMembership(\
+                source.interface,\
+                self.db.getTypeclassByName("GetPut.ToPut")):
+                raise Exception("Source is not a instace of ToPut")
+            if not self.db.checkToXMembership(\
+                sink.interface,\
+                self.db.getTypeclassByName("GetPut.ToGet")):
+                raise Exception("Sink is not a instace of ToGet")
+
+            self.connections.add((source,sink,"GETPUT"))
+        self.connections.add((source,sink,"Normal"))
 
     def add_onewaybus(self,ins,outs,insRanges):
         #check if ins have ToSource
@@ -135,21 +187,34 @@ class TopLevelModule():
 
     def to_string(self):
         s = []
-        s.append("package "+self.name + ";\n")
+        s.append("package "+self.package_name + ";\n")
         self.packages.add("Connectable")
         self.packages.add("GetPut")
         for m in self.modules.values():
             self.packages.add(m.creator_func.package)
+        # necessary packages
+        s.append("// necessary packages\n")
         for p in self.packages:
             s.append("import "+p+"::*;\n")
+        # imported packages
+        s.append("// imported packages\n")
+        for p in self.db.packages:
+            #check if package is already imported
+            if p not in self.packages:
+                s.append("import "+p+"::*;\n")
         s.append("\n")
         
+        # typedefs example. typedef 1 DATASIZE;
+        for t in self.typedefs.keys():
+            s.append("typedef " + str(self.typedefs[t]) + " " + str(t) + ";\n")
+        s.append("\n")
+
         # add bus routing functions
         for bus in self.buses:
             # generate routing function
             r_s = len(bus.ins)
-            s.append(f"function Vector #({r_s}, Bool) route{bus.name} (r_t x) provisos ( Bits#(r_t,{r_s}) );\n")
-            s.append(f"\tBit#({r_s}) r_t_b = pack(x);\n")
+            s.append(f"function Vector #({r_s}, Bool) route{bus.name} (r_t x) provisos ( Bits#(r_t,r_l) );\n")
+            s.append(f"\tBit#(r_l) r_t_b = pack(x);\n")
             s.append(f"\tVector#({r_s}, Bool) r_t_v = replicate (False);\n")
             for i in range(len(bus.ins)):
                 s.append(f"\tif (r_t_b >= {bus.insRanges[i][0]} && r_t_b <= {bus.insRanges[i][1]})\n")
@@ -157,7 +222,7 @@ class TopLevelModule():
             s.append(f"\treturn r_t_v;\n")
             s.append(f"endfunction\n\n")
         
-        s.append("module mk"+self.name+"();\n \n")
+        s.append("module "+self.name+"();\n \n")
         
         for m in self.modules.values():                
             s.append(m.type_string())
@@ -171,7 +236,10 @@ class TopLevelModule():
         s.append("\n")
 
         for c in self.connections:
-            s.append(f"\tmkConnection(toPut({c[0].instance_name}),toGet({c[1].instance_name}));\n")
+            if c[2] == "GETPUT":
+                s.append(f"\tmkConnection(toPut({c[0].instance_name}),toGet({c[1].instance_name}));\n")
+            else:
+                s.append(f"\tmkConnection({c[0].instance_name},{c[1].instance_name});\n")   
 
         for bus in self.buses:
             s.append(f"\tVector#({len(bus.ins)}, {bus.ins[0].type_string()}) {bus.name}_ins;\n")

@@ -3,6 +3,7 @@ from handlerV2 import *
 
 class typeDatabase():
     def __init__(self):
+        self.packages = set()
         self.functions = {}
         self.types = {}
         self.typeclasses = {}
@@ -36,7 +37,15 @@ class typeDatabase():
         for function in trasformed_functions:
             self.functions[function.full_name] = function
 
+    def evaluateTypedef(self,typedef):
+        for type in self.types:
+            if str(self.types[type].name) == typedef:
+                return self.types[type].type
+        raise Exception("Typedef not found")
+
     def addPackage(self,package_name):
+        # add package to database
+        self.packages.add(package_name)
         funcs = list_funcs(package_name=package_name)
         types = read_all_types(package_name=package_name)
         self.logged_funcs += funcs + b"\n"
@@ -55,11 +64,22 @@ class typeDatabase():
         for instance in typeclass.instances:
             if t_type.name != instance[0].fields[0].name or t_type.package != instance[0].fields[0].package:
                 continue
-            accesed_type = instance[0].fields[1].name  
-            for i,field in enumerate(instance[0].fields[0].fields):
-                if field.name == accesed_type:
-                    return t_type.fields[i]
+            return True
         return None
+
+    def checkifConnectable(self,type1,type2):
+        connectableTypeclass = self.getTypeclassByName("Connectable.Connectable")
+        for instance in connectableTypeclass.instances:
+            variables1 = {}
+            variables2 = {}
+            if instance[0].fields[0].name == type1.name and instance[0].fields[0].package == type1.package and \
+                instance[0].fields[1].name == type2.name and instance[0].fields[1].package == type2.package:
+                for field in instance[0].fields[0].fields:
+                   pass 
+
+    def checkMembership(self,type,typeclass):
+        # TODO: check if type is a member of typeclass
+        pass
 
     def printTypes(self):
         for type in self.types:

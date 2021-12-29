@@ -21,3 +21,5 @@ else
         echo Failed to compile
     fi
 fi
+
+#bsc -p .:./tutorial:./BlueStuff/build/bdir:+ -u ./tutorial/AXIDemo.bsv

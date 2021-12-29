@@ -15,6 +15,11 @@
 3. 
 
 
-Generated function should use size from number of connected components
-Formalize AFlit
-Add test with AFlit
+Generated function should use size from number of connected components done
+Formalize AFlit done 
+Add test with AFlit done
+
+
+Do mkConnection via connectable  done
+
+Questrions: maybe replicate typedefs indead of querring 

@@ -1,5 +1,17 @@
 from extractor import *
 from handlerV2 import *
+from thefuzz import process
+
+def fuzzyException(name,list,exception_string):
+    potential_matches = process.extract(name, list, limit=5)
+    string_of_matches = ""
+    for match in potential_matches:
+        if match[1] > 80:
+            string_of_matches += str(match[0]) + " \n"
+    if string_of_matches == "":
+        string_of_matches += str(potential_matches[0][0]) + " \n"
+    Exception(exception_string.format(name,string_of_matches))
+    
 
 class typeDatabase():
     def __init__(self):
@@ -14,13 +26,17 @@ class typeDatabase():
     def getFunctionByName(self,name):
         if name in self.functions:
             return self.functions[name]
-        raise Exception("Function not found")
+        fuzzyException(name,list(self.functions), "Function {} not found. \n Do you mean: \n{}")
     
     def getTypeByName(self,name):
-        return self.types[name]
+        if name in self.types:
+            return self.types[name]
+        fuzzyException(name,list(self.types), "Type {} not found. \n Do you mean: \n{}")
     
     def getTypeclassByName(self,name):
-        return self.typeclasses[name]
+        if name in self.typeclasses:
+            return self.typeclasses[name]
+        fuzzyException(name,list(self.typeclasses), "Typeclass {} not found. \n Do you mean: \n{}")
 
     def addUnparsedTypes(self,types):
         transformed_types = parse_and_transform(types)
@@ -41,7 +57,7 @@ class typeDatabase():
         for type in self.types:
             if str(self.types[type].name) == typedef:
                 return self.types[type].type
-        raise Exception("Typedef not found")
+        fuzzyException(typedef,list(self.types), "Typedef {} not found. \n Do you mean: \n{}")
 
     def addPackage(self,package_name):
         # add package to database

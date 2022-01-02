@@ -1,0 +1,55 @@
+{
+    "aditional folders" : ["BlueStuff/build/bdir","tutorial"],
+    "packages": ["FIFO","FIFOF","Connectable","AddressFlit","GetPut","AXI4_Types","AXI4_Interconnect","SourceSink","Routable"],
+    "name" : "top",
+    "package_name" : "fifoChain",
+    "typedefs": [
+        {
+            "name" : "DATASIZE",
+            "value" : 1
+        },
+        {
+            "name" : "ADDRWIDTH",
+            "value" : 4
+        }
+    ],
+    "modules" : [
+        {
+            "name" : "ff1",
+            "function": "FIFO.mkFIFO",
+            "function_params": [],
+            "interface_params": ["Bit#(8)"]
+        },
+        {
+            "name" : "ff2",
+            "function": "FIFOF.mkFIFO",
+            "function_params": [],
+            "interface_params": ["Bit#(8)"]
+        },
+        {
+            "name" : "bf3",
+            "function": "FIFO.mkFIFOF",
+            "interface_params": ["AFlit#(DATASIZE, ADDRWIDTH)"]
+        },
+        {
+            "name" : "bf4",
+            "copy_from" : "bf3"
+        }
+    ],
+
+    "connections": [
+        {
+            "from" : "ff1",
+            "to" : "ff2"
+        }
+    ],
+    
+    "busses": [
+        {
+            "masters" : ["bf3"],
+            "slaves" : ["bf4"],
+            "route" : ["0-2"]
+        }
+    ]
+
+}

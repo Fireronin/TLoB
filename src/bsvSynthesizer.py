@@ -126,7 +126,8 @@ class TopLevelModule():
                 raise Exception("Sink is not a instace of ToGet")
 
             self.connections.add((source,sink,"GETPUT"))
-        self.connections.add((source,sink,"Normal"))
+        else:
+            self.connections.add((source,sink,"Normal"))
 
     def add_onewaybus(self,ins,outs,insRanges):
         #check if ins have ToSource
@@ -140,6 +141,8 @@ class TopLevelModule():
         self.buses.add(BusInstace(ins,outs,insRanges))
 
     def add_bus(self,ins,outs,insRanges,two_way=False):
+        ins = [self.modules[i] if type(i) is str else i for i in ins]
+        outs = [self.modules[o] if type(o) is str else o for o in outs]
         ins_type = ins[0]
         for i in ins:
             if i.interface.full_name != ins_type.interface.full_name:

@@ -1,17 +1,17 @@
-package FIFOChain;
+package fifoChain;
 // necessary packages
-import GetPut::*;
-import FIFOF::*;
-import FIFO::*;
 import OneWayBus::*;
+import FIFO::*;
 import Connectable::*;
+import FIFOF::*;
 import Vector::*;
+import GetPut::*;
 // imported packages
-import AddressFlit::*;
-import AXI4_Interconnect::*;
-import Routable::*;
 import SourceSink::*;
+import AXI4_Interconnect::*;
+import AddressFlit::*;
 import AXI4_Types::*;
+import Routable::*;
 
 typedef 1 DATASIZE;
 typedef 4 ADDRWIDTH;
@@ -28,15 +28,15 @@ module top();
  
 	FIFO#(Bit#(8)) ff1 <- mkFIFO();
 	FIFO#(Bit#(8)) ff2 <- mkFIFO();
-	FIFOF#(AFlit#(DATASIZE, ADDRWIDTH)) bf1 <- mkFIFOF();
-	FIFOF#(AFlit#(DATASIZE, ADDRWIDTH)) bf2 <- mkFIFOF();
+	FIFOF#(AFlit#(DATASIZE, ADDRWIDTH)) bf3 <- mkFIFOF();
+	FIFOF#(AFlit#(DATASIZE, ADDRWIDTH)) bf4 <- mkFIFOF();
 
-	mkConnection(toPut(ff1),toGet(ff2));
 	mkConnection(ff1,ff2);
+	mkConnection(toPut(ff1),toGet(ff2));
 	Vector#(1, 	FIFOF#(AFlit#(DATASIZE, ADDRWIDTH))) __temp_1_ins;
-	__temp_1_ins[0] = bf1;
+	__temp_1_ins[0] = bf3;
 	Vector#(1, 	FIFOF#(AFlit#(DATASIZE, ADDRWIDTH))) __temp_1_outs;
-	__temp_1_outs[0] = bf2;
+	__temp_1_outs[0] = bf4;
 	mkOneWayBus(route__temp_1,__temp_1_ins,__temp_1_outs);
 
 endmodule

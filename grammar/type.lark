@@ -118,7 +118,7 @@ tcl_enum: "Enum" tcl_package_name tcl_e_members [tcl_width] tcl_position
 tcl_e_members: "{" "members" "{" identifier_u* "}" "}" -> to_list
             | "{" "members" identifier_u "}" -> to_list
 // Alias
-tcl_alias: "Alias" ( type_def_type | "{" type_def_type "}") (type |"{" type "}") tcl_position
+tcl_alias: "Alias" ( type_def_type | "{" type_def_type "}") (type |"{" type "}" | tcl_stu_module ) tcl_position
 
 // Vector
 tcl_vector: "Vector" "{"type_def_type "}" "polymorphic" tcl_v_length tcl_v_elem
@@ -136,7 +136,10 @@ tcl_tagged_union: "TaggedUnion" tcl_package_name tcl_stu_members [tcl_width] tcl
 
 tcl_stu_members: "{" "members" "{" tcl_stu_member* "}" "}"
 
-tcl_stu_member: "{" (type |"void") (identifier_u|identifier_l) [tcl_width] "}"
+tcl_stu_member: "{" (type |"void" | tcl_stu_module) (identifier_u|identifier_l) [tcl_width] "}"
+
+tcl_stu_module: "{" "module" identifier_l ["#" "(" type identifier_l ( "," type identifier_l )* ")" "(" type* ")" ] "}"
+
 
 // Interface
 atribute_instances: "ATRIBUTE INSTANCES TODO"

@@ -68,9 +68,9 @@ def lookForKeyword(keyword,dictionary):
     if keyword in dictionary:
         return dictionary[keyword]
     else:
-        clostestKeyword = process.findClosestKeyword(keyword,dictionary.keys())
+        clostestKeyword = process.extract(keyword,list(dictionary.keys()),limit=1)[0]
         if clostestKeyword[1] > 80:
-            print(f"While parsing we found {clostestKeyword[0]} while looking for {keyword}, this is probably a typo")
+            print(f"While parsing we found {clostestKeyword[2]} while looking for {keyword}, this is probably a typo")
         else:
             print(f"While parsing we exprected a keyword: {keyword}.")
         raise Exception(f"Keyword {keyword} not found")
@@ -137,5 +137,5 @@ if __name__ == "__main__":
             parser.print_help()
             exit()
         with open(args.json_file) as json_file:
-            load_json(json_file)
+            load_json(json.load(json_file))
         

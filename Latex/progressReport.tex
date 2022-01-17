@@ -1,0 +1,31 @@
+\documentclass[14pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx,changepage}
+\usepackage{xcolor}
+\newcommand\todo[1]{\textcolor{red}{#1}}
+\title{Legend Of Bluespec Progress Report}
+\author{kr469 }
+\date{October 2021}
+
+\begin{document}
+    \section{}
+     Bla bla bla meta data
+    
+\section{Project completeness}
+    \subsection{Is the project on schedule and if not, how many weeks behind or ahead?}    
+        Generally project is on track, it's almost exactly on schedule. Core of the project is working, but there is still a bit of code debt in from of lack of automated testing.
+    \subsection{What unexpected difficulties have arisen?}
+        The biggest such difficulty is complexity of Bluespec type sytstem, because functions are first class objects and can be passed around as values, and a lot of polymorphism. This makes quite difficult to do things in precise manner. This will mean that my project probably won't be able to check for type correctness of passed arguments, while initializing some objects. (I think because my timeline was quite short I will take some time to work on this). But again this might require pasting not only output from Bluetcl but also Bluespec code which might be a lot of work. 
+    \subsection{If the project is behind, what actions have been taken to address this and when will progress be back on track?}
+        Project is not behind, the worst case it's behind by roughly a week, but one might argue that it's timeline is planned to end roughly month or two before deadlines set in "important dates section", and I will argue that this is fine as started working on it 2 weeks after start date mentioned in timeline because I was waiting for confirmation of project being accepted. 
+    \subsection{Briefly, what has been accomplished?}
+    \begin{itemize}
+        \item Communication with bluetcl works. 
+        \item Most of bluetcl output for types and functions is parsable and converted to python classes. (What is lacking is a large scale test, and support for structs)
+        \item Synthesizing of Bluespec code works, and supports all features it needs to(like: adding packages, typedefs, initializing components, adding connections, adding connections via busses)
+        \item JSON parsing works. 
+    \end{itemize}
+        
+\end{document}
+

@@ -129,4 +129,33 @@ TaggedUnion {TRAM::TRAMreq#(type tg, type adr, type dta)} polymorphic {members {
 Alias {TRAM::TRAMresp#(type tg, type dta)} {Tuple2#(tg, dta)} {position {%/Libraries/TRAM.bs 57 5 {Library TRAM}}}
 Interface {PAClib::PipeOut#(type t)} polymorphic {members {{method {t first {} {{(* ports = [] *)}}}} {method {Action deq {} {{(* ports = [] *)}}}} {method {Bool notEmpty {} {{(* ports = [] *)}}}}}} {position {%/Libraries/PAClib.bsv 44 11 {Library PAClib}}}
 Alias {PAClib::Pipe#(type ta, type tb)} {module f#(PAClib::PipeOut#(ta) x1)(PAClib::PipeOut#(tb))} {position {%/Libraries/PAClib.bsv 55 9 {Library PAClib}}}
-Typeclass {PAClib::VectorTreeReduce#(numeric type n, type a)} {members {{{module f#(module x1#(PAClib::PipeOut#(Tuple2#(a, a)) x1)(PAClib::PipeOut#(a)), Bit#(32) x2, PAClib::PipeOut#(Vector::Vector#(n, a)) x3)(PAClib::PipeOut#(a))} mkTreeReducePipe} {{module f#(function a x1(a x1, a x2), function a x2(a x1), Bit#(32) x3, PAClib::PipeOut#(Vector::Vector#(n, a)) x4)(PAClib::PipeOut#(a))} mkTreeReduceFn}}} {instances {{PAClib::VectorTreeReduce#(1, a)   provisos (Bits#(a, sa))} {PAClib::VectorTreeReduce#(2, a)   provisos (Bits#(a, sa))} {PAClib::VectorTreeReduce#(n, a)   provisos (PAClib::VectorTreeReduce#(n2, a), Div#(n, 2, n2), Bits#(a, sa))}}} {position {%/Libraries/PAClib.bsv 1582 11 {Library PAClib}}}
+Typeclass {PAClib: :VectorTreeReduce#(numeric type n, type a)
+} {members {
+        {
+            {module f#(
+                    module x1#(PAClib: :PipeOut#(Tuple2#(a, a)) x1)
+                    (PAClib: :PipeOut#(a))
+                    , Bit#(32) x2 
+                    , PAClib: :PipeOut#(Vector: :Vector#(n, a)) x3)
+                    (PAClib: :PipeOut#(a))
+            } mkTreeReducePipe
+        } {
+            {module f#( function a x1(a x1, a x2), 
+                function a x2(a x1), 
+                Bit#(32) x3, 
+                PAClib: :PipeOut#(Vector: :Vector#(n, a)) x4)
+                (PAClib: :PipeOut#(a))
+            } mkTreeReduceFn
+        }
+    }
+} {instances {
+        {PAClib: :VectorTreeReduce#(1, a)   provisos (Bits#(a, sa))
+        } {PAClib: :VectorTreeReduce#(2, a)   provisos (Bits#(a, sa))
+        } {PAClib: :VectorTreeReduce#(n, a)   provisos (PAClib: :VectorTreeReduce#(n2, a), Div#(n,
+            2, n2), Bits#(a, sa))
+        }
+    }
+} {position {%/Libraries/PAClib.bsv 1582 11 {Library PAClib
+        }
+    }
+}

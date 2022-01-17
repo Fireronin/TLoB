@@ -391,6 +391,12 @@ class ModuleTransformer(Transformer):
     def tcl_vectr(self, args):
         return "Not Implemented"
 
+    def tcl_stu_module(self, args):
+        return "Not Implemented"
+
+    def tcl_vector(self, args):
+        return "Not Implemented"
+
     # type_def_type
     def type_ide(self, args):
         return ("type_ide",args[0])

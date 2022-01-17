@@ -23,3 +23,26 @@ Add test with AFlit done
 Do mkConnection via connectable  done
 
 Questrions: maybe replicate typedefs indead of querring 
+
+Create top file with mkCore https://github.com/CTSRD-CHERI/Flute/blob/CHERI/src_Core/Core/Core.bsv
+And memeory from https://github.com/CTSRD-CHERI/BlueStuff/blob/master/BlueUtils/MemUtils.bsv
+and https://github.com/CTSRD-CHERI/BlueStuff/blob/master/AXI4_Fake_16550.bsv
+
+Recreate this in quartus
+make using project
+
+make in folder https://github.com/CTSRD-CHERI/Flute/tree/CHERI/src_SSITH_P2
+this builds verilog
+
+put this verilog in quartus
+
+this should compain about axi 
+
+make wrapers sig for memmroy and axi4 AXI4_Fake_16550
+
+and import  them 
+
+
+
+
+

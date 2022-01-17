@@ -22,13 +22,13 @@
         },
         {
             "name" : "ff2",
-            "function": "FIFOF.mkFIFO",
+            "function": "FIFO.mkFIFO",
             "function_params": [],
             "interface_params": ["Bit#(8)"]
         },
         {
             "name" : "bf3",
-            "function": "FIFO.mkFIFOF",
+            "function": "FIFOF.mkFIFOF",
             "interface_params": ["AFlit#(DATASIZE, ADDRWIDTH)"]
         },
         {

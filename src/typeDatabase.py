@@ -1,3 +1,4 @@
+from logging import Handler
 from extractor import *
 from handlerV2 import *
 from thefuzz import process
@@ -10,7 +11,7 @@ def fuzzyException(name,list,exception_string):
             string_of_matches += str(match[0]) + " \n"
     if string_of_matches == "":
         string_of_matches += str(potential_matches[0][0]) + " \n"
-    Exception(exception_string.format(name,string_of_matches))
+    raise Exception(exception_string.format(name,string_of_matches))
     
 
 class typeDatabase():
@@ -22,6 +23,8 @@ class typeDatabase():
         self.parser = initalize_parser(start="tcl_type_full_list") 
         self.logged_funcs = b""
         self.logged_types = b""
+        if child is None:
+            create_bluetcl()
 
     def getFunctionByName(self,name):
         if name in self.functions:
@@ -123,11 +126,11 @@ class typeDatabase():
         print(len(self.functions))
 
     def writeToFile(self):
-        with open("typeDatabaseFuncs.txt","w") as f:
+        with open("typeDatabaseFuncs.json","w") as f:
             # convert to string
             f.write(self.logged_funcs.decode("utf-8"))
             f.close()
-        with open("typeDatabaseTypes.txt","w") as f:
+        with open("typeDatabaseTypes.json","w") as f:
             # convert to string
             f.write(self.logged_types.decode("utf-8"))
             f.close()

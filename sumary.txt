@@ -38,7 +38,7 @@ put this verilog in quartus
 
 this should compain about axi 
 
-make wrapers sig for memmroy and axi4 AXI4_Fake_16550
+make wrapers sig for memmroy (Done in top level BlueStuff folder) and axi4 AXI4_Fake_16550 (there is this tupple and little axi4, dose thhis complicate things ?)
 
 and import  them 
 

@@ -1,3 +1,4 @@
+from copy import deepcopy
 from logging import Handler
 from extractor import *
 from handlerV2 import *
@@ -23,8 +24,8 @@ class typeDatabase():
         self.parser = initalize_parser(start="tcl_type_full_list") 
         self.logged_funcs = b""
         self.logged_types = b""
-        if child is None:
-            create_bluetcl()
+        # if child is None:
+        #     create_bluetcl()
 
     def getFunctionByName(self,name):
         if name in self.functions:
@@ -42,8 +43,12 @@ class typeDatabase():
         fuzzyException(name,list(self.typeclasses), "Typeclass {} not found. \n Do you mean: \n{}")
 
     def addUnparsedTypes(self,types):
-        transformed_types = parse_and_transform(types)
-        for t_type in transformed_types:
+        for type_string in types:
+            try:
+                t_type = parse_and_transform(type_string)[0]
+            except Exception as e:
+                print(e)
+                t_type = "Parsing failed"
             if type(t_type)== Typeclass:
                 self.typeclasses[t_type.full_name] = t_type
             else:
@@ -68,7 +73,7 @@ class typeDatabase():
         funcs = list_funcs(package_name=package_name)
         types = read_all_types(package_name=package_name)
         self.logged_funcs += funcs + b"\n"
-        self.logged_types += types + b"\n"
+        self.logged_types += b"\n".join(types) + b"\n"
         self.writeToFile()
         self.addUnparsedTypes(types)
         self.addUnparsedFunctions(funcs)
@@ -78,6 +83,17 @@ class typeDatabase():
             load_package(package_name=package)
         for package in packages:
             self.addPackage(package)
+        for function in self.functions.values():
+            if type(function) == Module:
+                self.updateModuleMaker(function)
+    
+    def updateModuleMaker(self,module):
+        try:
+            fields = module.interface.fields
+            module.interface = deepcopy(self.types[module.interface.full_name])
+            module.interface.fields = fields
+        except Exception as e:
+            print(f"{module.interface.full_name} not found in function {module.full_name}")
 
     def checkToXMembership(self,t_type,typeclass):
         for instance in typeclass.instances:

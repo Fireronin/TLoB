@@ -49,14 +49,14 @@ class Type:
         self.width = None
 
     def __str__(self) -> str:
-        return f"{self.package}.{self.name}"
+        return f"{self.package}::{self.name}"
     
     def __repr__(self) -> str:
-        return f"{self.package}.{self.name}"
+        return f"{self.package}::{self.name}"
 
     @property
     def full_name(self) -> str:
-        return f"{self.package}.{self.name}"
+        return f"{self.package}::{self.name}"
 
 class Struct(Type):
     def __init__(self,name,members,package=None,position=None) -> None:
@@ -104,7 +104,7 @@ class Type_ide:
         self.is_primary = is_primary
 
     def __str__(self) -> str:
-        return f"{self.package}.{self.name}"# #({', '.join(self.formals)})"
+        return f"{self.package}::{self.name}"# #({', '.join(self.formals)})"
     
     def __repr__(self) -> str:
         return self.__str__()
@@ -137,7 +137,7 @@ class Module(Type):
     
     @property
     def full_name(self) -> str:
-        return f"{self.package}.{self.name}"
+        return f"{self.package}::{self.name}"
 
 class Function(Type):
     def __init__(self,name,package=None,arguments=[],result=None,provisos=[],position=None,argument_names=None) -> None:
@@ -154,7 +154,7 @@ class Function(Type):
     
     @property
     def full_name(self) -> str:
-        return f"{self.package}.{self.name}"
+        return f"{self.package}::{self.name}"
 
 class Typeclass():
     def __init__(self,type_ide,position=None,members=None,superclasses=None,dependencies=None,instances=None) -> None:
@@ -376,8 +376,14 @@ class ModuleTransformer(Transformer):
         attributes = None
         if len(args)==4:
             attributes = args[3]
-        return Interface(type_ide=args[0],members=args[1],position=args[2],attributes=attributes)
+        members_set = {args[1][x][0]:args[1][x][1] for x in range(len(args[1]))}
+        return Interface(type_ide=args[0],members=members_set,position=args[2],attributes=attributes)
 
+    def tcl_im_subinterface(self, args):
+        return (args[1],Interface(type_ide=args[0],members=None))
+
+    def tcl_im_method(self,args):
+        return (args[1],Interface_method(name=args[1],type=args[0],input_types=None,ports=None))
 
     def struct(self, args):
         return "Not Implemented"

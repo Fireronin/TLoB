@@ -1,6 +1,7 @@
 namespace import ::Bluetcl::*
 flags set -p ./tutorial:+
 flags set -p ./BlueStuff/build/bdir:+
+flags set -p ./Flute/src_SSITH_P2/build_dir:+
 bpackage load Polyfifo
 bpackage load SourceSink
 

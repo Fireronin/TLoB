@@ -1,4 +1,5 @@
 \documentclass[14pt]{article}
+\usepackage[margin=1in]{geometry} 
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{graphicx,changepage}
@@ -9,22 +10,39 @@
 \date{October 2021}
 
 \begin{document}
-    \section{}
-     Bla bla bla meta data
-    
+    \section{Information}
+    \begin{itemize}
+        \item Name: Krzysztof Rymski
+        \item Email: kr469@cam.ac.uk
+        \item Title: The Legend of Bluespec: A Link to the components
+        \item Supervisor: Jonathan Woodruff
+        \item Director of Studies: John Fawcett
+        \item Overseers: Rafal Mantiuk and Andrew Pittsburg
+    \end{itemize}
 \section{Project completeness}
     \subsection{Is the project on schedule and if not, how many weeks behind or ahead?}    
-        Generally project is on track, it's almost exactly on schedule. Core of the project is working, but there is still a bit of code debt in from of lack of automated testing.
+        Generally project is on track, it's almost exactly on schedule. Core of the project is working. There is still a bit of code debt in from of lack of automated testing. It's worth mentioning that the timeline starts at 15.10.2021, but I started working on the project at the end of October, because I was waiting for the confirmation. This means that I'm effectively about a week ahead of schedule, if we account for this shift of timeline.
     \subsection{What unexpected difficulties have arisen?}
-        The biggest such difficulty is complexity of Bluespec type sytstem, because functions are first class objects and can be passed around as values, and a lot of polymorphism. This makes quite difficult to do things in precise manner. This will mean that my project probably won't be able to check for type correctness of passed arguments, while initializing some objects. (I think because my timeline was quite short I will take some time to work on this). But again this might require pasting not only output from Bluetcl but also Bluespec code which might be a lot of work. 
+        The biggest such difficulty is complexity of Bluespec type system, because functions are first class objects and can be passed around as values, and a lot of polymorphism. 
+        This makes quite difficult to do things in precise manner. 
+        This will mean that my project is not be able to check for type correctness of passed arguments, while initializing some objects. 
+        Fixing this would require parsing raw Bluespec code which might be beyond the scope of this project, for more complicated constructs, if user will choose to do unsupported things, checking of theirs correctness will be simply delayed until compilation.   
     \subsection{If the project is behind, what actions have been taken to address this and when will progress be back on track?}
-        Project is not behind, the worst case it's behind by roughly a week, but one might argue that it's timeline is planned to end roughly month or two before deadlines set in "important dates section", and I will argue that this is fine as started working on it 2 weeks after start date mentioned in timeline because I was waiting for confirmation of project being accepted. 
+        Project is not behind, but because I have a lot of time to spare till the final deadline (roughly 3-4 months). I plan to finish evaluation do rough draft of the dissertation and start working on optional goal. 
     \subsection{Briefly, what has been accomplished?}
     \begin{itemize}
-        \item Communication with bluetcl works. 
+        \item Communication with bluetcl (bluetcl is the tool to extract data (functions/types) from packages) works. 
         \item Most of bluetcl output for types and functions is parsable and converted to python classes. (What is lacking is a large scale test, and support for structs)
-        \item Synthesizing of Bluespec code works, and supports all features it needs to(like: adding packages, typedefs, initializing components, adding connections, adding connections via busses)
-        \item JSON parsing works. 
+        \item Synthesizing of Bluespec code works, and supports all features for building top-level file like:
+        \begin{itemize}
+            \item Adding packages
+            \item Adding typedefs
+            \item Initializing components
+            \item Adding direct connections
+            \item Adding connections via busses (which special treatment for AXI4 busses).
+            \item Creating routing functions for busses
+        \end{itemize}
+        \item Parsing of description of top-level module in from of JSON works and generation of code from it works.
     \end{itemize}
         
 \end{document}

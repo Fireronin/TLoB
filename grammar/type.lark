@@ -57,7 +57,7 @@ method_proto_formal: [atribute_instances] type identifier_l
 
 tcl_position: "{" "position" "{" tcl_path NUMBER NUMBER ["{" "Library" identifier_u "}"] "}" "}"
 // todo check paths with spaces
-tcl_path: ["%/"] /\w+/ ["/" /\w+/ ]*  "." /\w+/
+tcl_path: ["%/"] /(([.]{1,2})|(\w+))/ ["/" /(([.][.])|([.])|(\w+))/]* "." /\w+/
 
 tcl_type_full: tcl_interface_dec
             | tcl_typeclass
@@ -109,6 +109,7 @@ tcl_tc_m_f_function: "function" type identifier_l "("  tcl_tc_m_f_argument ("," 
 
 tcl_tc_m_f_argument: type_def_type identifier_l
                 | tcl_tc_m_f_function
+
 // Primary 
 tcl_primary: "Primary" type_def_type [tcl_width]
     | "Primary" "{" type_def_type "}" "polymorphic" [tcl_width]
@@ -204,12 +205,6 @@ tcl_m_interface: "{" "interface" (type | "{" "{" type "}" "}" ) "}"
 
 //tcl_module: "{" "module" identifier_u ":" ":" identifier_l tcl_interface_use [tcl_func_arguments] [tcl_provisos] tcl_position "}"
 
-
-
-
-
-
- 
 
 tcl_provisos: "{" "provisos" "{" ("{" type "}" | type )* "}" "}"
             | "{" "provisos" type "}"

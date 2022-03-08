@@ -1,6 +1,7 @@
 import enum
 import os
 from re import S
+from tempfile import TemporaryFile
 name_counter = 0
 def get_name():
     global name_counter
@@ -10,27 +11,51 @@ def get_name():
 class ModuleInstance():
     def __init__(self,creator_func,interface_args=[],func_args=[],instance_name=None):
         self.creator_func = creator_func
-        self.interface_args = interface_args
         self.func_args = func_args
         self.interface = creator_func.interface
-        if(len(interface_args) != len(creator_func.interface.fields)):
-            raise Exception("Interface arguments do not match the interface")
+        self.interface.type_ide.fields = []
+
+        if interface_args != "auto":
+            for i,field in enumerate(creator_func.interface.fields):
+                if field.name[0].isUpper():
+                    self.interface.type_ide.fields += str(field)
+                else:
+                    self.interface.type_ide.fields += str(interface_args[i])
         if(len(func_args) != len(creator_func.arguments)):
             raise Exception("Function arguments do not match the function")
         self.instance_name = instance_name
         if instance_name is None:
             self.instance_name = creator_func.name[:-2]+get_name()
 
-    def type_string(self):
-        if self.creator_func.interface.fields!=0:
-                arguments = ""
-                for i in range(len(self.interface_args)):
-                    stringified = str(self.interface_args[i])
-                    arguments += stringified
-                    if i != len(self.interface_args)-1:
-                        arguments += ", "
-                
-        return "\t" + self.creator_func.interface.name + f"#({arguments})"
+
+
+    def submodule(self,name):
+        try:
+            subModule = self.interface.members[name]
+        except Exception as e:
+            print(f"{name} not found in {self.interface.name}")
+            raise e
+        subModule.instance_name = self.instance_name + "." + name
+        return AccessTuple(subModule.instance_name,subModule)
+    
+    def get(self):
+        return AccessTuple(self.instance_name,self.interface)
+
+class AccessTuple():
+    def __init__(self,access_name,thing):
+        self.access_name = access_name
+        self.thing = thing
+
+def type_string(interface):
+    if interface.type_ide.fields!=0:
+            arguments = ""
+            for i in range(len(interface.type_ide.fields)):
+                stringified = str(interface.type_ide.fields[i])
+                arguments += stringified
+                if i != len(interface.type_ide.fields)-1:
+                    arguments += ", "
+            
+    return interface.name + f"#({arguments})"
 
 # enum with one way and two way and AXI4
 class ConnectionType(enum.Enum):
@@ -63,6 +88,9 @@ class TopLevelModule():
         self.typedefs = {}
 
     def add_module(self,creator_func,instance_name,interface_args=[],func_args=[]):
+        #check if instance name starts with upercase character
+        if instance_name[0].isupper():
+            raise Exception("Instance name must start with lowercase character")
         self.modules[instance_name] = ModuleInstance(creator_func,interface_args,func_args,instance_name)
         return self.modules[instance_name]
 
@@ -72,12 +100,12 @@ class TopLevelModule():
 
     def add_connection(self,source,sink):
         if type(source) is str:
-            source = self.modules[source]
+            source = AccessTuple(source,self.modules[source])
         if type(sink) is str:
-            sink = self.modules[sink]
+            sink =  AccessTuple(sink,self.modules[sink])
         #check if connection is possible
         # this will simplify code
-        inputs = [source,sink] 
+        inputs = [source.thing,sink.thing] 
         possible = False
         connectableTypeclass = self.db.getTypeclassByName("Connectable.Connectable")
         for instance in connectableTypeclass.instances:
@@ -89,18 +117,18 @@ class TopLevelModule():
                 if type(instanceFields[i]) == str:
                     continue
                 else:
-                    if not ( instanceFields[i].name == inputs[i].interface.name and instanceFields[i].package == inputs[i].interface.package):
+                    if not instanceFields[i].full_name == str(inputs[i].type_ide):
                         namesAreMatching = False
                         break
             if not namesAreMatching:
                 continue
-            # check if all fields are matching
-            for i in range(len(instanceFields)):
-                if type(instanceFields[i]) == str:
-                    variables[i][instanceFields[i]] = inputs[i].interface_args[i]
-                else:
-                    for j in range(len(instanceFields[i].fields)):
-                        variables[i][instanceFields[i].fields[j]] = inputs[i].interface_args[j]
+            # # check if all fields are matching
+            # for i in range(len(instanceFields)):
+            #     if type(instanceFields[i]) == str:
+            #         variables[i][instanceFields[i]] = inputs[i].interface_args[i]
+            #     else:
+            #         for j in range(len(instanceFields[i].fields)):
+            #             variables[i][instanceFields[i].fields[j]] = inputs[i].interface_args[j]
             #compare sets of variables
             matching = True
 
@@ -141,26 +169,30 @@ class TopLevelModule():
         self.buses.add(BusInstace(ins,outs,insRanges))
 
     def add_bus(self,ins,outs,insRanges,two_way=False):
-        ins = [self.modules[i] if type(i) is str else i for i in ins]
-        outs = [self.modules[o] if type(o) is str else o for o in outs]
+        AcessIns = [AccessTuple(i,self.modules[i]) if type(i) is str else i for i in ins]
+        AccessOuts = [AccessTuple(o,self.modules[o]) if type(o) is str else o for o in outs]
+        
+        ins = [i.thing for i in AcessIns]
+        outs = [o.thing for o in AccessOuts]
+
         ins_type = ins[0]
         for i in ins:
-            if i.interface.full_name != ins_type.interface.full_name:
+            if i.full_name != ins_type.full_name:
                 raise Exception("Inputs are not of the same type")
-            if i.interface_args != ins_type.interface_args:
+            if i.type_ide.fields != ins_type.type_ide.fields:
                 raise Exception("Inputs have different interface arguments")
         outs_type = outs[0]
         for o in outs:
-            if o.interface.full_name != outs_type.interface.full_name:
+            if o.full_name != outs_type.full_name:
                 raise Exception("Outputs are not of the same type")
-            if o.interface_args != outs_type.interface_args:
+            if o.type_ide.fields != outs_type.type_ide.fields:
                 raise Exception("Outputs have different interface arguments")
         
         # check if AXI4
         is_AXI4 = True
-        if ins_type.interface.full_name != "AXI4_Types.AXI4_Master":
+        if ins_type.full_name != "AXI4_Types.AXI4_Master":
             is_AXI4 = False
-        if outs_type.interface.full_name != "AXI4_Types.AXI4_Slave":
+        if outs_type.full_name != "AXI4_Types.AXI4_Slave":
             is_AXI4 = False
         
         self.packages.add("Vector")
@@ -174,18 +206,18 @@ class TopLevelModule():
         if is_AXI4:
             self.packages.add("AXI4_Interconnect")
             connection_type = ConnectionType.AXI4
-            self.buses.add(BusInstace(ins,outs,insRanges,connection_type))
+            self.buses.add(BusInstace(AcessIns,AccessOuts,insRanges,connection_type))
             return
         
         # if not AXI4 check for typeclass membership
         for i in ins:
-            if not self.db.checkToXMembership(i.interface,self.db.getTypeclassByName("SourceSink.ToSource")):
+            if not self.db.checkToXMembership(i,self.db.getTypeclassByName("SourceSink.ToSource")):
                 raise Exception("Input is not a instance of ToSource")
         for o in outs:
-            if not self.db.checkToXMembership(o.interface,self.db.getTypeclassByName("SourceSink.ToSink")):
+            if not self.db.checkToXMembership(o,self.db.getTypeclassByName("SourceSink.ToSink")):
                 raise Exception("Output is not a instance of ToSink")
 
-        self.buses.add(BusInstace(ins,outs,insRanges,connection_type))
+        self.buses.add(BusInstace(AcessIns,AccessOuts,insRanges,connection_type))
         
 
     def to_string(self):
@@ -215,7 +247,7 @@ class TopLevelModule():
         # add bus routing functions
         for bus in self.buses:
             # generate routing function
-            r_s = len(bus.ins)
+            r_s = len(bus.outs)
             s.append(f"function Vector #({r_s}, Bool) route{bus.name} (r_t x) provisos ( Bits#(r_t,r_l) );\n")
             s.append(f"\tBit#(r_l) r_t_b = pack(x);\n")
             s.append(f"\tVector#({r_s}, Bool) r_t_v = replicate (False);\n")
@@ -227,31 +259,38 @@ class TopLevelModule():
         
         s.append("module "+self.name+"();\n \n")
         
-        for m in self.modules.values():                
-            s.append(m.type_string())
+        # add modules
+        for m in self.modules.values():
+            s.append("\t")
+            if m.interface.type_ide.fields == "auto":
+                s.append("let") 
+            else:             
+                s.append(type_string(m.interface))
             s.append(" " + m.instance_name)
             s.append(" <- " + m.creator_func.name + "(")
             for i in range(len(m.func_args)):
-                s.append(m.func_args[i])
+                s.append(str(m.func_args[i]))
                 if i != len(m.func_args)-1:
                     s.append(", ")
             s.append(");\n")
         s.append("\n")
 
+        # add connections
         for c in self.connections:
             if c[2] == "GETPUT":
-                s.append(f"\tmkConnection(toPut({c[0].instance_name}),toGet({c[1].instance_name}));\n")
+                s.append(f"\tmkConnection(toPut({c[0].access_name}),toGet({c[1].access_name}));\n")
             else:
-                s.append(f"\tmkConnection({c[0].instance_name},{c[1].instance_name});\n")   
+                s.append(f"\tmkConnection({c[0].access_name},{c[1].access_name});\n")   
 
+        # add busses
         for bus in self.buses:
-            s.append(f"\tVector#({len(bus.ins)}, {bus.ins[0].type_string()}) {bus.name}_ins;\n")
+            s.append(f"\tVector#({len(bus.ins)}, {type_string(bus.ins[0].thing)}) {bus.name}_ins;\n")
             for i in range(len(bus.ins)):
-                s.append(f"\t{bus.name}_ins[{i}] = {bus.ins[i].instance_name};\n")
+                s.append(f"\t{bus.name}_ins[{i}] = {bus.ins[i].access_name};\n")
             
-            s.append(f"\tVector#({len(bus.outs)}, {bus.outs[0].type_string()}) {bus.name}_outs;\n")
+            s.append(f"\tVector#({len(bus.outs)}, {type_string(bus.outs[0].thing)}) {bus.name}_outs;\n")
             for i in range(len(bus.outs)):
-                s.append(f"\t{bus.name}_outs[{i}] = {bus.outs[i].instance_name};\n")
+                s.append(f"\t{bus.name}_outs[{i}] = {bus.outs[i].access_name};\n")
             
             # depending on connection type generate bus
             if bus.connectionType == ConnectionType.one_way:
@@ -267,8 +306,8 @@ class TopLevelModule():
         s = "".join(s)
         return s
     
-    def to_file(self,filename,folder="."):
-        with open(os.path.join(folder,filename),'w') as f:
+    def to_file(self,folder="."):
+        with open(os.path.join(folder,self.package_name+".bsv"),'w') as f:
             f.write(self.to_string())
 
 

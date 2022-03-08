@@ -32,17 +32,18 @@ Recreate this in quartus
 make using project
 
 make in folder https://github.com/CTSRD-CHERI/Flute/tree/CHERI/src_SSITH_P2
-this builds verilog
+done this builds verilog
 
-put this verilog in quartus
+done put this verilog in quartus
 
-this should compain about axi 
+yep this should compain about axi 
 
-make wrapers sig for memmroy (Done in top level BlueStuff folder) and axi4 AXI4_Fake_16550 (there is this tupple and little axi4, dose thhis complicate things ?)
+done make wrapers sig for memmroy (Done in top level BlueStuff folder) and axi4 AXI4_Fake_16550 (there is this tupple and little axi4, dose thhis complicate things ?)
 
 and import  them 
 
 
-
+update flute 
+https://github.com/CTSRD-CHERI/BlueStuff/commit/390397a2c9fdf8d87c23ecf70ae83c4831971806
 
 

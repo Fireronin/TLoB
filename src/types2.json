@@ -1,0 +1,11 @@
+Interface {Polyfifo::FIFOIfc#(numeric type value_size)} polymorphic {members {{method {Action enq Bit#(value_size) {{(* ports = ["value"] *)}}}} {method {Action deq {} {{(* ports = [] *)}}}} {method {Bit#(value_size) first {} {{(* ports = [] *)}}}}}} {position {tutorial/Polyfifo.bsv 3 11}}
+Interface {Polyfifo::FIFOIfc2#(numeric type value_size)} polymorphic {members {{method {Action enq Bit#(value_size) {{(* ports = ["value"] *)}}}} {method {Action deq {Bit#(value_size) Bit#(value_size)} {{(* ports = ["value", "value2"] *)}}}} {method {Bit#(value_size) first {} {{(* ports = [] *)}}}}}} {position {tutorial/Polyfifo.bsv 9 11}}
+Enum Polyfifo::Bool2 {members {False True}} {width 1} {position {tutorial/Polyfifo.bsv 15 30}}
+Enum Polyfifo::Glurph {members {Foo0 Foo1 Bar5 Bar6 Bar7 Quux3 Quux2}} {position {tutorial/Polyfifo.bsv 21 3}}
+Struct Polyfifo::Coord {members {{Int#(32) x {width 32}} {Int#(32) y {width 32}}}} {position {tutorial/Polyfifo.bsv 23 34}}
+Struct Polyfifo::Proc {members {{Bit#(7) pc {width 7}} {Bit#(3) rf {width 3}} {Bit#(8) mem {width 8}}}} {position {tutorial/Polyfifo.bsv 24 57}}
+TaggedUnion Polyfifo::InstrOperand {members {{Bit#(5) Register {width 5}} {Bit#(22) Literal {width 22}} {{Polyfifo::InstrOperand_$Indexed} Indexed}}} {position {tutorial/Polyfifo.bsv 30 3}}
+
+TaggedUnion Polyfifo::Instruction {members {{{Polyfifo::Instruction_$Immediate} Immediate} {{Polyfifo::Instruction_$Jump} Jump {width 30}}}} {position {tutorial/Polyfifo.bsv 38 3}}
+
+

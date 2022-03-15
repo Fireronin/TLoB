@@ -52,7 +52,7 @@ class Type:
         return f"{self.package}::{self.name}"
     
     def __repr__(self) -> str:
-        return f"{self.package}::{self.name}"
+        return f"{self.package}::{self.name} ({','.join([str(f) for f in  self.fields])})"
 
     @property
     def full_name(self) -> str:
@@ -116,8 +116,7 @@ class Type_formal:
         self.numeric_tag = numeric_tag
     
     def __str__(self) -> str:
-        return f"""{"type" if self.type_tag else ""}
-        {"numeric" if self.numeric_tag else ""} {self.name}"""
+        return f"""{self.name}"""
 
     def __repr__(self) -> str:
         return self.__string__()
@@ -173,7 +172,7 @@ class Typeclass():
     
     @property
     def full_name(self) -> str:
-        return f"{self.type_ide.package}.{self.type_ide.name}"
+        return f"{self.type_ide.package}::{self.type_ide.name}"
 
 
 
@@ -499,13 +498,13 @@ class ModuleTransformer(Transformer):
     def NUMBER(self, number):
         return int(number.value)
 
-    def numeric_type_formal(self, args):
-        args = [x for x in args if x is not None]
-        return Type(name="numeric",fields=args)
+    # def numeric_type_formal(self, args):
+    #     args = [x for x in args if x is not None]
+    #     return Type(name="numeric",fields=args)
 
-    def type_formal(self, args):
-        args = [x for x in args if x is not None]
-        return Type(name="type_formal",fields=args)
+    # def type_formal(self, args):
+    #     args = [x for x in args if x is not None]
+    #     return Type(name="type_formal",fields=args)
 
     def list_of(self,args):
         return args

@@ -40,7 +40,7 @@ def fancy_call(command,only_last_line=True):
             child.expect(b"\r\r\n",timeout=7)
             s = child.before
     except pexpect.TIMEOUT:
-        print("Warrning: TIMEOUT or lack of functions")
+        print("Warrning: TIMEOUT")
         s = b""
     if s.find(b"Error")!=-1:
         raise Exception("Error:",s)

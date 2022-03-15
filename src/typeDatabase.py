@@ -1,8 +1,13 @@
 from copy import deepcopy
 from logging import Handler
+
+from numpy import var
+from extractor import Type as ExType
 from extractor import *
 from handlerV2 import *
 from thefuzz import process
+import pickle
+
 
 def fuzzyException(name,list,exception_string):
     potential_matches = process.extract(name, list, limit=5)
@@ -16,7 +21,9 @@ def fuzzyException(name,list,exception_string):
     
 
 class typeDatabase():
-    def __init__(self):
+    def __init__(self,load=False):
+        if load:
+            self.loadStateFromPickle()
         self.packages = set()
         self.functions = {}
         self.types = {}
@@ -83,15 +90,18 @@ class typeDatabase():
             load_package(package_name=package)
         for package in packages:
             self.addPackage(package)
-        for function in self.functions.values():
-            if type(function) == Module:
-                self.updateModuleMaker(function)
+        # DEPTH = 4
+        # for _ in range(DEPTH):
+        #     for function in self.functions.values():
+        #         if type(function) == Module:
+        #             self.updateModuleMaker(function)
     
     def updateModuleMaker(self,module):
         try:
             fields = module.interface.fields
-            module.interface = deepcopy(self.types[module.interface.full_name])
-            module.interface.fields = fields
+            if fields == None:
+                module.interface = deepcopy(self.types[module.interface.full_name])
+                module.interface.fields = fields
         except Exception as e:
             print(f"{module.interface.full_name} not found in function {module.full_name}")
 
@@ -101,6 +111,31 @@ class typeDatabase():
                 continue
             return True
         return None
+
+    def toXResultingType(self,t_type,typeclass):
+        for instance in typeclass.instances:
+            start = instance[0].fields[0]
+            end = instance[0].fields[1]
+            if type(start) == ExType:
+                if t_type.full_name == start.full_name:
+                    variables = {}
+                    for i,field in enumerate(start.fields):
+                        variables[str(field)] = t_type.type_ide.fields[i]
+                    
+                    if type(end) == str:
+                        return variables[end]
+                    else:
+                        if type(end) == ExType:
+                            end_copy = deepcopy(end)
+                            end_copy.type_ide = Type_ide(end.name,end.package)
+                            end_copy.type_ide.fields = end_copy.fields
+                            for i,field in enumerate(end.fields):
+                                end_copy.type_ide.fields[i] = variables[field]
+                            return end_copy
+                        else:
+                            raise Exception(f"Unknown type (or a function) on the left side {typeclass}")
+        return Exception(f"{t_type} not found in {typeclass}")
+            
 
     def checkifConnectable(self,type1,type2):
         connectableTypeclass = self.getTypeclassByName("Connectable.Connectable")
@@ -150,3 +185,14 @@ class typeDatabase():
             # convert to string
             f.write(self.logged_types.decode("utf-8"))
             f.close()
+
+    def saveStateToPickle(self):
+        with open("typeDatabase.pickle","wb") as f:
+            pickle.dump(self,f)
+            f.close()
+
+    def loadStateFromPickle(self):
+        with open("typeDatabase.pickle","rb") as f:
+            self = pickle.load(f)
+            f.close()
+        return self

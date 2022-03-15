@@ -13,7 +13,7 @@ add_folder("Flute/src_SSITH_P2/build_dir")
 # initalize tdb
 db = tdb()
 # Read contents of package
-packages_to_load = ["Core","AXI4_Fake_16550","MemUtils","Connectable","FIFO","FIFOF","GetPut","AXI4_Types","AXI4_Interconnect","SourceSink","Routable","Core_IFC"]
+packages_to_load = ["Core","AXI4_Fake_16550","MemUtils","Connectable","FIFO","FIFOF","GetPut","AXI4_Types","AXI4_Interconnect","SourceSink","Routable","Core_IFC","ClientServer"]
 db.addPackages(packages_to_load)
 
 db.writeToFile()

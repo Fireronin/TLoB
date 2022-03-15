@@ -1,2 +1,7 @@
 Bluespec
 bluetcl
+Vivado
+Xilinx
+IQP
+Quartus
+pexpect

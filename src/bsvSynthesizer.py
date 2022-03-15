@@ -1,7 +1,14 @@
+from copy import deepcopy
 import enum
 import os
 from re import S
 from tempfile import TemporaryFile
+
+from tenacity import retry_if_exception
+from extractor import Type as ExType
+from extractor import Interface as ExInterface
+from extractor import Type_formal as ExType_formal
+
 name_counter = 0
 def get_name():
     global name_counter
@@ -9,20 +16,72 @@ def get_name():
     return "__temp_" + str(name_counter)
 
 class ModuleInstance():
-    def __init__(self,creator_func,interface_args=[],func_args=[],instance_name=None):
+    def __init__(self,db,creator_func,interface_args=[],func_args=[],instance_name=None):
         self.creator_func = creator_func
         self.func_args = func_args
         self.interface = creator_func.interface
-        self.interface.type_ide.fields = []
+        #initial copy of fileds to type_ide 
+        try:
+            fields = self.interface.fields
+            self.interface = deepcopy(db.types[self.interface.full_name])
+            self.interface.type_ide.fields = fields
+        except Exception as e:
+            print(f"{self.interface.full_name} not found in function {creator_func.full_name}")
 
+
+        def fill_in_type(interface):
+            for name,value in interface.members.items():
+                if type(value) == ExInterface and value.full_name in db.types:
+                    fields = value.type_ide.fields
+                    newValue = deepcopy(db.types[value.full_name])
+                    newValue.type_ide.fields = fields
+                    newValue = fill_in_type(newValue)
+                    interface.members[name] = newValue
+
+                    # def fill_in_variables(obj):
+                    #     if type(obj) == str:
+                    #         newValue.fields 
+                        
+                    # for i,field in enumerate(newValue.type_ide.fields):
+                        
+
+                if type(value) == ExInterface and value.full_name not in db.types:
+                    print(f"{value.full_name} not found in {interface.full_name}")
+            return interface
+
+        def fill_in_variables(interface):
+            variables = {}
+            for field,formal in zip(interface.type_ide.fields,interface.type_ide.formals):
+                if type(formal) == ExType_formal:
+                    variables[formal.name] = field
+
+            for name,value in interface.members.items():
+                if type(value) == ExInterface and value.full_name in db.types:
+                    subFields = value.type_ide.fields
+                    for i,field in enumerate(subFields):
+                        if type(field) == str:
+                            subFields[i] = variables[field]
+                        if type(field) == ExType:
+                            for j,subTypeFiled in enumerate(field.fields):
+                                if type(subTypeFiled) == str:
+                                    field.fields[j] = variables[subTypeFiled]
+                    fill_in_variables(value)
+
+        self.interface = fill_in_type(self.interface)
+        
+
+        self.interface.type_ide.fields = []
         if interface_args != "auto":
             for i,field in enumerate(creator_func.interface.fields):
-                if field.name[0].isUpper():
-                    self.interface.type_ide.fields += str(field)
+                if type(field)!=str and field.name[0].isupper():
+                    self.interface.type_ide.fields.append(str(field))
                 else:
-                    self.interface.type_ide.fields += str(interface_args[i])
+                    self.interface.type_ide.fields.append(str(interface_args[i]))
         if(len(func_args) != len(creator_func.arguments)):
             raise Exception("Function arguments do not match the function")
+        
+        fill_in_variables(self.interface)
+
         self.instance_name = instance_name
         if instance_name is None:
             self.instance_name = creator_func.name[:-2]+get_name()
@@ -91,12 +150,97 @@ class TopLevelModule():
         #check if instance name starts with upercase character
         if instance_name[0].isupper():
             raise Exception("Instance name must start with lowercase character")
-        self.modules[instance_name] = ModuleInstance(creator_func,interface_args,func_args,instance_name)
+        self.modules[instance_name] = ModuleInstance(self.db,creator_func,interface_args,func_args,instance_name)
         return self.modules[instance_name]
 
     def add_typedef(self,name,type):
         self.typedefs[name] = type
         return name
+
+    def list_connectable(self,start,ends=[]):
+        connectableTypeclass = self.db.getTypeclassByName("Connectable::Connectable")
+        #ends = []
+        connectable_ends = []
+        #inital triming of connectable rules
+        considered_instances = []
+        for instance in connectableTypeclass.instances:
+            instanceFields = instance[0].fields
+            #check if both Fields are types
+            if type(instanceFields[0]) == ExType and type(instanceFields[1]) == ExType:
+                #check if name matches start point
+                if instanceFields[0].full_name == start.thing.full_name:
+                    considered_instances.append(instance)
+        
+        #check if end is a connectable
+        for end in ends:
+            for instance in considered_instances:
+                instanceFields = instance[0].fields
+                #check if both Fields are types
+                if instanceFields[0].full_name != end.thing.full_name:
+                    continue
+                variables = {}
+                def add_variable(name,value):
+                    if name in variables:
+                        old = variables[name]
+                        if old != value:
+                            raise Exception(f"Variable {name} has different values")
+                    else:
+                        variables[name] = value
+
+                #check if values that can be polymorphic are the same
+                variableMissmatch = False
+                for i,field in enumerate(instanceFields[0].fields):
+                    try:
+                        add_variable(str(field),start.thing.type_ide.fields[i])
+                    except Exception as e:
+                        variableMissmatch = True
+                        break
+                for i,field in enumerate(instanceFields[1].fields):
+                    try:
+                        add_variable(str(field),end.thing.type_ide.fields[i])
+                    except Exception as e:
+                        variableMissmatch = True
+                        break
+                if variableMissmatch:
+                    continue
+
+                connectable_ends.append(end)
+                break
+        
+        #fallback to trying cast to source and sink scheme
+        #check if start is to_source
+        def is_to_X(start,X):
+            try:
+                start_to_X = self.db.toXResultingType(start.thing,self.db.getTypeclassByName(X))
+            except Exception as e:
+                return None
+            return start_to_X
+
+        start_to_get = is_to_X(start,"GetPut.ToGet")
+        start_to_source = is_to_X(start,"SourceSink.ToSource")
+
+        for end in ends:
+            if end in connectable_ends:
+                continue
+            if start_to_get is not None:
+                end_to_put = is_to_X(end,"GetPut.ToPut")
+                if end_to_put is not None:
+                    if str(start_to_get) != str(end_to_put):
+                        continue
+                    # TODO mark that it uses GetPut
+                    connectable_ends.append(AccessTuple(f"toPut({end.access_name})", end))
+                    continue
+            if start_to_source is not None:
+                end_to_sink = is_to_X(end,"SourceSink.ToSink")
+                if end_to_sink is not None:
+                    if str(start_to_source) != str(end_to_sink):
+                        continue
+                    # TODO mark that it uses SourceSink
+                    connectable_ends.append(AccessTuple(f"toSink({end.access_name})", end))
+                    continue
+            
+        return connectable_ends
+                
 
     def add_connection(self,source,sink):
         if type(source) is str:
@@ -107,7 +251,7 @@ class TopLevelModule():
         # this will simplify code
         inputs = [source.thing,sink.thing] 
         possible = False
-        connectableTypeclass = self.db.getTypeclassByName("Connectable.Connectable")
+        connectableTypeclass = self.db.getTypeclassByName("Connectable::Connectable")
         for instance in connectableTypeclass.instances:
             instanceFields = instance[0].fields
             variables = [{},{}]
@@ -160,11 +304,11 @@ class TopLevelModule():
     def add_onewaybus(self,ins,outs,insRanges):
         #check if ins have ToSource
         for i in ins:
-            if not self.db.checkToXMembership(self.modules[i].interface,self.db.getTypeclassByName("SourceSink.ToSource")):
+            if not self.db.checkToXMembership(self.modules[i].interface,self.db.getTypeclassByName("SourceSink::ToSource")):
                 raise Exception("Input is not a instance of ToSource") 
         #check if outs have ToSink
         for o in outs:
-            if not self.db.checkToXMembership(self.modules[o].interface,self.db.getTypeclassByName("SourceSink.ToSink")):
+            if not self.db.checkToXMembership(self.modules[o].interface,self.db.getTypeclassByName("SourceSink::ToSink")):
                 raise Exception("Output is not a instance of ToSink")
         self.buses.add(BusInstace(ins,outs,insRanges))
 
@@ -190,9 +334,9 @@ class TopLevelModule():
         
         # check if AXI4
         is_AXI4 = True
-        if ins_type.full_name != "AXI4_Types.AXI4_Master":
+        if ins_type.full_name != "AXI4_Types::AXI4_Master":
             is_AXI4 = False
-        if outs_type.full_name != "AXI4_Types.AXI4_Slave":
+        if outs_type.full_name != "AXI4_Types::AXI4_Slave":
             is_AXI4 = False
         
         self.packages.add("Vector")
@@ -211,10 +355,10 @@ class TopLevelModule():
         
         # if not AXI4 check for typeclass membership
         for i in ins:
-            if not self.db.checkToXMembership(i,self.db.getTypeclassByName("SourceSink.ToSource")):
+            if not self.db.checkToXMembership(i,self.db.getTypeclassByName("SourceSink::ToSource")):
                 raise Exception("Input is not a instance of ToSource")
         for o in outs:
-            if not self.db.checkToXMembership(o,self.db.getTypeclassByName("SourceSink.ToSink")):
+            if not self.db.checkToXMembership(o,self.db.getTypeclassByName("SourceSink::ToSink")):
                 raise Exception("Output is not a instance of ToSink")
 
         self.buses.add(BusInstace(AcessIns,AccessOuts,insRanges,connection_type))

@@ -12,10 +12,10 @@ add_folder("tutorial")
 # initalize tdb
 db = tdb()
 # Read contents of package
-packages_to_load = ["FIFO","FIFOF","Connectable","AddressFlit","GetPut","SourceSink","Routable"]
+packages_to_load = ["FIFO","FIFOF","Connectable","AddressFlit","GetPut","SourceSink","Routable","AXI"]
 db.addPackages(packages_to_load)
-
-
+knownPackages = list_packages()
+db.addPackages(knownPackages)
 db.writeToFile()
 #db.saveStateToPickle()
 # todo read json file

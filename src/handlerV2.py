@@ -49,6 +49,8 @@ def fancy_call(command,only_last_line=True):
 def list_packages():
     s = fancy_call("bpackage list")
     packages = s.split()
+    # covert from bytes to str
+    packages = [str(p, encoding='utf-8') for p in packages]
     return packages
 
 def list_types(package_name="Polyfifo"):

@@ -2,7 +2,7 @@
 from bsvSynthesizer import *
 import json
 from thefuzz import process
-from typeDatabase import typeDatabase as tdb
+from typeDatabase import TypeDatabase as tdb
 from handlerV2 import *
 import argparse
 import os

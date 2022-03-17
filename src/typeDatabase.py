@@ -1,5 +1,7 @@
 from copy import deepcopy
 from logging import Handler
+from posixpath import split
+from typing import Dict
 
 from numpy import var
 from extractor import Type as ExType
@@ -20,7 +22,9 @@ def fuzzyException(name,list,exception_string):
     raise Exception(exception_string.format(name,string_of_matches))
     
 
-class typeDatabase():
+class TypeDatabase():
+    aliases: Dict[str,Alias]    
+
     def __init__(self,load=False):
         if load:
             self.loadStateFromPickle()
@@ -31,6 +35,13 @@ class typeDatabase():
         self.parser = initalize_parser(start="tcl_type_full_list") 
         self.logged_funcs = b""
         self.logged_types = b""
+        self.aliases = {}
+        # remove file failed_types.json
+        try:
+            os.remove("failed_types.json")
+        except:
+            pass
+        
         # if child is None:
         #     create_bluetcl()
 
@@ -54,17 +65,46 @@ class typeDatabase():
             try:
                 t_type = parse_and_transform(type_string)[0]
             except Exception as e:
+                # type_string from str to bytes
+                type_string = str(type_string, encoding='utf-8')
+                #save type_string to file failed_types.json
+                with open("failed_types.json","a") as f:
+                    f.write(type_string + "\n")
+
                 print(e)
                 t_type = "Parsing failed"
+            
+            if type(t_type) == Struct:
+                type_string = str(type_string, encoding='utf-8')
+                # save type_string to file failed_types.json
+                with open("failed_types.json","a") as f:
+                    f.write(type_string + "\n")
             if type(t_type)== Typeclass:
                 self.typeclasses[t_type.full_name] = t_type
+            elif type(t_type) == Alias:
+                self.aliases[t_type.full_name] = t_type
             else:
                 if type(t_type) == str:
                     continue
-                self.types[t_type.full_name] = t_type
+                try:
+                    self.types[t_type.full_name] = t_type
+                except Exception as e:
+                    # type_string from str to bytes
+                    type_string = str(type_string, encoding='utf-8')
+                    #save type_string to file failed_types.json
+                    with open("failed_types.json","a") as f:
+                        f.write(type_string + "\n")
 
     def addUnparsedFunctions(self,functions):
-        trasformed_functions = parse_and_transform(functions)
+        try:
+            trasformed_functions = parse_and_transform(functions)
+        except Exception as e:
+            # functions from str to bytes
+            functions = str(functions, encoding='utf-8')
+            #save functions to file failed_functions.json
+            with open("failed_functions.json","a") as f:
+                f.write(functions + "\n")
+            return
         for function in trasformed_functions:
             self.functions[function.full_name] = function
 
@@ -76,6 +116,8 @@ class typeDatabase():
 
     def addPackage(self,package_name):
         # add package to database
+        if package_name in self.packages:
+            return
         self.packages.add(package_name)
         funcs = list_funcs(package_name=package_name)
         types = read_all_types(package_name=package_name)
@@ -90,20 +132,15 @@ class typeDatabase():
             load_package(package_name=package)
         for package in packages:
             self.addPackage(package)
-        # DEPTH = 4
-        # for _ in range(DEPTH):
-        #     for function in self.functions.values():
-        #         if type(function) == Module:
-        #             self.updateModuleMaker(function)
     
-    def updateModuleMaker(self,module):
-        try:
-            fields = module.interface.fields
-            if fields == None:
-                module.interface = deepcopy(self.types[module.interface.full_name])
-                module.interface.fields = fields
-        except Exception as e:
-            print(f"{module.interface.full_name} not found in function {module.full_name}")
+    # def updateModuleMaker(self,module):
+    #     try:
+    #         fields = module.interface.fields
+    #         if fields == None:
+    #             module.interface = deepcopy(self.types[module.interface.full_name])
+    #             module.interface.fields = fields
+    #     except Exception as e:
+    #         print(f"{module.interface.full_name} not found in function {module.full_name}")
 
     def checkToXMembership(self,t_type,typeclass):
         for instance in typeclass.instances:
@@ -135,7 +172,20 @@ class typeDatabase():
                         else:
                             raise Exception(f"Unknown type (or a function) on the left side {typeclass}")
         return Exception(f"{t_type} not found in {typeclass}")
-            
+
+    def evaluateAlias(self,alias):
+        if alias in self.aliases:
+            return self.aliases[alias].type
+        else:
+            package,name = alias.split("::")
+            if package != "None":
+                self.addPackage(package)
+                if alias in self.aliases:
+                    return self.aliases[alias].type
+            print("Alias {} not found".format(alias))
+            return None
+            #fuzzyException(alias,list(self.aliases.keys()), "Alias {} not found. \n Do you mean: \n{}")
+    
 
     def checkifConnectable(self,type1,type2):
         connectableTypeclass = self.getTypeclassByName("Connectable.Connectable")

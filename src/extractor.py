@@ -1,6 +1,9 @@
-from typing import Tuple
+from dataclasses import dataclass
+from typing import List, Tuple, Union
 from lark import Lark, Transformer, v_args
 import os
+
+from sympy import arg
 
 
 
@@ -23,23 +26,11 @@ class Position:
     def __repr__(self) -> str:
         return f"{self.file}:{self.line}:{self.column}"
 
-class Alias:
-    def __init__(self,name,type,position) -> None:
-        self.name = name
-        self.type = type
-        self.position = position
 
-    def __str__(self) -> str:
-        return f"alias {self.name} {self.type}"
-
-    def __repr__(self) -> str:
-        return f"alias {self.name} {self.type}"
-    
-    @property
-    def full_name(self) -> str:
-        return f"Alias {self.name}"
 
 class Type:
+    position: Position
+
     def __init__(self,name,package=None,position=None,fields=None) -> None:
         self.name = name
         self.package = package
@@ -59,9 +50,11 @@ class Type:
         return f"{self.package}::{self.name}"
 
 class Struct(Type):
-    def __init__(self,name,members,package=None,position=None) -> None:
+    is_polymorphic: bool
+    def __init__(self,name,members,package=None,position=None,is_polymorphic=False) -> None:
         super().__init__(name,package,position)
         self.members = members
+        self.is_polymorphic = is_polymorphic
 
 class Interface(Type):
     def __init__(self,type_ide,members,position=None,attributes=None) -> None:
@@ -103,10 +96,40 @@ class Type_ide:
         self.is_polymorphic = is_polymorphic
         self.is_primary = is_primary
 
+    def __getitem__(self,key):
+        for i in range(len(self.formals)):
+            if self.formals[i].name == key:
+                return self.fields[i]
+
     def __str__(self) -> str:
-        return f"{self.package}::{self.name}"# #({', '.join(self.formals)})"
+        return f"{self.package}::{self.name}"
     
     def __repr__(self) -> str:
+        return self.__str__()
+
+    @property
+    def full_name(self) -> str:
+        return f"{self.package}::{self.name}"
+
+class Alias:
+    type_ide: Type_ide
+    type: Type
+    position: Position
+
+    def __init__(self,type_ide:Type_ide,type,position:Position) -> None:
+        self.name = type_ide
+        self.type_ide = type_ide
+        self.type = type
+        self.position = position
+
+    def __str__(self) -> str:
+        return f"{self.name.__str__()}"
+
+    def __repr__(self) -> str:
+        return f"alias {self.name} {self.type}"
+    
+    @property
+    def full_name(self) -> str:
         return self.__str__()
 
 class Type_formal:
@@ -119,7 +142,7 @@ class Type_formal:
         return f"""{self.name}"""
 
     def __repr__(self) -> str:
-        return self.__string__()
+        return self.__str__()
 
 class Module(Type):
     def __init__(self,name,package,interface,position,arguments=[],provisos=[]) -> None:
@@ -155,7 +178,32 @@ class Function(Type):
     def full_name(self) -> str:
         return f"{self.package}::{self.name}"
 
+class Typeclass_instance():
+    def __init__(self,t_type,provisos=None) -> None:
+        self.t_type = t_type
+        self.provisos = provisos
+        self.inputs = t_type.fields
+
+    # add [] operator to allow for typeclass instances to be subscripted
+    def __getitem__(self,index):
+        if index == 0:
+            return self.t_type
+        if index == 1:
+            return self.provisos
+        raise IndexError(f"Typeclass instance index out of range: {index}")
+
+    def __str__(self) -> str:
+        return f"{self.inputs} {self.provisos}"
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
+
 class Typeclass():
+    type_ide: Type_ide
+    position: Position
+    instances: List[Typeclass_instance]
+
     def __init__(self,type_ide,position=None,members=None,superclasses=None,dependencies=None,instances=None) -> None:
         self.type_ide = type_ide
         self.position = position
@@ -173,6 +221,7 @@ class Typeclass():
     @property
     def full_name(self) -> str:
         return f"{self.type_ide.package}::{self.type_ide.name}"
+
 
 
 
@@ -227,8 +276,8 @@ class ModuleTransformer(Transformer):
     def tcl_tc_i_instance(self,args):
         args = [x for x in args if x is not None]
         if len(args) == 1:
-            return (args[0],None)
-        return (args[0], args[1])
+            return Typeclass_instance(args[0],None)
+        return Typeclass_instance(args[0], args[1])
     
     def tcl_tc_members(self,args):
         return ("members",args)
@@ -259,6 +308,8 @@ class ModuleTransformer(Transformer):
     #region func and module
     #new func
     
+    def string_input(self,args):
+        return args[0][1:-1]
 
     def tcl_function(self, args):
         args = [x for x in args if x is not None]
@@ -282,7 +333,6 @@ class ModuleTransformer(Transformer):
             provisos = args[it][1]
             it+=1
         return Function(name=function_name,package=package,arguments=arguments,result=result,provisos=provisos,position=args[it])
-
 
     def package_name(self,args):
         return (args[0],args[1])
@@ -368,7 +418,7 @@ class ModuleTransformer(Transformer):
         return Enum(name=args[0],members=args[1],width=width,position=position)
         
     def tcl_alias(self, args):
-        return Alias(name=args[0],type=args[1],position=args[2])
+        return Alias(type_ide=args[0],type=args[1],position=args[2])
 
     def tcl_interface_dec(self, args):
         args = [x for x in args if x is not None]
@@ -385,13 +435,21 @@ class ModuleTransformer(Transformer):
         return (args[1],Interface_method(name=args[1],type=args[0],input_types=None,ports=None))
 
     def struct(self, args):
-        return "Not Implemented"
+        type_ide = args[0]
+        members = args[1]
+        if len(args) == 4:
+            tcl_width = args[2]
+        else:
+            tcl_width = None
+        position = args[-1]
+        return Struct(name=type_ide,members=members,tcl_width=tcl_width,position=position)
 
     def tcl_tagged_union(self, args):
         return "Not Implemented"
     
     def poly_struct(self, args):
-        return "Not Implemented"
+        struct = self.struct(args)
+        struct.is_polymorphic = True
     
     def tcl_vectr(self, args):
         return "Not Implemented"
@@ -517,20 +575,34 @@ class ModuleTransformer(Transformer):
     
     #endregion
 
-parser = None
+parser: Lark = None
+typeParser: Lark = None
 
-def initalize_parser(start="start"):
+def initalize_parser(start: str="start"):
     global parser
+    global typeParser
     with open(os.path.join(os.path.join(os.path.dirname(__file__),"..","grammar"), "type.lark")) as f:
         lark_string = f.read()
     parser = Lark(lark_string, parser="earley",start=start)
+    typeParser = Lark(lark_string, parser="earley",start="type")
     return parser
 
-def parse_and_transform(tcl_string):
+def parse_and_transform(tcl_string: Union[str,bytes]):
     if type(tcl_string) == bytes:
         tcl_string = tcl_string.decode("utf-8")
     global parser
-    parsed = parser.parse(tcl_string)
+    try:
+        parsed = parser.parse(tcl_string)
+    except:
+        raise Exception("Failed to parse: \n")
+    result = ModuleTransformer().transform(parsed)
+    return result
+
+def evaluateType(type_string: Union[str,bytes]):
+    if type(type_string) == bytes:
+        type_string = type_string.decode("utf-8")
+    global typeParser
+    parsed = typeParser.parse(type_string)
     result = ModuleTransformer().transform(parsed)
     return result
 

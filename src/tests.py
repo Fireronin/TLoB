@@ -1,6 +1,6 @@
 import os
 import typeDatabase
-from typeDatabase import typeDatabase as tdb
+from typeDatabase import TypeDatabase as tdb
 
 #use whereis bsc to get the path of the bsc binary 
 BSCPATH = os.popen("whereis bsc").read().split()[1][:-4]

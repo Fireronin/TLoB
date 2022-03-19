@@ -20,7 +20,6 @@ type: typeprimary -> t_single
 typeprimary: [package_name_solo](identifier_u | identifier_l)["#(" type  ("," type)* ")"] -> tp_parametric
     | "bit" "[" typenat ":" typenat "]" -> bit
     | "int" -> int
-    //| identifier_l -> string_placeholder
     | typenat -> int_value
     | tcl_tc_m_f_function
     |  /"[^"]*"/  -> string_input
@@ -29,7 +28,7 @@ typeprimary: [package_name_solo](identifier_u | identifier_l)["#(" type  ("," ty
 typenat: NUMBER -> int_value
 
 identifier_l: /[a-z_$][\w$_']*/ 
-identifier_u: /[A-Z][\w$_]*/ 
+identifier_u: /[A-Z][\w$_']*/ 
 type_ide: identifier_u
 type_ide_poly: identifier_l
 
@@ -46,6 +45,8 @@ type_formal: "numeric" "type" identifier_l -> numeric_type_formal
             | "type" identifier_l -> type_type_formal
             | identifier_l
             | type_def_type
+            | "module" type_def_type -> module_type_formal
+            | typenat -> int_value
 
 interface_member_decl: method_proto
 
@@ -57,8 +58,8 @@ method_proto_formal: [atribute_instances] type identifier_l
 
 
 tcl_position: "{" "position" "{" tcl_path NUMBER NUMBER ["{" "Library" identifier_u "}"] "}" "}"
-// todo check paths with spaces
-tcl_path: ["%/"] /(([.]{1,2})|(\w+))/ ["/" /(([.][.])|([.])|(\w+))/]* "." /\w+/
+
+tcl_path: ["%/"] /(([.]{1,2})|(\w|-|\s)+)/ ["/" /(([.][.])|([.])|((\w|-|\s)+))/]* "." /\w+/
 
 tcl_type_full: tcl_interface_dec
             | tcl_typeclass
@@ -95,18 +96,20 @@ tcl_tc_dependencies: "{" "dependencies" "{" tcl_tc_d_dependency* "}" "}"
 
 tcl_tc_d_dependency: "{"  tcl_tc_dd_l "determines" tcl_tc_dd_l "}"
 
-tcl_tc_dd_l: "(" type ("," type)* ")" -> list_of
-        | type -> list_of
+tcl_tc_dd_l: "(" identifier_l ("," identifier_l)* ")" -> list_of
+        | identifier_l -> list_of
 
 tcl_tc_members: "{" "members" "{" (tcl_tc_m_value | tcl_tc_m_function | tcl_tc_m_module)* "}" "}"
 
 tcl_tc_m_value: "{" type_def_type identifier_l "}"
 
-tcl_tc_m_module: "{" "{" ["module"] type [tcl_tc_provisos] "}" identifier_l "}"
+tcl_tc_m_module: "{" "{" type [tcl_tc_provisos] "}" identifier_l "}"
 
 tcl_tc_m_function: "{" "{" tcl_tc_m_f_function [tcl_tc_provisos] "}" (identifier_l | /\S/ | /\S\S/ ) "}"
 
-tcl_tc_m_f_function: "function" type identifier_l "("  tcl_tc_m_f_argument ("," tcl_tc_m_f_argument )* ")"
+tcl_tc_m_f_function: "function" type_def_type identifier_l "("  tcl_tc_m_f_argument ("," tcl_tc_m_f_argument )* ")" -> tcl_tc_m_f_function
+                | "module" identifier_l "#("  tcl_tc_m_f_argument ("," tcl_tc_m_f_argument )* ")" "(" type_def_type ")" -> tcl_tc_m_f_module
+
 
 tcl_tc_m_f_argument: type_def_type identifier_l
                 | tcl_tc_m_f_function
@@ -116,11 +119,11 @@ tcl_primary: "Primary" type_def_type [tcl_width]
     | "Primary" "{" type_def_type "}" "polymorphic" [tcl_width]
 
 // Enum
-tcl_enum: "Enum" tcl_package_name tcl_e_members [tcl_width] tcl_position
+tcl_enum: "Enum" type_def_type tcl_e_members [tcl_width] tcl_position
 tcl_e_members: "{" "members" "{" identifier_u* "}" "}" -> to_list
             | "{" "members" identifier_u "}" -> to_list
 // Alias
-tcl_alias: "Alias" ( type_def_type | "{" type_def_type "}") (type |"{" type "}" | tcl_stu_module ) tcl_position
+tcl_alias: "Alias" ( type_def_type | "{" type_def_type "}") (type |"{" type "}"  ) tcl_position
 
 // Vector
 tcl_vector: "Vector" "{"type_def_type "}" "polymorphic" tcl_v_length tcl_v_elem
@@ -130,18 +133,15 @@ tcl_v_elem: "{" "elem" identifier_l "}"
 // List this is type on it's own weird ??
 tcl_list: "List" "{" type_def_type "}" "polymorphic" "{" type identifier_l "}" 
 // Struct and TaggedUnion
-tcl_struct: "Struct" tcl_package_name tcl_stu_members [tcl_width] tcl_position -> struct
+tcl_struct: "Struct" type_def_type tcl_stu_members [tcl_width] tcl_position -> struct
         | "Struct" "{" type_def_type "}" "polymorphic" tcl_stu_members [tcl_width] tcl_position -> poly_struct
 
-tcl_tagged_union: "TaggedUnion" tcl_package_name tcl_stu_members [tcl_width] tcl_position
+tcl_tagged_union: "TaggedUnion" type_def_type tcl_stu_members [tcl_width] tcl_position
         | "TaggedUnion" "{" type_def_type "}" "polymorphic"  tcl_stu_members  [tcl_width] tcl_position
 
 tcl_stu_members: "{" "members" "{" tcl_stu_member* "}" "}"
 
-tcl_stu_member: "{" (type |"void" | tcl_stu_module) (identifier_u|identifier_l) [tcl_width] "}"
-
-tcl_stu_module: "{" "module" identifier_l ["#" "(" type identifier_l ( "," type identifier_l )* ")" "(" type* ")" ] "}"
-
+tcl_stu_member: "{" type (identifier_u|identifier_l) [tcl_width] "}"
 
 // Interface
 atribute_instances: "ATRIBUTE INSTANCES TODO"
@@ -149,7 +149,6 @@ atribute_instances: "ATRIBUTE INSTANCES TODO"
 tcl_interface_dec: "Interface" "{" type_def_type "}" tcl_i_members tcl_position [tcl_i_attributes]
         | "Interface" "{" type_def_type "}" "polymorphic"  tcl_i_members  tcl_position [tcl_i_attributes]
         | "Interface" type_def_type tcl_i_members tcl_position [tcl_i_attributes]
-   // | "Interface"  identifier_u ":"":" type_def_type  tcl_members tcl_position
 
 tcl_i_members:  "{" "members" "{" ( "{" (tcl_im_method | tcl_im_subinterface) "}"  )* "}" "}" -> list_of
 
@@ -184,8 +183,8 @@ tcl_f_identifier: "{" identifier_l "}" ->string_placeholder
 
 
 
-tcl_f_result: "{" "result"  type "}" 
-            | "{" "result" "{" "{" type "}" "}" "}" 
+tcl_f_result: "{" "result"  type_def_type "}" 
+            | "{" "result" "{" "{" type_def_type "}" "}" "}" 
 
 tcl_f_arguments: "{" "arguments" tcl_fa_argument  "}"
             | "{" "arguments" "{" tcl_fa_argument* "}"  "}"
@@ -198,13 +197,6 @@ tcl_fa_argument: "{" tcl_tc_m_f_function "}"
 tcl_module: "{" "module" [package_name_solo] tcl_f_identifier tcl_m_interface [tcl_f_arguments] [tcl_provisos] tcl_position "}"
 
 tcl_m_interface: "{" "interface" (type | "{" "{" type "}" "}" ) "}"
-
-//////// Other crap
-
-
-//tcl_arguments: "{" "arguments" "{" type type* "}" "}"
-
-//tcl_module: "{" "module" identifier_u ":" ":" identifier_l tcl_interface_use [tcl_func_arguments] [tcl_provisos] tcl_position "}"
 
 
 tcl_provisos: "{" "provisos" "{" ("{" type "}" | type )* "}" "}"

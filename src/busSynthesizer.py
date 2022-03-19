@@ -2,10 +2,8 @@ from copy import deepcopy
 import enum
 from math import ceil, log2
 import os
-from re import S
-from tempfile import TemporaryFile
 
-from tenacity import retry_if_exception
+
 from extractor import Type as ExType
 from extractor import Interface as ExInterface
 from extractor import Type_formal as ExType_formal

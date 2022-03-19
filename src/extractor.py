@@ -1,9 +1,12 @@
+from ast import arguments
 from dataclasses import dataclass
-from typing import List, Tuple, Union
+import enum
+from turtle import position
+from typing import Dict, List, Tuple, Union
 from lark import Lark, Transformer, v_args
 import os
 
-from sympy import arg
+from sympy import EX, arg
 
 
 
@@ -39,6 +42,15 @@ class Type:
         self.primary = False
         self.width = None
 
+    def __eq__(self, other) -> bool:
+        if self.name != other.name:
+            return False
+        if self.package != other.package:
+            return False
+        if self.fields != other.fields:
+            return False
+        return True
+
     def __str__(self) -> str:
         return f"{self.package}::{self.name}"
     
@@ -48,13 +60,6 @@ class Type:
     @property
     def full_name(self) -> str:
         return f"{self.package}::{self.name}"
-
-class Struct(Type):
-    is_polymorphic: bool
-    def __init__(self,name,members,package=None,position=None,is_polymorphic=False) -> None:
-        super().__init__(name,package,position)
-        self.members = members
-        self.is_polymorphic = is_polymorphic
 
 class Interface(Type):
     def __init__(self,type_ide,members,position=None,attributes=None) -> None:
@@ -80,14 +85,9 @@ class Interface_method:
         self.input_types = input_types
         self.ports = ports
 
-class Enum(Type):
-    def __init__(self,name,members,width=None,package=None,position=None) -> None:
-        super().__init__(name,package,position)
-        self.primary = True
-        self.members = members
-        self.width = width
-
 class Type_ide:
+    name: str
+
     def __init__(self,name,package=None,formals=None,is_polymorphic=False,is_primary=False,used_name=None) -> None:
         self.name = name
         self.used_name = used_name
@@ -111,6 +111,75 @@ class Type_ide:
     def full_name(self) -> str:
         return f"{self.package}::{self.name}"
 
+
+class Enum(Type):
+    def __init__(self,type_ide,members,width=None,position=None) -> None:
+        super().__init__(type_ide.name,type_ide.package,position)
+        self.primary = True
+        self.members = members
+        self.width = width
+        self.type_ide = type_ide
+
+    def __str__(self) -> str:
+        return f"{self.type_ide}"
+    
+    def __repr__(self) -> str:
+        return f"{self.type_ide}"
+
+    @property
+    def full_name(self) -> str:
+        return f"{self.type_ide}"
+
+class Struct(Type):
+    is_tagged_union = False
+    is_polymorphic: bool
+    type_ide: Type_ide
+    members: Dict[str,Type]
+    position: Position
+
+
+    def __init__(self,type_ide: Type_ide,members,position=None,is_polymorphic=False,width=None,widths={},is_tagged_union=False) -> None:
+        super().__init__(type_ide.name,type_ide.package,position)
+        self.type_ide = type_ide
+        self.members = members
+        self.is_polymorphic = is_polymorphic
+        self.widths = widths
+        self.width = width 
+        self.is_tagged_union = is_tagged_union
+    
+    def __str__(self) -> str:
+        return f"{self.type_ide}"
+    
+    def __repr__(self) -> str:
+        return f"{self.type_ide}"
+
+    @property
+    def full_name(self) -> str:
+        return f"{self.type_ide}"
+
+
+
+#list or vector
+class GetItemTypes(Type):
+    type_ide: Type_ide
+
+    def __init__(self,type_ide: Type_ide,elem,length =None) -> None:
+        super().__init__(type_ide.name,type_ide.package)
+        self.type_ide = type_ide
+        self.elem = elem
+        self.length = length
+    
+    def __str__(self) -> str:
+        return f"{self.type_ide}"
+
+    def __repr__(self) -> str:
+        return f"{self.type_ide}"
+
+    @property
+    def full_name(self) -> str:
+        return f"{self.type_ide}"
+
+
 class Alias:
     type_ide: Type_ide
     type: Type
@@ -133,6 +202,8 @@ class Alias:
         return self.__str__()
 
 class Type_formal:
+    is_module: bool = False
+
     def __init__(self,name,type_tag=False,numeric_tag=False) -> None:
         self.name = name
         self.type_tag = type_tag
@@ -145,7 +216,7 @@ class Type_formal:
         return self.__str__()
 
 class Module(Type):
-    def __init__(self,name,package,interface,position,arguments=[],provisos=[]) -> None:
+    def __init__(self,name,interface,package=None,position=None,arguments=[],provisos=[]) -> None:
         Type.__init__(self,name=name,package=package,position=position)
         self.interface = interface
         self.arguments = arguments
@@ -162,14 +233,18 @@ class Module(Type):
         return f"{self.package}::{self.name}"
 
 class Function(Type):
+    type_ide: Type_ide #result
+    arguments: Dict[str,Type]
+
     def __init__(self,name,package=None,arguments=[],result=None,provisos=[],position=None,argument_names=None) -> None:
         Type.__init__(self,name=name,package=package,position=position)
         self.arguments = arguments
         self.result = result
+        self.type_ide = result
         self.provisos = provisos
     
     def __str__(self) -> str:
-        return super().__str__() + f""" ({"" if self.arguments is None else ", ".join(str(x) for x in self.arguments)}) out: {self.result}"""
+        return f"{self.type_ide} ({','.join([str(aa) for aa in self.arguments.values()])})"
     
     def __repr__(self) -> str:
         return self.__str__()
@@ -177,6 +252,8 @@ class Function(Type):
     @property
     def full_name(self) -> str:
         return f"{self.package}::{self.name}"
+
+
 
 class Typeclass_instance():
     def __init__(self,t_type,provisos=None) -> None:
@@ -267,7 +344,7 @@ class ModuleTransformer(Transformer):
     def tcl_tc_dependencies(self,args):
         return ("dependencies",args)
 
-    def tcl_tc_dependency(self,args):
+    def tcl_tc_d_dependency(self,args):
         return (args[0],args[1])
 
     def tcl_tc_instances(self,args):
@@ -280,29 +357,67 @@ class ModuleTransformer(Transformer):
         return Typeclass_instance(args[0], args[1])
     
     def tcl_tc_members(self,args):
-        return ("members",args)
+        members = {}
+        for arg in args:
+            if type(arg)==tuple:
+                members[arg[1]] = arg[2]
+            else:
+                members[arg] = None
+        return ("members",members)
     
     def tcl_tc_m_value(self,args):
-        args[0].used_name = args[1]
-        return ("value",args[0])
+        # name value
+        return ("memberValue",args[1],args[0])
+
+    def tcl_tc_m_module(self,args):
+        name = args[-1]
+        provisos = None
+        if len(args) == 3:
+            provisos = args[1]
+        module = args[0]
+        module.provisos = provisos
+        return ("module",name,module)
 
     def tcl_tc_m_function(self,args):
-        args = [x for x in args if x is not None]
-        if len(args) == 2:
-            return ("function",args[0],args[1],None)
-        return ("function",args[0],args[2],args[1])
+        name = args[-1]
+        provisos = None
+        if len(args) == 3:
+            provisos = args[1]
+        func = args[0]
+        func.provisos = provisos
+        return ("function",name,func)
 
     def tcl_tc_provisos(self,args):
         return ("provisos",args)
 
     def tcl_tc_m_f_function(self, args):
-        return Function(name=args[1],result=args[0],arguments=args[2:])
+        try:
+            arguments = {}
+            for argument in args[2:]:
+                if argument[0] =="TypeIdeAndName":
+                    arguments[argument[2]] = argument[1]
+                else:
+                    arguments[argument[1].name] = argument[1]
+
+            return Function(name=args[1],result=args[0],arguments=arguments)
+        except Exception as e:
+            print(e)
+            return None
+
+    def tcl_tc_m_f_module(self, args):
+        arguments = {}
+        for argument in args[2:]:
+            if issubclass(type(argument),Type):
+                arguments[argument.name] = argument
+            else:
+                arguments[argument[1]] = argument[0]
+        return Module(name=args[0],arguments=args[1:-1],interface=args[-1])
 
     def tcl_tc_m_f_argument(self, args):
         args = [x for x in args if x is not None]
         if len(args) == 2:
-            return ("argument",args[0],args[1]) 
-        return ("function",args[0])
+            return ("TypeIdeAndName",args[0],args[1]) 
+        return ("functionOrModule",args[0])
     #endregion
     
     #region func and module
@@ -312,27 +427,32 @@ class ModuleTransformer(Transformer):
         return args[0][1:-1]
 
     def tcl_function(self, args):
-        args = [x for x in args if x is not None]
-        package = None
-        arguments = []
-        provisos = []
-        result = None
-        it = 0
-        if type(args[it])==tuple and args[it][0] == "package":
-            package = args[it][1]
+        try:
+            args = [x for x in args if x is not None]
+            package = None
+            arguments = []
+            provisos = []
+            result = None
+            it = 0
+            if type(args[it])==tuple and args[it][0] == "package":
+                package = args[it][1]
+                it+=1
+            function_name = args[it]
             it+=1
-        function_name = args[it]
-        it+=1
-        if type(args[it])==tuple and args[it][0] == "result":
-            result = args[it][1]
-            it+=1
-        if type(args[it])==tuple and args[it][0] == "arguments":
-            arguments = args[it][1]
-            it+=1
-        if type(args[it])==tuple and args[it][0] == "provisos":
-            provisos = args[it][1]
-            it+=1
-        return Function(name=function_name,package=package,arguments=arguments,result=result,provisos=provisos,position=args[it])
+            if type(args[it])==tuple and args[it][0] == "result":
+                result = args[it][1]
+                it+=1
+            if type(args[it])==tuple and args[it][0] == "arguments":
+                arguments = args[it][1]
+                it+=1
+            if type(args[it])==tuple and args[it][0] == "provisos":
+                provisos = args[it][1]
+                it+=1
+            return Function(name=function_name,package=package,arguments=arguments,result=result,provisos=provisos,position=args[it])
+        except Exception as e:
+            print(e)
+            print(args)
+            raise e
 
     def package_name(self,args):
         return (args[0],args[1])
@@ -348,7 +468,10 @@ class ModuleTransformer(Transformer):
         return ("result",args[0])
 
     def tcl_f_arguments(self,args):
-        return ("arguments",args)
+        arguments = {}
+        for i,argument in enumerate(args):
+            arguments[str(i)] = argument
+        return ("arguments",arguments)
 
     def tcl_fa_argument(self, args):
         return args[0]
@@ -356,29 +479,34 @@ class ModuleTransformer(Transformer):
     # module
 
     def tcl_module(self, args):
-        args = [x for x in args if x is not None]
-        package = None
-        interface = None
-        arguments = []
-        provisos = []
-        position = None
-        it = 0
-        if type(args[it])==tuple and  args[it][0] == "package":
-            package = args[it][1]
+        try:
+            args = [x for x in args if x is not None]
+            package = None
+            interface = None
+            arguments = []
+            provisos = []
+            position = None
+            it = 0
+            if type(args[it])==tuple and  args[it][0] == "package":
+                package = args[it][1]
+                it+=1
+            module_name = args[it]
             it+=1
-        module_name = args[it]
-        it+=1
-        interface = args[it][1]
-        it+=1
-        if type(args[it])==tuple and args[it][0] == "arguments":
-            arguments = args[it][1]
+            interface = args[it][1]
             it+=1
-        if type(args[it])==tuple and args[it][0] == "provisos":
-            provisos = args[it][1]
-            it+=1
-        position = args[it]
-        return Module(name=module_name,package=package,interface=interface,arguments=arguments,provisos=provisos,position=position)
-    
+            if type(args[it])==tuple and args[it][0] == "arguments":
+                arguments = args[it][1]
+                it+=1
+            if type(args[it])==tuple and args[it][0] == "provisos":
+                provisos = args[it][1]
+                it+=1
+            position = args[it]
+            return Module(name=module_name,package=package,interface=interface,arguments=arguments,provisos=provisos,position=position)
+        except Exception as e:
+            print(e)
+            print(args)
+            raise e
+
     def tcl_m_interface(self, args):
         args = [x for x in args if x is not None]
         if len(args) == 2:
@@ -404,18 +532,18 @@ class ModuleTransformer(Transformer):
     def tcl_width(self, args):
         return ("width",args[0])
 
-    def tcl_list(self, args):
-        return ("list",args)
-
     def tcl_enum(self, args):
-        args = [x for x in args if x is not None]
-        if len(args) == 4:
-            width = args[2][1]
-            position = args[3]
-        else:
+        try:
+            args = [x for x in args if x is not None]
             width = None
-            position = args[2]
-        return Enum(name=args[0],members=args[1],width=width,position=position)
+            if len(args) == 4:
+                width = args[2][1]
+                
+            position = args[-1]
+            return Enum(type_ide=args[0],members=args[1],width=width,position=position)
+        except Exception as e:
+            print(e)
+            return None
         
     def tcl_alias(self, args):
         return Alias(type_ide=args[0],type=args[1],position=args[2])
@@ -436,29 +564,59 @@ class ModuleTransformer(Transformer):
 
     def struct(self, args):
         type_ide = args[0]
-        members = args[1]
+        members = args[1][1]
+        widths = args[1][2]
         if len(args) == 4:
-            tcl_width = args[2]
+            width = args[2]
         else:
-            tcl_width = None
+            width = None
         position = args[-1]
-        return Struct(name=type_ide,members=members,tcl_width=tcl_width,position=position)
+        return Struct(type_ide=type_ide,members=members,width=width,position=position,widths=widths)
 
     def tcl_tagged_union(self, args):
-        return "Not Implemented"
+        type_ide = args[0]
+        members = args[1][1]
+        widths = args[1][2]
+        if len(args) == 4:
+            width = args[2]
+        else:
+            width = None
+        position = args[-1]
+        return Struct(type_ide=type_ide,members=members,width=width,position=position,widths=widths,is_tagged_union=True)
     
     def poly_struct(self, args):
         struct = self.struct(args)
         struct.is_polymorphic = True
+        return struct
     
-    def tcl_vectr(self, args):
-        return "Not Implemented"
+    def tcl_stu_members(self, args):
+        #dict of members
+        members = {}
+        widths = {}
+        for x in range(len(args)):
+            members[args[x][2]] = args[x][1]
+            widths[args[x][2]] = args[x][3]
 
-    def tcl_stu_module(self, args):
-        return "Not Implemented"
+        return ("members_widths",members,widths)
+
+    def tcl_stu_member(self,args):
+        width = None
+        if type(args[-1]) == tuple and args[-1][0] == "width":
+            width = args[-1][1]
+        
+        return ("member",args[0],args[1],width)
+
+    def tcl_v_elem(self, args):
+        return args[0]
+
+    def tcl_v_length(self, args):
+        return args[0]
 
     def tcl_vector(self, args):
-        return "Not Implemented"
+        return GetItemTypes(type_ide=args[0],elem = args[2],length =args[1])
+
+    def tcl_list(self, args):
+        return GetItemTypes(type_ide=args[0],elem = args[1])
 
     # type_def_type
     def type_ide(self, args):
@@ -485,6 +643,10 @@ class ModuleTransformer(Transformer):
     def type_formal(self, args):
         return Type_formal(name=args[0])
 
+    def module_type_formal(self, args):
+        args[0].is_module = True
+        return args[0]
+
     def type_type_formal(self, args):
         return Type_formal(name=args[0],type_tag=True)
 
@@ -507,9 +669,6 @@ class ModuleTransformer(Transformer):
         return ("package",args[0])
 
     #region old crap
-    
-    # def tcl_module(self,args):
-    #     return Module(package=args[0],name=args[1],interface=args[2],arguments=args[3],position=args[4])
 
     def tcl_position(self, args):
         return Position(args[0],args[1],args[2])
@@ -556,19 +715,8 @@ class ModuleTransformer(Transformer):
     def NUMBER(self, number):
         return int(number.value)
 
-    # def numeric_type_formal(self, args):
-    #     args = [x for x in args if x is not None]
-    #     return Type(name="numeric",fields=args)
-
-    # def type_formal(self, args):
-    #     args = [x for x in args if x is not None]
-    #     return Type(name="type_formal",fields=args)
-
     def list_of(self,args):
         return args
-
-    # def type_def_type(self, args):
-    #     return Type(name="type_def",fields=args)
 
     def tcl_polymorphic(self, args):
         return (args[0],"polyTAG")
@@ -593,7 +741,7 @@ def parse_and_transform(tcl_string: Union[str,bytes]):
     global parser
     try:
         parsed = parser.parse(tcl_string)
-    except:
+    except Exception as e:
         raise Exception("Failed to parse: \n")
     result = ModuleTransformer().transform(parsed)
     return result

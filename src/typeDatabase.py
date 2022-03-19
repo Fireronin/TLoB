@@ -1,7 +1,7 @@
 from copy import deepcopy
 from logging import Handler
 from posixpath import split
-from typing import Dict
+from typing import Dict, Set
 
 from numpy import var
 from extractor import Type as ExType
@@ -23,27 +23,26 @@ def fuzzyException(name,list,exception_string):
     
 
 class TypeDatabase():
-    aliases: Dict[str,Alias]    
+    aliases: Dict[str,Alias] = {}
+    types: Dict[str,Type] = {}
+    functions: Dict[str,Function] = {}
+    typeclasses: Dict[str,Typeclass] = {}
+    structs: Dict[str,Struct] = {}
+    packages: Set[str] = set()
+    logged_funcs: bytes = b""
+    logged_types: bytes = b""
 
     def __init__(self,load=False):
         if load:
             self.loadStateFromPickle()
-        self.packages = set()
-        self.functions = {}
-        self.types = {}
-        self.typeclasses = {}
-        self.parser = initalize_parser(start="tcl_type_full_list") 
-        self.logged_funcs = b""
-        self.logged_types = b""
-        self.aliases = {}
-        # remove file failed_types.json
+        self.parser = initalize_parser(start="tcl_type_full_list")
+        # remove file failed_types.json and failed_functions.json
         try:
             os.remove("failed_types.json")
+            os.remove("failed_functions.json")
+            os.remove("failed_loads.json")
         except:
             pass
-        
-        # if child is None:
-        #     create_bluetcl()
 
     def getFunctionByName(self,name):
         if name in self.functions:
@@ -62,6 +61,8 @@ class TypeDatabase():
 
     def addUnparsedTypes(self,types):
         for type_string in types:
+            if len(type_string) == 0:
+                continue
             try:
                 t_type = parse_and_transform(type_string)[0]
             except Exception as e:
@@ -74,26 +75,20 @@ class TypeDatabase():
                 print(e)
                 t_type = "Parsing failed"
             
+            if issubclass(type(t_type),Type):
+                self.types[t_type.full_name] = t_type
             if type(t_type) == Struct:
-                type_string = str(type_string, encoding='utf-8')
-                # save type_string to file failed_types.json
-                with open("failed_types.json","a") as f:
-                    f.write(type_string + "\n")
+                self.structs[t_type.full_name] = t_type
             if type(t_type)== Typeclass:
                 self.typeclasses[t_type.full_name] = t_type
             elif type(t_type) == Alias:
                 self.aliases[t_type.full_name] = t_type
             else:
                 if type(t_type) == str:
-                    continue
-                try:
-                    self.types[t_type.full_name] = t_type
-                except Exception as e:
-                    # type_string from str to bytes
-                    type_string = str(type_string, encoding='utf-8')
                     #save type_string to file failed_types.json
                     with open("failed_types.json","a") as f:
                         f.write(type_string + "\n")
+                    continue
 
     def addUnparsedFunctions(self,functions):
         try:
@@ -114,9 +109,24 @@ class TypeDatabase():
                 return self.types[type].type
         fuzzyException(typedef,list(self.types), "Typedef {} not found. \n Do you mean: \n{}")
 
+    def loadPackage(self,package_name):
+        try:
+            load_package(package_name=package_name)
+        except Exception as e:
+            print("Failed to load package {}".format(package_name))
+            print(e)
+            #save same message to file failed_loads.json
+            with open("failed_loads.json","a") as f:
+                f.write("Failed to load package {} \n".format(package_name))
+                f.write(str(e) + "\n")
+            return package_name
+        return package_name
+    
     def addPackage(self,package_name):
         # add package to database
         if package_name in self.packages:
+            return
+        if self.loadPackage(package_name) == None:
             return
         self.packages.add(package_name)
         funcs = list_funcs(package_name=package_name)
@@ -128,21 +138,14 @@ class TypeDatabase():
         self.addUnparsedFunctions(funcs)
         
     def addPackages(self,packages):
-        for package in packages:
-            load_package(package_name=package)
-        for package in packages:
-            self.addPackage(package)
+        loaded = []
+        for package_name in packages:
+            if self.loadPackage(package_name) != None:
+                loaded.append(package_name)
+        for package_name in loaded:
+            self.addPackage(package_name)
     
-    # def updateModuleMaker(self,module):
-    #     try:
-    #         fields = module.interface.fields
-    #         if fields == None:
-    #             module.interface = deepcopy(self.types[module.interface.full_name])
-    #             module.interface.fields = fields
-    #     except Exception as e:
-    #         print(f"{module.interface.full_name} not found in function {module.full_name}")
-
-    def checkToXMembership(self,t_type,typeclass):
+    def checkToXMembership(self,t_type,typeclass: Typeclass):
         for instance in typeclass.instances:
             if t_type.name != instance[0].fields[0].name or t_type.package != instance[0].fields[0].package:
                 continue

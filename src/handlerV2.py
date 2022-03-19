@@ -6,7 +6,7 @@ child = None
 
 def create_bluetcl():
     global child
-    child = pexpect.spawn('/opt/tools/bsc/bsc-2021/bin/bluetcl',cwd='/mnt/d/Mega/Documents/CS/TLoB')
+    child = pexpect.spawn('/opt/tools/bsc/latest/bin/bluetcl',cwd='/mnt/e/Mega/Documents/CS/TLoB')
     child.setecho(True)
     child.sendline(b'namespace import ::Bluetcl::*')
     child.expect(b'% ',timeout=5)
@@ -31,19 +31,22 @@ def fancy_call(command,only_last_line=True):
         command = bytes(command, encoding= "raw_unicode_escape")
     child.sendline(command)
     child.expect(re.escape(command)+b"\r\n",timeout=5)
+    full_text = b""
     try:
         if only_last_line:
             s = b""
             while child.buffer != b'% ':
                 s = child.readline()
+                full_text += s
         else:
             child.expect(b"\r\r\n",timeout=7)
             s = child.before
+            full_text += s
     except pexpect.TIMEOUT:
         print("Warrning: TIMEOUT")
         s = b""
-    if s.find(b"Error")!=-1:
-        raise Exception("Error:",s)
+    if full_text.find(b"Error: ")!=-1:
+        raise Exception("Error:",full_text)
     return s
 
 def list_packages():
@@ -64,13 +67,13 @@ def list_funcs(package_name="Polyfifo"):
 
 def read_type(type_string=b"Polyfifo::FIFOIfc"):
     type_name = type_string.split(b"::")[-1]
-    print(b"Currently reading: type constr "+type_name)
+    print("Currently reading type: "+str(type_name, encoding='utf-8') )
     if type_name in [b"Bits",b"SizedLiteral"]:
         return b""
     try:
         constr = fancy_call(b"type constr "+type_name,only_last_line=False)
     except Exception as e:
-        print(b"Warrning:" + type_name + b"is probably a keyword")
+        print("Warrning:" + str(type_name, encoding='utf-8') + "is probably a keyword")
         return b""
     try:
         #remove spaces
@@ -78,11 +81,12 @@ def read_type(type_string=b"Polyfifo::FIFOIfc"):
         type_full = fancy_call(b"type full "+constr,only_last_line=False)
     except Exception as e:
         print(e)
-        print(b"Warrning: Type "+ type_name + b" failed to load")
+        print("Warrning: Type "+ str(type_name, encoding='utf-8') + " failed to load")
         return b""
     return type_full
 
 def read_all_types(package_name="Polyfifo"):
+    print("Reading types in package: "+package_name)
     types = list_types(package_name)
     type_strings = []
     for type_name in types:

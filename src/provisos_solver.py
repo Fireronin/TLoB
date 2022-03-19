@@ -10,3 +10,16 @@ problem.addVariable("c", [1,2,4,5,8])
 problem.addConstraint(lambda a, b,c: a+b == int(log2(c)) , ("a", "b","c"))
 
 problem.getSolutions()
+
+class Proviso:
+    name: str
+
+    def __init__(self, name, args):
+        self.name = name
+        self.args = args
+
+def resolveProvisos(provisos):
+    pass
+
+def provisoAdd(a,b,c):
+    return a+b == int(log2(c))

@@ -4,7 +4,6 @@ import os
 from re import S
 from tempfile import TemporaryFile
 
-from tenacity import retry_if_exception
 from extractor import Position, Type as ExType, Type_ide
 from extractor import Interface as ExInterface
 from extractor import Type_formal as ExType_formal

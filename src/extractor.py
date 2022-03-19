@@ -253,7 +253,22 @@ class Function(Type):
     def full_name(self) -> str:
         return f"{self.package}::{self.name}"
 
+class Proviso(Type):
+    Type_ide: Type_ide
 
+    def __init__(self,type_ide: Type_ide,position=None) -> None:
+        Type.__init__(self,type_ide.name,type_ide.package,position)
+        self.type_ide = type_ide
+
+    def __str__(self) -> str:
+        return f"{self.type_ide}"
+    
+    def __repr__(self) -> str:
+        return f"{self.type_ide}"
+    
+    @property
+    def full_name(self) -> str:
+        return f"{self.type_ide}"
 
 class Typeclass_instance():
     def __init__(self,t_type,provisos=None) -> None:
@@ -387,8 +402,9 @@ class ModuleTransformer(Transformer):
         func.provisos = provisos
         return ("function",name,func)
 
-    def tcl_tc_provisos(self,args):
-        return ("provisos",args)
+    def tcl_provisos(self,args):
+        provisos = [ Proviso(x) for x in args ]
+        return ("provisos",provisos)
 
     def tcl_tc_m_f_function(self, args):
         try:
@@ -656,11 +672,7 @@ class ModuleTransformer(Transformer):
     #endregion
 
 
-
     #utility
-
-    def tcl_provisos(self,args):
-        return ("provisos",args)
 
     def tcl_type_full(self,args):
         return args[0]

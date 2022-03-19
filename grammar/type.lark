@@ -90,7 +90,7 @@ tcl_tc_instances: "{" "instances" "{" (tcl_tc_i_instance)*  "}" "}"
 tcl_tc_i_instance: type
                 | "{" type [tcl_tc_provisos] "}"
 
-tcl_tc_provisos: "provisos" "(" type ("," type)* ")"
+tcl_tc_provisos: "provisos" "(" type_def_type ("," type_def_type)* ")" -> tcl_provisos
 
 tcl_tc_dependencies: "{" "dependencies" "{" tcl_tc_d_dependency* "}" "}"
 
@@ -199,8 +199,8 @@ tcl_module: "{" "module" [package_name_solo] tcl_f_identifier tcl_m_interface [t
 tcl_m_interface: "{" "interface" (type | "{" "{" type "}" "}" ) "}"
 
 
-tcl_provisos: "{" "provisos" "{" ("{" type "}" | type )* "}" "}"
-            | "{" "provisos" type "}"
+tcl_provisos: "{" "provisos" "{" ("{" type_def_type "}" | type_def_type )* "}" "}"
+            | "{" "provisos" type_def_type "}" 
 
 //// flags imports
 %import common.CNAME -> NAME

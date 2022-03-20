@@ -22,7 +22,7 @@ for file in os.listdir("Flute/src_SSITH_P2/build_dir"):
 # packages_to_load.remove("CacheCore")
 # packages_to_load.remove("Core")
 
-packages_to_load.insert("FIFO")
+packages_to_load.append("FIFO")
 
 for package in packages_to_load:
     db.loadPackage(package)

@@ -85,6 +85,8 @@ class Interface_method:
         self.input_types = input_types
         self.ports = ports
 
+
+
 class Type_ide:
     name: str
 
@@ -111,6 +113,20 @@ class Type_ide:
     def full_name(self) -> str:
         return f"{self.package}::{self.name}"
 
+
+class Value:
+    is_string: bool
+
+    def __init__(self,value) -> None:
+        self.value = value        
+        if type(value) == str:
+            self.is_string = True
+
+    def __str__(self) -> str:
+        return f"{self.value}"
+    
+    def __repr__(self) -> str:
+        return f"{self.value}"
 
 class Enum(Type):
     def __init__(self,type_ide,members,width=None,position=None) -> None:
@@ -216,11 +232,14 @@ class Type_formal:
         return self.__str__()
 
 class Module(Type):
+    type_ide: Type_ide
+
     def __init__(self,name,interface,package=None,position=None,arguments=[],provisos=[]) -> None:
         Type.__init__(self,name=name,package=package,position=position)
         self.interface = interface
         self.arguments = arguments
         self.provisos = provisos
+        self.type_ide = interface
     
     def __str__(self) -> str:
         return super().__str__() +f""" {self.interface}"""
@@ -236,7 +255,7 @@ class Function(Type):
     type_ide: Type_ide #result
     arguments: Dict[str,Type]
 
-    def __init__(self,name,package=None,arguments=[],result=None,provisos=[],position=None,argument_names=None) -> None:
+    def __init__(self,name,package=None,arguments={},result=None,provisos=[],position=None,argument_names=None) -> None:
         Type.__init__(self,name=name,package=package,position=position)
         self.arguments = arguments
         self.result = result
@@ -254,7 +273,7 @@ class Function(Type):
         return f"{self.package}::{self.name}"
 
 class Proviso(Type):
-    Type_ide: Type_ide
+    type_ide: Type_ide
 
     def __init__(self,type_ide: Type_ide,position=None) -> None:
         Type.__init__(self,type_ide.name,type_ide.package,position)
@@ -271,10 +290,13 @@ class Proviso(Type):
         return f"{self.type_ide}"
 
 class Typeclass_instance():
+    type_ide: Type_ide
+
     def __init__(self,t_type,provisos=None) -> None:
         self.t_type = t_type
         self.provisos = provisos
-        self.inputs = t_type.fields
+        self.type_ide = t_type
+        self.inputs = t_type.formals
 
     # add [] operator to allow for typeclass instances to be subscripted
     def __getitem__(self,index):
@@ -641,7 +663,12 @@ class ModuleTransformer(Transformer):
     def type_ide_poly(self, args):
         return ("type_ide_poly",args[0])
 
+    def type_def_type_value(self, args):
+        return Value(args[0])
+
     def type_def_type(self, args):
+        if type(args[0]) == Value:
+            return args[0]
         args = [x for x in args if x is not None]
         poly = False
         package = None
@@ -754,6 +781,8 @@ def parse_and_transform(tcl_string: Union[str,bytes]):
     try:
         parsed = parser.parse(tcl_string)
     except Exception as e:
+        if tcl_string == 'can\'t read "Cons": no such variable':
+            raise Exception("Failed to parse: \n")
         raise Exception("Failed to parse: \n")
     result = ModuleTransformer().transform(parsed)
     return result

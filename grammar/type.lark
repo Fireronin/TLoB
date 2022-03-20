@@ -38,8 +38,14 @@ interface_decl: [atribute_instances] "interface" type_def_type ";" (interface_me
 
 type_def_type: tcl_package_name (type_formals)*
             | type_ide_poly (type_formals)*
+            | "{" tcl_package_name (type_formals)* "}"
+            | "{" type_ide_poly (type_formals)* "}"
+            | type_def_type_value
 
 type_formals: "#(" type_formal ("," type_formal)* ")" -> list_of
+
+type_def_type_value: typenat 
+            |  /"[^"]*"/  
 
 type_formal: "numeric" "type" identifier_l -> numeric_type_formal
             | "type" identifier_l -> type_type_formal
@@ -47,6 +53,7 @@ type_formal: "numeric" "type" identifier_l -> numeric_type_formal
             | type_def_type
             | "module" type_def_type -> module_type_formal
             | typenat -> int_value
+            | tcl_tc_m_f_function
 
 interface_member_decl: method_proto
 
@@ -87,8 +94,8 @@ tcl_tc_superclasses: "{" "superclasses" (type_def_type | "{" (type_def_type | "{
 tcl_tc_instances: "{" "instances" "{" (tcl_tc_i_instance)*  "}" "}"
                |  "{" "instances" tcl_tc_i_instance "}"
                
-tcl_tc_i_instance: type
-                | "{" type [tcl_tc_provisos] "}"
+tcl_tc_i_instance: type_def_type        
+                | "{" type_def_type [tcl_tc_provisos] "}"
 
 tcl_tc_provisos: "provisos" "(" type_def_type ("," type_def_type)* ")" -> tcl_provisos
 
@@ -103,7 +110,7 @@ tcl_tc_members: "{" "members" "{" (tcl_tc_m_value | tcl_tc_m_function | tcl_tc_m
 
 tcl_tc_m_value: "{" type_def_type identifier_l "}"
 
-tcl_tc_m_module: "{" "{" type [tcl_tc_provisos] "}" identifier_l "}"
+tcl_tc_m_module: "{" "{" type_def_type [tcl_tc_provisos] "}" identifier_l "}"
 
 tcl_tc_m_function: "{" "{" tcl_tc_m_f_function [tcl_tc_provisos] "}" (identifier_l | /\S/ | /\S\S/ ) "}"
 
@@ -123,7 +130,7 @@ tcl_enum: "Enum" type_def_type tcl_e_members [tcl_width] tcl_position
 tcl_e_members: "{" "members" "{" identifier_u* "}" "}" -> to_list
             | "{" "members" identifier_u "}" -> to_list
 // Alias
-tcl_alias: "Alias" ( type_def_type | "{" type_def_type "}") (type |"{" type "}"  ) tcl_position
+tcl_alias: "Alias" ( type_def_type ) (type_def_type) tcl_position
 
 // Vector
 tcl_vector: "Vector" "{"type_def_type "}" "polymorphic" tcl_v_length tcl_v_elem
@@ -131,9 +138,9 @@ tcl_v_length: "{" "length" identifier_l "}"
 tcl_v_elem: "{" "elem" identifier_l "}"
 
 // List this is type on it's own weird ??
-tcl_list: "List" "{" type_def_type "}" "polymorphic" "{" type identifier_l "}" 
+tcl_list: "List" "{" type_def_type "}" "polymorphic" "{" type_def_type identifier_l "}" 
 // Struct and TaggedUnion
-tcl_struct: "Struct" type_def_type tcl_stu_members [tcl_width] tcl_position -> struct
+tcl_struct: "Struct"  type_def_type  tcl_stu_members [tcl_width] tcl_position -> struct
         | "Struct" "{" type_def_type "}" "polymorphic" tcl_stu_members [tcl_width] tcl_position -> poly_struct
 
 tcl_tagged_union: "TaggedUnion" type_def_type tcl_stu_members [tcl_width] tcl_position
@@ -141,8 +148,8 @@ tcl_tagged_union: "TaggedUnion" type_def_type tcl_stu_members [tcl_width] tcl_po
 
 tcl_stu_members: "{" "members" "{" tcl_stu_member* "}" "}"
 
-tcl_stu_member: "{" type (identifier_u|identifier_l) [tcl_width] "}"
-
+tcl_stu_member: "{" type_def_type (identifier_u|identifier_l) [tcl_width] "}"
+            | "{" "{" type_def_type "}" (identifier_u|identifier_l) [tcl_width] "}"
 // Interface
 atribute_instances: "ATRIBUTE INSTANCES TODO"
 
@@ -152,9 +159,10 @@ tcl_interface_dec: "Interface" "{" type_def_type "}" tcl_i_members tcl_position 
 
 tcl_i_members:  "{" "members" "{" ( "{" (tcl_im_method | tcl_im_subinterface) "}"  )* "}" "}" -> list_of
 
-tcl_im_subinterface: "interface" type identifier_l [tcl_imm_input_types] "{"  ([tcl_imm_prefix] | [tcl_imm_result] | [tcl_imm_ports] | [tcl_imm_other])*  "}"
+tcl_im_subinterface: "interface" type_def_type identifier_l [tcl_imm_input_types] "{"  ([tcl_imm_prefix] | [tcl_imm_result] | [tcl_imm_ports] | [tcl_imm_other])*  "}"
+                |"interface" "{" type_def_type "}"  identifier_l  [tcl_imm_input_types] "{"  ([tcl_imm_prefix] | [tcl_imm_result] | [tcl_imm_ports] | [tcl_imm_other])*  "}"
 
-tcl_im_method: "method" "{" type identifier_l tcl_imm_input_types "{"  ([tcl_imm_prefix] | [tcl_imm_result] | [tcl_imm_ports] | [tcl_imm_other])* "}" "}"
+tcl_im_method: "method" "{" type_def_type identifier_l tcl_imm_input_types "{"  ([tcl_imm_prefix] | [tcl_imm_result] | [tcl_imm_ports] | [tcl_imm_other])* "}" "}"
 
 tcl_imm_other: "{" "(" "*" identifier_l "*" ")" "}" -> string_placeholder
 
@@ -190,13 +198,13 @@ tcl_f_arguments: "{" "arguments" tcl_fa_argument  "}"
             | "{" "arguments" "{" tcl_fa_argument* "}"  "}"
 
 tcl_fa_argument: "{" tcl_tc_m_f_function "}" 
-            | type
-            | "{" type "}"
+            | type_def_type
+            | "{" type_def_type "}"
 
 //// module
 tcl_module: "{" "module" [package_name_solo] tcl_f_identifier tcl_m_interface [tcl_f_arguments] [tcl_provisos] tcl_position "}"
 
-tcl_m_interface: "{" "interface" (type | "{" "{" type "}" "}" ) "}"
+tcl_m_interface: "{" "interface" (type_def_type | "{" "{" type_def_type "}" "}" ) "}"
 
 
 tcl_provisos: "{" "provisos" "{" ("{" type_def_type "}" | type_def_type )* "}" "}"

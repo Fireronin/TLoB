@@ -1,6 +1,4 @@
 from copy import deepcopy
-from logging import Handler
-from posixpath import split
 from typing import Dict, Set
 
 from numpy import var
@@ -9,6 +7,7 @@ from extractor import *
 from handlerV2 import *
 from thefuzz import process
 import pickle
+from provisoSolverV3 import solveNonNumerical
 
 
 def fuzzyException(name,list,exception_string):
@@ -20,7 +19,13 @@ def fuzzyException(name,list,exception_string):
     if string_of_matches == "":
         string_of_matches += str(potential_matches[0][0]) + " \n"
     raise Exception(exception_string.format(name,string_of_matches))
-    
+
+def CAdd(context,s,value):
+    if s not in context:
+        context[s] = value
+    else:
+        context[s].populate(value)
+
 
 class TypeDatabase():
     aliases: Dict[str,Alias] = {}
@@ -175,6 +180,174 @@ class TypeDatabase():
                         else:
                             raise Exception(f"Unknown type (or a function) on the left side {typeclass}")
         return Exception(f"{t_type} not found in {typeclass}")
+
+    def mergeV2(self,a: Union[Value,Type_ide,str],b: Union[Value,Type_ide,str],context: Dict[str,Union[Value,Type_ide]]):
+        a,b = deepcopy(a),deepcopy(b)
+        if type(a) == str and type(b) != str:
+            CAdd(context,a,b)
+        if type(b) == str and type(a) != str:
+            CAdd(context,b,a)
+        
+        if type(a) == str and type(b) == str:
+            if a in context and b in context:
+                assert context[a] == context[b]
+            elif a in context:
+                CAdd(context,b,context[a])
+            elif b in context:
+                CAdd(context,a,context[b])
+            else: 
+                newType = Type_ide("nothing")
+                context[a] = newType
+                context[b] = newType
+        
+        if type(a) == Value and type(b) == Value:
+            if a.value == b.value:
+                return context
+            else:
+                raise Exception(f"Cannot merge different values, {a} and {b}")
+        if type(a) == Value and type(b) == Type_ide:
+            #swap a and b
+            return context
+        if type(a) == Type_ide and type(b) == Value:
+            #handle sudo types 
+            return context
+        if type(a) == Type_ide and type(b) == Type_ide:
+            if a.full_name != b.full_name:
+                raise Exception(f"Cannot merge different types, {a} and {b}")
+            for i,pair in enumerate(zip(a.children,b.children)):
+                fa,fb = pair
+                context |= self.mergeV2(fa,fb,context)
+        return context
+
+    def merge(self,a: Union[Value,Type_ide],b: Union[Value,Type_ide]) -> Union[Value,Type_ide,str]:
+        a,b = deepcopy(a),deepcopy(b)
+        variables = {}
+        if type(a) == str or type(b) == str:
+            if type(a) == str:
+                variables[a] = b
+            if type(b) == str:
+                variables[b] = a
+                b = a
+            return b,variables
+
+        if type(a) == Value and type(b) == Value:
+            if a == b:
+                return a,variables
+            else:
+                raise Exception(f"Cannot merge different values, {a} and {b}")
+        if type(a) == Value and type(b) == Type_ide:
+            #swap a and b
+            a,b = b,a
+        if type(a) == Type_ide and type(b) == Value:
+            #handle sudo types like,
+            return b,variables
+        if type(a) == Type_ide and type(b) == Type_ide:
+            if a.full_name != b.full_name:
+                raise Exception(f"Cannot merge different types, {a} and {b}")
+            for i,pair in enumerate(zip(a.formals,b.formals)):
+                fa,fb = pair
+                merged_type,newVars = self.merge(fa.type_ide,fb.type_ide)
+                a.formals[i].type_ide = merged_type
+                
+                for key,value in newVars.items():
+                    if key in variables:
+                        if type(variables[key]) == str:
+                            pass
+                        
+                    variables[key] = value
+            return a,variables
+        raise Exception(f"Cannot merge {type(a)} and {type(b)} Something weird Happened")
+
+    def applyVariables(self,t_type: Type_ide, variables) -> Union[Type_ide,Value,str]:
+        if type(t_type) == str:
+            if t_type in variables:
+                return variables[t_type]
+            return t_type
+        if type(t_type) == Value:
+            return t_type
+        if type(t_type) == Type_ide:
+            for i,field in enumerate(t_type.formals):
+                t_type.formals[i].type_ide = self.applyVariables(t_type.formals[i].type_ide,variables)
+            return t_type
+        raise Exception(f"Cannot apply variables to {type(t_type)}")
+
+    def solveTypeclass(self,typeclass: Typeclass,t_type: Type_ide) -> Type_ide:
+        newVars = self.mergeV2(typeclass.type_ide,t_type,{})
+        #append vars
+        variables = newVars
+        ok = False
+        for left,right in typeclass.dependencies:
+            #check if left is resolved
+            ok = True
+            for var in left:
+                if not (var in variables and type(variables[var]) != str):
+                    ok = False
+                    break
+                if ok:
+                    break
+            if ok:
+                break
+        if not ok:
+            #resolving not possible
+            raise Exception(f"Cannot resolve {typeclass}")
+        
+        for instance in typeclass.instances:
+            if instance.inputs[0].type_ide == 'void':
+                continue
+            try:
+                newVars = self.mergeV2(t_type,instance.type_ide,context={})
+                newVars = self.solveProvisos(instance.provisos,newVars)
+                t_type = self.applyVariables(t_type,newVars)
+            except Exception as e:
+                continue
+            return t_type
+        raise Exception(f"Cannot solve {typeclass} {t_type}")
+
+    def solveProvisos(self,provisos,context):
+        if provisos == []:
+            return context
+        #scan for type class provisos
+        NonTypeClassProvisos = ["None::Add","None::Mul","None::Div","None::Max","None::Log"]
+        numerical = []
+        nonNumerical = []
+
+        for proviso in provisos:
+            if proviso.full_name in NonTypeClassProvisos:
+                numerical.append(proviso)
+            else:
+                nonNumerical.append(proviso)
+
+        lastTodo = nonNumerical
+        toDo = []
+        while len(lastTodo) != 0:
+            for proviso in lastTodo:
+                if proviso.full_name not in self.typeclasses:
+                    self.loadPackage(proviso.package)
+                    if proviso.full_name not in self.typeclasses:
+                        raise Exception(f"{proviso} not found, even after loading package {proviso.package}")
+                try:
+                    transformed = deepcopy(proviso.type_ide)
+                    transformed = self.applyVariables(transformed,context)
+                    newTypeIde = self.solveTypeclass(self.typeclasses[proviso.full_name],transformed)
+                except Exception as e:
+                    toDo.append(proviso)
+                    continue
+                
+                context |= self.mergeV2(proviso.type_ide,newTypeIde,context)
+                
+            
+            # if len(toDo) == len(lastTodo):
+            #     continue
+            #     #raise Exception(f"Cannot solve provisos {provisos}")
+            # else:
+            lastTodo = toDo
+            toDo = []
+
+        context |= solveNonNumerical(numerical,context)
+        
+        return context
+
+
 
     def evaluateAlias(self,alias):
         if alias in self.aliases:

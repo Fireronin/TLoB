@@ -33,7 +33,7 @@ def resolveProvisosSympy(provisos):
             if arg in v:
                 continue
             if type(arg) == str:
-                v[arg] = Symbol(arg,integer = True,positive=True)
+                v[arg] = Symbol(arg,integer = True,negative=False)
             elif type(arg) == int:
                 v[arg] = arg
         if proviso.name == "Add":
@@ -67,7 +67,7 @@ def resolveProvisosSympy(provisos):
     return outVars
 
 
-examples = [Proviso("Add",["a","b",5]),Proviso("Mul",["a","b",6]) ]
+examples = [Proviso("Add",["a","b",5]),Proviso("Add",["a","a",10]) ]
 
 examples2 = [Proviso("Log",["a",3]),Proviso("Mul",["a","b",8*3]) ]
 

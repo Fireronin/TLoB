@@ -1,7 +1,6 @@
-from ast import arguments
+from copy import deepcopy
 from dataclasses import dataclass
 import enum
-from turtle import position
 from typing import Dict, List, Tuple, Union
 from lark import Lark, Transformer, v_args
 import os
@@ -31,6 +30,62 @@ class Position:
 
 
 
+class Type_ide:
+    name: str
+
+    def __init__(self,name,package=None,formals=[],is_polymorphic=False,is_primary=False,used_name=None) -> None:
+        self.name = name
+        self.used_name = used_name
+        self.package = package
+        self.formals = formals
+        self.is_polymorphic = is_polymorphic
+        self.is_primary = is_primary
+
+    def __getitem__(self,key):
+        for i in range(len(self.formals)):
+            if self.formals[i].name == key:
+                return self.fields[i]
+
+    def populate(self,other):
+        if other.name == "nothing":
+            return
+        self.name = other.name
+        self.used_name = other.used_name
+        self.package = other.package
+        self.formals = other.formals
+        self.is_polymorphic = other.is_polymorphic
+        self.is_primary = other.is_primary
+        #self.children = other.children
+
+    @property
+    def children(self):
+        return [f.type_ide for f in self.formals]
+
+    def __str__(self) -> str:
+        return f"{self.package}::{self.name}"
+    
+    def __repr__(self) -> str:
+        return "Type_ide "+self.__str__()
+
+    @property
+    def full_name(self) -> str:
+        return f"{self.package}::{self.name}"
+
+class Value(Type_ide):
+    is_string: bool
+
+    def __init__(self,value) -> None:
+        super().__init__(self,value)
+        self.value = value        
+        if type(value) == str:
+            self.is_string = True
+
+    def __str__(self) -> str:
+        return f"{self.value}"
+    
+    def __repr__(self) -> str:
+        return "Value "+f"{self.value}"
+
 class Type:
     position: Position
 
@@ -55,7 +110,7 @@ class Type:
         return f"{self.package}::{self.name}"
     
     def __repr__(self) -> str:
-        return f"{self.package}::{self.name} ({','.join([str(f) for f in  self.fields])})"
+        return "Type "+f"{self.package}::{self.name} ({','.join([str(f) for f in  self.fields])})"
 
     @property
     def full_name(self) -> str:
@@ -72,7 +127,7 @@ class Interface(Type):
         return f"{self.type_ide}"
     
     def __repr__(self) -> str:
-        return f"{self.type_ide}"
+        return "Interface "+f"{self.type_ide}"
 
     @property
     def full_name(self) -> str:
@@ -87,47 +142,6 @@ class Interface_method:
 
 
 
-class Type_ide:
-    name: str
-
-    def __init__(self,name,package=None,formals=None,is_polymorphic=False,is_primary=False,used_name=None) -> None:
-        self.name = name
-        self.used_name = used_name
-        self.package = package
-        self.formals = formals
-        self.is_polymorphic = is_polymorphic
-        self.is_primary = is_primary
-
-    def __getitem__(self,key):
-        for i in range(len(self.formals)):
-            if self.formals[i].name == key:
-                return self.fields[i]
-
-    def __str__(self) -> str:
-        return f"{self.package}::{self.name}"
-    
-    def __repr__(self) -> str:
-        return self.__str__()
-
-    @property
-    def full_name(self) -> str:
-        return f"{self.package}::{self.name}"
-
-
-class Value:
-    is_string: bool
-
-    def __init__(self,value) -> None:
-        self.value = value        
-        if type(value) == str:
-            self.is_string = True
-
-    def __str__(self) -> str:
-        return f"{self.value}"
-    
-    def __repr__(self) -> str:
-        return f"{self.value}"
-
 class Enum(Type):
     def __init__(self,type_ide,members,width=None,position=None) -> None:
         super().__init__(type_ide.name,type_ide.package,position)
@@ -140,7 +154,7 @@ class Enum(Type):
         return f"{self.type_ide}"
     
     def __repr__(self) -> str:
-        return f"{self.type_ide}"
+        return "Enum "+f"{self.type_ide}"
 
     @property
     def full_name(self) -> str:
@@ -167,13 +181,11 @@ class Struct(Type):
         return f"{self.type_ide}"
     
     def __repr__(self) -> str:
-        return f"{self.type_ide}"
+        return "Struct "+f"{self.type_ide}"
 
     @property
     def full_name(self) -> str:
         return f"{self.type_ide}"
-
-
 
 #list or vector
 class GetItemTypes(Type):
@@ -194,7 +206,6 @@ class GetItemTypes(Type):
     @property
     def full_name(self) -> str:
         return f"{self.type_ide}"
-
 
 class Alias:
     type_ide: Type_ide
@@ -219,22 +230,23 @@ class Alias:
 
 class Type_formal:
     is_module: bool = False
+    type_ide: Type_ide
 
     def __init__(self,name,type_tag=False,numeric_tag=False) -> None:
-        self.name = name
+        self.type_ide = name
         self.type_tag = type_tag
         self.numeric_tag = numeric_tag
     
     def __str__(self) -> str:
-        return f"""{self.name}"""
+        return f"""{self.type_ide}"""
 
     def __repr__(self) -> str:
-        return self.__str__()
+        return "T_formal "+self.__str__()
 
 class Module(Type):
     type_ide: Type_ide
 
-    def __init__(self,name,interface,package=None,position=None,arguments=[],provisos=[]) -> None:
+    def __init__(self,name,interface,package=None,position=None,arguments={},provisos=[]) -> None:
         Type.__init__(self,name=name,package=package,position=position)
         self.interface = interface
         self.arguments = arguments
@@ -245,7 +257,7 @@ class Module(Type):
         return super().__str__() +f""" {self.interface}"""
     
     def __repr__(self) -> str:
-        return self.__str__()
+        return "Module "+self.__str__()
     
     @property
     def full_name(self) -> str:
@@ -253,20 +265,20 @@ class Module(Type):
 
 class Function(Type):
     type_ide: Type_ide #result
-    arguments: Dict[str,Type]
+    arguments: Dict[str,Type] = {}
 
-    def __init__(self,name,package=None,arguments={},result=None,provisos=[],position=None,argument_names=None) -> None:
+    def __init__(self,name,package=None,arguments: Dict[Union[str,int],Type]={},result=None,provisos=[],position=None,argument_names=None) -> None:
         Type.__init__(self,name=name,package=package,position=position)
-        self.arguments = arguments
         self.result = result
         self.type_ide = result
         self.provisos = provisos
+        self.arguments = arguments
     
     def __str__(self) -> str:
         return f"{self.type_ide} ({','.join([str(aa) for aa in self.arguments.values()])})"
     
     def __repr__(self) -> str:
-        return self.__str__()
+        return "Function "+self.__str__()
     
     @property
     def full_name(self) -> str:
@@ -283,7 +295,7 @@ class Proviso(Type):
         return f"{self.type_ide}"
     
     def __repr__(self) -> str:
-        return f"{self.type_ide}"
+        return "Proviso "+f"{self.type_ide}"
     
     @property
     def full_name(self) -> str:
@@ -292,7 +304,7 @@ class Proviso(Type):
 class Typeclass_instance():
     type_ide: Type_ide
 
-    def __init__(self,t_type,provisos=None) -> None:
+    def __init__(self,t_type,provisos=[]) -> None:
         self.t_type = t_type
         self.provisos = provisos
         self.type_ide = t_type
@@ -310,8 +322,7 @@ class Typeclass_instance():
         return f"{self.inputs} {self.provisos}"
 
     def __repr__(self) -> str:
-        return self.__str__()
-
+        return "T_classInstance "+self.__str__()
 
 class Typeclass():
     type_ide: Type_ide
@@ -330,7 +341,7 @@ class Typeclass():
         return f"{self.type_ide}"
 
     def __repr__(self) -> str:
-        return self.__str__()
+        return "T_class "+self.__str__()
     
     @property
     def full_name(self) -> str:
@@ -390,7 +401,7 @@ class ModuleTransformer(Transformer):
     def tcl_tc_i_instance(self,args):
         args = [x for x in args if x is not None]
         if len(args) == 1:
-            return Typeclass_instance(args[0],None)
+            return Typeclass_instance(args[0],[])
         return Typeclass_instance(args[0], args[1])
     
     def tcl_tc_members(self,args):
@@ -408,7 +419,7 @@ class ModuleTransformer(Transformer):
 
     def tcl_tc_m_module(self,args):
         name = args[-1]
-        provisos = None
+        provisos = []
         if len(args) == 3:
             provisos = args[1]
         module = args[0]
@@ -417,7 +428,7 @@ class ModuleTransformer(Transformer):
 
     def tcl_tc_m_function(self,args):
         name = args[-1]
-        provisos = None
+        provisos = []
         if len(args) == 3:
             provisos = args[1]
         func = args[0]
@@ -468,7 +479,7 @@ class ModuleTransformer(Transformer):
         try:
             args = [x for x in args if x is not None]
             package = None
-            arguments = []
+            arguments = {}
             provisos = []
             result = None
             it = 0
@@ -508,7 +519,7 @@ class ModuleTransformer(Transformer):
     def tcl_f_arguments(self,args):
         arguments = {}
         for i,argument in enumerate(args):
-            arguments[str(i)] = argument
+            arguments[i] = argument
         return ("arguments",arguments)
 
     def tcl_fa_argument(self, args):
@@ -521,7 +532,7 @@ class ModuleTransformer(Transformer):
             args = [x for x in args if x is not None]
             package = None
             interface = None
-            arguments = []
+            arguments = {}
             provisos = []
             position = None
             it = 0
@@ -681,7 +692,7 @@ class ModuleTransformer(Transformer):
             else:
                 name = args[0][1]
                 package = args[0][0]
-        return Type_ide(name=name,package=package,formals=(None if len(args)==1 else args[name_len]),is_polymorphic=poly)
+        return Type_ide(name=name,package=package,formals=([] if len(args)==1 else args[name_len]),is_polymorphic=poly)
         
     def type_formal(self, args):
         return Type_formal(name=args[0])
@@ -781,7 +792,7 @@ def parse_and_transform(tcl_string: Union[str,bytes]):
     try:
         parsed = parser.parse(tcl_string)
     except Exception as e:
-        if tcl_string == 'can\'t read "Cons": no such variable':
+        if tcl_string == 'can\'t read "Cons": no such variable' or 'Typeclass {Generic#' in tcl_string:
             raise Exception("Failed to parse: \n")
         raise Exception("Failed to parse: \n")
     result = ModuleTransformer().transform(parsed)
@@ -792,6 +803,16 @@ def evaluateType(type_string: Union[str,bytes]):
         type_string = type_string.decode("utf-8")
     global typeParser
     parsed = typeParser.parse(type_string)
+    result = ModuleTransformer().transform(parsed)
+    return result
+
+def evaluateCustomStart(type_string: Union[str,bytes],start:str):
+    if type(type_string) == bytes:
+        type_string = type_string.decode("utf-8")
+    with open(os.path.join(os.path.join(os.path.dirname(__file__),"..","grammar"), "type.lark")) as f:
+        lark_string = f.read()
+    customParser = Lark(lark_string, parser="earley",start=start)
+    parsed = customParser.parse(type_string,start=start)
     result = ModuleTransformer().transform(parsed)
     return result
 

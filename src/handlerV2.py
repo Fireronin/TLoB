@@ -68,8 +68,8 @@ def list_funcs(package_name="Polyfifo"):
 def read_type(type_string=b"Polyfifo::FIFOIfc"):
     type_name = type_string.split(b"::")[-1]
     print("Currently reading type: "+str(type_name, encoding='utf-8') )
-    if type_name in [b"Bits",b"SizedLiteral"]:
-        return b""
+    # if type_name in [b"Bits",b"SizedLiteral"]:
+    #     return b""
     try:
         constr = fancy_call(b"type constr "+type_name,only_last_line=False)
     except Exception as e:

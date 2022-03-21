@@ -87,7 +87,7 @@ tcl_package_name: identifier_u ":"":" identifier_u  -> package_name
         | identifier_u -> name_only
 
 // Typeclass grammar
-tcl_typeclass: "Typeclass" "{" type_def_type "}" [tcl_tc_superclasses] ["coherent"] [tcl_tc_dependencies] ["incoherent"] tcl_tc_members [tcl_tc_instances] tcl_position
+tcl_typeclass: "Typeclass" "{" type_def_type "}" [tcl_tc_superclasses]  [tcl_tc_dependencies] ["coherent"] ["incoherent"] tcl_tc_members [tcl_tc_instances] tcl_position
 
 tcl_tc_superclasses: "{" "superclasses" (type_def_type | "{" (type_def_type | "{" type_def_type "}")+ "}"  ) "}" -> list_of
 
@@ -170,7 +170,9 @@ tcl_imm_prefix: "{" "(" "*" "prefix" "=" "\"" "\""  "*" ")" "}"
 
 tcl_imm_result: "{" "(" "*" "result" "=" "\"UNUSED\"" "*" ")" "}"
 
-tcl_imm_input_types: (type | "{" type* "}" ) -> list_of
+tcl_imm_input_types:  (type | "{" type* "}" ) -> list_of
+
+//tcl_imm_input_types:  (type_def_type | "{" type_def_type* "}" ) -> list_of
 
 tcl_imm_ports: "{" "(*" "ports =" "[" [tcl_immp_name ( "," tcl_immp_name )* ] "]" "*)" "}" -> list_of
 

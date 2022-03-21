@@ -4,15 +4,15 @@ import os
 from re import S
 from tempfile import TemporaryFile
 
-from extractor import Position, Type as ExType, Type_ide
+from extractor import Position, Type as ExType, Type_ide, Value as ExValue
 from extractor import Interface as ExInterface
 from extractor import Type_formal as ExType_formal
-from extractor import evaluateType
+from extractor import evaluateType,evaluateCustomStart
 from extractor import Alias as ExAlias
 from extractor import Typeclass as ExTypeclass
 from extractor import Typeclass_instance as ExTypeclassInstance
 
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from typeDatabase import TypeDatabase
 
@@ -149,7 +149,47 @@ class ModuleInstance():
     def get(self):
         return AccessTuple(self.instance_name,self.interface)
 
+class InstanceV2():
+    pass
 
+context = {}
+class InstanceV2():
+    db: TypeDatabase
+    type_ide : Type_ide
+
+    def __init__(self,db: TypeDatabase,creator: ExType,
+                creator_args : List[Union[InstanceV2,Type_ide]] =[],
+                module_args:List[Type_ide]=[],
+                instance_name:str=None):
+        self.db = db
+        self.creator = creator
+        self.creator_args = creator_args
+        self.instance_name = instance_name
+
+        if len(creator_args) != len(creator.arguments):
+            raise Exception("Number of function arguments do not match the function")
+
+        context = {}
+        for i,pair in  enumerate( zip(creator.arguments.items(),creator_args)):
+            arg,value = pair
+            if type(value) == InstanceV2:
+                value = value.type_ide
+            if isinstance(value, Type_ide):
+                context |= db.mergeV2(arg[1],value,context) 
+
+            creator.arguments[arg[0]] = db.applyVariables(creator.arguments[arg[0]],context)
+
+        ideCopy  = deepcopy(creator.type_ide)
+        for i,field in enumerate(ideCopy.formals):
+            ideCopy.formals[i].type_ide = module_args[i]
+
+        context |= db.mergeV2(creator.type_ide,ideCopy,context)
+
+        #account for provisos
+        context |= db.solveProvisos(creator.provisos,context)
+        
+        creator.type_ide = db.applyVariables(creator.type_ide,context)
+        print('Works')
 
 def type_string(interface):
     if interface.type_ide.fields!=0:

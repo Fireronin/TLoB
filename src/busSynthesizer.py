@@ -105,7 +105,7 @@ class OneWayBusV2(BusV2):
         return f"OneWayBusV2({self.name}) Flit:{self.flit_t} Connections: {','.join(self.slaves.keys())} -> {','.join(self.masters.keys())}"
 
     def add_slave(self,slave: AccessTuple,route: List[Tuple[int,int]]):
-        
+        slave.thing
 
         flit_t = self.db.toXResultingType(slave.thing,self.db.getTypeclassByName("SourceSink::ToSource"))
         if self.flit_t is None:

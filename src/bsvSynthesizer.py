@@ -7,6 +7,7 @@ from tempfile import TemporaryFile
 from extractor import Position, Type as ExType, Type_ide, Value as ExValue
 from extractor import Interface as ExInterface
 from extractor import Type_formal as ExType_formal
+from extractor import Function as ExFunction
 from extractor import evaluateType,evaluateCustomStart
 from extractor import Alias as ExAlias
 from extractor import Typeclass as ExTypeclass
@@ -152,7 +153,16 @@ class ModuleInstance():
 class InstanceV2():
     pass
 
-context = {}
+instances = {}
+
+def convertToTypeIde(arg):
+    if type(arg) == Type_ide:
+        return arg
+    arg = str(arg)
+    if arg[0].islower():
+        return instances[arg]
+    return evaluateCustomStart(arg,"type_def_type")
+
 class InstanceV2():
     db: TypeDatabase
     type_ide : Type_ide
@@ -165,31 +175,67 @@ class InstanceV2():
         self.creator = creator
         self.creator_args = creator_args
         self.instance_name = instance_name
+        self.module_args = module_args
+        self.update()
+        global instances
+        interfaces = self.list_all_Interfaces()
+        for interface in interfaces:
+            instances[interface.access_name] = interface.thing
 
-        if len(creator_args) != len(creator.arguments):
+    def list_all_Interfaces(self):
+        MAX_DEPTH = 1
+        def visitRecursively(parent_name: str, interface: Type_ide,depth:int=1):
+            if depth > 1:
+                return
+            if len(interface.members) == 0:
+                return
+            for name,value in interface.members.items():
+                if type(value) == Type_ide:
+                    full_name = f"{parent_name}.{name}"
+                    yield AccessTuple(full_name,value)
+                    yield from visitRecursively(full_name,value,depth+1) 
+        return [AccessTuple(self.instance_name,self.creator.type_ide)] + list(visitRecursively(self.instance_name,self.creator.type_ide))
+
+    def update(self):
+        if len(self.creator_args) != len(self.creator.arguments):
             raise Exception("Number of function arguments do not match the function")
+        #convert to TypeIde arguments
+        creator_args = [convertToTypeIde(arg) for arg in self.creator_args]
+        module_args = [convertToTypeIde(arg) for arg in self.module_args]
+
+
 
         context = {}
-        for i,pair in  enumerate( zip(creator.arguments.items(),creator_args)):
+        for i,pair in  enumerate( zip(self.creator.arguments.items(),creator_args)):
             arg,value = pair
             if type(value) == InstanceV2:
                 value = value.type_ide
             if isinstance(value, Type_ide):
-                context |= db.mergeV2(arg[1],value,context) 
+                context |= self.db.mergeV2(arg[1],value,context) 
 
-            creator.arguments[arg[0]] = db.applyVariables(creator.arguments[arg[0]],context)
+            self.creator.arguments[arg[0]] = self.db.applyVariables(self.creator.arguments[arg[0]],context)
 
-        ideCopy  = deepcopy(creator.type_ide)
+        ideCopy  = deepcopy(self.creator.type_ide)
+        if len(module_args) == 0:
+            module_args = ["a"+str(i) for i in range(len(ideCopy.formals))]
         for i,field in enumerate(ideCopy.formals):
             ideCopy.formals[i].type_ide = module_args[i]
 
-        context |= db.mergeV2(creator.type_ide,ideCopy,context)
+        context |= self.db.mergeV2(self.creator.type_ide,ideCopy,context)
 
         #account for provisos
-        context |= db.solveProvisos(creator.provisos,context)
+        context |= self.db.solveProvisos(self.creator.provisos,context)
         
-        creator.type_ide = db.applyVariables(creator.type_ide,context)
+        self.creator.type_ide = self.db.applyVariables(self.creator.type_ide,context)
+        self.db.populateMembers(self.creator.type_ide)
         print('Works')
+
+    def get(self):
+        return AccessTuple(self.instance_name,self.creator.type_ide)
+
+    def to_string(self):
+        if type(self.creator) == ExFunction:
+            return f"{self.creator.name}({','.join(map(str,self.creator_args))});\n"
 
 def type_string(interface):
     if interface.type_ide.fields!=0:
@@ -225,7 +271,7 @@ class TopLevelModule():
     accessableInterfaces: List[AccessTuple] = []
     cashed_considered_instances: Dict[str,AccessTuple] = {}
 
-    modules: Dict[str,ModuleInstance]
+    modules: Dict[str,InstanceV2]
 
     def __init__(self,name,db,package_name=None) -> None:
         self.modules = {}
@@ -259,11 +305,114 @@ class TopLevelModule():
         self.modules[instance_name] = newModule
         return self.modules[instance_name]
 
+    def add_moduleV2(self,creator_func,instance_name,interface_args=[],func_args=[]):
+        #check if instance name starts with upercase character
+        if instance_name[0].isupper():
+            raise Exception("Instance name must start with lowercase character")
+        if type(creator_func) == str:
+            creator_func = self.db.getFunctionByName(creator_func)
+        newModule = InstanceV2(self.db,creator_func,func_args,interface_args,instance_name)
+        
+
+
+        #populate possible connections
+        for current in newModule.list_all_Interfaces():
+            self.possibleConnections[current.access_name] = self.list_connectableV2(current,self.accessableInterfaces)
+            for interface in self.accessableInterfaces:
+                self.possibleConnections[interface.access_name] += self.list_connectableV2(interface,[current])
+
+        self.accessableInterfaces += newModule.list_all_Interfaces()
+
+        self.modules[instance_name] = newModule
+        return self.modules[instance_name]
+
     def add_typedef(self,name,type):
         self.typedefs[name] = type
         alias = ExAlias(Type_ide(name),evaluateType(str(type)),None)
         self.db.aliases[alias.full_name] = alias
         return name
+
+    def list_connectableV2(self,start:AccessTuple,ends:List[AccessTuple]=[]):
+        if len(ends) == 0:
+            return []
+
+        connectableTypeclass : ExTypeclass = self.db.getTypeclassByName("Connectable::Connectable")
+        #ends = []
+        connectable_ends : List[AccessTuple]  = []
+        
+        #inital triming of connectable rules
+        #it cashes results, allowing for this function to be roughly O(len(ends))
+        if start.access_name in self.cashed_considered_instances:
+            considered_instances = self.cashed_considered_instances[start.access_name]
+        else:   
+            considered_instances : List[ExTypeclassInstance] = []
+            for instance in connectableTypeclass.instances:
+                instanceFields = instance.inputs
+                #check if both Fields are types
+                if type(instanceFields[0].type_ide) == Type_ide and type(instanceFields[1].type_ide) == Type_ide:
+                    #check if name matches start point
+                    if instanceFields[0].type_ide.full_name == start.thing.full_name:
+                        considered_instances.append(instance)
+            self.cashed_considered_instances[start.access_name] = considered_instances
+        
+        connectable_instances : Dict[str,ExTypeclassInstance] = {}
+        #check if end is a connectable
+        for end in ends:
+            for instance in considered_instances:
+                instanceFields = instance.inputs
+                #check if both Fields are types
+                if instanceFields[1].type_ide.full_name != end.thing.full_name:
+                    continue
+                variables = {}
+                def add_variable(name,value):
+                    if name in variables:
+                        old = variables[name]
+                        try:
+                            self.db.mergeV2(old,value,{})
+                        except Exception as e:
+                            raise Exception(f"Variable {name} has different values")
+                    else:
+                        variables[name] = value
+
+                #check if values that can be polymorphic are the same
+                variableMissmatch = False
+                for i,field in enumerate(instanceFields[0].type_ide.children):
+                    try:
+                        add_variable(str(field),start.thing.children[i])
+                    except Exception as e:
+                        variableMissmatch = True
+                        break
+                for i,field in enumerate(instanceFields[1].type_ide.children):
+                    try:
+                        add_variable(str(field),end.thing.children[i])
+                    except Exception as e:
+                        variableMissmatch = True
+                        break
+                if variableMissmatch:
+                    continue
+
+                connectable_instances[end.access_name] = instance
+                break
+        for end in ends:
+            if end.access_name not in connectable_instances:
+                continue
+            result = None
+            try:
+                connection = deepcopy(connectableTypeclass.type_ide)
+                connection.formals[0].type_ide = start.thing
+                connection.formals[1].type_ide = end.thing
+                result = self.db.solveTypeclass(connectableTypeclass, connection,connectable_instances[end.access_name])
+            except Exception as e:
+                continue
+            if result is not None:
+                  connectable_ends.append(end)
+        return connectable_ends
+
+    def add_connectionV2(self,start:str,end:str):
+        creator_func = self.db.getFunctionByName("mkConnection")
+        connection = InstanceV2(self.db,creator_func,[start,end],[],f"connection_{len(self.connections)}")
+        self.connections.add(connection)
+
 
     def list_connectable(self,start:AccessTuple,ends:List[AccessTuple]=[]):
         connectableTypeclass : ExTypeclass = self.db.getTypeclassByName("Connectable::Connectable")
@@ -424,69 +573,6 @@ class TopLevelModule():
         else:
             self.connections.add((source,sink,"Normal"))
 
-    #region old code
-    # def add_onewaybus(self,ins,outs,insRanges):
-    #     #check if ins have ToSource
-    #     for i in ins:
-    #         if not self.db.checkToXMembership(self.modules[i].interface,self.db.getTypeclassByName("SourceSink::ToSource")):
-    #             raise Exception("Input is not a instance of ToSource") 
-    #     #check if outs have ToSink
-    #     for o in outs:
-    #         if not self.db.checkToXMembership(self.modules[o].interface,self.db.getTypeclassByName("SourceSink::ToSink")):
-    #             raise Exception("Output is not a instance of ToSink")
-    #     self.buses.add(BusInstace(ins,outs,insRanges))
-
-    # def add_bus(self,ins,outs,insRanges,two_way=False):
-    #     AcessIns = [AccessTuple(i,self.modules[i]) if type(i) is str else i for i in ins]
-    #     AccessOuts = [AccessTuple(o,self.modules[o]) if type(o) is str else o for o in outs]
-        
-    #     ins = [i.thing for i in AcessIns]
-    #     outs = [o.thing for o in AccessOuts]
-
-    #     ins_type = ins[0]
-    #     for i in ins:
-    #         if i.full_name != ins_type.full_name:
-    #             raise Exception("Inputs are not of the same type")
-    #         if i.type_ide.fields != ins_type.type_ide.fields:
-    #             raise Exception("Inputs have different interface arguments")
-    #     outs_type = outs[0]
-    #     for o in outs:
-    #         if o.full_name != outs_type.full_name:
-    #             raise Exception("Outputs are not of the same type")
-    #         if o.type_ide.fields != outs_type.type_ide.fields:
-    #             raise Exception("Outputs have different interface arguments")
-        
-    #     # check if AXI4
-    #     is_AXI4 = True
-    #     if ins_type.full_name != "AXI4_Types::AXI4_Master":
-    #         is_AXI4 = False
-    #     if outs_type.full_name != "AXI4_Types::AXI4_Slave":
-    #         is_AXI4 = False
-        
-    #     self.packages.add("Vector")
-
-    #     if not two_way:
-    #         self.packages.add("OneWayBus")
-    #         connection_type = ConnectionType.one_way
-    #     if two_way:
-    #         self.packages.add("TwoWayBus")
-    #         connection_type = ConnectionType.two_way
-    #     if is_AXI4:
-    #         self.packages.add("AXI4_Interconnect")
-    #         connection_type = ConnectionType.AXI4
-    #         self.buses.add(BusInstace(AcessIns,AccessOuts,insRanges,connection_type))
-    #         return
-        
-    #     # if not AXI4 check for typeclass membership
-    #     for i in ins:
-    #         if not self.db.checkToXMembership(i,self.db.getTypeclassByName("SourceSink::ToSource")):
-    #             raise Exception("Input is not a instance of ToSource")
-    #     for o in outs:
-    #         if not self.db.checkToXMembership(o,self.db.getTypeclassByName("SourceSink::ToSink")):
-    #             raise Exception("Output is not a instance of ToSink")
-
-    #     self.buses.add(BusInstace(AcessIns,AccessOuts,insRanges,connection_type))
-    #endregion
 
     def to_string(self):
         s = []
@@ -494,7 +580,7 @@ class TopLevelModule():
         self.packages.add("Connectable")
         self.packages.add("GetPut")
         for m in self.modules.values():
-            self.packages.add(m.creator_func.package)
+            self.packages.add(m.creator.package)
         # necessary packages
         s.append("// necessary packages\n")
         for p in self.packages:
@@ -535,25 +621,24 @@ class TopLevelModule():
         # add modules
         for m in self.modules.values():
             s.append("\t")
-            if m.interface.type_ide.fields == "auto":
-                s.append("let") 
-            else:             
-                s.append(type_string(m.interface))
+        
+            s.append(str(m.creator.type_ide))
             s.append(" " + m.instance_name)
-            s.append(" <- " + m.creator_func.name + "(")
-            for i in range(len(m.func_args)):
-                s.append(str(m.func_args[i]))
-                if i != len(m.func_args)-1:
+            s.append(" <- " + m.creator.name + "(")
+            for i in range(len(m.creator_args)):
+                s.append(str(m.creator_args[i]))
+                if i != len(m.creator_args)-1:
                     s.append(", ")
             s.append(");\n")
         s.append("\n")
 
         # add connections
         for c in self.connections:
-            if c[2] == "GETPUT":
-                s.append(f"\tmkConnection(toPut({c[0].access_name}),toGet({c[1].access_name}));\n")
-            else:
-                s.append(f"\tmkConnection({c[0].access_name},{c[1].access_name});\n")   
+            s.append("\t"+c.to_string())
+            # if c[2] == "GETPUT":
+            #     s.append(f"\tmkConnection(toPut({c[0].access_name}),toGet({c[1].access_name}));\n")
+            # else:
+            #     s.append(f"\tmkConnection({c[0].access_name},{c[1].access_name});\n")   
 
         # add busses
         for bus in self.buses:

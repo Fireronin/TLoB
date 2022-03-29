@@ -7,6 +7,7 @@ import os
 from extractor import Type as ExType
 from extractor import Interface as ExInterface
 from extractor import Type_formal as ExType_formal
+from extractor import Type_ide
 
 from typing import List, Set, Dict, Tuple, Optional, Union, Any
 from typeDatabase import TypeDatabase
@@ -16,8 +17,8 @@ from bsvSynthesizer import AccessTuple,type_string
 busCounter = 0
 
 class BusV2():
-    masters: Dict[str, ExInterface]
-    slaves: Dict[str, ExInterface]
+    masters: Dict[str, Type_ide]
+    slaves: Dict[str, Type_ide]
     name: str
     routes: Dict[str, List[Tuple[int,int]]]
 
@@ -104,6 +105,8 @@ class OneWayBusV2(BusV2):
         return f"OneWayBusV2({self.name}) Flit:{self.flit_t} Connections: {','.join(self.slaves.keys())} -> {','.join(self.masters.keys())}"
 
     def add_slave(self,slave: AccessTuple,route: List[Tuple[int,int]]):
+        
+
         flit_t = self.db.toXResultingType(slave.thing,self.db.getTypeclassByName("SourceSink::ToSource"))
         if self.flit_t is None:
             self.flit_t = flit_t

@@ -30,6 +30,7 @@ for package in packages_to_load:
 knownPackages = list_packages()
 db.addPackages(knownPackages)
 db.writeToFile()
+db.saveStateToPickle()
 #db.saveStateToPickle()
 # todo read json file
 # %% Build bluespcefile

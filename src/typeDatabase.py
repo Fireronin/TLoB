@@ -37,21 +37,34 @@ class TypeDatabase():
     logged_funcs: bytes = b""
     logged_types: bytes = b""
 
-    def __init__(self,load=False):
+    def __init__(self,load=True):
+        loaded = False
         if load:
-            self.loadStateFromPickle()
+            try:
+                self.loadStateFromPickle()
+                loaded = True
+            except Exception as e:
+                print("Failed to load typeDatabase state from pickle")
         self.parser = initalize_parser(start="tcl_type_full_list")
         # remove file failed_types.json and failed_functions.json
-        try:
-            os.remove("failed_types.json")
-            os.remove("failed_functions.json")
-            os.remove("failed_loads.json")
-        except:
-            pass
-
+        if not loaded:
+            try:
+                os.remove("failed_types.json")
+                os.remove("failed_functions.json")
+                os.remove("failed_loads.json")
+            except:
+                pass
+    
+    functionNameCache = {}
     def getFunctionByName(self,name):
         if name in self.functions:
-            return self.functions[name]
+            return deepcopy(self.functions[name])
+        else:
+            if self.functionNameCache == {}:
+                self.functionNameCache = {function.name:function.full_name for function in self.functions.values()}
+            else:
+                if name in self.functionNameCache:
+                    return deepcopy(self.functionNameCache[name])
         fuzzyException(name,list(self.functions), "Function {} not found. \n Do you mean: \n{}")
     
     def getTypeByName(self,name):
@@ -86,6 +99,9 @@ class TypeDatabase():
                 self.structs[t_type.full_name] = t_type
             if type(t_type)== Typeclass:
                 self.typeclasses[t_type.full_name] = t_type
+                for member in t_type.members.values():
+                    if type(member) == Function:
+                        self.functions[member.full_name] = member
             elif type(t_type) == Alias:
                 self.aliases[t_type.full_name] = t_type
             else:
@@ -149,6 +165,7 @@ class TypeDatabase():
                 loaded.append(package_name)
         for package_name in loaded:
             self.addPackage(package_name)
+        self.saveStateToPickle()
     
     def checkToXMembership(self,t_type,typeclass: Typeclass):
         for instance in typeclass.instances:
@@ -183,6 +200,10 @@ class TypeDatabase():
 
     def mergeV2(self,a: Union[Value,Type_ide,str],b: Union[Value,Type_ide,str],context: Dict[str,Union[Value,Type_ide]]):
         a,b = deepcopy(a),deepcopy(b)
+        if type(a) == Type_ide and a.is_polymorphic:
+            a = a.name
+        if type(b) == Type_ide and b.is_polymorphic:
+            b = b.name
         if type(a) == str and type(b) != str:
             CAdd(context,a,b)
         if type(b) == str and type(a) != str:
@@ -219,45 +240,6 @@ class TypeDatabase():
                 context |= self.mergeV2(fa,fb,context)
         return context
 
-    def merge(self,a: Union[Value,Type_ide],b: Union[Value,Type_ide]) -> Union[Value,Type_ide,str]:
-        a,b = deepcopy(a),deepcopy(b)
-        variables = {}
-        if type(a) == str or type(b) == str:
-            if type(a) == str:
-                variables[a] = b
-            if type(b) == str:
-                variables[b] = a
-                b = a
-            return b,variables
-
-        if type(a) == Value and type(b) == Value:
-            if a == b:
-                return a,variables
-            else:
-                raise Exception(f"Cannot merge different values, {a} and {b}")
-        if type(a) == Value and type(b) == Type_ide:
-            #swap a and b
-            a,b = b,a
-        if type(a) == Type_ide and type(b) == Value:
-            #handle sudo types like,
-            return b,variables
-        if type(a) == Type_ide and type(b) == Type_ide:
-            if a.full_name != b.full_name:
-                raise Exception(f"Cannot merge different types, {a} and {b}")
-            for i,pair in enumerate(zip(a.formals,b.formals)):
-                fa,fb = pair
-                merged_type,newVars = self.merge(fa.type_ide,fb.type_ide)
-                a.formals[i].type_ide = merged_type
-                
-                for key,value in newVars.items():
-                    if key in variables:
-                        if type(variables[key]) == str:
-                            pass
-                        
-                    variables[key] = value
-            return a,variables
-        raise Exception(f"Cannot merge {type(a)} and {type(b)} Something weird Happened")
-
     def applyVariables(self,t_type: Type_ide, variables) -> Union[Type_ide,Value,str]:
         if type(t_type) == str:
             if t_type in variables:
@@ -266,33 +248,41 @@ class TypeDatabase():
         if type(t_type) == Value:
             return t_type
         if type(t_type) == Type_ide:
+            if t_type.full_name in variables:
+                return variables[t_type.full_name]
             for i,field in enumerate(t_type.formals):
                 t_type.formals[i].type_ide = self.applyVariables(t_type.formals[i].type_ide,variables)
             return t_type
         raise Exception(f"Cannot apply variables to {type(t_type)}")
 
-    def solveTypeclass(self,typeclass: Typeclass,t_type: Type_ide) -> Type_ide:
+    def solveTypeclass(self,typeclass: Typeclass,t_type: Type_ide,instance_hint:Typeclass_instance=None) -> Type_ide:
         newVars = self.mergeV2(typeclass.type_ide,t_type,{})
         #append vars
         variables = newVars
-        ok = False
-        for left,right in typeclass.dependencies:
-            #check if left is resolved
-            ok = True
-            for var in left:
-                if not (var in variables and type(variables[var]) != str):
-                    ok = False
-                    break
+        if len(typeclass.dependencies) != 0:
+            ok = False
+            for left,right in typeclass.dependencies:
+                #check if left is resolved
+                ok = True
+                for var in left:
+                    if not (var in variables and type(variables[var]) != str):
+                        ok = False
+                        break
+                    if ok:
+                        break
                 if ok:
                     break
-            if ok:
-                break
-        if not ok:
-            #resolving not possible
-            raise Exception(f"Cannot resolve {typeclass}")
+            if not ok:
+                #resolving not possible
+                raise Exception(f"Cannot resolve {typeclass} dependencies not met") 
         
-        for instance in typeclass.instances:
-            if instance.inputs[0].type_ide == 'void':
+        considered_instances = [instance_hint]
+        if instance_hint == None:
+            considered_instances = typeclass.instances
+        for instance in considered_instances:
+            if type(instance.inputs[0].type_ide) == str and instance.inputs[0].type_ide == 'void':
+                continue
+            if type(instance.inputs[0].type_ide) == Function or type(instance.inputs[1].type_ide) == Function:
                 continue
             try:
                 newVars = self.mergeV2(t_type,instance.type_ide,context={})
@@ -307,7 +297,7 @@ class TypeDatabase():
         if provisos == []:
             return context
         #scan for type class provisos
-        NonTypeClassProvisos = ["None::Add","None::Mul","None::Div","None::Max","None::Log"]
+        NonTypeClassProvisos = ["Add","Mul","Div","Max","Log"]
         numerical = []
         nonNumerical = []
 
@@ -321,6 +311,8 @@ class TypeDatabase():
         toDo = []
         while len(lastTodo) != 0:
             for proviso in lastTodo:
+                if proviso.full_name == 'IsModule':
+                    continue
                 if proviso.full_name not in self.typeclasses:
                     self.loadPackage(proviso.package)
                     if proviso.full_name not in self.typeclasses:
@@ -336,17 +328,41 @@ class TypeDatabase():
                 context |= self.mergeV2(proviso.type_ide,newTypeIde,context)
                 
             
-            # if len(toDo) == len(lastTodo):
-            #     continue
-            #     #raise Exception(f"Cannot solve provisos {provisos}")
-            # else:
-            lastTodo = toDo
-            toDo = []
+            if len(toDo) == len(lastTodo):
+                raise Exception(f"Cannot solve provisos {provisos}")
+            else:
+                lastTodo = toDo
+                toDo = []
 
-        context |= solveNonNumerical(numerical,context)
-        
+        if len(numerical) == 0:
+            return context
+
+        solvedContext = solveNonNumerical(numerical,context)
+        for key,val in solvedContext.items():
+            CAdd(context,key,val)        
+
+        for key in context.keys():
+            if type(context[key].name) == Value:
+                context[key] = context[key].name
+
         return context
 
+    def populateMembers(self,t_type : Type_ide):
+        if t_type.full_name not in self.types:
+            print(f"{t_type.full_name} not found")
+            return
+        other = self.types[t_type.full_name]
+        context = self.mergeV2(t_type,other.type_ide,{})
+        t_type.members = {}
+        for key in other.members.keys():
+            if type(other.members[key]) == Interface_method:
+                t_type.members[key] = other.members[key]
+                continue
+            if type(other.members[key]) == Type_ide:
+                t_type.members[key] = self.applyVariables(deepcopy(other.members[key]),context)
+            if type(other.members[key]) == Interface:
+                t_type.members[key] = self.applyVariables(deepcopy(other.members[key].type_ide),context)
+            self.populateMembers(t_type.members[key])
 
 
     def evaluateAlias(self,alias):
@@ -414,11 +430,27 @@ class TypeDatabase():
 
     def saveStateToPickle(self):
         with open("typeDatabase.pickle","wb") as f:
-            pickle.dump(self,f)
+            d = {}
+            d["types"] = self.types
+            d["typeclasses"] = self.typeclasses
+            d["functions"] = self.functions
+            d["aliases"] = self.aliases
+            d["packages"] = self.packages
+            d["structs"] = self.structs
+            d["logged_funcs"] = self.logged_funcs
+            d["logged_types"] = self.logged_types
+            pickle.dump(d,f)
             f.close()
 
     def loadStateFromPickle(self):
         with open("typeDatabase.pickle","rb") as f:
-            self = pickle.load(f)
+            d = pickle.load(f)
+            self.types = d["types"]
+            self.typeclasses = d["typeclasses"]
+            self.functions = d["functions"]
+            self.aliases = d["aliases"]
+            self.packages = d["packages"]
+            self.structs = d["structs"]
+            self.logged_funcs = d["logged_funcs"]
+            self.logged_types = d["logged_types"]
             f.close()
-        return self

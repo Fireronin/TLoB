@@ -32,6 +32,7 @@ class Position:
 
 class Type_ide:
     name: str
+    members = {}
 
     def __init__(self,name,package=None,formals=[],is_polymorphic=False,is_primary=False,used_name=None) -> None:
         self.name = name
@@ -62,13 +63,21 @@ class Type_ide:
         return [f.type_ide for f in self.formals]
 
     def __str__(self) -> str:
-        return f"{self.package}::{self.name}"
-    
+        if self.package is None:
+            return self.name
+        if len(self.formals) == 0:
+            return f"{self.package}::{self.name}"
+        else:
+            fs = ','.join([str(f.type_ide) for f in self.formals])
+            return f"{self.package}::{self.name}#({fs})"
+ 
     def __repr__(self) -> str:
         return "Type_ide "+self.__str__()
 
     @property
     def full_name(self) -> str:
+        if self.package is None:
+            return self.name
         return f"{self.package}::{self.name}"
 
 class Value(Type_ide):
@@ -85,6 +94,13 @@ class Value(Type_ide):
     
     def __repr__(self) -> str:
         return "Value "+f"{self.value}"
+
+    def populate(self,other):
+        if other.name == "nothing":
+            return
+        self.value = other.value
+        if type(self.value) == str:
+            self.is_string = True
 
 class Type:
     position: Position
@@ -131,7 +147,7 @@ class Interface(Type):
 
     @property
     def full_name(self) -> str:
-        return f"{self.type_ide}"
+        return f"{self.type_ide.full_name}"
 
 class Interface_method:
     def __init__(self,name,type,input_types,ports) -> None:
@@ -158,7 +174,7 @@ class Enum(Type):
 
     @property
     def full_name(self) -> str:
-        return f"{self.type_ide}"
+        return f"{self.type_ide.full_name}"
 
 class Struct(Type):
     is_tagged_union = False
@@ -185,7 +201,7 @@ class Struct(Type):
 
     @property
     def full_name(self) -> str:
-        return f"{self.type_ide}"
+        return f"{self.type_ide.full_name}"
 
 #list or vector
 class GetItemTypes(Type):
@@ -205,7 +221,7 @@ class GetItemTypes(Type):
 
     @property
     def full_name(self) -> str:
-        return f"{self.type_ide}"
+        return f"{self.type_ide.full_name}"
 
 class Alias:
     type_ide: Type_ide
@@ -219,14 +235,14 @@ class Alias:
         self.position = position
 
     def __str__(self) -> str:
-        return f"{self.name.__str__()}"
+        return f"{self.type_ide}"
 
     def __repr__(self) -> str:
-        return f"alias {self.name} {self.type}"
+        return f"alias {self.type_ide} {self.type}"
     
     @property
     def full_name(self) -> str:
-        return self.__str__()
+        return self.type_ide.full_name
 
 class Type_formal:
     is_module: bool = False
@@ -254,13 +270,17 @@ class Module(Type):
         self.type_ide = interface
     
     def __str__(self) -> str:
-        return super().__str__() +f""" {self.interface}"""
+        if self.package is None:
+            return self.name
+        return f"{self.package}::{self.name}"
     
     def __repr__(self) -> str:
         return "Module "+self.__str__()
     
     @property
     def full_name(self) -> str:
+        if self.package is None:
+            return self.name
         return f"{self.package}::{self.name}"
 
 class Function(Type):
@@ -282,6 +302,8 @@ class Function(Type):
     
     @property
     def full_name(self) -> str:
+        if self.package is None:
+            return self.name
         return f"{self.package}::{self.name}"
 
 class Proviso(Type):
@@ -299,7 +321,7 @@ class Proviso(Type):
     
     @property
     def full_name(self) -> str:
-        return f"{self.type_ide}"
+        return f"{self.type_ide.full_name}"
 
 class Typeclass_instance():
     type_ide: Type_ide
@@ -329,10 +351,17 @@ class Typeclass():
     position: Position
     instances: List[Typeclass_instance]
 
-    def __init__(self,type_ide,position=None,members=None,superclasses=None,dependencies=None,instances=None) -> None:
+    def __init__(self,type_ide,position=None,members={},superclasses=None,dependencies=[],instances=None) -> None:
         self.type_ide = type_ide
         self.position = position
         self.members = members
+        try:
+            for name,member in members.items():
+                if type(member) == Function:
+                    member.provisos.append(Proviso(self.type_ide))
+                    member.name = name
+        except Exception as e:
+            pass
         self.superclasses = superclasses
         self.dependencies = dependencies
         self.instances = instances
@@ -345,7 +374,7 @@ class Typeclass():
     
     @property
     def full_name(self) -> str:
-        return f"{self.type_ide.package}::{self.type_ide.name}"
+        return self.__str__()
 
 
 
@@ -366,13 +395,13 @@ class ModuleTransformer(Transformer):
                 superclasses = args[i][1]
                 break
         # find in args ("dependencies",x)
-        dependencies = None
+        dependencies = []
         for i,arg in enumerate(args):
             if type(arg)==tuple and isinstance(arg[0],str) and arg[0] == "dependencies":
                 dependencies = args[i][1]
                 break
         # find in args ("members",x)
-        members = None
+        members = {}
         for i,arg in enumerate(args):
             if type(arg)==tuple and isinstance(arg[0],str) and arg[0] == "members":
                 members = args[i][1]
@@ -402,7 +431,7 @@ class ModuleTransformer(Transformer):
         args = [x for x in args if x is not None]
         if len(args) == 1:
             return Typeclass_instance(args[0],[])
-        return Typeclass_instance(args[0], args[1])
+        return Typeclass_instance(args[0], args[1][1])
     
     def tcl_tc_members(self,args):
         members = {}
@@ -430,7 +459,10 @@ class ModuleTransformer(Transformer):
         name = args[-1]
         provisos = []
         if len(args) == 3:
-            provisos = args[1]
+            if args[1] == None:
+                provisos = []
+            else:
+                provisos = args[1][1]
         func = args[0]
         func.provisos = provisos
         return ("function",name,func)
@@ -454,13 +486,16 @@ class ModuleTransformer(Transformer):
             return None
 
     def tcl_tc_m_f_module(self, args):
-        arguments = {}
-        for argument in args[2:]:
-            if issubclass(type(argument),Type):
-                arguments[argument.name] = argument
-            else:
-                arguments[argument[1]] = argument[0]
-        return Module(name=args[0],arguments=args[1:-1],interface=args[-1])
+        try:
+            arguments = {}
+            for argument in args[1:-1]:
+                if issubclass(type(argument),Type):
+                    arguments[argument.name] = argument
+                else:
+                    arguments[argument[1]] = argument[0]
+        except Exception as e:
+            pass
+        return Module(name=args[0],arguments=arguments,interface=args[-1])
 
     def tcl_tc_m_f_argument(self, args):
         args = [x for x in args if x is not None]

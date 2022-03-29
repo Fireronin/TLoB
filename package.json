@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "react-flow-renderer": "^9.7.4",
+    "react-scripts": "^5.0.0"
+  }
+}

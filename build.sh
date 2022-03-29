@@ -6,7 +6,7 @@ export TOPFILE=./tutorial/FluteSoc.bsv
 #export TOPFILE=./Flute/libs/BlueStuff/AXI4_Fake_16550.bsv
 #export TOPFILE=./Flute/libs/BlueStuff/AXI/AXI4Lite.bsv
 export BSCFLAGS="-p .:./tutorial:./Flute/src_SSITH_P2/build_dir:+"
-
+export CFILES="Flute/libs/BlueStuff/BlueUtils/MemSim.c Flute/libs/BlueStuff/BlueUtils/SimUtils.c"
 
 echo $TOPMOD
 if [ "$SYNTH" = "1" ]; then
@@ -15,7 +15,7 @@ else
     if bsc $BSCFLAGS -sim -bdir $OUTDIR  -g $TOPMOD -u $TOPFILE ; then
         # move TOPMOD.ba to the build directory from topfile directory
         mv ./tutorial/$TOPMOD.ba $OUTDIR
-        if bsc $BSCFLAGS -sim -simdir $OUTDIR -o  $OUTDIR$TOPMOD -e $TOPMOD $OUTDIR$TOPMOD.ba; then
+        if bsc $BSCFLAGS -sim -simdir $OUTDIR -o  $OUTDIR$TOPMOD -e $TOPMOD $OUTDIR$TOPMOD.ba $CFILES; then
             $OUTDIR$TOPMOD
         else
             echo Failed to generate executable simulation model

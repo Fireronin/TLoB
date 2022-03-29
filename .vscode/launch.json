@@ -5,6 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Nodemon Launch Server",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "runtimeExecutable": "nodemon",
+            // "runtimeArgs": [
+            //     "--debug=5858"
+            // ],/mnt/e/Mega/Documents/CS/TLoB
+            "program": "${workspaceRoot}/GUI/react-flow-node-shapes/src/App.js",
+            "restart": true,
+            "port": 5858,
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
+           },
+        {
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",

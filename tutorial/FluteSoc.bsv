@@ -36,6 +36,7 @@ module top();
 	AXI4_Slave#(6, 64, 64, 0, 0, 0, 0, 0) memory <- mkAXI4SimpleMem(32, Invalid);
 	AXI4_Slave#(6, 64, 64, 0, 0, 0, 0, 0) aXI4_Fake_16550 <- mkAXI4_Fake_16550_Simple();
 
+
 	Vector#(1, AXI4_Master#(6, 64, 64, 0, 0, 0, 0, 0)) axi4_bus_masters;
 	axi4_bus_masters[0] = core.core_mem_master;
 	Vector#(2, AXI4_Slave#(6, 64, 64, 0, 0, 0, 0, 0)) axi4_bus_slaves;

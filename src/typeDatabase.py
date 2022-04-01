@@ -49,17 +49,21 @@ class TypeDatabase():
             try:
                 self.loadStateFromPickle()
                 loaded = True
+                self.functionNameCache = {function.name:function.full_name for function in self.functions.values()}
+                print("Loaded state from pickle")
             except Exception as e:
                 print("Failed to load typeDatabase state from pickle")
         self.parser = initalize_parser(start="tcl_type_full_list")
         # remove file failed_types.json and failed_functions.json
         if not loaded:
-            try:
-                os.remove("failed_types.json")
-                os.remove("failed_functions.json")
-                os.remove("failed_loads.json")
-            except:
-                pass
+            FILES = ["failed_types.json","failed_functions.json","typeDatabase.pickle","typeDatabaseFunctions.json","typeDatabaseTypes.json"]
+            for file in FILES:
+                try:
+                    if os.path.exists(os.path.join(saveLocation,file)):
+                        os.remove(os.path.join(saveLocation,file))
+                except Exception as e:
+                    print(e)
+                    print("Failed to remove file: " + file)
     
     def addLibraryFolder(self,folder):
         self.handler.add_folder(folder)
@@ -174,6 +178,7 @@ class TypeDatabase():
         for package_name in loaded:
             self.addPackage(package_name)
         self.saveStateToPickle()
+        self.functionNameCache = {function.name:function.full_name for function in self.functions.values()}
     
     # region OLD
     # def toXResultingType(self,t_type,typeclass):
@@ -292,7 +297,7 @@ class TypeDatabase():
             try:
                 newVars = self.mergeV2(t_type,instance.type_ide,context={})
                 newVars = self.solveProvisos(instance.provisos,newVars)
-                t_type = self.applyVariables(t_type,newVars)
+                t_type = self.applyVariables(deepcopy(t_type),newVars)
             except Exception as e:
                 continue
             return t_type
@@ -409,7 +414,7 @@ class TypeDatabase():
         print(len(self.functions))
 
     def writeToFile(self):
-        with open(os.path.join(self.saveLocation,"typeDatabaseFuncs.json"),"w") as f:
+        with open(os.path.join(self.saveLocation,"typeDatabaseFunctions.json"),"w") as f:
             # convert to string
             f.write(self.logged_funcs.decode("utf-8"))
             f.close()

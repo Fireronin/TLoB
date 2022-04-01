@@ -57,9 +57,9 @@ def convertToTypeIde(arg,caller=None):
 
 def addInstance(instance,name):
     global instances
-    if name in instances:
+    if name in subscribers:
         #remove stale subscriptions
-        for channel in subscribers[name]:
+        for channel in subscribers:
             if name in channel:
                 del channel[name]
     instances[name] = instance
@@ -87,7 +87,8 @@ class InstanceV2():
         self.instance_name = instance_name
         self.module_args = module_args
         addInstance(self,instance_name)
-        self.update()
+        if creator_args is not None:
+            self.update()
 
 
     def list_all_Interfaces(self)->List[AccessTuple]:
@@ -300,7 +301,7 @@ class TopLevelModule():
         self.db = db
         self.packages = set()
 
-    def add_moduleV2(self,creator_func,instance_name,interface_args=[],func_args=[]):
+    def add_moduleV2(self,creator_func,instance_name,interface_args=[],func_args=[]) -> InstanceV2:
         #check if instance name starts with upercase character
         if instance_name[0].isupper():
             raise Exception("Instance name must start with lowercase character")
@@ -467,6 +468,9 @@ class TopLevelModule():
         
         # add modules
         for m in self.modules.values():
+            if m.creator_args is None:
+                s.append("Awiaiting for args for ")
+                continue
             s.append("\t")
         
             s.append(str(m.creator.type_ide))

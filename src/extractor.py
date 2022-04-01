@@ -12,8 +12,6 @@ from sympy import EX, arg
 with open(os.path.join(os.path.join(os.path.dirname(__file__),"..","grammar","tests"), "testFunc.json")) as f:
     example_text = f.read()
 
-# with open(os.path.join(os.path.join(os.path.dirname(__file__),"..","grammar","tests"), "funcs.json")) as f:
-#     example_text = f.read()
 
 #region class definitions
 class Position:
@@ -32,6 +30,9 @@ class Type_formal:
     pass
 
 class Type_ide:
+    pass
+
+class Value:
     pass
 
 class Type_ide:
@@ -81,13 +82,14 @@ class Type_ide:
         return [f.type_ide for f in self.formals]
 
     def __str__(self) -> str:
-        if self.package is None:
-            return self.name
+        package = ""
+        if self.package is not None:
+            package = self.package+"::"
         if len(self.formals) == 0:
-            return f"{self.package}::{self.name}"
+            return f"{package}{self.name}"
         else:
             fs = ','.join([str(f.type_ide) for f in self.formals])
-            return f"{self.package}::{self.name}#({fs})"
+            return f"{package}{self.name}#({fs})"
  
     def __repr__(self) -> str:
         return "Type_ide "+self.__str__()
@@ -97,6 +99,22 @@ class Type_ide:
         if self.package is None:
             return self.name
         return f"{self.package}::{self.name}"
+
+    @property
+    def json(self) -> Dict:
+        out = {'name':self.full_name}
+        if len(self.children) ==0:
+            return out
+        for i,child in enumerate(self.children):
+            out["child"+str(i)] = None
+            if type(child) == str:
+                out["child"+str(i)] = child
+            if type(child) == Value:
+                out["child"+str(i)] = child.value
+            if type(child) == Type_ide:
+                out["child"+str(i)] = child.json
+        return out
+         
 
 class Value(Type_ide):
     is_string: bool

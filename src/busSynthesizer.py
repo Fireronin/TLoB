@@ -8,7 +8,7 @@ from extractor import Type as ExType
 from extractor import Interface as ExInterface
 from extractor import Type_formal as ExType_formal
 from extractor import Type_ide
-
+from extractor import evaluateCustomStart
 from typing import List, Set, Dict, Tuple, Optional, Union, Any
 from typeDatabase import TypeDatabase
 from bsvSynthesizer import AccessTuple,type_string
@@ -105,8 +105,6 @@ class OneWayBusV2(BusV2):
         return f"OneWayBusV2({self.name}) Flit:{self.flit_t} Connections: {','.join(self.slaves.keys())} -> {','.join(self.masters.keys())}"
 
     def add_slave(self,slave: AccessTuple,route: List[Tuple[int,int]]):
-        slave.thing
-
         flit_t = self.db.toXResultingType(slave.thing,self.db.getTypeclassByName("SourceSink::ToSource"))
         if self.flit_t is None:
             self.flit_t = flit_t
@@ -251,6 +249,7 @@ class AXI4BusV2(BusV2):
         return valid_masters
 
     def add_slave(self,slave: AccessTuple,route: List[Tuple[int,int]]):
+        
         if self.AXI4_params is None:
             self.AXI4_params = {}
             for param in self.SHARED_PARAMS:

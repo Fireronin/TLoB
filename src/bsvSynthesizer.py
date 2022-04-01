@@ -7,23 +7,16 @@ from tempfile import TemporaryFile
 from extractor import Position, Type as ExType, Type_ide, Value as ExValue
 from extractor import Interface as ExInterface
 from extractor import Type_formal as ExType_formal
-from extractor import Function as ExFunction
+from extractor import Function as ExFunction, Module as ExModule
 from extractor import evaluateType,evaluateCustomStart
 from extractor import Alias as ExAlias
 from extractor import Typeclass as ExTypeclass
 from extractor import Typeclass_instance as ExTypeclassInstance
 
-from typing import Dict, List, Union
+from typing import Dict, List, Union,Set,Tuple
 
 from typeDatabase import TypeDatabase
 
-
-
-name_counter = 0
-def get_name():
-    global name_counter
-    name_counter += 1
-    return "_temp_" + str(name_counter)
 
 class AccessTuple():
     access_name: str
@@ -38,19 +31,51 @@ class AccessTuple():
 class InstanceV2():
     pass
 
-instances = {}
+#region utility functions (should be wrapped into toplevel module class)
+name_counter = 0
+def get_name():
+    global name_counter
+    name_counter += 1
+    return "_temp_" + str(name_counter)
 
-def convertToTypeIde(arg):
+instances:Dict[str,InstanceV2] = {}
+knownNames:Dict[str,Type_ide] = {}
+subscribers:Dict[str,Set[str]] = {}
+
+def convertToTypeIde(arg,caller=None):
     if type(arg) == Type_ide:
         return arg
     arg = str(arg)
     if arg[0].islower():
-        return instances[arg]
+        if caller is not None:
+            global subscribers
+            if arg not in subscribers:
+                subscribers[arg] = set()
+            subscribers[arg].add(caller)
+        return knownNames[arg]
     return evaluateCustomStart(arg,"type_def_type")
+
+def addInstance(instance,name):
+    global instances
+    if name in instances:
+        #remove stale subscriptions
+        for channel in subscribers[name]:
+            if name in channel:
+                del channel[name]
+    instances[name] = instance
+
+def addName(name,type_ide):
+    global knownNames
+    knownNames[name] = type_ide
+    if name in subscribers:
+        for subscriber in subscribers[name]:
+            instances[subscriber].update()
+#endregion
 
 class InstanceV2():
     db: TypeDatabase
     type_ide : Type_ide
+    creator: Union[ExFunction,ExModule]
 
     def __init__(self,db: TypeDatabase,creator: ExType,
                 creator_args : List[Union[InstanceV2,Type_ide]] =[],
@@ -61,13 +86,11 @@ class InstanceV2():
         self.creator_args = creator_args
         self.instance_name = instance_name
         self.module_args = module_args
+        addInstance(self,instance_name)
         self.update()
-        global instances
-        interfaces = self.list_all_Interfaces()
-        for interface in interfaces:
-            instances[interface.access_name] = interface.thing
 
-    def list_all_Interfaces(self):
+
+    def list_all_Interfaces(self)->List[AccessTuple]:
         MAX_DEPTH = 1
         def visitRecursively(parent_name: str, interface: Type_ide,depth:int=1):
             if depth > 1:
@@ -82,23 +105,24 @@ class InstanceV2():
         return [AccessTuple(self.instance_name,self.creator.type_ide)] + list(visitRecursively(self.instance_name,self.creator.type_ide))
 
     def update(self):
+        print(f"Updating {self.instance_name}")
         if len(self.creator_args) != len(self.creator.arguments):
             raise Exception("Number of function arguments do not match the function")
         #convert to TypeIde arguments
-        creator_args = [convertToTypeIde(arg) for arg in self.creator_args]
-        module_args = [convertToTypeIde(arg) for arg in self.module_args]
-
-
+        creator_args = [convertToTypeIde(arg,self.instance_name) for arg in self.creator_args]
+        module_args = [convertToTypeIde(arg,self.instance_name) for arg in self.module_args]
 
         context = {}
         for i,pair in  enumerate( zip(self.creator.arguments.items(),creator_args)):
             arg,value = pair
+            if type(value) == ExFunction:
+                continue
             if type(value) == InstanceV2:
                 value = value.type_ide
             if isinstance(value, Type_ide):
                 context |= self.db.mergeV2(arg[1],value,context) 
-
-            self.creator.arguments[arg[0]] = self.db.applyVariables(self.creator.arguments[arg[0]],context)
+            #this is just to check if everything is ok
+            self.db.applyVariables(deepcopy(self.creator.arguments[arg[0]]),context)
 
         ideCopy  = deepcopy(self.creator.type_ide)
         if len(module_args) == 0:
@@ -113,7 +137,10 @@ class InstanceV2():
         
         self.creator.type_ide = self.db.applyVariables(self.creator.type_ide,context)
         self.db.populateMembers(self.creator.type_ide)
-        print('Works')
+        global instances
+        interfaces = self.list_all_Interfaces()
+        for interface in interfaces:
+            addName(interface.access_name,interface.thing)
 
     def get(self):
         return AccessTuple(self.instance_name,self.creator.type_ide)
@@ -122,33 +149,134 @@ class InstanceV2():
         if type(self.creator) == ExFunction:
             return f"{self.creator.name}({','.join(map(str,self.creator_args))});\n"
 
-def type_string(interface):
-    if interface.type_ide.fields!=0:
-            arguments = ""
-            for i in range(len(interface.type_ide.fields)):
-                stringified = str(interface.type_ide.fields[i])
-                arguments += stringified
-                if i != len(interface.type_ide.fields)-1:
-                    arguments += ", "
-            
-    return interface.name + f"#({arguments})"
+class VectorInstance(InstanceV2):
+    items: List[str] = []
+    flit_type_ide:  Type_ide = evaluateCustomStart("flit","type_def_type")
+    type_ide: Type_ide = evaluateCustomStart(f"Vector::Vector#(0,flit)","type_def_type")
+    def __init__(self,db,name):
+        self.instance_name = name
+        self.db = db
+        addInstance(self,name)
 
-from busSynthesizer import OneWayBusV2, BusV2,AXI4BusV2
+    def remove(self,item:str):
+        self.items.remove(item)
+        if len(self.items) == 0:
+            self.flit_type_ide = evaluateCustomStart("flit","type_def_type")
+        self.type_ide = evaluateCustomStart(f"Vector::Vector#({len(self.items)},{self.flit_type_ide})","type_def_type")
 
-# enum with one way and two way and AXI4
-class ConnectionType(enum.Enum):
-    one_way = 1
-    two_way = 2
-    AXI4 = 3
 
-class BusInstace():
-    
-    def __init__(self,ins,outs,insRanges,connectionType):
-        self.ins = ins
-        self.outs = outs
-        self.insRanges = insRanges
-        self.name = get_name()
-        self.connectionType = connectionType
+    def add(self,item:str):
+        itemType_ide = convertToTypeIde(item,self.instance_name)
+        try:
+            context = self.db.mergeV2(self.flit_type_ide,itemType_ide,{})
+        except Exception as e:
+            raise Exception("Adding item to vector failed types don't match")
+        if len(self.items) == 0:
+            self.flit_type_ide = self.db.applyVariables(self.flit_type_ide,context)
+        self.items.append(item)
+        self.type_ide = evaluateCustomStart(f"Vector::Vector#({len(self.items)},{self.flit_type_ide})","type_def_type")
+
+    def update(self):
+        items =[convertToTypeIde(item,self.instance_name) for item in self.items]
+        try:
+            for item in items:
+                self.db.mergeV2(self.flit_type_ide,item,{})
+        except Exception as e:
+            print("Failed updaitng vector")
+            print(e)
+            raise Exception("Adding item to vector failed types don't match")
+        addName(self.instance_name,self.type_ide)
+
+    def __str__(self):
+        output_str = []
+        output_str.append(f"\t{self.type_ide} {self.instance_name};\n")
+        for i,item  in enumerate(self.items):
+            output_str.append(f"\t{self.instance_name}[{i}] = {item};\n")
+        return "".join(output_str)
+
+class BusInstanceV3(InstanceV2):
+    def __init__(self,db,name,busCreator:str,masters:List[str],slaves:List[Tuple[str,List[Tuple[int,int]]]]):
+        self.instance_name = name
+        self.db = db 
+        self.busCreator = self.db.getFunctionByName(busCreator)
+        addInstance(self,name)
+        self.masters = masters
+        self.slaves = slaves
+        self.mastersV = VectorInstance(self.db,name+"_masters")
+        self.slavesV = VectorInstance(self.db,name+"_slaves")
+        self.update()
+
+
+    def update(self):    
+        for master in self.masters:
+            self.mastersV.add(master)
+        self.mastersV.update()
+        #subscribe to changes in masters
+        convertToTypeIde(self.mastersV.instance_name,self.instance_name)
+
+        for slave in self.slaves:
+            self.slavesV.add(slave[0])
+        self.slavesV.update()
+        convertToTypeIde(self.slavesV.instance_name,self.instance_name)
+
+        functionString = \
+        """
+        {function route_{busName} {result Vector#({NSlaves}, Bool)
+        } {arguments {
+                {r_t 
+                }
+            }
+        }
+        {provisos {
+                {Bits#(r_t,r_l)
+                }
+            }
+        }	
+        {position {../this.bsv 1 2
+            }
+        }
+        }
+        """
+        functionString = functionString.replace("{NSlaves}",str(len(self.slaves)))
+        functionString = functionString.replace("{busName}",self.instance_name)
+        
+
+        routingFunction = evaluateCustomStart(functionString,"tcl_function")
+        addName(routingFunction.full_name,routingFunction)
+        InstanceV2(self.db,self.busCreator,[routingFunction.full_name,self.mastersV.instance_name,self.slavesV.instance_name],[],self.instance_name+"_busInstance")
+        
+    def routingFunctionString(self):
+        """
+        Generate a function that routes a flit from a master to a slave.
+        """
+        #check if there is at least one master and one slave
+        if len(self.masters) == 0 or len(self.slaves) == 0:
+            raise Exception(f"Bus {self.instance_name} has no masters or slaves. Slaves: {len(self.slaves)} Masters: {len(self.masters)}")
+
+        output_str = []
+        # generate routing function
+        r_s = len(self.slaves)
+
+        # create map from slave to id
+        slave_to_id = {}
+        for i, slave in enumerate(self.slaves):
+            slave_to_id[slave[0]] = i
+        output_str.append(f"function Vector #({r_s}, Bool) route_{self.instance_name} (r_t x) provisos ( Bits#(r_t,r_l) );\n")
+        output_str.append(f"\tBit#(r_l) adress = pack(x);\n")
+        output_str.append(f"\tVector#({r_s}, Bool) oneHotAdress = replicate (False);\n")
+        
+        for name, route in self.slaves:
+            slave_id = slave_to_id[name]
+            output_str.append(f"\t// {name} -> {slave_id}\n")
+            for start, end in route:
+                output_str.append(f"\tif (adress >= {start} && adress < {end})\n")
+                output_str.append(f"\t\toneHotAdress[{slave_id}] = True;\n")
+        output_str.append(f"\treturn oneHotAdress;\n")
+        output_str.append(f"endfunction\n\n")
+        return "".join(output_str)
+
+    def __str__(self):
+        return f"\t{self.busCreator.full_name}(route_{self.instance_name},{self.mastersV.instance_name},{self.slavesV.instance_name});\n"
 
 class TopLevelModule():
     db: TypeDatabase
@@ -156,21 +284,21 @@ class TopLevelModule():
     accessableInterfaces: List[AccessTuple] = []
     cashed_considered_instances: Dict[str,AccessTuple] = {}
 
-    modules: Dict[str,InstanceV2]
+    modules: Dict[str,InstanceV2] = {}
+    connections: Dict[str,InstanceV2] = {}
+    buses: Dict[str,BusInstanceV3] = {}
+    name: str
+    package_name: str
+    typedefs: Dict[str,ExAlias] = {}
 
     def __init__(self,name,db,package_name=None) -> None:
-        self.modules = {}
-        self.connections = set()
         self.name = name
         if package_name is None:
             self.package_name = name
         else:
             self.package_name = package_name
         self.db = db
-        self.buses = set()
         self.packages = set()
-        self.typedefs = {}
-        self.busesV2 = set()
 
     def add_moduleV2(self,creator_func,instance_name,interface_args=[],func_args=[]):
         #check if instance name starts with upercase character
@@ -180,8 +308,6 @@ class TopLevelModule():
             creator_func = self.db.getFunctionByName(creator_func)
         newModule = InstanceV2(self.db,creator_func,func_args,interface_args,instance_name)
         
-
-
         #populate possible connections
         for current in newModule.list_all_Interfaces():
             self.possibleConnections[current.access_name] = self.list_connectableV2(current,self.accessableInterfaces)
@@ -275,20 +401,40 @@ class TopLevelModule():
                   connectable_ends.append(end)
         return connectable_ends
 
-    def add_connectionV2(self,start:str,end:str):
+    def add_connectionV2(self,start:str,end:str,connection_name:str=None):
+        if connection_name is None:
+            connection_name = f"connection_{len(self.connections)}"
         creator_func = self.db.getFunctionByName("mkConnection")
-        connection = InstanceV2(self.db,creator_func,[start,end],[],f"connection_{len(self.connections)}")
-        self.connections.add(connection)
+        connection = InstanceV2(self.db,creator_func,[start,end],[],connection_name)
+        self.connections[connection_name] = connection
 
-    def add_busV2(self,busType:ConnectionType ,name=None) -> BusV2:
-        if busType == ConnectionType.one_way:
-            bus = OneWayBusV2(self.db,name)
-        elif busType == ConnectionType.two_way:
-            raise Exception("Two way buses are not supported yet")
-        elif busType == ConnectionType.AXI4:
-            bus = AXI4BusV2(self.db,name)
-        self.busesV2.add(bus)
-        return bus
+    def add_busV3(self,name,busCreator:str,masters:List[str],slaves:List[Tuple[str,List[Tuple[int,int]]]]):
+        bI = BusInstanceV3(self.db,name,busCreator,masters,slaves)
+        self.buses[name] = bI
+
+    def remove(self,name:str):
+        #in accessable interfaces find name* use start with and fiter
+        self.accessableInterfaces.filter(lambda x: not x.access_name.startswith(name))
+
+        global instances
+        if name in instances:
+            instances.remove(name)
+        global knownNames
+        knownNames = {k:v for k,v in knownNames.items() if not k.startswith(name)}
+        global subscribers
+        for subscriber in subscribers:
+            if name in subscriber:
+                subscriber.remove(name)
+        
+        if name in self.modules:
+            del self.modules[name]
+        if name in self.connections:
+            del self.connections[name]
+        if name in self.buses:
+            del self.buses[name]
+        if name in self.typedefs:
+            del self.typedefs[name]
+
 
     def to_string(self):
         s = []
@@ -314,23 +460,8 @@ class TopLevelModule():
             s.append("typedef " + str(self.typedefs[t]) + " " + str(t) + ";\n")
         s.append("\n")
 
-        # add bus routing functions
-        for bus in self.buses:
-            # generate routing function
-            r_s = len(bus.outs)
-            s.append(f"function Vector #({r_s}, Bool) route{bus.name} (r_t x) provisos ( Bits#(r_t,r_l) );\n")
-            s.append(f"\tBit#(r_l) r_t_b = pack(x);\n")
-            s.append(f"\tVector#({r_s}, Bool) r_t_v = replicate (False);\n")
-            for i in range(len(bus.ins)):
-                s.append(f"\tif (r_t_b >= {bus.insRanges[i][0]} && r_t_b <= {bus.insRanges[i][1]})\n")
-                s.append(f"\t\tr_t_v[{i}] = True;\n")
-            s.append(f"\treturn r_t_v;\n")
-            s.append(f"endfunction\n\n")
-        
-
-        # add busesV2
-        for bus in self.busesV2:
-            s.append(bus.make_routing_function())
+        for bus in self.buses.values():
+            s.append(bus.routingFunctionString())
 
         s.append("module "+self.name+"();\n \n")
         
@@ -349,30 +480,11 @@ class TopLevelModule():
         s.append("\n")
 
         # add connections
-        for c in self.connections:
+        for c in self.connections.values():
             s.append("\t"+c.to_string())
 
-        # add busses
-        for bus in self.buses:
-            s.append(f"\tVector#({len(bus.ins)}, {type_string(bus.ins[0].thing)}) {bus.name}_ins;\n")
-            for i in range(len(bus.ins)):
-                s.append(f"\t{bus.name}_ins[{i}] = {bus.ins[i].access_name};\n")
-            
-            s.append(f"\tVector#({len(bus.outs)}, {type_string(bus.outs[0].thing)}) {bus.name}_outs;\n")
-            for i in range(len(bus.outs)):
-                s.append(f"\t{bus.name}_outs[{i}] = {bus.outs[i].access_name};\n")
-            
-            # depending on connection type generate bus
-            if bus.connectionType == ConnectionType.one_way:
-                s.append(f"\tmkOneWayBus(route{bus.name},{bus.name}_ins,{bus.name}_outs);\n")
-            elif bus.connectionType == ConnectionType.two_way:
-                s.append(f"\tmkTwoWayBus(route{bus.name},{bus.name}_ins,{bus.name}_outs);\n")
-            elif bus.connectionType == ConnectionType.AXI4:
-                s.append(f"\tmkAXI4Bus(route{bus.name},{bus.name}_ins,{bus.name}_outs);\n")
-
-        # add bussesV2
-        for bus in self.busesV2:
-            s.append(bus.make_initialization_string())
+        for bus in self.buses.values():
+            s.append(str(bus))
 
         s.append("\n")
         s.append("endmodule\n")

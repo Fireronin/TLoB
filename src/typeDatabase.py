@@ -4,7 +4,7 @@ from typing import Dict, Set
 from numpy import var
 from extractor import Type as ExType
 from extractor import *
-from handlerV2 import *
+from handlerV2 import Handler
 from thefuzz import process
 import pickle
 from provisoSolverV3 import solveNonNumerical
@@ -20,7 +20,7 @@ def fuzzyException(name,list,exception_string):
         string_of_matches += str(potential_matches[0][0]) + " \n"
     raise Exception(exception_string.format(name,string_of_matches))
 
-def CAdd(context,s,value):
+def CAdd(context:Dict[str,Type_ide],s,value):
     if s not in context:
         context[s] = value
     else:
@@ -36,9 +36,15 @@ class TypeDatabase():
     packages: Set[str] = set()
     logged_funcs: bytes = b""
     logged_types: bytes = b""
+    handler: Handler
 
-    def __init__(self,load=True):
+    def __init__(self,load=True,saveLocation=os.path.join(".","saved"),librariesRoot='/mnt/e/Mega/Documents/CS/TLoB'):
+        self.saveLocation = saveLocation
+        #check if saveLocation exists
+        if not os.path.exists(saveLocation):
+            os.mkdir(saveLocation)
         loaded = False
+        self.handler = Handler(librariesRoot)
         if load:
             try:
                 self.loadStateFromPickle()
@@ -55,6 +61,9 @@ class TypeDatabase():
             except:
                 pass
     
+    def addLibraryFolder(self,folder):
+        self.handler.add_folder(folder)
+
     functionNameCache = {}
     def getFunctionByName(self,name):
         if name in self.functions:
@@ -62,9 +71,8 @@ class TypeDatabase():
         else:
             if self.functionNameCache == {}:
                 self.functionNameCache = {function.name:function.full_name for function in self.functions.values()}
-            else:
-                if name in self.functionNameCache:
-                    return deepcopy(self.functionNameCache[name])
+            if name in self.functionNameCache:
+                return deepcopy(self.functions[self.functionNameCache[name]])
         fuzzyException(name,list(self.functions), "Function {} not found. \n Do you mean: \n{}")
     
     def getTypeByName(self,name):
@@ -132,7 +140,7 @@ class TypeDatabase():
 
     def loadPackage(self,package_name):
         try:
-            load_package(package_name=package_name)
+            self.handler.load_package(package_name=package_name)
         except Exception as e:
             print("Failed to load package {}".format(package_name))
             print(e)
@@ -150,8 +158,8 @@ class TypeDatabase():
         if self.loadPackage(package_name) == None:
             return
         self.packages.add(package_name)
-        funcs = list_funcs(package_name=package_name)
-        types = read_all_types(package_name=package_name)
+        funcs = self.handler.list_funcs(package_name=package_name)
+        types = self.handler.read_all_types(package_name=package_name)
         self.logged_funcs += funcs + b"\n"
         self.logged_types += b"\n".join(types) + b"\n"
         self.writeToFile()
@@ -167,36 +175,31 @@ class TypeDatabase():
             self.addPackage(package_name)
         self.saveStateToPickle()
     
-    def checkToXMembership(self,t_type,typeclass: Typeclass):
-        for instance in typeclass.instances:
-            if t_type.name != instance[0].fields[0].name or t_type.package != instance[0].fields[0].package:
-                continue
-            return True
-        return None
-
-    def toXResultingType(self,t_type,typeclass):
-        for instance in typeclass.instances:
-            start = instance[0].fields[0]
-            end = instance[0].fields[1]
-            if type(start) == ExType:
-                if t_type.full_name == start.full_name:
-                    variables = {}
-                    for i,field in enumerate(start.fields):
-                        variables[str(field)] = t_type.type_ide.fields[i]
+    # region OLD
+    # def toXResultingType(self,t_type,typeclass):
+    #     for instance in typeclass.instances:
+    #         start = instance[0].fields[0]
+    #         end = instance[0].fields[1]
+    #         if type(start) == ExType:
+    #             if t_type.full_name == start.full_name:
+    #                 variables = {}
+    #                 for i,field in enumerate(start.fields):
+    #                     variables[str(field)] = t_type.type_ide.fields[i]
                     
-                    if type(end) == str:
-                        return variables[end]
-                    else:
-                        if type(end) == ExType:
-                            end_copy = deepcopy(end)
-                            end_copy.type_ide = Type_ide(end.name,end.package)
-                            end_copy.type_ide.fields = end_copy.fields
-                            for i,field in enumerate(end.fields):
-                                end_copy.type_ide.fields[i] = variables[field]
-                            return end_copy
-                        else:
-                            raise Exception(f"Unknown type (or a function) on the left side {typeclass}")
-        return Exception(f"{t_type} not found in {typeclass}")
+    #                 if type(end) == str:
+    #                     return variables[end]
+    #                 else:
+    #                     if type(end) == ExType:
+    #                         end_copy = deepcopy(end)
+    #                         end_copy.type_ide = Type_ide(end.name,end.package)
+    #                         end_copy.type_ide.fields = end_copy.fields
+    #                         for i,field in enumerate(end.fields):
+    #                             end_copy.type_ide.fields[i] = variables[field]
+    #                         return end_copy
+    #                     else:
+    #                         raise Exception(f"Unknown type (or a function) on the left side {typeclass}")
+    #     return Exception(f"{t_type} not found in {typeclass}")
+    # endregion
 
     def mergeV2(self,a: Union[Value,Type_ide,str],b: Union[Value,Type_ide,str],context: Dict[str,Union[Value,Type_ide]]):
         a,b = deepcopy(a),deepcopy(b)
@@ -237,7 +240,9 @@ class TypeDatabase():
                 raise Exception(f"Cannot merge different types, {a} and {b}")
             for i,pair in enumerate(zip(a.children,b.children)):
                 fa,fb = pair
-                context |= self.mergeV2(fa,fb,context)
+                neWcontext = self.mergeV2(fa,fb,context)
+                for key in neWcontext:
+                    CAdd(context,key,neWcontext[key])
         return context
 
     def applyVariables(self,t_type: Type_ide, variables) -> Union[Type_ide,Value,str]:
@@ -363,7 +368,7 @@ class TypeDatabase():
             if type(other.members[key]) == Interface:
                 t_type.members[key] = self.applyVariables(deepcopy(other.members[key].type_ide),context)
             self.populateMembers(t_type.members[key])
-
+        return
 
     def evaluateAlias(self,alias):
         if alias in self.aliases:
@@ -378,21 +383,6 @@ class TypeDatabase():
             return None
             #fuzzyException(alias,list(self.aliases.keys()), "Alias {} not found. \n Do you mean: \n{}")
     
-
-    def checkifConnectable(self,type1,type2):
-        connectableTypeclass = self.getTypeclassByName("Connectable.Connectable")
-        for instance in connectableTypeclass.instances:
-            variables1 = {}
-            variables2 = {}
-            if instance[0].fields[0].name == type1.name and instance[0].fields[0].package == type1.package and \
-                instance[0].fields[1].name == type2.name and instance[0].fields[1].package == type2.package:
-                for field in instance[0].fields[0].fields:
-                   pass 
-
-    def checkMembership(self,type,typeclass):
-        # TODO: check if type is a member of typeclass
-        pass
-
     def printTypes(self):
         for type in self.types:
             print(self.types[type])
@@ -419,17 +409,17 @@ class TypeDatabase():
         print(len(self.functions))
 
     def writeToFile(self):
-        with open("typeDatabaseFuncs.json","w") as f:
+        with open(os.path.join(self.saveLocation,"typeDatabaseFuncs.json"),"w") as f:
             # convert to string
             f.write(self.logged_funcs.decode("utf-8"))
             f.close()
-        with open("typeDatabaseTypes.json","w") as f:
+        with open(os.path.join(self.saveLocation,"typeDatabaseTypes.json"),"w") as f:
             # convert to string
             f.write(self.logged_types.decode("utf-8"))
             f.close()
 
     def saveStateToPickle(self):
-        with open("typeDatabase.pickle","wb") as f:
+        with open(os.path.join(self.saveLocation,"typeDatabase.pickle"),"wb") as f:
             d = {}
             d["types"] = self.types
             d["typeclasses"] = self.typeclasses
@@ -443,7 +433,7 @@ class TypeDatabase():
             f.close()
 
     def loadStateFromPickle(self):
-        with open("typeDatabase.pickle","rb") as f:
+        with open(os.path.join(self.saveLocation,"typeDatabase.pickle"),"rb") as f:
             d = pickle.load(f)
             self.types = d["types"]
             self.typeclasses = d["typeclasses"]

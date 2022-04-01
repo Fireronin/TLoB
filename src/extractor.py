@@ -28,15 +28,19 @@ class Position:
     def __repr__(self) -> str:
         return f"{self.file}:{self.line}:{self.column}"
 
+class Type_formal:
+    pass
 
+class Type_ide:
+    pass
 
 class Type_ide:
     name: str
     members = {}
+    fromals: List[Type_formal]
 
-    def __init__(self,name,package=None,formals=[],is_polymorphic=False,is_primary=False,used_name=None) -> None:
+    def __init__(self,name,package=None,formals=[],is_polymorphic=False,is_primary=False) -> None:
         self.name = name
-        self.used_name = used_name
         self.package = package
         self.formals = formals
         self.is_polymorphic = is_polymorphic
@@ -47,16 +51,30 @@ class Type_ide:
             if self.formals[i].name == key:
                 return self.fields[i]
 
-    def populate(self,other):
+    def __eq__(self, __o: object) -> bool:
+        if type(__o) != type(self):
+            return False
+        if type(self) == Value:
+            return self.value == __o.value
+        if type(self) == Type_ide:
+            same = True
+            same &= self.name == __o.name
+            same &= self.package == __o.package
+            same &= self.formals == __o.formals
+            return same
+
+    def populate(self,other:Type_ide):
         if other.name == "nothing":
             return
-        self.name = other.name
-        self.used_name = other.used_name
-        self.package = other.package
-        self.formals = other.formals
-        self.is_polymorphic = other.is_polymorphic
-        self.is_primary = other.is_primary
-        #self.children = other.children
+        if self.name == "nothing":
+            self.name = other.name
+            self.package = other.package
+            self.formals = other.formals
+            self.is_polymorphic = other.is_polymorphic
+            self.is_primary = other.is_primary
+        else:
+            if self != other:
+                raise Exception("Population failed, types are not equal"+str(self)+" "+str(other))
 
     @property
     def children(self):
@@ -84,7 +102,7 @@ class Value(Type_ide):
     is_string: bool
 
     def __init__(self,value) -> None:
-        super().__init__(self,value)
+        super().__init__(value)
         self.value = value        
         if type(value) == str:
             self.is_string = True
@@ -98,9 +116,13 @@ class Value(Type_ide):
     def populate(self,other):
         if other.name == "nothing":
             return
-        self.value = other.value
-        if type(self.value) == str:
-            self.is_string = True
+        if self.name != "nothing":
+            if self.value != other.value:
+                raise Exception("Population failed, types are not equal"+str(self)+" "+str(other))
+        else:
+            self.value = other.value
+            if type(self.value) == str:
+                self.is_string = True
 
 class Type:
     position: Position
@@ -155,8 +177,6 @@ class Interface_method:
         self.type = type
         self.input_types = input_types
         self.ports = ports
-
-
 
 class Enum(Type):
     def __init__(self,type_ide,members,width=None,position=None) -> None:
@@ -258,6 +278,9 @@ class Type_formal:
 
     def __repr__(self) -> str:
         return "T_formal "+self.__str__()
+    
+    def __eq__(self, __o: object) -> bool:
+        return self.type_ide == __o.type_ide
 
 class Module(Type):
     type_ide: Type_ide
@@ -374,7 +397,7 @@ class Typeclass():
     
     @property
     def full_name(self) -> str:
-        return self.__str__()
+        return self.type_ide.full_name
 
 
 
@@ -492,7 +515,7 @@ class ModuleTransformer(Transformer):
                 if issubclass(type(argument),Type):
                     arguments[argument.name] = argument
                 else:
-                    arguments[argument[1]] = argument[0]
+                    arguments[argument[2]] = argument[1]
         except Exception as e:
             pass
         return Module(name=args[0],arguments=arguments,interface=args[-1])
@@ -841,7 +864,7 @@ def evaluateType(type_string: Union[str,bytes]):
     result = ModuleTransformer().transform(parsed)
     return result
 
-def evaluateCustomStart(type_string: Union[str,bytes],start:str):
+def evaluateCustomStart(type_string: Union[str,bytes],start:str = "type_def_type"):
     if type(type_string) == bytes:
         type_string = type_string.decode("utf-8")
     with open(os.path.join(os.path.join(os.path.dirname(__file__),"..","grammar"), "type.lark")) as f:

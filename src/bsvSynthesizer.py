@@ -59,9 +59,9 @@ def addInstance(instance,name):
     global instances
     if name in subscribers:
         #remove stale subscriptions
-        for channel in subscribers:
+        for channel in subscribers.values():
             if name in channel:
-                del channel[name]
+                channel.remove(name)
     instances[name] = instance
 
 def addName(name,type_ide):
@@ -80,12 +80,14 @@ class InstanceV2():
     def __init__(self,db: TypeDatabase,creator: ExType,
                 creator_args : List[Union[InstanceV2,Type_ide]] =[],
                 module_args:List[Type_ide]=[],
-                instance_name:str=None):
+                instance_name:str=None,
+                input_context:Dict[str,str]={}):
         self.db = db
         self.creator = creator
         self.creator_args = creator_args
         self.instance_name = instance_name
         self.module_args = module_args
+        self.input_context = {key:evaluateCustomStart(val) for key,val in input_context.items()}
         addInstance(self,instance_name)
         if creator_args is not None:
             self.update()
@@ -107,13 +109,16 @@ class InstanceV2():
 
     def update(self):
         print(f"Updating {self.instance_name}")
+        self.creator.type_ide.accessName = self.instance_name
+        
         if len(self.creator_args) != len(self.creator.arguments):
+            print(f"{self.instance_name} has {len(self.creator_args)} arguments, but {self.creator.name} has {len(self.creator.arguments)}")
             raise Exception("Number of function arguments do not match the function")
         #convert to TypeIde arguments
         creator_args = [convertToTypeIde(arg,self.instance_name) for arg in self.creator_args]
         module_args = [convertToTypeIde(arg,self.instance_name) for arg in self.module_args]
 
-        context = {}
+        context = self.input_context 
         for i,pair in  enumerate( zip(self.creator.arguments.items(),creator_args)):
             arg,value = pair
             if type(value) == ExFunction:
@@ -301,13 +306,13 @@ class TopLevelModule():
         self.db = db
         self.packages = set()
 
-    def add_moduleV2(self,creator_func,instance_name,interface_args=[],func_args=[]) -> InstanceV2:
+    def add_moduleV2(self,creator_func,instance_name,interface_args=[],func_args=[],input_context={}) -> InstanceV2:
         #check if instance name starts with upercase character
         if instance_name[0].isupper():
             raise Exception("Instance name must start with lowercase character")
         if type(creator_func) == str:
             creator_func = self.db.getFunctionByName(creator_func)
-        newModule = InstanceV2(self.db,creator_func,func_args,interface_args,instance_name)
+        newModule = InstanceV2(self.db,creator_func,func_args,interface_args,instance_name,input_context)
         
         #populate possible connections
         for current in newModule.list_all_Interfaces():

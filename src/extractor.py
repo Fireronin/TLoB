@@ -39,6 +39,7 @@ class Type_ide:
     name: str
     members = {}
     fromals: List[Type_formal]
+    accessName: str = ""
 
     def __init__(self,name,package=None,formals=[],is_polymorphic=False,is_primary=False) -> None:
         self.name = name
@@ -105,14 +106,20 @@ class Type_ide:
         out = {'name':self.full_name}
         if len(self.children) ==0:
             return out
+        out["children"] = []
+        out["acessName"] = self.accessName
         for i,child in enumerate(self.children):
-            out["child"+str(i)] = None
             if type(child) == str:
-                out["child"+str(i)] = child
+                processed = child
             if type(child) == Value:
-                out["child"+str(i)] = child.value
+                processed = str(child.value)
             if type(child) == Type_ide:
-                out["child"+str(i)] = child.json
+                processed = child.json
+            out["children"].append(processed)
+        out["members"] = []
+        for name,member in self.members.items():
+            if type(member) ==Type_ide:
+                out["members"].append(member.json)
         return out
          
 

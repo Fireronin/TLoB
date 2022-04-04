@@ -359,7 +359,8 @@ class TypeDatabase():
 
     def populateMembers(self,t_type : Type_ide):
         if t_type.full_name not in self.types:
-            print(f"{t_type.full_name} not found")
+            if t_type.full_name != "nothing":
+                print(f"{t_type.full_name} not found")
             return
         other = self.types[t_type.full_name]
         context = self.mergeV2(t_type,other.type_ide,{})
@@ -367,11 +368,14 @@ class TypeDatabase():
         for key in other.members.keys():
             if type(other.members[key]) == Interface_method:
                 t_type.members[key] = other.members[key]
+                t_type.members[key].accessName = key
                 continue
             if type(other.members[key]) == Type_ide:
                 t_type.members[key] = self.applyVariables(deepcopy(other.members[key]),context)
+                t_type.members[key].accessName = key
             if type(other.members[key]) == Interface:
                 t_type.members[key] = self.applyVariables(deepcopy(other.members[key].type_ide),context)
+                t_type.members[key].accessName = key
             self.populateMembers(t_type.members[key])
         return
 

@@ -129,6 +129,7 @@ def confirmBus(request):
             raise Exception("Master range not supported")
         else:
             #I'm using eval this is a bit sus
+            print(eval(range))
             slaves[int(id)] = (slaves[int(id)][0],eval(range))
     #convert masters and slaves to lists
     masters = list(masters.values())

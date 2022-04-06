@@ -39,7 +39,7 @@ core2 = topLevel.add_moduleV2("Core::mkCore","core2",[],[])
 #     pass
 
 # memory = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",SPARAMS,[4096,'Maybe#("xddd")'])
-memory2 = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",[],None)
+memory2 = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",[],['4096', 'Maybe#("xdd")'])
 
 print(topLevel.to_string())
 topLevel.to_file("/mnt/d/Mega/Documents/CS/TLoB/tutorial/")

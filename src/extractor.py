@@ -143,7 +143,7 @@ class Value(Type_ide):
             return
         if self.name != "nothing":
             if self.value != other.value:
-                raise Exception("Population failed, types are not equal"+str(self)+" "+str(other))
+                raise Exception("Population failed, types are not equal "+str(self)+" "+str(other))
         else:
             self.value = other.value
             if type(self.value) == str:

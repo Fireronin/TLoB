@@ -87,3 +87,65 @@ def confirmDesign(request):
     bsvText = topLevel.to_string()
     responseJson = {"bsvText" : bsvText}
     return HttpResponse(json.dumps(responseJson))
+
+def confirmConnection(request):
+    json_data = json.loads(request.body)
+
+    inputs = json_data['inputs']
+    name = json_data['name']
+    print("Connection Inputs",inputs)
+    try:
+        topLevel.add_connectionV2(inputs['0'],inputs['1'],name)
+    except Exception as e:
+        tb = traceback.format_exc()
+        print(tb)
+        exception = str(e)
+        print(e)
+        return HttpResponse(json.dumps({'exception':str(e)}))
+    response = {
+        'exception':"",
+    }
+    return HttpResponse(json.dumps(response))
+
+def confirmBus(request):
+    json_data = json.loads(request.body)
+    busName = json_data['name']
+    creator = json_data['creator']
+    inputs = json_data['inputs']
+    ranges = json_data['ranges']
+
+    print("name:",busName,"creator:",creator,"masters:",inputs,"ranges:",ranges)
+    masters = {}
+    slaves = {}
+    for name,value in inputs.items():
+        kind,id = name.split(" ")
+        if kind == "master":
+            masters[int(id)] = value
+        else:
+            slaves[int(id)] = (value,None)
+    for name,range in ranges.items():
+        kind,id = name.split(" ")
+        if kind == "master":
+            raise Exception("Master range not supported")
+        else:
+            #I'm using eval this is a bit sus
+            slaves[int(id)] = (slaves[int(id)][0],eval(range))
+    #convert masters and slaves to lists
+    masters = list(masters.values())
+    slaves = list(slaves.values())
+    exception = ""
+    try:
+        topLevel.add_busV3(busName,creator,masters,slaves)
+    except Exception as e:
+        tb = traceback.format_exc()
+        print(tb)
+        exception = str(e)
+        print(e)
+        return HttpResponse(json.dumps({'exception':str(e)}))
+
+    response = {
+        'name':name,
+        'creator':creator,
+        'exception':exception,
+    }
+    return HttpResponse(json.dumps(response))

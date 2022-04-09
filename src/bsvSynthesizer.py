@@ -52,6 +52,8 @@ def convertToTypeIde(arg,caller=None):
             if arg not in subscribers:
                 subscribers[arg] = set()
             subscribers[arg].add(caller)
+        if arg not in knownNames:
+            raise Exception(f"Unknown name {arg}")
         return knownNames[arg]
     return evaluateCustomStart(arg,"type_def_type")
 
@@ -113,7 +115,7 @@ class InstanceV2():
         
         if len(self.creator_args) != len(self.creator.arguments):
             print(f"{self.instance_name} has {len(self.creator_args)} arguments, but {self.creator.name} has {len(self.creator.arguments)}")
-            raise Exception("Number of function arguments do not match the function")
+            raise Exception("Number of function arguments do not match the number of arguments required")
         #convert to TypeIde arguments
         creator_args = [convertToTypeIde(arg,self.instance_name) for arg in self.creator_args]
         module_args = [convertToTypeIde(arg,self.instance_name) for arg in self.module_args]

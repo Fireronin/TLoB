@@ -108,14 +108,16 @@ A nice feature supported by Lark is ability to have regular expressions in the g
 \chapter{Implementation}
 \section{Reading packages}
 \subsection{Bluetcl}
-As mentioned before, bluetcl is a tool written in Tcl that behaves like a library. To interact with this tool I have written a script using pexpect library. This script works by creating subprocess of bluetcl, and gives works like a library with functions that allow for performing certain quarries. Core of this script is a function called \verb!fancy_call! that takes as input a string that is a command and returns output of stripped of warnings or raises an error if such occurred(for example in case where package was not found). To remove warnings I make some assumptions.
+As mentioned before, bluetcl is a tool written in bash that starts Tcl terminal and sets up environment to use certain Tcl commands thanks to which one can inspect packages. To interact with this tool I have written a script using Pexpect library. This script works by creating subprocess of bluetcl, and exposes functions that allow for performing quarries. Core of this script is a function called \verb!call! that takes as input a string that is a command and returns output of stripped of warnings or raises an exception if error occurred(for example in case where package was not found). To remove warnings I make some assumptions.
 \begin{itemize}
-    \item I only care about supporting fixed set of commands.
-    \item For those commands output that I care about is always equal to the last line. (this was checked empirically)
+    \item I only use fixed set of commands.
+    \item For those commands important output about is always on the last line. (this was checked empirically)
     \item Output of a command is always followed by $\%$ a character that never occurs in the rest of the output and marks the end of the output.
 \end{itemize}
-
-This simple script allows me for:
+Thanks to them I don't need sophisticated system for parsing error, and or warnings. I can just make a quick search for error, and if needed forward this to user otherwise drop all warnings.
+\\ 
+\\
+In total this script allows me for:
 \begin{itemize}
     \item Initialize subprocess
     \item Add folder to search path of bluetcl
@@ -127,8 +129,44 @@ This simple script allows me for:
 \end{itemize}
 
 \section{Parsing}
-TODO, I might want to clean this up a bit before I write about it.
+Output of bluetcl is text, and I need it in some better organized form, so I can parse it. I decided to use Lark library for parsing, and I'm using Earley parser. At this step I encountered first major difficulty that is total lack of documentation on form bluetcl output. I decided to reverse engineer it, and I'm using this website: \href{https://www.lark-parser.org/ide/}{https://www.lark-parser.org/ide/} to debug and create grammar, it can run parser online, and show output tree. To aid myself in this process I consulted Bluespec reference guide. While bluetcl output was undocumented it still needed to map to features of Bluespec. In total, I produced grammar with roughly 80 non-terminals.
 
+\subsection{Understanding abstract syntax tree (AST)}
+Given AST I needed to turn it into a more useful form. To do this I used \verb!Transformer! class provided by Lark. The way it worked is that I created subclass of \verb!Transformer! that implemented a function for each non-terminal / rule(Each non-terminal can have multiple rules and Lark allows for renaming individual of rules, this for example allows parsing different non-terminals using same function or parsing single non-terminal using different function depending on constructing rule). \verb!Transformer! will then perform bottom up transformation of AST, and for each rule it will call respective member function, with parsed children as arguments. At the end of the transforming process I would have a list of objects that represented data from Blutecl.
+\\
+One of the bigger inconveniences I encounter is the fact that Lark passes parsed children, as a simple list. This doesn't provide information about what exactly is each child, this isn't a problem if rule contains fixed number of non-terminals, but otherwise I employ mix of length based inference, or I wrap data from children into tuples, to provide remove ambiguity.
+\\
+What was quite useful at this stage is Python's type system flexibility, I was able to gradually build up system and add typing information only after I had firm understand what type something needs to be. For some things it wasn't imminently obvious, what is the best way to represent type, and what often happen is that I would shape type to needs of the functions using it and not other way. 
+
+\subsection{Organizing data and functionality}
+I created a class called \verb!TypeDatabase! it is basically a wrapper over previously mentioned functionality that manages organizing parsed output into separate dictionaries, like types, functions, type classes ect. It is also capable of loading and storing it's state to pickle file. This saves a lot of time as all this parsing and communication with bluetcl isn't particularly fast. TODO some break down of the speed.
+
+\section{Building the top level module}
+Building the top level module can be broken down into few operations.
+\begin{itemize}
+    \item Instantiating new modules.
+    \item Connecting modules using \verb!mkConnection! function.
+    \item Connecting modules using busses.
+    \item Synthesizing Bluespec.
+\end{itemize} 
+Those operations if implemented naively would be almost as simple as formatting a string. But If this was the only thing that this project provided I wouldn't need to go through all the trouble of parsing Bluespec grammar, and generally users would be better off just writing Bluespec code. My unique proposition is effectively running something similar to a language server, that will be capable of dynamically resolving types, and aiding user in the design process by providing possible connections, informing whether values passed to initialize module are correct, and informing about subinterfaces that can be found in the instantiated modules. 
+At the basis of all those features will be type resolution, and to do it we first need to talk about do we do this.
+\subsection{Resolving types}
+\subsection{Provisos explained (intuition)}
+On big feature of Bluespec typing is support for provisos. They create constraints on types that can be used with given function and give information about expected type of output of the function. This is similar to how C++ has template types, but it is much more powerful. For example, we can have a polymorphic function from \verb!Bit#(a)! to \verb!Bit#(b)! and $a=b+1$ where \verb!Bit#(x)! a vector of $x$ bits.  To do something like this we would write a proviso \verb!Add#(b,1,a)! which means that $b+1$ must be equal to $a$.
+\\
+System of provisos and typeclass work similarly to Prolog. We have variables that are lowercase names, we have values that are either strings or integers, and we have parametric types that are like compound terms. Typeclass instances are like rules and provisos attached to it are like predicates. To resolve types I do something I run Prolog style resolution. 
+
+\subsubsection*{Provisos explained (formally)}
+There are two types of provisos: Size Relationship provisos, and typeclass based provisos.
+
+Mentioned above \verb!Add! is one of Size Relationship provisos, other such provisos are \verb!Mul Div Max Min Log!. Those provisos can't be nested, but we still can express complex arithmetic constraints, thanks to size relationship type functions. They essentially represent result of the operation on values on that were supplied. There are only 8 of them, and they are \verb!TAdd TSub TDiv TMul TMax TMin TLog TExp!.
+To better explain this let's look at some simple example: \\
+\verb!Add#(TExp#(a),TMul#(a,8),c)! is a proviso that says that following equation on values must be satisfied $2^a+a*8 = c$. \\
+Of course, we can have multiple provisos that together create a set of equations. 
+
+Typeclass based provisos, allow us to either check if certain functions are defined for given type or to deuce something. For example \verb!Bits#(a,b)! means that type \verb!a! must be convertible to vector of $b$ bits. This can be used to get the length in bits of given objects, on which we can later put constraints using Size Relationship provisos.
+In my project I will often check if there exists instance of the \verb!Connectable#(a,b)! typeclass to check if function \verb!mkConnection!(used to connect two interfaces together) is defined for given types.
 
 \section{Synthesizing}
 The goal of this project is to synthesize a 

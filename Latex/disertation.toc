@@ -16,4 +16,9 @@
 \contentsline {section}{\numberline {3.1}Reading packages}{7}{section.3.1}%
 \contentsline {subsection}{\numberline {3.1.1}Bluetcl}{7}{subsection.3.1.1}%
 \contentsline {section}{\numberline {3.2}Parsing}{7}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Synthesizing}{7}{section.3.3}%
+\contentsline {subsection}{\numberline {3.2.1}Understanding abstract syntax tree (AST)}{8}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Organizing data and functionality}{8}{subsection.3.2.2}%
+\contentsline {section}{\numberline {3.3}Building the top level module}{8}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Resolving types}{8}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Provisos explained (intuition)}{8}{subsection.3.3.2}%
+\contentsline {section}{\numberline {3.4}Synthesizing}{9}{section.3.4}%

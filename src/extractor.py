@@ -103,7 +103,7 @@ class Type_ide:
 
     @property
     def json(self) -> Dict:
-        out = {'name':self.full_name}
+        out = {'name':self.__str__()}
         if len(self.children) ==0:
             return out
         out["children"] = []
@@ -520,29 +520,22 @@ class ModuleTransformer(Transformer):
         return ("provisos",provisos)
 
     def tcl_tc_m_f_function(self, args):
-        try:
-            arguments = {}
-            for argument in args[2:]:
-                if argument[0] =="TypeIdeAndName":
-                    arguments[argument[2]] = argument[1]
-                else:
-                    arguments[argument[1].name] = argument[1]
+        arguments = {}
+        for argument in args[2:]:
+            if argument[0] =="TypeIdeAndName":
+                arguments[argument[2]] = argument[1]
+            else:
+                arguments[argument[1].name] = argument[1]
 
-            return Function(name=args[1],result=args[0],arguments=arguments)
-        except Exception as e:
-            print(e)
-            return None
+        return Function(name=args[1],result=args[0],arguments=arguments)
 
     def tcl_tc_m_f_module(self, args):
-        try:
-            arguments = {}
-            for argument in args[1:-1]:
-                if issubclass(type(argument),Type):
-                    arguments[argument.name] = argument
-                else:
-                    arguments[argument[2]] = argument[1]
-        except Exception as e:
-            pass
+        arguments = {}
+        for argument in args[1:-1]:
+            if issubclass(type(argument),Type):
+                arguments[argument.name] = argument
+            else:
+                arguments[argument[2]] = argument[1]
         return Module(name=args[0],arguments=arguments,interface=args[-1])
 
     def tcl_tc_m_f_argument(self, args):
@@ -559,32 +552,27 @@ class ModuleTransformer(Transformer):
         return args[0][1:-1]
 
     def tcl_function(self, args):
-        try:
-            args = [x for x in args if x is not None]
-            package = None
-            arguments = {}
-            provisos = []
-            result = None
-            it = 0
-            if type(args[it])==tuple and args[it][0] == "package":
-                package = args[it][1]
-                it+=1
-            function_name = args[it]
+        args = [x for x in args if x is not None]
+        package = None
+        arguments = {}
+        provisos = []
+        result = None
+        it = 0
+        if type(args[it])==tuple and args[it][0] == "package":
+            package = args[it][1]
             it+=1
-            if type(args[it])==tuple and args[it][0] == "result":
-                result = args[it][1]
-                it+=1
-            if type(args[it])==tuple and args[it][0] == "arguments":
-                arguments = args[it][1]
-                it+=1
-            if type(args[it])==tuple and args[it][0] == "provisos":
-                provisos = args[it][1]
-                it+=1
-            return Function(name=function_name,package=package,arguments=arguments,result=result,provisos=provisos,position=args[it])
-        except Exception as e:
-            print(e)
-            print(args)
-            raise e
+        function_name = args[it]
+        it+=1
+        if type(args[it])==tuple and args[it][0] == "result":
+            result = args[it][1]
+            it+=1
+        if type(args[it])==tuple and args[it][0] == "arguments":
+            arguments = args[it][1]
+            it+=1
+        if type(args[it])==tuple and args[it][0] == "provisos":
+            provisos = args[it][1]
+            it+=1
+        return Function(name=function_name,package=package,arguments=arguments,result=result,provisos=provisos,position=args[it])
 
     def package_name(self,args):
         return (args[0],args[1])

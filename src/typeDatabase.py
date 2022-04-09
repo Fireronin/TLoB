@@ -235,10 +235,15 @@ class TypeDatabase():
             else:
                 raise Exception(f"Cannot merge different values, {a} and {b}")
         if type(a) == Value and type(b) == Type_ide:
-            #swap a and b
-            return context
+            a,b = b,a
         if type(a) == Type_ide and type(b) == Value:
             #handle sudo types 
+            if type(b.value) == str:
+                if a.full_name != "String":
+                    raise Exception(f"Cannot merge {a} and {b} because {a} is not a string")
+            if type(b.value) == int:
+                if a.full_name == "String":
+                    raise Exception(f"Cannot merge {a} and {b} because {a} is a string and {b} is an int")
             return context
         if type(a) == Type_ide and type(b) == Type_ide:
             if a.full_name != b.full_name:

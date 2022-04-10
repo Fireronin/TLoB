@@ -7,7 +7,7 @@ from extractor import *
 from handlerV2 import Handler
 from thefuzz import process
 import pickle
-from provisoSolverV3 import solveNonNumerical
+from provisoSolverV3 import solveNumerical
 
 
 def fuzzyException(name,list,exception_string):
@@ -180,33 +180,7 @@ class TypeDatabase():
         self.saveStateToPickle()
         self.functionNameCache = {function.name:function.full_name for function in self.functions.values()}
     
-    # region OLD
-    # def toXResultingType(self,t_type,typeclass):
-    #     for instance in typeclass.instances:
-    #         start = instance[0].fields[0]
-    #         end = instance[0].fields[1]
-    #         if type(start) == ExType:
-    #             if t_type.full_name == start.full_name:
-    #                 variables = {}
-    #                 for i,field in enumerate(start.fields):
-    #                     variables[str(field)] = t_type.type_ide.fields[i]
-                    
-    #                 if type(end) == str:
-    #                     return variables[end]
-    #                 else:
-    #                     if type(end) == ExType:
-    #                         end_copy = deepcopy(end)
-    #                         end_copy.type_ide = Type_ide(end.name,end.package)
-    #                         end_copy.type_ide.fields = end_copy.fields
-    #                         for i,field in enumerate(end.fields):
-    #                             end_copy.type_ide.fields[i] = variables[field]
-    #                         return end_copy
-    #                     else:
-    #                         raise Exception(f"Unknown type (or a function) on the left side {typeclass}")
-    #     return Exception(f"{t_type} not found in {typeclass}")
-    # endregion
-
-    def mergeV2(self,a: Union[Value,Type_ide,str],b: Union[Value,Type_ide,str],context: Dict[str,Union[Value,Type_ide]]):
+    def merge(self,a: Union[Value,Type_ide,str],b: Union[Value,Type_ide,str],context: Dict[str,Union[Value,Type_ide]]):
         a,b = deepcopy(a),deepcopy(b)
         if type(a) == Type_ide and a.is_polymorphic:
             a = a.name
@@ -250,7 +224,7 @@ class TypeDatabase():
                 raise Exception(f"Cannot merge different types, {a} and {b}")
             for i,pair in enumerate(zip(a.children,b.children)):
                 fa,fb = pair
-                neWcontext = self.mergeV2(fa,fb,context)
+                neWcontext = self.merge(fa,fb,context)
                 for key in neWcontext:
                     CAdd(context,key,neWcontext[key])
         return context
@@ -270,8 +244,9 @@ class TypeDatabase():
             return t_type
         raise Exception(f"Cannot apply variables to {type(t_type)}")
 
-    def solveTypeclass(self,typeclass: Typeclass,t_type: Type_ide,instance_hint:Typeclass_instance=None) -> Type_ide:
-        newVars = self.mergeV2(typeclass.type_ide,t_type,{})
+    def resolveTypeclass(self,typeclass: Typeclass,t_type: Type_ide,instance_hint:Typeclass_instance=None) -> Type_ide:
+        typeclass = self.getTypeclassByName(typeclass.full_name)
+        newVars = self.merge(typeclass.type_ide,t_type,{})
         #append vars
         variables = newVars
         if len(typeclass.dependencies) != 0:
@@ -300,12 +275,12 @@ class TypeDatabase():
             if type(instance.inputs[0].type_ide) == Function or type(instance.inputs[1].type_ide) == Function:
                 continue
             try:
-                newVars = self.mergeV2(t_type,instance.type_ide,context={})
+                newVars = self.merge(t_type,instance.type_ide,context={})
                 newVars = self.solveProvisos(instance.provisos,newVars)
-                t_type = self.applyVariables(deepcopy(t_type),newVars)
+                #t_type = self.applyVariables(deepcopy(t_type),newVars)
             except Exception as e:
                 continue
-            return t_type
+            return newVars
         raise Exception(f"Cannot solve {typeclass} {t_type}")
 
     def solveProvisos(self,provisos,context):
@@ -322,6 +297,16 @@ class TypeDatabase():
             else:
                 nonNumerical.append(proviso)
 
+        if len(numerical) != 0:
+            solvedContext = solveNumerical(numerical,context)
+        
+            for key,val in solvedContext.items():
+                CAdd(context,key,val)        
+
+            for key in context.keys():
+                if type(context[key].name) == Value:
+                    context[key] = context[key].name
+
         lastTodo = nonNumerical
         toDo = []
         while len(lastTodo) != 0:
@@ -335,12 +320,13 @@ class TypeDatabase():
                 try:
                     transformed = deepcopy(proviso.type_ide)
                     transformed = self.applyVariables(transformed,context)
-                    newTypeIde = self.solveTypeclass(self.typeclasses[proviso.full_name],transformed)
+                    newVariables = self.resolveTypeclass(self.typeclasses[proviso.full_name],transformed)
                 except Exception as e:
                     toDo.append(proviso)
                     continue
                 
-                context |= self.mergeV2(proviso.type_ide,newTypeIde,context)
+                context |= newVariables
+                #self.merge(proviso.type_ide,newTypeIde,context)
                 
             
             if len(toDo) == len(lastTodo):
@@ -349,26 +335,18 @@ class TypeDatabase():
                 lastTodo = toDo
                 toDo = []
 
-        if len(numerical) == 0:
-            return context
-
-        solvedContext = solveNonNumerical(numerical,context)
-        for key,val in solvedContext.items():
-            CAdd(context,key,val)        
-
-        for key in context.keys():
-            if type(context[key].name) == Value:
-                context[key] = context[key].name
-
         return context
 
     def populateMembers(self,t_type : Type_ide):
+        if type(t_type) == Value:
+            t_type.members = {}
+            return
         if t_type.full_name not in self.types:
             if t_type.full_name != "nothing":
                 print(f"{t_type.full_name} not found")
             return
         other = self.types[t_type.full_name]
-        context = self.mergeV2(t_type,other.type_ide,{})
+        context = self.merge(t_type,other.type_ide,{})
         t_type.members = {}
         for key in other.members.keys():
             if type(other.members[key]) == Interface_method:

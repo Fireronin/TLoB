@@ -4,15 +4,8 @@ from typing import List,Dict,Union
 
 
 
-def solveNonNumerical(provisos:List[Proviso],variables):
+def solveNumerical(provisos:List[Proviso],variables):
     sym: Dict[str,Symbol] = {}
-    # to_remove = []
-    # for var in variables.keys():
-    #     if variables[var].full_name == 'nothing':
-    #         to_remove.append(var)
-        
-    # for var in to_remove:
-    #     del variables[var]
 
     def type_ide_to_expr(proviso:Union[Type_ide,Value,str]):
         if type(proviso) == str:

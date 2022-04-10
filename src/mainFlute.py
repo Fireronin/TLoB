@@ -21,28 +21,28 @@ topLevel = TopLevelModule("top",db,package_name="FluteSoc")
 
 
 # Axi4 parameters
-SPARAMS = [6, 65, 64, 0, 0, 0, 0, 0]
+SPARAMS = [6, 64, 64, 0, 0, 0, 0, 0]
 
 tdtSPARAMS = [evaluateCustomStart(str(x),"type_def_type") for x in SPARAMS]
 
-core = topLevel.add_moduleV2("Core::mkCore","core",[],None)
-core2 = topLevel.add_moduleV2("Core::mkCore","core2",[],[])
-# memory = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",SPARAMS,[4096,'Maybe#("xddd")'])
-# SPARAMS = [6, 64, 64, 0, 0, 0, 0, 0]
-# fakeAXI = topLevel.add_moduleV2("AXI4_Fake_16550::mkAXI4_Fake_16550_Simple","aXI4_Fake_16550",SPARAMS,[])
+core = topLevel.add_moduleV2("Core::mkCore","core",[],[])
+memory = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",SPARAMS,[4096,'Maybe#("xddd")'])
 
-# try:
-#     topLevel.add_connectionV2("core.core_mem_master","memory")
-#     topLevel.add_busV3("bus1","mkAXI4Bus",["core.core_mem_master"],[("memory",[(0,4096)]),("aXI4_Fake_16550",[(4096,8192)])])
-# except Exception as e:
-#     print(e)
-#     pass
+fakeAXI = topLevel.add_moduleV2("AXI4_Fake_16550::mkAXI4_Fake_16550_Simple","aXI4_Fake_16550",SPARAMS,[])
+
+topLevel.add_connectionV2("core.core_mem_master","memory")
+topLevel.add_busV3("bus1","mkAXI4Bus",["core.core_mem_master"],[("memory",[(0,4096)]),("aXI4_Fake_16550",[(4096,8192)])])
+
+
+topLevel.add_connectionV2("core.core_mem_master","memory")
+topLevel.add_busV3("bus1","mkAXI4Bus",["core.core_mem_master"],[("memory",[(0,4096)]),("aXI4_Fake_16550",[(4096,8192)])])
+
 
 # memory = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",SPARAMS,[4096,'Maybe#("xddd")'])
-memory2 = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",[],['4096', 'Maybe#(34)'])
+# memory2 = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",[],['4096', 'Maybe#(34)'])
 
 print(topLevel.to_string())
-topLevel.to_file("/mnt/d/Mega/Documents/CS/TLoB/tutorial/")
+topLevel.to_file("/mnt/e/Mega/Documents/CS/TLoB/tutorial/")
 
 # %%
 

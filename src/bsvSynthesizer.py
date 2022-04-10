@@ -43,7 +43,7 @@ knownNames:Dict[str,Type_ide] = {}
 subscribers:Dict[str,Set[str]] = {}
 
 def convertToTypeIde(arg,caller=None):
-    if type(arg) == Type_ide:
+    if isinstance(arg,Type_ide) or type(arg) == ExFunction:
         return arg
     arg = str(arg)
     if arg[0].islower():
@@ -120,7 +120,7 @@ class InstanceV2():
         creator_args = [convertToTypeIde(arg,self.instance_name) for arg in self.creator_args]
         module_args = [convertToTypeIde(arg,self.instance_name) for arg in self.module_args]
 
-        context = self.input_context 
+        context = deepcopy(self.input_context)
         for i,pair in  enumerate( zip(self.creator.arguments.items(),creator_args)):
             arg,value = pair
             if type(value) == ExFunction:
@@ -128,7 +128,7 @@ class InstanceV2():
             if type(value) == InstanceV2:
                 value = value.type_ide
             if isinstance(value, Type_ide):
-                context |= self.db.mergeV2(arg[1],value,context) 
+                context |= self.db.merge(arg[1],value,{}) 
             #this is just to check if everything is ok
             self.db.applyVariables(deepcopy(self.creator.arguments[arg[0]]),context)
 
@@ -138,7 +138,7 @@ class InstanceV2():
         for i,field in enumerate(ideCopy.formals):
             ideCopy.formals[i].type_ide = module_args[i]
 
-        context |= self.db.mergeV2(self.creator.type_ide,ideCopy,context)
+        context |= self.db.merge(self.creator.type_ide,ideCopy,context)
 
         #account for provisos
         context |= self.db.solveProvisos(self.creator.provisos,context)
@@ -157,14 +157,18 @@ class InstanceV2():
         if type(self.creator) == ExFunction:
             return f"{self.creator.name}({','.join(map(str,self.creator_args))});\n"
 
-class VectorInstance(InstanceV2):
-    items: List[str] = []
+class VectorInstance():
+    items: List[str]
     flit_type_ide:  Type_ide = evaluateCustomStart("flit","type_def_type")
     type_ide: Type_ide = evaluateCustomStart(f"Vector::Vector#(0,flit)","type_def_type")
+    instance_name: str = None
+
     def __init__(self,db,name):
+        self.items = []
         self.instance_name = name
         self.db = db
         addInstance(self,name)
+        addName(name,self.type_ide)
 
     def remove(self,item:str):
         self.items.remove(item)
@@ -176,7 +180,7 @@ class VectorInstance(InstanceV2):
     def add(self,item:str):
         itemType_ide = convertToTypeIde(item,self.instance_name)
         try:
-            context = self.db.mergeV2(self.flit_type_ide,itemType_ide,{})
+            context = self.db.merge(self.flit_type_ide,itemType_ide,{})
         except Exception as e:
             raise Exception("Adding item to vector failed types don't match")
         if len(self.items) == 0:
@@ -184,16 +188,18 @@ class VectorInstance(InstanceV2):
         self.items.append(item)
         self.type_ide = evaluateCustomStart(f"Vector::Vector#({len(self.items)},{self.flit_type_ide})","type_def_type")
 
-    def update(self):
+    def update(self,silent=False):
         items =[convertToTypeIde(item,self.instance_name) for item in self.items]
         try:
             for item in items:
-                self.db.mergeV2(self.flit_type_ide,item,{})
+                self.db.merge(self.flit_type_ide,item,{})
         except Exception as e:
             print("Failed updaitng vector")
             print(e)
             raise Exception("Adding item to vector failed types don't match")
-        addName(self.instance_name,self.type_ide)
+        if not silent:
+            addName(self.instance_name,self.type_ide)
+            
 
     def __str__(self):
         output_str = []
@@ -206,26 +212,29 @@ class BusInstanceV3(InstanceV2):
     def __init__(self,db,name,busCreator:str,masters:List[str],slaves:List[Tuple[str,List[Tuple[int,int]]]]):
         self.instance_name = name
         self.db = db 
-        self.busCreator = self.db.getFunctionByName(busCreator)
+        self.creator = self.db.getFunctionByName(busCreator)
         addInstance(self,name)
         self.masters = masters
         self.slaves = slaves
         self.mastersV = VectorInstance(self.db,name+"_masters")
         self.slavesV = VectorInstance(self.db,name+"_slaves")
+        for master in self.masters:
+            self.mastersV.add(master)
+        self.mastersV.update(silent=False)
+        #addName(self.instance_name,self.type_ide)
+        for slave in self.slaves:
+            self.slavesV.add(slave[0])
+        self.slavesV.update(silent=False)
+        #addName(self.instance_name,self.type_ide)
+        self.creator_args = [f"route_{self.instance_name}",self.mastersV.type_ide,self.slavesV.type_ide]
+        self.module_args = []
+        self.input_context = {}
         self.update()
 
 
     def update(self):    
-        for master in self.masters:
-            self.mastersV.add(master)
-        self.mastersV.update()
-        #subscribe to changes in masters
-        convertToTypeIde(self.mastersV.instance_name,self.instance_name)
-
-        for slave in self.slaves:
-            self.slavesV.add(slave[0])
-        self.slavesV.update()
-        convertToTypeIde(self.slavesV.instance_name,self.instance_name)
+        # convertToTypeIde(self.mastersV.instance_name,self.instance_name)
+        # convertToTypeIde(self.slavesV.instance_name,self.instance_name)
 
         functionString = \
         """
@@ -250,8 +259,8 @@ class BusInstanceV3(InstanceV2):
         
 
         routingFunction = evaluateCustomStart(functionString,"tcl_function")
-        addName(routingFunction.full_name,routingFunction)
-        InstanceV2(self.db,self.busCreator,[routingFunction.full_name,self.mastersV.instance_name,self.slavesV.instance_name],[],self.instance_name+"_busInstance")
+        self.creator_args[0] = routingFunction
+        super().update()
         
     def routingFunctionString(self):
         """
@@ -284,7 +293,7 @@ class BusInstanceV3(InstanceV2):
         return "".join(output_str)
 
     def __str__(self):
-        return f"\t{self.busCreator.full_name}(route_{self.instance_name},{self.mastersV.instance_name},{self.slavesV.instance_name});\n"
+        return f"\t{self.creator.full_name}(route_{self.instance_name},{self.mastersV.instance_name},{self.slavesV.instance_name});\n"
 
 class TopLevelModule():
     db: TypeDatabase
@@ -369,7 +378,7 @@ class TopLevelModule():
                     if name in variables:
                         old = variables[name]
                         try:
-                            self.db.mergeV2(old,value,{})
+                            self.db.merge(old,value,{})
                         except Exception as e:
                             raise Exception(f"Variable {name} has different values")
                     else:
@@ -402,11 +411,11 @@ class TopLevelModule():
                 connection = deepcopy(connectableTypeclass.type_ide)
                 connection.formals[0].type_ide = start.thing
                 connection.formals[1].type_ide = end.thing
-                result = self.db.solveTypeclass(connectableTypeclass, connection,connectable_instances[end.access_name])
+                result = self.db.resolveTypeclass(connectableTypeclass, connection,connectable_instances[end.access_name])
             except Exception as e:
                 continue
             if result is not None:
-                  connectable_ends.append(end)
+                connectable_ends.append(end)
         return connectable_ends
 
     def add_connectionV2(self,start:str,end:str,connection_name:str=None):
@@ -442,7 +451,6 @@ class TopLevelModule():
             del self.buses[name]
         if name in self.typedefs:
             del self.typedefs[name]
-
 
     def to_string(self):
         s = []

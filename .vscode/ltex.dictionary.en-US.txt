@@ -4,3 +4,6 @@ Earley
 Bluespec
 typeclass
 Typeclass
+Prolog
+typeclasses
+subinterfaces

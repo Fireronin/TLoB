@@ -168,7 +168,59 @@ Of course, we can have multiple provisos that together create a set of equations
 Typeclass based provisos, allow us to either check if certain functions are defined for given type or to deuce something. For example \verb!Bits#(a,b)! means that type \verb!a! must be convertible to vector of $b$ bits. This can be used to get the length in bits of given objects, on which we can later put constraints using Size Relationship provisos.
 In my project I will often check if there exists instance of the \verb!Connectable#(a,b)! typeclass to check if function \verb!mkConnection!(used to connect two interfaces together) is defined for given types.
 
+\subsection{Resolving types (implementation)}
+In my code there are 4 main functions that combined allow for type resolution:
+\begin{itemize}
+    \item \verb!merge! function takes two type identifiers and returns dictionary from names of variables to theirs values.
+    \item \verb!applyVariables! function takes a dictionary and a type and returns a type with all variables replaced by their values.
+    \item \verb!resolveTypeclass! function that takes a type identifiers that is an instance of a typeclass and returns dictionary similarly to merge.
+    \item \verb!solveProvisos! function that takes a dictionary and a list of provisos and returns a dictionary with all provisos resolved.
+\end{itemize}
+Those functions can also fail with exception if something is impossible.
+
+Type identifier is a tree where every non leaf node is another type identifier, and leaf nodes are either variables or values(strings, ints). Example type identifier \verb!Foo#(a,42,"file.hex")! is a type with name \verb!Foo! and three arguments \verb!a! (variable) and \verb!42! (int value) and \verb!"file.hex"! (string value).
+
+\subsubsection*{Merge function}
+This function works like a two synchronized dfs's, that go through the trees (type identifiers) and apply logic based on nodes that are beginning currently visited.
+This function needs to account for quite a lot of special cases here are some of them:
+\begin{itemize}
+    \item If one of the nodes is a variable, and other is a value or another type identifier, then we can add such pair to the dictionary of resolved variables.
+    \item If both nodes, are type identifiers, we run merge recursively on pairs of theirs children. We also check if type identifiers share the same name.
+    \item If one of the nodes is a value, then other node must be either a value with same value, or a variable.
+\end{itemize}
+The most complicated case is when both nodes are variables, this is because we need to account for the case where both variables have a value and check if this value is equal. If only one of them has value and this value needs to be copied to other one, or if neither of them has value, then we we must create dummy object and set it as a value of both of them, then if one of them is resolved it will such resolution will resolve other one, by virtue of shared pointer.
+
+\subsubsection*{Apply variables function}
+This function is quite simple, it just traverses a type identifier and replaces all variables with their values.
+\subsubsection*{Resolve typeclass function}
+Earlier, I compared typeclass to groups of Prolog rules, one thing I didn't mention that typeclasses can also contain something called dependencies, they are something like marking inputs and outputs in Prolog. Those dependencies are used for typeclasses like \verb!Bits#(a,b)! that are used to determine something, and they make are there to use of typeclass is always unambiguous. \\
+For example, \verb!Bits#(a,b)! has a dependency \verb!a determines b! which means that you can use it to determine \verb!b! from \verb!a!, but if you know only \verb!b! then you can't use it to determine \verb!a! because there may be multiple types that can be packed to a bit vector of length \verb!b!. 
+\\  
+To check if proposed instance of a typeclass is a valid instance we perform following algorithm:
+\begin{enumerate}
+    \item Check if a proposed instance of a typeclass is an instance of a known typeclass, otherwise fail.
+    \item Check if all dependencies of the typeclass are satisfied, otherwise fail.
+    \item Iterate over all known templates of an instance of a typeclass, then attempt to merge function between a template and the proposed instance. 
+    \item If merging failed, jump back to step 3 and continue iteration.
+    \item If merging succeeded, attempt to solve provisos.
+    \item If provisos were successfully solved, return the dictionary of resolved variables, otherwise continue iteration.
+    \item If all iterations failed, fail.
+\end{enumerate}
+This procedure is a bit slow, so I also allow a passing of an suggested list of instances of a typeclass, which will be iterated over. In specific scenarios like, when user creates connection between two interfaces, I can run a heuristic that only checks if names of type identifiers match, to quickly trim search space. Doing this in general is non-trivial, due to existence of dependencies. As it's possible to have typeclass like this:
+\\
+\verb!Foo#(a,b,c)! where \verb!a determines b,c! and \verb!b,c determines a! then I would need to check which case this is then to do lookup in a dictionary corresponding to that dependency. Preprocessing of such dictionaries would take something like $O(nInstances^2*nDependencies)$ time, and it would add unnecessary complexity. (Though it's something that might be worth looking in the future.)
+
+\subsubsection*{Solve provisos function}
+TODO (I think my implementation is bugged as it can fail, in an edge case due to ordering of provisos)
+
+\subsubsection*{How those functions can be used}
+Thanks to those functions, my code can check if types of arguments given by the user are correct (thanks to merge function). I can check if enough information about expected resulting type of overloaded function was given and if so, I can use it to deduce types of subinterfaces.
+
 \section{Synthesizing}
-The goal of this project is to synthesize a 
+The goal of the project is to be able to take a JSON with some data and synthesize a top module in the Bluespec language from it. This goal is more like a justification to create a language server like API. With this approach I have some simple core goal, but in the later sections we will see how thanks to all the work I can use this API to support GUI that aids the user in creating a top module. Therefore, I will focus in this section on how the API works, and only later how is it used when reading JSON or as a backend to the GUI based app.
+
+\subsubsection*{Top level module object}
+TODO
+
 
 \end{document}

@@ -70,6 +70,8 @@ def solveNumerical(provisos:List[Proviso],variables):
         raise Exception("Well sympy can't find solution, you are not satisfing provisos")
     outVars = {}
 
+    print(sym.items())
+
     if len(output.free_symbols) != 0:
         # print free symbols
         print("Free symbols")
@@ -83,4 +85,5 @@ def solveNumerical(provisos:List[Proviso],variables):
         if int(output[i]) != output[i]:
             raise Exception("Solution contains non integer values")
         outVars[key] = Value( int(output[i]))
+    
     return outVars

@@ -19,9 +19,9 @@ db.addPackages(packages_to_load)
 
 topLevel = TopLevelModule("top",db,package_name="FluteSoc")
 
-
+topLevel.add_typedef("DATASIZE","64")
 # Axi4 parameters
-SPARAMS = [6, 64, 64, 0, 0, 0, 0, 0]
+SPARAMS = [6, 64, "DATASIZE", 0, 0, 0, 0, 0]
 
 tdtSPARAMS = [evaluateCustomStart(str(x),"type_def_type") for x in SPARAMS]
 

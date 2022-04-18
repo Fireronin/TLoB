@@ -11,6 +11,7 @@
 \usepackage{fancyvrb}
 \usepackage{listings}
 \usepackage{svg}
+\usepackage{dirtytalk}
 \usepackage{csvsimple}
 \newcommand\todo[1]{\textcolor{red}{#1}}
 \title{Legend Of Bluespec}
@@ -220,7 +221,79 @@ Thanks to those functions, my code can check if types of arguments given by the 
 The goal of the project is to be able to take a JSON with some data and synthesize a top module in the Bluespec language from it. This goal is more like a justification to create a language server like API. With this approach I have some simple core goal, but in the later sections we will see how thanks to all the work I can use this API to support GUI that aids the user in creating a top module. Therefore, I will focus in this section on how the API works, and only later how is it used when reading JSON or as a backend to the GUI based app.
 
 \subsubsection*{Top level module object}
-TODO
+Let's start with quick overview of the functions found in API.
+\begin{itemize}
+    \item \verb!addModule! as the name suggest this function adds an instance of a module.
+    \item \verb!addConnection! Essentially a wrapper on a \verb!addModule! function that adds connection between two interfaces.
+    \item \verb!addBus! given list of slaves and masters it adds a bus with those interfaces connected.
+    \item \verb!listConnectable! is a function not meant to be called directly by the user, it will be called by the \verb!addModule!, and it will populate the dictionary of possible connections (that user can use).
+    \item \verb!remove! to remove previously added things.
+    \item \verb!to_string! that returns a string representing \verb!.bsv! file with top module as defined by previous calls.
+\end{itemize}
 
+\subsubsection*{Adding modules (introduction)}
+Adding an instance of a module in Bluespec is done by calling function used to instantiatie chosen module, and potentially assigning it to a variable of a type of interface produced by a function. It's worth keeping in mind that not all such functions can create new modules (those who do are called modules and one that don't are called functions in Bluespec), for example \verb!fromAXI4LiteToAXI4_Master! is a function that will take already existing instance with \verb!AXI4_Master! interface and return \verb!AXI4Lite_Master! interface, and all of this will be done by just assigning functions and subinterfaces found in one to the other one. Fortunately, there is no need for me to treat modules different from the functions. The only thing that will be treated differently are busses and connections, as they are functions like described above but theirs result interface is \verb!Empty!(similar to void in C++), so there is no need to assign them to a variable.
+\\
+One more decision I had to make was whether I want to support \verb!let! as a type. \verb!let! keyword is used to omit writing type of variable explicitly. This makes it so compiler has to deduce it from the output of a function defining such variable. While Bluespec is strongly typed language it's not always possible to use \verb!let!. For example, in cases where you create a module with polymorphic interface, there might not be enough information to deduce the full type of the interface. What's even more confusing is that sometimes you only need to provide some subset of variables in the type of interface, and the rest can be deduced using provisos. (TODO check this) Bluespec doesn't support something like this, but I do. On the other hand I don't support \verb!let! keyword and I will always write out full type explicitly, this makes it harder to modify the code, as some changes might require more changes down the line, but this produces more readable code, also making such changes is still quick if done before code generation.
+\subsubsection*{Adding modules (implementation)}
+Here is a procedure of instantiating a module:
+\begin{enumerate}
+    \item Check if name string is a valid name and starts with lowercase.
+    \item Create an instance object.
+    \item Call update function of that object, that will verify correctness of the arguments and it will update global state. In more detail update function does following:
+    \begin{enumerate}
+        \item Parse user given strings that represent arguments. This includes 
+        \item Run a unification (merge function described earlier) to check if types of arguments are correct.
+        \item Run a unification on between user defined resulting type of interface and the type of interface given by the function. This produces set of context variables.
+        \item Attempt to solve provisos attached to the function, with the context variables, and populate the context with newly learned variables.
+        \item Apply variables to the type of interface, filling out unknows.
+        \item Populate type of the instance with member subinterfaces.
+        \item Add interface, and it's member subinterfaces to a global dictionary of accessible names. During this addition we also propagate updates, if for example 
+    \end{enumerate}
+\end{enumerate}
+
+\subsubsection*{Adding connections}
+With creating instances explained above, adding connections become trivial. We just create and instance of \verb!mkConnection! and ad it into list of known connections if we ever need to remove it.
+
+\subsubsection{Adding busses}
+Similarly to adding conenctions a lot of complexity is handled by logic to create instances, as bus is just a function that takes vectors of masters and slaves and routing function that specifies how addresses map to slaves. Two differences from standard instance is automatically instantiating of a vector that hold masters and slaves and generating routing function. \\
+Instantiating of vectors was a bit tricky due to two conflicting requirements:
+\begin{enumerate}
+    \item I wanted to give user an option to create a vector on their own, and if elements of such vector are updated, I wanted to propagate the update to all instances using that vector.
+    \item I wanted to create a vector automatically when creating a bus, so users don't have to create it manually.
+\end{enumerate} 
+This created a feedback loop, where update of a bus caused update of vectors used by this bus, and so on. To fix this I moved the updates of vectors to initialization of a bus, and allow for updates of vectors that are "silent" and don't cause updates. 
+\\
+Routing function is a function that takes a route and produces one hot vector, that specifies which slave is used for a given address. 
+To create a routing function two things must be created. First I need to create a new function to be added to the database of known functions. To do this I just reuse my parsing tooling. As for creating code for it, I generate it by simply adding \verb!if! statement for each address region. I also generate comments giving information about which slave occupy which address region.
+
+\subsection{GUI}
+Adding GUI was an optional goal mentioned in the project proposal. I originally intended to use some game engine to create a GUI, but Bluespec compiler is a Linux tool and game engines like Unreal Engine 4 or Unity3d are meant to be used on Windows, I decided against that idea. Instead, I found a library called React Flow, that provided nice API for creating graph based user interfaces. After some though I decided to create a GUI as a website. This was quite an adventure as It was my first contact with full stack web development. (I have done backend in .NET and \verb!C#! for group project in last term, but it was mostly focused on writing queries to database)
+
+
+\subsubsection*{Backend}
+For backend, I had a choice between Django and Flask. After reading about them in theory Flask was supposed to be better for small projects, like this one. However, I decided to use Django because I wanted to learn technology that might be more useful in the future. I followed official tutorial on Django and after initial pain with security adding functionality was easy.
+
+\subsubsection*{Frontend (React)}
+Frontend was written in React.js as you might have guessed from the name of the library I wanted to use. According to \href{https://insights.stackoverflow.com/survey/2021#most-popular-technologies-webframe}{Stack Overflow 2021 survey} React.js is the most popular frontend technology in 2021, so again I considered time spent on learning it to be good investment. One thing that took me quite a bit to get used to is everything being a function(React.js supports classes, but it's an old paradigm and I wanted to learn doing thing the \say{correct} way). This makes working with variables a bit tricky, as changes to state variable cause re-rendering of the whole component, and if variable is not a state variable, then it's value is going to be lost after re-rendering. If not careful is easy to cause feedback loop causing infinite re-rendering and subsequent crash of the application. 
+
+\subsubsection*{Frontend (React Flow)}
+\begin{tcolorbox}[title=Vocabulary]
+    \begin{itemize}
+        \item Handle - Is a component of node that is used to start or end a connection. TODO include a image of a handle.
+    \end{itemize}
+\end{tcolorbox}
+React Flow from developer perspective requires defining nodes (they can be basically and arbitrary React components), and some metadata about displaying a graph that is things like how edges look, how user can add new nodes, etc. 
+The exposed API is quite simplistic. 
+For example position of a handle is constrained to the middle of side of a node, and this library will generate CSS to put it there. 
+Therefore, I needed to write some finicky CSS to align handle with text displaying its name. [TODO improve this sentence.]
+\\
+Another thing that is problematic about React Flow is that it will cause node component to update every time it is moved. 
+What I found is that if you wrap larger subcomponents of a node in \verb!memo! from React, then performance stays quite good even if multiple nodes are moving.   
+\\
+On the bright side after I figured out workarounds for those issues, I was left with many other things being handled by library. This included automatic graph formatting, and pretty Bézier curves for edges. 
+
+\subsubsection*{Frontend (MUI)}
+My default HTML buttons, and text boxes are ugly. So I decided to use React UI component library called MUI (previously Material UI). I don't have much to say about it except that use of it was seamless, at least in my humble option made my application look modern. I'm mentioning this as one of my complaints about Intel's QSys was that it's UI is decades old.
 
 \end{document}

@@ -16,40 +16,54 @@
     "modules" : [
         {
             "name" : "ff1",
-            "function": "FIFO.mkFIFO",
+            "function": "mkFIFO",
             "function_params": [],
             "interface_params": ["Bit#(8)"]
+        },
+        {
+            "name" : "ff1get",
+            "function": "toGet",
+            "function_params": ["ff1"]
         },
         {
             "name" : "ff2",
-            "function": "FIFO.mkFIFO",
+            "function": "mkFIFO",
             "function_params": [],
             "interface_params": ["Bit#(8)"]
         },
         {
-            "name" : "bf3",
-            "function": "FIFOF.mkFIFOF",
-            "interface_params": ["AFlit#(DATASIZE, ADDRWIDTH)"]
+            "name" : "ff2put",
+            "function": "toPut",
+            "function_params": ["ff2"]
         },
         {
-            "name" : "bf4",
-            "copy_from" : "bf3"
+            "name" : "core",
+            "function": "mkCore"
+        },
+        {
+            "name" : "memory",
+            "function": "mkAXI4SimpleMem",
+            "function_params": [4096,"Maybe#('xddd')"],
+            "interface_params": [6, 64, 64, 0, 0, 0, 0, 0]
         }
     ],
 
     "connections": [
         {
-            "from" : "ff1",
-            "to" : "ff2"
+            "from" : "ff1get",
+            "to" : "ff2put"
         }
     ],
     
     "busses": [
         {
-            "masters" : ["bf3"],
-            "slaves" : ["bf4"],
-            "route" : ["0-2"]
+            "name" : "mainBus",
+            "function": "mkAXI4Bus",
+            "masters" : ["core.core_mem_master"],
+            "slaves" : [{
+                "name" : "memory",
+                "routes" : [[0,4096],[5096,6400]]
+            }]
         }
     ]
-
 }

@@ -42,7 +42,7 @@ instances:Dict[str,InstanceV2] = {}
 knownNames:Dict[str,Type_ide] = {}
 subscribers:Dict[str,Set[str]] = {}
 
-def convertToTypeIde(arg,caller=None):
+def convertToTypeIde(db:TypeDatabase,arg,caller=None):
     if isinstance(arg,Type_ide) or type(arg) == ExFunction:
         return arg
     arg = str(arg)
@@ -55,6 +55,9 @@ def convertToTypeIde(arg,caller=None):
         if arg not in knownNames:
             raise Exception(f"Unknown name {arg}")
         return knownNames[arg]
+    if arg[0].isupper():
+        type_t = evaluateCustomStart(arg,"type_def_type")
+        return db.evaluateTypedef(type_t)
     return evaluateCustomStart(arg,"type_def_type")
 
 def addInstance(instance,name):
@@ -117,8 +120,8 @@ class InstanceV2():
             print(f"{self.instance_name} has {len(self.creator_args)} arguments, but {self.creator.name} has {len(self.creator.arguments)}")
             raise Exception("Number of function arguments do not match the number of arguments required")
         #convert to TypeIde arguments
-        creator_args = [convertToTypeIde(arg,self.instance_name) for arg in self.creator_args]
-        module_args = [convertToTypeIde(arg,self.instance_name) for arg in self.module_args]
+        creator_args = [convertToTypeIde(self.db,arg,self.instance_name) for arg in self.creator_args]
+        module_args = [convertToTypeIde(self.db,arg,self.instance_name) for arg in self.module_args]
 
         context = deepcopy(self.input_context)
         for i,pair in  enumerate( zip(self.creator.arguments.items(),creator_args)):
@@ -178,7 +181,7 @@ class VectorInstance():
 
 
     def add(self,item:str):
-        itemType_ide = convertToTypeIde(item,self.instance_name)
+        itemType_ide = convertToTypeIde(self.db,item,self.instance_name)
         try:
             context = self.db.merge(self.flit_type_ide,itemType_ide,{})
         except Exception as e:
@@ -189,7 +192,7 @@ class VectorInstance():
         self.type_ide = evaluateCustomStart(f"Vector::Vector#({len(self.items)},{self.flit_type_ide})","type_def_type")
 
     def update(self,silent=False):
-        items =[convertToTypeIde(item,self.instance_name) for item in self.items]
+        items =[convertToTypeIde(self.db,item,self.instance_name) for item in self.items]
         try:
             for item in items:
                 self.db.merge(self.flit_type_ide,item,{})
@@ -199,7 +202,15 @@ class VectorInstance():
             raise Exception("Adding item to vector failed types don't match")
         if not silent:
             addName(self.instance_name,self.type_ide)
-            
+
+    def listAddable(self,proposed)->List[AccessTuple]:
+        for item in proposed:
+            try:
+                vars = self.db.merge(self.flit_type_ide,item,{})
+            except Exception as e:
+                continue
+            yield AccessTuple(self.instance_name,item)
+        
 
     def __str__(self):
         output_str = []
@@ -308,6 +319,7 @@ class TopLevelModule():
     package_name: str
     typedefs: Dict[str,ExAlias] = {}
 
+
     def __init__(self,name,db,package_name=None) -> None:
         self.name = name
         if package_name is None:
@@ -323,7 +335,16 @@ class TopLevelModule():
             raise Exception("Instance name must start with lowercase character")
         if type(creator_func) == str:
             creator_func = self.db.getFunctionByName(creator_func)
+        #try:
         newModule = InstanceV2(self.db,creator_func,func_args,interface_args,instance_name,input_context)
+        # except Exception as e:
+        #     raise Exception(f"""Error creating module {instance_name}: {e}
+        #         Arguments:
+        #             creator function: {creator_func}
+        #             function arguments: {func_args}
+        #             interface arguments: {interface_args}
+        #             instance name: {instance_name}
+        #     """)
         
         #populate possible connections
         for current in newModule.list_all_Interfaces():
@@ -338,7 +359,7 @@ class TopLevelModule():
 
     def add_typedef(self,name,type):
         self.typedefs[name] = type
-        alias = ExAlias(Type_ide(name),evaluateType(str(type)),None)
+        alias = ExAlias(Type_ide(name),evaluateCustomStart(str(type)),None)
         self.db.aliases[alias.full_name] = alias
         return name
 
@@ -458,7 +479,11 @@ class TopLevelModule():
         self.packages.add("Connectable")
         self.packages.add("GetPut")
         for m in self.modules.values():
-            self.packages.add(m.creator.package)
+            if m.creator.package is not None:
+                self.packages.add(m.creator.package)
+        for b in self.buses.values():
+            if b.creator.package is not None:
+                self.packages.add(b.creator.package)
         # necessary packages
         s.append("// necessary packages\n")
         for p in self.packages:

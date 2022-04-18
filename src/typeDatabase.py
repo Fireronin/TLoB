@@ -137,10 +137,18 @@ class TypeDatabase():
             self.functions[function.full_name] = function
 
     def evaluateTypedef(self,typedef):
-        for type in self.types:
-            if str(self.types[type].name) == typedef:
-                return self.types[type].type
-        fuzzyException(typedef,list(self.types), "Typedef {} not found. \n Do you mean: \n{}")
+        if type(typedef) == str:
+            return typedef
+        if type(typedef) == Value:
+            return typedef
+        if typedef.name in self.aliases:
+            return self.aliases[typedef.name].type
+        else:
+            return typedef
+        # for type in self.aliases.values():
+        #     if str(self.types[type].name) == typedef:
+        #         return self.types[type].type
+        # fuzzyException(typedef,list(self.types), "Typedef {} not found. \n Do you mean: \n{}")
 
     def loadPackage(self,package_name):
         try:
@@ -180,8 +188,12 @@ class TypeDatabase():
         self.saveStateToPickle()
         self.functionNameCache = {function.name:function.full_name for function in self.functions.values()}
     
+    def loadDependencies(self):
+        known_packages = self.handler.list_packages()
+        self.addPackages(known_packages)
+
     def merge(self,a: Union[Value,Type_ide,str],b: Union[Value,Type_ide,str],context: Dict[str,Union[Value,Type_ide]]):
-        a,b = deepcopy(a),deepcopy(b)
+        a,b = deepcopy(self.evaluateTypedef(a)),deepcopy(self.evaluateTypedef(b))
         if type(a) == Type_ide and a.is_polymorphic:
             a = a.name
         if type(b) == Type_ide and b.is_polymorphic:
@@ -244,6 +256,25 @@ class TypeDatabase():
             return t_type
         raise Exception(f"Cannot apply variables to {type(t_type)}")
 
+    def preprocessTypeclass(self,typeclass):
+        pass
+        # if len(typeclass.dependencies) != 0:
+        #     ok = False
+        #     for left,right in typeclass.dependencies:
+        #         #check if left is resolved
+        #         ok = True
+        #         for var in left:
+        #             if not (var in variables and type(variables[var]) != str):
+        #                 ok = False
+        #                 break
+        #             if ok:
+        #                 break
+        #         if ok:
+        #             break
+        #     if not ok:
+        #         #resolving not possible
+        #         raise Exception(f"Cannot resolve {typeclass} dependencies not met") 
+
     def resolveTypeclass(self,typeclass: Typeclass,t_type: Type_ide,instance_hint:Typeclass_instance=None) -> Type_ide:
         typeclass = self.getTypeclassByName(typeclass.full_name)
         newVars = self.merge(typeclass.type_ide,t_type,{})
@@ -277,10 +308,11 @@ class TypeDatabase():
             try:
                 newVars = self.merge(t_type,instance.type_ide,context={})
                 newVars = self.solveProvisos(instance.provisos,newVars)
-                #t_type = self.applyVariables(deepcopy(t_type),newVars)
+                solvedInstance = self.applyVariables(deepcopy(instance.type_ide),newVars)
+                solvedVariables = self.merge(deepcopy(typeclass.type_ide),solvedInstance,{})
             except Exception as e:
                 continue
-            return newVars
+            return solvedVariables
         raise Exception(f"Cannot solve {typeclass} {t_type}")
 
     def solveProvisos(self,provisos,context):
@@ -295,7 +327,14 @@ class TypeDatabase():
             if proviso.full_name in NonTypeClassProvisos:
                 numerical.append(proviso)
             else:
+                if proviso.full_name == 'IsModule':
+                    continue
+                if proviso.full_name not in self.typeclasses:
+                    self.loadPackage(proviso.package)
+                    if proviso.full_name not in self.typeclasses:
+                        raise Exception(f"{proviso} not found, even after loading package {proviso.package}")
                 nonNumerical.append(proviso)
+            
 
         if len(numerical) != 0:
             solvedContext = solveNumerical(numerical,context)
@@ -311,12 +350,6 @@ class TypeDatabase():
         toDo = []
         while len(lastTodo) != 0:
             for proviso in lastTodo:
-                if proviso.full_name == 'IsModule':
-                    continue
-                if proviso.full_name not in self.typeclasses:
-                    self.loadPackage(proviso.package)
-                    if proviso.full_name not in self.typeclasses:
-                        raise Exception(f"{proviso} not found, even after loading package {proviso.package}")
                 try:
                     transformed = deepcopy(proviso.type_ide)
                     transformed = self.applyVariables(transformed,context)
@@ -330,7 +363,7 @@ class TypeDatabase():
                 
             
             if len(toDo) == len(lastTodo):
-                raise Exception(f"Cannot solve provisos {provisos}")
+                raise Exception(f"Cannot solve provisos {provisos} with context {context}")
             else:
                 lastTodo = toDo
                 toDo = []

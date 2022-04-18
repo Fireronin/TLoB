@@ -1,27 +1,28 @@
 package FluteSoc;
 // necessary packages
 import MemUtils::*;
-import Connectable::*;
-import AXI4_Fake_16550::*;
 import Core::*;
+import AXI4_Fake_16550::*;
 import GetPut::*;
+import Connectable::*;
 // imported packages
-import Routable::*;
-import ClientServer::*;
-import SourceSink::*;
-import AXI4_Common_Types::*;
 import AXI4_Types::*;
-import Prelude::*;
+import AXI4_Common_Types::*;
+import MasterSlave::*;
 import AXI4Lite_Types::*;
+import Prelude::*;
+import MemSim::*;
+import SourceSink::*;
+import FIFO::*;
+import Routable::*;
+import AXI4Stream_Types::*;
+import ClientServer::*;
+import OneWayBus::*;
+import FIFOF::*;
 import AXI4_Interconnect::*;
 import Core_IFC::*;
-import OneWayBus::*;
-import AXI4Stream_Types::*;
-import FIFO::*;
-import FIFOF::*;
-import MemSim::*;
-import MasterSlave::*;
 
+typedef 64 DATASIZE;
 
 function Vector #(2, Bool) route_bus1 (r_t x) provisos ( Bits#(r_t,r_l) );
 	Bit#(r_l) adress = pack(x);

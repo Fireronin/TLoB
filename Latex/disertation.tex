@@ -267,6 +267,50 @@ This created a feedback loop, where update of a bus caused update of vectors use
 Routing function is a function that takes a route and produces one hot vector, that specifies which slave is used for a given address. 
 To create a routing function two things must be created. First I need to create a new function to be added to the database of known functions. To do this I just reuse my parsing tooling. As for creating code for it, I generate it by simply adding \verb!if! statement for each address region. I also generate comments giving information about which slave occupy which address region.
 
+\subsection*{JSON interface}
+I decided that my \say{human-readable format} will be JSON. This is because wide support for JSON is already available in many languages. The only problem of JSON is that it's more verbose than Bluespec, and in theory it would make more sense to use Bluespec. However, this could introduce user confusion, as I wouldn't be able to support arbitrary Bluespec features. My understanding is that supporting something only partially could lead users to think that my tool is broken, because it doesn't match theirs assumptions about what it can do. While it can be argued that if I had written this project as extension of Bluespec compiler I could have supported all features of Bluespec (thanks to already written logic). As explained at the beginning of this document, doing this was infeasible for me as a part II project. \\
+With this out of the way let's talk about how I'm using JSON files.
+\subsubsection*{Structure of JSON file}
+At the top level of the file user can define following things:(TODO change those names to something more descriptive)
+\begin{itemize}
+    \item \say{additional folders} - This should be a list of folders that will be added to Bluespec's search path used to find modules.
+    \item \say{packages} - List of packages that will be loaded. Theirs dependencies will be loaded automatically.
+    \item \say{name} - Name of the top module.
+    \item \say{packageName} - Name of the package, and therefore the file that contains the top module.
+    \item \say{typedefs} - List of typedefs that will be added to the global scope. \\
+    \begin{itemize}
+        \item \say{name} - Name of the typedef.
+        \item \say{value} - Value of the typedef.
+    \end{itemize}
+    \item \say{modules} - List of modules that will be created. \\
+    \begin{itemize}
+        \item \say{name} - Name of the module.
+        \item \say{function} - Name of the function that will be used to instantiate the module.
+        \item \say{function\_params} - List of parameters that will be passed to the function. (optional if function dose not take any parameters)
+        \item \say{interface\_params} - List of the parameters of created interface. (optional if it's possible to deduce them from functions type)
+        \item \say{context} - TODO implement, ability to pass only specific interface parameters
+    \end{itemize}
+    \item \say{connections} - List of connections that will be added to the global scope. \\
+    \begin{itemize}
+        \item \say{from} - Name used to access interface on the left side of the connection.
+        \item \say{to} - Name used to access interface on the right side of the connection.
+    \end{itemize}
+    \item  \say{busses} - List of busses that will be added to the global scope. \\
+    \begin{itemize}
+        \item \say{name} - Name of the bus. (optional)
+        \item \say{function} - Name of the function that will be used to instantiate the bus.
+        \item \say{masters} - List of names used to access interfaces that will be used as masters.
+        \item \say{slaves} - List of slaves. \\
+        \begin{itemize}
+            \item \say{name} - Name used to access the interface.
+            \item \say{routes} - List of lists length two that specify starts and ends of address regions that will be used by this slave. \\
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{Using JSON interface}
+At this point if all I did was simply synthesizing a Bluespec file from JSON, it would be possible to do that just by doing simple string manipulation. I know this because my initial iterations were doing this. However, my tool can do more than that, the important feature is this tools ability to display all possible connections' user can make between interfaces and subinterfaces. It is also able to show what possible valid master and slaves are for a given bus(Assuming at least one master and slave are present as otherwise it doesn't make sense). Finally, it can also display types of all interfaces and subinterfaces. This can be useful when using complex modules, like a core that doesn't have any direct connections, but It has many subinterfaces that can be connected to things like memory, external devices, etc. \\
+
 \subsection{GUI}
 Adding GUI was an optional goal mentioned in the project proposal. I originally intended to use some game engine to create a GUI, but Bluespec compiler is a Linux tool and game engines like Unreal Engine 4 or Unity3d are meant to be used on Windows, I decided against that idea. Instead, I found a library called React Flow, that provided nice API for creating graph based user interfaces. After some though I decided to create a GUI as a website. This was quite an adventure as It was my first contact with full stack web development. (I have done backend in .NET and \verb!C#! for group project in last term, but it was mostly focused on writing queries to database)
 

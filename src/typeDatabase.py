@@ -114,6 +114,7 @@ class TypeDatabase():
                 for member in t_type.members.values():
                     if type(member) == Function:
                         self.functions[member.full_name] = member
+                self.preprocessTypeclass(t_type)
             elif type(t_type) == Alias:
                 self.aliases[t_type.full_name] = t_type
             else:
@@ -256,55 +257,86 @@ class TypeDatabase():
             return t_type
         raise Exception(f"Cannot apply variables to {type(t_type)}")
 
-    def preprocessTypeclass(self,typeclass):
-        pass
-        # if len(typeclass.dependencies) != 0:
-        #     ok = False
-        #     for left,right in typeclass.dependencies:
-        #         #check if left is resolved
-        #         ok = True
-        #         for var in left:
-        #             if not (var in variables and type(variables[var]) != str):
-        #                 ok = False
-        #                 break
-        #             if ok:
-        #                 break
-        #         if ok:
-        #             break
-        #     if not ok:
-        #         #resolving not possible
-        #         raise Exception(f"Cannot resolve {typeclass} dependencies not met") 
+    def preprocessTypeclass(self,typeclass: Typeclass):
+        lookUpDictionaries: Dict[Dict[str,str],List[Typeclass_instance]] = {}
+        universalInstances: List[Typeclass_instance] = []
+        for instance in typeclass.instances:
+            skip = False
+            for input in instance.inputs:
+                if type(input.type_ide) == str and input.type_ide == 'void':
+                    skip = True
+                if type(input.type_ide) == Function:
+                    skip = True
+            if skip:
+                continue
+            variables = self.merge(typeclass.type_ide,instance.type_ide,{})
+            
+
+            if len(typeclass.dependencies) != 0:
+                for left,right in typeclass.dependencies:
+                    for var in left:
+                        fail = False
+                        keyDict = {}
+                        if var in variables:
+                            if type(variables[var]) == Type_ide:
+                                if variables[var].name == 'nothing':
+                                    fail = True
+                                keyDict[var] = variables[var].full_name
+                        if fail:
+                            universalInstances.append(instance)
+                        lookUpDictionaries[str(keyDict)] = lookUpDictionaries.get(str(keyDict),[]) + [instance]
+            else:
+                keyDict = {}
+                for member in typeclass.type_ide.children:
+                    if member in variables:
+                        if type(variables[member].name) == 'nothing':
+                            universalInstances.append(instance)
+                            continue
+                        keyDict[member] = variables[member].full_name
+                lookUpDictionaries[str(keyDict)] = lookUpDictionaries.get(str(keyDict),[]) + [instance]
+        
+        typeclass.lookUpDictionaries = lookUpDictionaries
+        typeclass.universalInstances = universalInstances
+
+
 
     def resolveTypeclass(self,typeclass: Typeclass,t_type: Type_ide,instance_hint:Typeclass_instance=None) -> Type_ide:
         typeclass = self.getTypeclassByName(typeclass.full_name)
-        newVars = self.merge(typeclass.type_ide,t_type,{})
+        variables = self.merge(typeclass.type_ide,t_type,{})
         #append vars
-        variables = newVars
+        keyDict = {}
+        considered_instances = typeclass.universalInstances
         if len(typeclass.dependencies) != 0:
             ok = False
             for left,right in typeclass.dependencies:
                 #check if left is resolved
                 ok = True
                 for var in left:
-                    if not (var in variables and type(variables[var]) != str):
-                        ok = False
-                        break
-                    if ok:
-                        break
+                    if var in variables:
+                        if type(variables[var])== Type_ide and variables[var].name == 'nothing':
+                            ok = False
+                            break
+                    keyDict[var] = variables[var].full_name
                 if ok:
+                    considered_instances = typeclass.lookUpDictionaries[str(keyDict)]+typeclass.universalInstances
                     break
             if not ok:
-                #resolving not possible
-                raise Exception(f"Cannot resolve {typeclass} dependencies not met") 
+                pass
+        else:
+            keyDict = {}
+            for member in typeclass.type_ide.children:
+                if member in variables:
+                    keyDict[member] = variables[member].full_name
+            considered_instances += typeclass.lookUpDictionaries.get(str(keyDict),[])
         
-        considered_instances = [instance_hint]
-        if instance_hint == None:
-            considered_instances = typeclass.instances
+        # considered_instances = [instance_hint]
+        # if instance_hint == None:
+        #     considered_instances = typeclass.instances
         for instance in considered_instances:
-            if type(instance.inputs[0].type_ide) == str and instance.inputs[0].type_ide == 'void':
-                continue
-            if type(instance.inputs[0].type_ide) == Function or type(instance.inputs[1].type_ide) == Function:
-                continue
+            # if type(instance.inputs[0].type_ide) == str and instance.inputs[0].type_ide == 'void':
+            #     continue
+            # if type(instance.inputs[0].type_ide) == Function or type(instance.inputs[1].type_ide) == Function:
+            #     continue
             try:
                 newVars = self.merge(t_type,instance.type_ide,context={})
                 newVars = self.solveProvisos(instance.provisos,newVars)

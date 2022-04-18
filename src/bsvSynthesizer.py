@@ -31,69 +31,28 @@ class AccessTuple():
 class InstanceV2():
     pass
 
-#region utility functions (should be wrapped into toplevel module class)
-name_counter = 0
-def get_name():
-    global name_counter
-    name_counter += 1
-    return "_temp_" + str(name_counter)
+class TopLevelModule():
+    pass
 
-instances:Dict[str,InstanceV2] = {}
-knownNames:Dict[str,Type_ide] = {}
-subscribers:Dict[str,Set[str]] = {}
-
-def convertToTypeIde(db:TypeDatabase,arg,caller=None):
-    if isinstance(arg,Type_ide) or type(arg) == ExFunction:
-        return arg
-    arg = str(arg)
-    if arg[0].islower():
-        if caller is not None:
-            global subscribers
-            if arg not in subscribers:
-                subscribers[arg] = set()
-            subscribers[arg].add(caller)
-        if arg not in knownNames:
-            raise Exception(f"Unknown name {arg}")
-        return knownNames[arg]
-    if arg[0].isupper():
-        type_t = evaluateCustomStart(arg,"type_def_type")
-        return db.evaluateTypedef(type_t)
-    return evaluateCustomStart(arg,"type_def_type")
-
-def addInstance(instance,name):
-    global instances
-    if name in subscribers:
-        #remove stale subscriptions
-        for channel in subscribers.values():
-            if name in channel:
-                channel.remove(name)
-    instances[name] = instance
-
-def addName(name,type_ide):
-    global knownNames
-    knownNames[name] = type_ide
-    if name in subscribers:
-        for subscriber in subscribers[name]:
-            instances[subscriber].update()
-#endregion
 
 class InstanceV2():
     db: TypeDatabase
     type_ide : Type_ide
     creator: Union[ExFunction,ExModule]
 
-    def __init__(self,db: TypeDatabase,creator: ExType,
+    def __init__(self,topLevel:TopLevelModule,creator: ExType,
                 creator_args : List[Union[InstanceV2,Type_ide]] =[],
                 module_args:List[Type_ide]=[],
                 instance_name:str=None,
                 input_context:Dict[str,str]={}):
-        self.db = db
+        self.topLevel = topLevel
+        self.db = topLevel.db
         self.creator = creator
         self.creator_args = creator_args
         self.instance_name = instance_name
         self.module_args = module_args
         self.input_context = {key:evaluateCustomStart(val) for key,val in input_context.items()}
-        addInstance(self,instance_name)
+        self.topLevel.addInstance(self,instance_name)
         if creator_args is not None:
             self.update()
 
@@ -102,7 +61,7 @@ class InstanceV2():
         MAX_DEPTH = 1
         def visitRecursively(parent_name: str, interface: Type_ide,depth:int=1):
             if depth > 1:
-                return
+                pass
             if len(interface.members) == 0:
                 return
             for name,value in interface.members.items():
@@ -120,8 +79,8 @@ class InstanceV2():
             print(f"{self.instance_name} has {len(self.creator_args)} arguments, but {self.creator.name} has {len(self.creator.arguments)}")
             raise Exception("Number of function arguments do not match the number of arguments required")
         #convert to TypeIde arguments
-        creator_args = [convertToTypeIde(self.db,arg,self.instance_name) for arg in self.creator_args]
-        module_args = [convertToTypeIde(self.db,arg,self.instance_name) for arg in self.module_args]
+        creator_args = [self.topLevel.convertToTypeIde(self.db,arg,self.instance_name) for arg in self.creator_args]
+        module_args = [self.topLevel.convertToTypeIde(self.db,arg,self.instance_name) for arg in self.module_args]
 
         context = deepcopy(self.input_context)
         for i,pair in  enumerate( zip(self.creator.arguments.items(),creator_args)):
@@ -147,11 +106,12 @@ class InstanceV2():
         context |= self.db.solveProvisos(self.creator.provisos,context)
         
         self.creator.type_ide = self.db.applyVariables(self.creator.type_ide,context)
+        if self.creator.name == "mkConnection":
+            return
         self.db.populateMembers(self.creator.type_ide)
-        global instances
-        interfaces = self.list_all_Interfaces()
-        for interface in interfaces:
-            addName(interface.access_name,interface.thing)
+        self.interfaces = self.list_all_Interfaces()
+        for interface in self.interfaces:
+            self.topLevel.addName(interface.access_name,interface.thing)
 
     def get(self):
         return AccessTuple(self.instance_name,self.creator.type_ide)
@@ -166,12 +126,13 @@ class VectorInstance():
     type_ide: Type_ide = evaluateCustomStart(f"Vector::Vector#(0,flit)","type_def_type")
     instance_name: str = None
 
-    def __init__(self,db,name):
+    def __init__(self,topLevel,name):
         self.items = []
         self.instance_name = name
-        self.db = db
-        addInstance(self,name)
-        addName(name,self.type_ide)
+        self.db = topLevel.db
+        self.topLevel = topLevel
+        self.topLevel.addInstance(self,name)
+        self.topLevel.addName(name,self.type_ide)
 
     def remove(self,item:str):
         self.items.remove(item)
@@ -181,7 +142,7 @@ class VectorInstance():
 
 
     def add(self,item:str):
-        itemType_ide = convertToTypeIde(self.db,item,self.instance_name)
+        itemType_ide = self.topLevel.convertToTypeIde(self.db,item,self.instance_name)
         try:
             context = self.db.merge(self.flit_type_ide,itemType_ide,{})
         except Exception as e:
@@ -192,7 +153,7 @@ class VectorInstance():
         self.type_ide = evaluateCustomStart(f"Vector::Vector#({len(self.items)},{self.flit_type_ide})","type_def_type")
 
     def update(self,silent=False):
-        items =[convertToTypeIde(self.db,item,self.instance_name) for item in self.items]
+        items =[self.topLevel.convertToTypeIde(self.db,item,self.instance_name) for item in self.items]
         try:
             for item in items:
                 self.db.merge(self.flit_type_ide,item,{})
@@ -201,15 +162,17 @@ class VectorInstance():
             print(e)
             raise Exception("Adding item to vector failed types don't match")
         if not silent:
-            addName(self.instance_name,self.type_ide)
+            self.topLevel.addName(self.instance_name,self.type_ide)
 
-    def listAddable(self,proposed)->List[AccessTuple]:
-        for item in proposed:
+    def listAddable(self,proposed)->List[Tuple[str,Type_ide]]:
+        out =[]
+        for name,value in proposed:
             try:
-                vars = self.db.merge(self.flit_type_ide,item,{})
+                vars = self.db.merge(self.flit_type_ide,value,{})
             except Exception as e:
                 continue
-            yield AccessTuple(self.instance_name,item)
+            out.append(name)
+        return out
         
 
     def __str__(self):
@@ -220,15 +183,16 @@ class VectorInstance():
         return "".join(output_str)
 
 class BusInstanceV3(InstanceV2):
-    def __init__(self,db,name,busCreator:str,masters:List[str],slaves:List[Tuple[str,List[Tuple[int,int]]]]):
+    def __init__(self,topLevel:TopLevelModule,name,busCreator:str,masters:List[str],slaves:List[Tuple[str,List[Tuple[int,int]]]]):
         self.instance_name = name
-        self.db = db 
+        self.db = topLevel.db 
+        self.topLevel = topLevel
         self.creator = self.db.getFunctionByName(busCreator)
-        addInstance(self,name)
+        self.topLevel.addInstance(self,name)
         self.masters = masters
         self.slaves = slaves
-        self.mastersV = VectorInstance(self.db,name+"_masters")
-        self.slavesV = VectorInstance(self.db,name+"_slaves")
+        self.mastersV = VectorInstance(self.topLevel,name+"_masters")
+        self.slavesV = VectorInstance(self.topLevel,name+"_slaves")
         for master in self.masters:
             self.mastersV.add(master)
         self.mastersV.update(silent=False)
@@ -319,6 +283,48 @@ class TopLevelModule():
     package_name: str
     typedefs: Dict[str,ExAlias] = {}
 
+    #region utility functions (should be wrapped into toplevel module class)
+    name_counter = 0
+    def get_name(self):
+        self.name_counter += 1
+        return "_temp_" + str(self.name_counter)
+
+    instances:Dict[str,InstanceV2] = {}
+    knownNames:Dict[str,Type_ide] = {}
+    subscribers:Dict[str,Set[str]] = {}
+
+    def convertToTypeIde(self,db:TypeDatabase,arg,caller=None):
+        if isinstance(arg,Type_ide) or type(arg) == ExFunction:
+            return arg
+        arg = str(arg)
+        if arg[0].islower():
+            if caller is not None:
+                self.subscribers
+                if arg not in self.subscribers:
+                    self.subscribers[arg] = set()
+                self.subscribers[arg].add(caller)
+            if arg not in self.knownNames:
+                raise Exception(f"Unknown name {arg}")
+            return self.knownNames[arg]
+        if arg[0].isupper():
+            type_t = evaluateCustomStart(arg,"type_def_type")
+            return db.evaluateTypedef(type_t)
+        return evaluateCustomStart(arg,"type_def_type")
+
+    def addInstance(self,instance,name):
+        if name in self.subscribers:
+            #remove stale subscriptions
+            for channel in self.subscribers.values():
+                if name in channel:
+                    channel.remove(name)
+        self.instances[name] = instance
+
+    def addName(self,name,type_ide):
+        self.knownNames[name] = type_ide
+        if name in self.subscribers:
+            for subscriber in self.subscribers[name]:
+                self.instances[subscriber].update()
+    #endregion
 
     def __init__(self,name,db,package_name=None) -> None:
         self.name = name
@@ -336,7 +342,7 @@ class TopLevelModule():
         if type(creator_func) == str:
             creator_func = self.db.getFunctionByName(creator_func)
         #try:
-        newModule = InstanceV2(self.db,creator_func,func_args,interface_args,instance_name,input_context)
+        newModule = InstanceV2(self,creator_func,func_args,interface_args,instance_name,input_context)
         # except Exception as e:
         #     raise Exception(f"""Error creating module {instance_name}: {e}
         #         Arguments:
@@ -443,11 +449,11 @@ class TopLevelModule():
         if connection_name is None:
             connection_name = f"connection_{len(self.connections)}"
         creator_func = self.db.getFunctionByName("mkConnection")
-        connection = InstanceV2(self.db,creator_func,[start,end],[],connection_name)
+        connection = InstanceV2(self,creator_func,[start,end],[],connection_name)
         self.connections[connection_name] = connection
 
     def add_busV3(self,name,busCreator:str,masters:List[str],slaves:List[Tuple[str,List[Tuple[int,int]]]]):
-        bI = BusInstanceV3(self.db,name,busCreator,masters,slaves)
+        bI = BusInstanceV3(self,name,busCreator,masters,slaves)
         self.buses[name] = bI
 
     def remove(self,name:str):

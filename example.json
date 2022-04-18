@@ -1,6 +1,6 @@
 {
-    "aditional folders" : ["BlueStuff/build/bdir","tutorial"],
-    "packages": ["FIFO","FIFOF","Connectable","AddressFlit","GetPut","AXI4_Types","AXI4_Interconnect","SourceSink","Routable"],
+    "aditional folders" : ["Flute/src_SSITH_P2/build_dir","tutorial"],
+    "packages": ["FIFO" ,"GetPut","AXI4_Interconnect","SourceSink","Routable","Core","MemSim"],
     "name" : "top",
     "package_name" : "fifoChain",
     "typedefs": [

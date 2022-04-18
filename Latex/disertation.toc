@@ -24,4 +24,4 @@
 \contentsline {subsection}{\numberline {3.3.3}Resolving types (implementation)}{9}{subsection.3.3.3}%
 \contentsline {section}{\numberline {3.4}Synthesizing}{11}{section.3.4}%
 \contentsline {subsubsection}{Adding busses}{12}{section*.12}%
-\contentsline {subsection}{\numberline {3.4.1}GUI}{12}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.1}GUI}{14}{subsection.3.4.1}%

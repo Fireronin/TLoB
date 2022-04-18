@@ -8,8 +8,8 @@ import argparse
 import os
 
 example_string = r"""{
-    "aditional folders" : ["BlueStuff/build/bdir","tutorial"],
-    "packages": ["FIFO","FIFOF","Connectable","AddressFlit","GetPut","AXI4_Types","AXI4_Interconnect","SourceSink","Routable"],
+    "aditional folders" : ["Flute/src_SSITH_P2/build_dir","tutorial"],
+    "packages": ["FIFO","AddressFlit","GetPut","AXI4_Interconnect","SourceSink","Routable","Core","MemSim"],
     "name" : "top",
     "package_name" : "fifoChain",
     "typedefs": [
@@ -151,14 +151,14 @@ if __name__ == "__main__":
     # argument reload values True of False
     parser.add_argument("-reload",type=bool,default=True,help="If packages haven't changed since last run, use false to skip reloading")
     #print f as a example of how to use the json file
-    parser.add_argument("-showExample",action="store_true",help="Prints the json file as a example of how to use the json file")
-    parser.add_argument("-showPossibleConnections",action="store_true",help="Prints the possible connections between modules")
-
+    # parser.add_argument("-showExample",action="store_true",help="Prints the json file as a example of how to use the json file")
+    parser.add_argument("-showPossibleConnections",action="store_true",default=True,help="Prints the possible connections between modules")
+    parser.add_argument("-showTypes",action="store_true",default=True,help="Prints the type indentifiers of interfaces in defined modules")
 
     args = parser.parse_args()
-    if args.showExample:
-        print(json.dumps(example_json,indent=4))
-        exit()
+    # if args.showExample:
+    #     print(json.dumps(example_json,indent=4))
+    #     exit()
     
     #check if the json file was passed as argument
     if args.json_file == None:
@@ -167,8 +167,16 @@ if __name__ == "__main__":
         exit()
     with open(args.json_file) as json_file:
         topLevel = load_json(json.load(json_file),args.reload)
-    for start,ends in topLevel.possibleConnections.items():
-        print(f"{start} -> {ends}")
-    for busName,busInstance in topLevel.buses.items():
-        print(f"{busName}")
-    print("Hi")
+    if args.showPossibleConnections:
+        print("Potential connections:")
+        for start,ends in topLevel.possibleConnections.items():
+            print(f"{start} -> {[end.access_name for end in ends]}")
+        for busName,busInstance in topLevel.buses.items():
+            print(f"Possible masters for {busName} {busInstance.mastersV.flit_type_ide}:")
+            print(topLevel.buses['mainBus'].mastersV.listAddable(topLevel.knownNames.items()))
+            print(f"Possible slaves for {busName} {busInstance.slavesV.flit_type_ide}:")
+            print(topLevel.buses['mainBus'].slavesV.listAddable(topLevel.knownNames.items()))
+    if args.showTypes:
+        for name,value in topLevel.knownNames.items():
+            print(f"{name} : {value}")
+    print("Finished")

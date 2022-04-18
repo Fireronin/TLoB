@@ -2,3 +2,7 @@ Failed to load package None
 can only concatenate str (not "NoneType") to str
 Failed to load package None 
 can only concatenate str (not "NoneType") to str
+Failed to load package AddressFlit 
+('Error:', b'Error: "../libs/BlueStuff/BlueBasics/SourceSink.bsv", line 31, column 9: (S0027)\r\r\n  The package `AddressFlit\' was compiled using a different version of the file\r\r\n  `SourceSink.bo\' than what was found in the path.\r\r\n  Please recompile the affected packages in dependency order or with -u.\r\r\n\r\r\n')
+Failed to load package AddressFlit 
+('Error:', b'Error: "tutorial/AddressFlit.bsv", line 1, column 9: (S0027)\r\r\n  The package `AddressFlit\' was compiled using a different version of the file\r\r\n  `SourceSink.bo\' than what was found in the path.\r\r\n  Please recompile the affected packages in dependency order or with -u.\r\r\n\r\r\n')

@@ -1,26 +1,11 @@
 package FluteSoc;
 // necessary packages
-import MemUtils::*;
 import Core::*;
-import AXI4_Fake_16550::*;
 import GetPut::*;
+import MemUtils::*;
 import Connectable::*;
-// imported packages
-import AXI4_Types::*;
-import AXI4_Common_Types::*;
-import MasterSlave::*;
-import AXI4Lite_Types::*;
-import Prelude::*;
-import MemSim::*;
-import SourceSink::*;
-import FIFO::*;
-import Routable::*;
-import AXI4Stream_Types::*;
-import ClientServer::*;
-import OneWayBus::*;
-import FIFOF::*;
 import AXI4_Interconnect::*;
-import Core_IFC::*;
+import AXI4_Fake_16550::*;
 
 typedef 64 DATASIZE;
 

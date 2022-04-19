@@ -7,9 +7,11 @@ from typeDatabase import TypeDatabase as tdb
 #%% initalize bluetcl
 # initalize tdb
 db = tdb(load=True)
+
 db.addLibraryFolder("Flute/src_SSITH_P2/build_dir")
 # Read contents of package
 packages_to_load = ["Core","Prelude","OneWayBus","MemUtils","Connectable","FIFO","FIFOF","GetPut","AXI4_Types","AXI4_Interconnect","SourceSink","Routable","Core_IFC","ClientServer","MasterSlave","AXI4_Common_Types","MemSim","AXI4_Fake_16550","AXI4Stream_Types","AXI4Lite_Types"]
+
 db.addPackages(packages_to_load)
 
 
@@ -36,7 +38,6 @@ topLevel.add_busV3("bus1","mkAXI4Bus",["core.core_mem_master"],[("memory",[(0,40
 
 topLevel.add_connectionV2("core.core_mem_master","memory")
 topLevel.add_busV3("bus1","mkAXI4Bus",["core.core_mem_master"],[("memory",[(0,4096)]),("aXI4_Fake_16550",[(4096,8192)])])
-
 
 # memory = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",SPARAMS,[4096,'Maybe#("xddd")'])
 # memory2 = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",[],['4096', 'Maybe#(34)'])

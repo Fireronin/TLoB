@@ -3,6 +3,7 @@ import enum
 import os
 from re import S
 from tempfile import TemporaryFile
+import time
 
 from extractor import Position, Type as ExType, Type_ide, Value as ExValue
 from extractor import Interface as ExInterface
@@ -16,7 +17,7 @@ from extractor import Typeclass_instance as ExTypeclassInstance
 from typing import Dict, List, Union,Set,Tuple
 
 from typeDatabase import TypeDatabase
-
+from tqdm import tqdm
 
 class AccessTuple():
     access_name: str
@@ -342,7 +343,9 @@ class TopLevelModule():
         if type(creator_func) == str:
             creator_func = self.db.getFunctionByName(creator_func)
         #try:
+        start_time = time.time()
         newModule = InstanceV2(self,creator_func,func_args,interface_args,instance_name,input_context)
+        print(f"Created module {instance_name} in {time.time()-start_time}s")
         # except Exception as e:
         #     raise Exception(f"""Error creating module {instance_name}: {e}
         #         Arguments:
@@ -353,7 +356,7 @@ class TopLevelModule():
         #     """)
         
         #populate possible connections
-        for current in newModule.list_all_Interfaces():
+        for current in tqdm(newModule.list_all_Interfaces()):
             self.possibleConnections[current.access_name] = self.list_connectableV2(current,self.accessableInterfaces)
             for interface in self.accessableInterfaces:
                 self.possibleConnections[interface.access_name] += self.list_connectableV2(interface,[current])
@@ -495,11 +498,11 @@ class TopLevelModule():
         for p in self.packages:
             s.append("import "+p+"::*;\n")
         # imported packages
-        s.append("// imported packages\n")
-        for p in self.db.packages:
-            #check if package is already imported
-            if p not in self.packages:
-                s.append("import "+p+"::*;\n")
+        #s.append("// imported packages\n")
+        # for p in self.db.packages:
+        #     #check if package is already imported
+        #     if p not in self.packages:
+        #         s.append("import "+p+"::*;\n")
         s.append("\n")
         
         # typedefs example. typedef 1 DATASIZE;

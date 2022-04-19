@@ -1,5 +1,5 @@
 from sympy import *
-from extractor import Proviso,Type_ide,Value
+from extractor import Proviso,Type_ide,Value,evaluateCustomStart
 from typing import List,Dict,Union
 
 
@@ -60,30 +60,44 @@ def solveNumerical(provisos:List[Proviso],variables):
 
     Eqs = []    
     for proviso in provisos:
-        Eqs.append(type_ide_to_expr(proviso.type_ide))
+        eq = type_ide_to_expr(proviso.type_ide)
+        if eq == True:
+            continue
+        Eqs.append(eq)
 
-    sol = nonlinsolve(Eqs,list(sym.values()))
+    if len(Eqs) == 0:
+        return {}
+
+    sol = solve(Eqs,list(sym.values()))
     try:
-        output = list(sol)[0]
+        output = sol
     except Exception as e:
         print("Well sympy can't find solution, you are not satisfing provisos")
         raise Exception("Well sympy can't find solution, you are not satisfing provisos")
     outVars = {}
-
-    print(sym.items())
-
-    if len(output.free_symbols) != 0:
-        # print free symbols
-        print("Free symbols")
-        for sym in output.free_symbols:
-            print(sym)
-        raise Exception("Too many solutions")
         
-    
-    for i,key in enumerate(sym.keys()):
+    newInformation = False
+    for key,val in sol.items():
+        if not val.is_Atom or val.is_Symbol:
+            continue
+        newInformation = True
         #check if after converting to int value didn't change
-        if int(output[i]) != output[i]:
+        if int(val) != val:
             raise Exception("Solution contains non integer values")
-        outVars[key] = Value( int(output[i]))
+        outVars[key] = Value( int(val))
     
+    if not newInformation:
+        raise Exception("No new information, this suggest that resolution might be stuck stuck")
+
     return outVars
+
+if __name__ == "__main__":
+    #region test
+    variables = {}
+    provisos = evaluateCustomStart("""{ provisos { 
+        {Add#(2,a,y)}
+        {Add#(a,5,7)} 
+        } }""","tcl_provisos")[1]
+    print(solveNumerical(provisos,variables))
+    #endregion
+    pass

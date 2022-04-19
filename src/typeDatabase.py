@@ -182,6 +182,8 @@ class TypeDatabase():
     def addPackages(self,packages):
         loaded = []
         for package_name in packages:
+            if package_name in self.packages:
+                continue
             if self.loadPackage(package_name) != None:
                 loaded.append(package_name)
         for package_name in loaded:
@@ -368,19 +370,25 @@ class TypeDatabase():
                 nonNumerical.append(proviso)
             
 
-        if len(numerical) != 0:
-            solvedContext = solveNumerical(numerical,context)
-        
-            for key,val in solvedContext.items():
-                CAdd(context,key,val)        
-
-            for key in context.keys():
-                if type(context[key].name) == Value:
-                    context[key] = context[key].name
 
         lastTodo = nonNumerical
         toDo = []
         while len(lastTodo) != 0:
+            numericalProgress = False
+            if len(numerical) != 0:
+                numericalProgress = True
+                try:
+                    solvedContext = solveNumerical(numerical,context)
+                
+                    for key,val in solvedContext.items():
+                        CAdd(context,key,val)        
+
+                    for key in context.keys():
+                        if type(context[key].name) == Value:
+                            context[key] = context[key].name
+                except Exception as e:
+                    numericalProgress = False
+
             for proviso in lastTodo:
                 try:
                     transformed = deepcopy(proviso.type_ide)
@@ -391,10 +399,9 @@ class TypeDatabase():
                     continue
                 
                 context |= newVariables
-                #self.merge(proviso.type_ide,newTypeIde,context)
                 
             
-            if len(toDo) == len(lastTodo):
+            if len(toDo) == len(lastTodo) and not numericalProgress:
                 raise Exception(f"Cannot solve provisos {provisos} with context {context}")
             else:
                 lastTodo = toDo

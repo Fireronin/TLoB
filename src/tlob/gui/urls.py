@@ -10,4 +10,6 @@ urlpatterns = [
     path('confirmDesign/', views.confirmDesign, name='confirmDesign'),
     path('confirmConnection/', views.confirmConnection, name='confirmConnection'),
     path('confirmBus/', views.confirmBus, name='confirmBus'),
+    path('removeNode/', views.removeNode, name='removeNode'),
+    path('fullClear/', views.fullClear, name='fullClear'),  
 ]

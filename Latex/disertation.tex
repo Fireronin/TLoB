@@ -26,27 +26,27 @@
 
 \chapter{Introduction}
 
-Making hardware is hard, and similarly to other problems in computer science, we make it easier by adding layers of abstraction. There are many layers involved in making hardware from that abstract transistors to gates to logical operations to functions to modules to chips to multi-chip modules to whole devices. The layer this project focuses on is going from modules to chips(TODO: this probably need renaming). At this layer we already have code for modules like memory, CPU-cores, interconnects and so on. Now what we need is an ability to compose them in such a way that they create a whole device. On a paper this should be a simple task but in reality it's a lot more complicated.
+Making hardware is hard, and similarly to other problems in computer science, we make it easier by adding layers of abstraction. There are many layers involved in making hardware from that abstract transistors to gates to logical operations to functions to modules to chips to multi-chip modules to whole devices. The layer this project focuses on is going from modules to chips(TODO: this probably need renaming, add graph showing layers). At this layer we already have code for modules like memory, CPU-cores, interconnects and so on. Now what we need is an ability to compose them in such a way that they create a whole device.
 
-\section{Reality}
-Creating custom hardware is getting more expensive both in therms of money but also in terms of man-hours needed to create it. 
+\section{Already existing tools}
+Creating custom hardware has gotten expensive in last few decades both in therms of money but also in terms of man-hours needed to create it. 
 This creates barriers to entry for new players, and also reinforces strong positions of already adopted standards. 
 Two monoliths that I will focus on are language Verilog and design software Intel Quartus Prime(IQP). 
-In my work I will work with Bluespec language that can be compiled down to Verilog. 
+In my work I will work with Bluespec language which can be compiled down to Verilog. 
 \begin{tcolorbox}[title=Market share and justification for focusing entirely on comparisons with Intel Quartus Prime]
-    It's a bit difficult to accurately judge market share of IQP, but It is produced by one of the biggest chip manufacturer and designer in the world, and it's also used by Qualcomm according to \href{https://discovery.hgdata.com/product/intel-quartus-prime}{HG Insights}. Using Google trends tool we can see that while in recent years(since 2016) competitor Xilinx Vivado has overtaken, IQP in interest at the global scale, in most developed countries like US, Europe, and parts of Asia. There is roughly 50/50 split between IQP and Vivado. My personal observations suggest that Xilinx Vivado has been more popular in India which is a large country that is currently developing rapidly. Therefore, while I'm going to assume that IQP is still one of two biggest hardware design platforms, and it's fair to not investigate Xilinx's software during evaluation(TODO: check if this has changed).
+    It's a bit difficult to accurately judge market share of IQP, but It is produced by one of the biggest chip manufacturer and designer in the world, and it's also used by Qualcomm according to \href{https://discovery.hgdata.com/product/intel-quartus-prime}{HG Insights}. Using Google trends tool we can see that while in recent years(since 2016) competitor Xilinx Vivado has overtaken, IQP in interest at the global scale, in most developed countries like US, Europe, and parts of Asia. There is roughly 50/50 split between IQP and Vivado. My personal observations suggest that Xilinx Vivado became highly popular in India which is a large country with history of chip design, and this might be strongly skewing data in favor of Xilinx's product. Another argument to compare against IQP is that it was used last year as a part of the course, and it can't be irrelevant if it's taught at Cambridge. Therefore, it's fair to not investigate Xilinx's software during evaluation(TODO: check if this has changed).
 \end{tcolorbox}
-My project will try to tackle a subset of functionality provided by a tool called Platform Designer that is a part of Intel Quartus Prime package. Platform Designer is a GUI tool for connecting modules, it is capable of saving and loading designs, from proprietary plain text file format. Unfortunately, those files are not exactly what one might call "Human readable" as they have a tendency to be megabytes long(millions of characters). This tool also have some other pains that will be explained later.
+My project will try to tackle a subset of functionality provided by a tool called Platform Designer that is a part of Intel Quartus Prime package. Platform Designer is a GUI tool for connecting modules, it is capable of saving and loading designs, from proprietary plain text file format. Unfortunately, those files are not exactly what one might call "Human readable" as they have a tendency to be megabytes long(millions of characters). This tool also have some other issues that will be explained later, one of which is its lack of support for Bluespec.
 
-\section{Solution}
-During my project I will try to create an alternative file format that is much simpler and allows for editing by a human. To do this I will harness power of types in Bluespec language. My tool will be able to operate on Bluespec packages, but thanks to other tools that allow for interoperability of Bluespec and Verilog, it should be still technically possible to use my tool with wider Verilog ecosystem.
+\section{Proposed solution}
+During my project I created an alternative file format that is much simpler and allows for editing by a human. It archives this by harnessing power of types in Bluespec language. My tool will be able to operate on Bluespec packages, but thanks to other tools that allow for interoperability of Bluespec and Verilog, it is still technically possible to use my tool within wider Verilog ecosystem. I have also created a GUI that provides similar functionality to Platform Designer, but it is designed to be used with Bluespec.
 
 \chapter{Preparation}
 
-\section{Understanding Bluespec}
-To begin working with Bluespec we first need to understand the language.
+\section{Understanding Bluespec (This section is to be pruned or rewritten)}
+To begin working with Bluespec we first need to understand the language. This subsection is meant to be a brief overview of the language.
 \subsection{Rules}
- In Bluespec all computation is done in form of rules. Each cycle we will take a subset of all rules that we are going to execute in this cycle, rule is fired (executed) in cycle only if it's ready (or will be ready) and it's not conflicting with other rules (If this happens compiler must issue a warning, and picks arbitrary rule to fire from subset of conflicting rules). Each rule can fire at most one time per cycle. For rule to be ready to fire it needs it's implicit and explicit conditions to be true. Rule can be fired in a cycle even if it's not ready at the start of cycle, for example if you add item on an empty queue and then pop can happen in same cycle.\\
+ In Bluespec all computation is done in form of rules. Each cycle we will take a subset of all rules that we are going to execute in this cycle, rule is fired (executed) in cycle only if it's ready (or will be ready) and it's not conflicting with other rules (If this happens compiler must issue a warning, and picks arbitrary rule to fire from subset of conflicting rules). Each rule can fire at most one time per cycle. For rule to be ready to fire it needs it's implicit and explicit conditions to be true. Rule can be fired in a cycle even if it's not ready at the start of cycle, for example if you add item on an empty queue and then pop can happen in same cycle. \\
 \includegraphics[width=\textwidth]{Rulemapping.png}
 (TODO: add reference to the bsv reference document from which this image was taken)
 \begin{verbatim}
@@ -57,27 +57,53 @@ To begin working with Bluespec we first need to understand the language.
 \end{verbatim}
 
 \subsection{Modules and interfaces}
-Module is something (TODO: I have no Idea how to call it). Modules don't have types, instead they implement some interface. This means that you can have multiple different modules that implement the same interface, this makes interoperability much easier. Interfaces are made up out of two things:
+Module is something (TODO: I have no Idea how to call it). Modules don't have types, instead they implement some interface. This means that you can have multiple different modules that implement the same interface and makes interoperability much easier. Interfaces are made up out of two types of things:
     \begin{itemize}
         \item Methods - that allow for interaction with the module.
-        \item Subinterfaces - That allow for more generalization, for example you need to connect one more thing you don't need to change an interface used by other modules, you can just create a new interface that contains two subinterfaces and pass them accordingly.
+        \item Subinterfaces - That allow for more generalization, for example if you want to implement module that contains two copies of the same interface, you can just create a new interface that contains two subinterfaces and assign them accordingly.
     \end{itemize}
 
 \subsection{Types}
-Welp, there is a ton of them.
+Welp, there is a ton of them. (TODO: say few thign about them)
 \subsection{Typeclasses}
 Types classes in Bluespec are used to group types for which specific functions are implemented. TODO:
 
+\section{Choosing tools}
+I had effectively 3 choices for a language to this project in:
+\subsection{Haskell}'
+Compiler of Bluespec is written in Haskell. Therefore there are seweral reason why Haskell would be right choice. Here are some of them:
+\begin{itemize}
+    \item I can reuse already written logic.
+    \item I won't diverge in terms of logic.
+    \item I won't need to write grammar to load packages.
+\end{itemize}
+But there are also few very good reasons why I didn't used Haskell.
+\begin{itemize}
+    \item I never used Haskell before, and my experience with functional languages equal to what was shown in the foundations of the computer science course.
+    \item I never used Bluespec before, and my experience is limited to completing Bluespec tutor provided by computer science department.
+    \item Even if I knew Haskell and Bluespec, industrial compilers are rather large and complicated. I also received advice to avoid modifying / extending them as a part of the project.
+\end{itemize}
+While each of those reasons on its own is something that can be managed. All of them combined would create unacceptable amount of risk of not delivering the project. There was also a risk that use of Haskell wouldn't create a good story for the project. (This is quite subtle).
+
+\subsection{Tcl (pronounced "tickle")}
+This language is used as a scripting language in both Intel and Xilinx tools, I will be reading packages using Tcl scripts provided by the creators of the Bluespec compiler (BSC), but my understanding is that those scripts are just handy wrappers for some Haskell functions. This is also foreign language to me with minimal presence online, and negligible learning resources, making it difficult to learn. It's also quite obsolete and there is not much tooling for it making it undesirable as a time investment(As an example of desirable to learn technology. I learned for this project JavaScript, just to create a GUI).
+\subsection{Python}
+Firstly this is a language I have experience working with, secondly it's widely supported, and there is extensive tooling for it. It's flexible typing system allows for rapid experimenting, this was especially handy when I wasn't sure how structure of the data would look like. It's also worth mentioning that at some point I decided to start adding typing hints around. My rule of thumb that I used was that if Pylance (python language server) can't deduce type of something I need more hints.
+Other reasons for using python are:
+\begin{itemize}
+    \item I will have many interesting problems to solve. Like creating and interpreting grammar.
+    \item Code written in it can be used by large community of python developers.
+    \item I can use many tools like, Lark (for grammar), Django (as a backend server), SymPy (to solve size relationship provisos) that will speed up the process.
+\end{itemize}
+The two arguments against using python are:
+\begin{itemize}
+    \item Haskell would be better suited for this task. I explaing above why it doesn't make sense for me to use Haskell. 
+    \item Python is quite slow, Fortunately this isn't a big issue thanks to cashing.
+\end{itemize}
 \section{Creating a grammar}
 
 \subsection{Why grammar is needed ?}
-I had effectively 3 choices for a language to write this grammar in:
-\begin{itemize}
-    \item Haskell - This would require me to directly tap into complier for information about modules and ect. in packages, and I would also need to learn Haskell effectively from scratch. I hope that I don't need to explain why learning Haskell while trying to understand complier of another language is a bad idea.
-    \item Tcl (pronounced "tickle") - This language is used as a scripting language in both Inter and Xilinx tools, I will be reading packages using Tcl scripts provided by the creators of the Bluespec complier (BSC), but my understanding is that those scripts are just handy wrappers for some Haskell code. This is also foreign language to me with minimal presence, and negligible learning resources.
-    \item Python - Firstly this is a language I have experience working with, secondly it's widely supported, and there is extensive tooling for it. It's flexible typing system allows for rapid experimenting. 
-\end{itemize}
-I have chosen Python for this project as I didn't want to dabble in the BSC as I was advised that this is dangerous for part II project as compliers are overwhelmingly complex and difficult to understand. This meant that I will need to parse output of Bluetcl (complier script for inspecting packages), and to do this I'm going to need grammar.
+
 
 \subsection{What grammar is needed ?}
 Bluetcl produces many, outputs but two of them that we are going to focus on are: descriptions of functions and descriptions of types. To simplify parsing of those I will have one grammar capable of parsing both outputs at the same time, as some grammar structures are reued in both outputs.

@@ -8,3 +8,7 @@ Prolog
 typeclasses
 subinterfaces
 MUI
+Xilinx
+Vivado
+Pylance
+SymPy

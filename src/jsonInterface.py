@@ -91,7 +91,7 @@ def lookForKeyword(keyword,dictionary):
         raise Exception(f"Keyword {keyword} not found")
 
 def load_json(json_file,reload=False):
-    db = tdb(load=reload)
+    db = tdb(load=not reload)
     
     if "aditional folders" in json_file:  
         for folder in json_file["aditional folders"]:
@@ -146,10 +146,10 @@ def load_json(json_file,reload=False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Convert a json file to a bsv file')
-    parser.add_argument('-json_file', default="example.json", type=str, help='The json file to convert')
+    parser.add_argument('-json_file', default="exampleFifos.json", type=str, help='The json file to convert')
     parser.add_argument('-of','--output_folder', type=str, help='The folder of output',default="./tutorial")
     # argument reload values True of False
-    parser.add_argument("-reload",type=bool,default=True,help="If packages haven't changed since last run, use false to skip reloading")
+    parser.add_argument("-reload",type=bool,default=False,help="If packages haven't changed since last run, use false to skip reloading")
     #print f as a example of how to use the json file
     # parser.add_argument("-showExample",action="store_true",help="Prints the json file as a example of how to use the json file")
     parser.add_argument("-showPossibleConnections",action="store_true",default=True,help="Prints the possible connections between modules")
@@ -177,6 +177,7 @@ if __name__ == "__main__":
             print(f"Possible slaves for {busName} {busInstance.slavesV.flit_type_ide}:")
             print(topLevel.buses['mainBus'].slavesV.listAddable(topLevel.knownNames.items()))
     if args.showTypes:
+        print("Infered Interfaces:")
         for name,value in topLevel.knownNames.items():
             print(f"{name} : {value}")
     print("Finished")

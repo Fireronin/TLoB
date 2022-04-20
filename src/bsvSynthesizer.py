@@ -109,6 +109,7 @@ class InstanceV2():
         self.creator.type_ide = self.db.applyVariables(self.creator.type_ide,context)
         if self.creator.name == "mkConnection":
             return
+        self.creator.type_ide.accessName = self.instance_name
         self.db.populateMembers(self.creator.type_ide)
         self.interfaces = self.list_all_Interfaces()
         for interface in self.interfaces:
@@ -283,6 +284,10 @@ class TopLevelModule():
     name: str
     package_name: str
     typedefs: Dict[str,ExAlias] = {}
+    instances:Dict[str,InstanceV2] = {}
+    knownNames:Dict[str,Type_ide] = {}
+    subscribers:Dict[str,Set[str]] = {}
+
 
     #region utility functions (should be wrapped into toplevel module class)
     name_counter = 0
@@ -290,9 +295,7 @@ class TopLevelModule():
         self.name_counter += 1
         return "_temp_" + str(self.name_counter)
 
-    instances:Dict[str,InstanceV2] = {}
-    knownNames:Dict[str,Type_ide] = {}
-    subscribers:Dict[str,Set[str]] = {}
+
 
     def convertToTypeIde(self,db:TypeDatabase,arg,caller=None):
         if isinstance(arg,Type_ide) or type(arg) == ExFunction:
@@ -461,17 +464,15 @@ class TopLevelModule():
 
     def remove(self,name:str):
         #in accessable interfaces find name* use start with and fiter
-        self.accessableInterfaces.filter(lambda x: not x.access_name.startswith(name))
-
-        global instances
-        if name in instances:
-            instances.remove(name)
-        global knownNames
-        knownNames = {k:v for k,v in knownNames.items() if not k.startswith(name)}
-        global subscribers
-        for subscriber in subscribers:
+        self.accessableInterfaces = list(filter(lambda x: not x.access_name.startswith(name),self.accessableInterfaces))
+        if name in self.instances:
+            if name in self.instances: 
+                del self.instances[name]
+        self.knownNames = {k:v for k,v in self.knownNames.items() if not k.startswith(name)}
+        for subscriber in self.subscribers:
             if name in subscriber:
-                subscriber.remove(name)
+                if name in subscriber:
+                    del subscriber[name]
         
         if name in self.modules:
             del self.modules[name]

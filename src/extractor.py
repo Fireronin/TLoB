@@ -104,10 +104,10 @@ class Type_ide:
     @property
     def json(self) -> Dict:
         out = {'name':self.__str__()}
+        out["acessName"] = self.accessName
         if len(self.children) ==0:
             return out
         out["children"] = []
-        out["acessName"] = self.accessName
         for i,child in enumerate(self.children):
             if type(child) == str:
                 processed = child

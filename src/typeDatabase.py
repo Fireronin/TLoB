@@ -223,6 +223,9 @@ class TypeDatabase():
                 return context
             else:
                 raise Exception(f"Cannot merge different values, {a} and {b}")
+        if type(a) == Type_ide and a.name =='nothing' or type(b) == Type_ide and b.name =='nothing':
+            return context
+        
         if type(a) == Value and type(b) == Type_ide:
             a,b = b,a
         if type(a) == Type_ide and type(b) == Value:

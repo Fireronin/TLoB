@@ -36,23 +36,16 @@ def addModule(request):
     # get name of module
     name = json_data['name']
     creator = json_data['creator']
+    creatorFunc = db.getFunctionByName(creator)
     print("name:",name,"creator:",creator)
     exception = ""
-    try:
-        module:InstanceV2 = topLevel.add_moduleV2(creator,name,[],None)
-    except Exception as e:
-        tb = traceback.format_exc()
-        print(tb)
-        exception = str(e)
-        print(e)
-        return HttpResponse(json.dumps({'exception':str(e)}))
 
     response = {
         'name':name,
         'creator':creator,
         'exception':exception,
-        'arguments': {f'arg_{i}':arg.json for i,arg in module.creator.arguments.items()},
-        'interface': module.creator.type_ide.json,
+        'arguments': {f'arg_{i}':arg.json for i,arg in creatorFunc.arguments.items()},
+        'interface': creatorFunc.type_ide.json,
     }
     return HttpResponse(json.dumps(response))
 
@@ -148,5 +141,34 @@ def confirmBus(request):
         'name':name,
         'creator':creator,
         'exception':exception,
+    }
+    return HttpResponse(json.dumps(response))
+
+def removeNode(request):
+    json_data = json.loads(request.body)
+    name = json_data['name']
+    print("name:",name)
+    try:
+        topLevel.remove(name)
+    except Exception as e:
+        tb = traceback.format_exc()
+        print(tb)
+        exception = str(e)
+        print(e)
+        return HttpResponse(json.dumps({'exception':str(e)}))
+    response = {
+        'name':name,
+        'exception':"",
+    }
+    print(topLevel.instances)
+    return HttpResponse(json.dumps(response))
+
+
+def fullClear(request):
+    global db,topLevel
+    db = tdb(load=True,saveLocation=os.path.join("../../saved"))
+    topLevel = TopLevelModule("top",db,package_name="GUITEST")
+    response = {
+        'exception':"",
     }
     return HttpResponse(json.dumps(response))

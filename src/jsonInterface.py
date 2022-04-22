@@ -99,7 +99,7 @@ if __name__ == "__main__":
     if args.showPossibleConnections:
         print("Potential connections:")
         for start,ends in topLevel.possibleConnections.items():
-            print(f"{start} -> {[end.access_name for end in ends]}")
+            print(f"{start} -> {[end for end in ends]}")
         for busName,busInstance in topLevel.buses.items():
             print(f"Possible masters for {busName} {busInstance.mastersV.flit_type_ide}:")
             print(topLevel.buses['mainBus'].mastersV.listAddable(topLevel.knownNames.items()))

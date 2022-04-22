@@ -1,4 +1,4 @@
-from copy import deepcopy
+from copy import deepcopy, copy
 from typing import Dict, Set
 
 from numpy import var
@@ -28,7 +28,7 @@ class Variable():
 
 def CAdd(variables:Dict[str,Variable],s,value):
     if s not in variables:
-        variables[s] = Variable(value)
+        variables[s] = Variable(deepcopy(value))
     else:
         if variables[s].value != value:
             raise Exception("Conflicting values for variable: "+s)
@@ -177,7 +177,7 @@ class TypeDatabase():
         if type(typedef) == Value:
             return typedef
         if typedef.name in self.aliases:
-            return self.aliases[typedef.name].type
+            return self.aliases[typedef.name].result_type_ide
         else:
             return typedef
 
@@ -274,7 +274,7 @@ class TypeDatabase():
                 newVariables = self.merge(fa,fb,variables)
                 for key in newVariables:
                     CAdd(variables,key,newVariables[key].value)
-        if type(b) != Function and type(a) == Function:
+        if type(b) == Function and type(a) != Function:
             a,b = b,a
         if type(a) == Function and type(b) != Function and type(b) != str:
             raise Exception(f"Cannot merge {a} and {b}")
@@ -282,6 +282,8 @@ class TypeDatabase():
             newVariables = self.merge(a.return_type,b.return_type,variables)
             for key in newVariables.keys():
                 CAdd(variables,key,newVariables[key].value)
+            if len(a.arguments) != len(b.arguments):
+                raise Exception(f"Cannot merge functions with different number of arguments, {a} and {b}")
             for pair in zip(a.arguments.values(),b.arguments.values()):
                 fa,fb = pair
                 newVariables = self.merge(fa,fb,variables)
@@ -328,18 +330,19 @@ class TypeDatabase():
 
             if len(typeclass.dependencies) != 0:
                 for left,right in typeclass.dependencies:
+                    fail = False
+                    keyDict = {}
                     for var in left:
-                        fail = False
-                        keyDict = {}
                         if var in variables:
                             value = variables[var].value
                             if value == None:
                                 fail = True
                             else:
                                 keyDict[var] = value.full_name
-                        if fail:
-                            universalInstances.append(instance)
-                        lookUpDictionaries[str(keyDict)] = lookUpDictionaries.get(str(keyDict),[]) + [instance]
+                    if fail:
+                        universalInstances.append(instance)
+                        break
+                    lookUpDictionaries[str(keyDict)] = lookUpDictionaries.get(str(keyDict),[]) + [instance]
             else:
                 keyDict = {}
                 for member in typeclass.type_ideAlpha.children:
@@ -347,7 +350,7 @@ class TypeDatabase():
                         memberValue = variables[member].value
                         if memberValue == None:
                             universalInstances.append(instance)
-                            continue
+                            break
                         keyDict[member] = memberValue.full_name
                 lookUpDictionaries[str(keyDict)] = lookUpDictionaries.get(str(keyDict),[]) + [instance]
         
@@ -359,7 +362,7 @@ class TypeDatabase():
         variables = self.merge(typeclass.type_ideAlpha,t_type,{})
         #append vars
         keyDict = {}
-        considered_instances = typeclass.universalInstances
+        considered_instances = copy( typeclass.universalInstances)
         if len(typeclass.dependencies) != 0:
             ok = False
             for left,right in typeclass.dependencies:
@@ -393,6 +396,7 @@ class TypeDatabase():
                 solvedVariables = self.merge(typeclass.type_ide,solvedInstance,{})
             except Exception as e:
                 continue
+            self.merge(t_type,instance.type_ide,variables={})
             return solvedVariables
         raise Exception(f"Cannot solve {typeclass} {t_type}")
 
@@ -458,7 +462,7 @@ class TypeDatabase():
         return variables
 
     def populateMembers(self,t_type : Type_ide):
-        if type(t_type) == Value:
+        if type(t_type) == Value or type(t_type) == Function:
             t_type.members = {}
             return
         if t_type.full_name not in self.types:
@@ -472,7 +476,7 @@ class TypeDatabase():
         t_type.members = {}
         for key in other.members.keys():
             if type(other.members[key]) == Function:
-                t_type.members[key] = other.members[key]
+                t_type.members[key] = self.applyVariables(deepcopy(other.members[key]),variables)
                 t_type.members[key].accessName = key
             if type(other.members[key]) == Type_ide:
                 t_type.members[key] = self.applyVariables(deepcopy(other.members[key]),variables)

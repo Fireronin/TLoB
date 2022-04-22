@@ -21,6 +21,7 @@ from tqdm import tqdm
 
 class AccessTuple():
     access_name: str
+    thing = None
 
     def __init__(self,access_name: str,thing):
         self.access_name = access_name
@@ -62,7 +63,7 @@ class InstanceV2():
         MAX_DEPTH = 1
         def visitRecursively(parent_name: str, interface: Type_ide,depth:int=1):
             if depth > 1:
-                pass
+                return
             for name,value in interface.members.items():
                 full_name = f"{parent_name}.{name}"
                 yield AccessTuple(full_name,value)
@@ -269,7 +270,7 @@ class BusInstanceV3(InstanceV2):
 
 class TopLevelModule():
     db: TypeDatabase
-    possibleConnections: Dict[str,AccessTuple] = {}
+    possibleConnections: Dict[str,List[str]] = {}
     accessableInterfaces: List[AccessTuple] = []
     cashed_considered_instances: Dict[str,AccessTuple] = {}
 
@@ -282,6 +283,17 @@ class TopLevelModule():
     instances:Dict[str,InstanceV2] = {}
     knownNames:Dict[str,Type_ide] = {}
     subscribers:Dict[str,Set[str]] = {}
+
+    @property
+    def reversedPossibleConnections(self):
+        out = {}
+        for start,ends in self.possibleConnections.items():
+            for end in ends:
+                if end not in out:
+                    out[end] = []
+                out[end].append(start)
+        return out
+
 
     def validArguments(self,function:Union[ExFunction,ExModule])->bool:
         validOptions = {}
@@ -382,9 +394,14 @@ class TopLevelModule():
         
         #populate possible connections
         for current in tqdm(newModule.list_all_Interfaces()):
-            self.possibleConnections[current.access_name] = self.list_connectableV2(current,self.accessableInterfaces)
+            #if number of dots in interface name is more than 1 skip
+            if current.access_name.count(".") > 1:
+                continue
+            self.possibleConnections[current.access_name] =[x.access_name for x in self.list_connectableV3(current,self.accessableInterfaces)]
             for interface in self.accessableInterfaces:
-                self.possibleConnections[interface.access_name] += self.list_connectableV2(interface,[current])
+                if interface.access_name not in self.possibleConnections:
+                    self.possibleConnections[interface.access_name] = []
+                self.possibleConnections[interface.access_name] +=[x.access_name for x in self.list_connectableV3(interface,[current])]
 
         self.accessableInterfaces += newModule.list_all_Interfaces()
 
@@ -472,6 +489,23 @@ class TopLevelModule():
             if result is not None:
                 connectable_ends.append(end)
         return connectable_ends
+
+    def list_connectableV3(self,start:AccessTuple,ends:List[AccessTuple]=[]):
+        connectableTypeclass : ExTypeclass = self.db.getTypeclassByName("Connectable::Connectable")
+        connectable_ends : List[AccessTuple]  = []
+        for end in ends:
+            if end.access_name.count(".") > 1:
+                continue
+            try:
+                connection = deepcopy(connectableTypeclass.type_ide)
+                connection.formals[0].type_ide = start.thing
+                connection.formals[1].type_ide = end.thing
+                self.db.resolveTypeclass(connectableTypeclass, connection)
+            except Exception as e:
+                continue
+            connectable_ends.append(end)
+        return connectable_ends
+
 
     def add_connectionV2(self,start:str,end:str,connection_name:str=None):
         if connection_name is None:

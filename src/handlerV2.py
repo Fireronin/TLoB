@@ -61,7 +61,11 @@ class Handler():
         return types
 
     def list_funcs(self,package_name="Polyfifo"):
-        funcs = self.call("defs func " + package_name )
+        try:
+            funcs = self.call("defs func " + package_name )
+        except Exception as e:
+            print("Warrning:" + package_name + "failed to load")
+            return b""   
         return funcs
 
     def read_type(self,type_string=b"Polyfifo::FIFOIfc"):

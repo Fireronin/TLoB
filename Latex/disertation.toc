@@ -11,21 +11,25 @@
 \contentsline {subsection}{\numberline {2.2.1}Haskell}{5}{subsection.2.2.1}%
 \contentsline {subsection}{\numberline {2.2.2}Tcl (pronounced "tickle")}{5}{subsection.2.2.2}%
 \contentsline {subsection}{\numberline {2.2.3}Python}{6}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Postmortem}{6}{subsection.2.2.4}%
 \contentsline {section}{\numberline {2.3}Creating a grammar}{6}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}Why grammar is needed ?}{6}{subsection.2.3.1}%
-\contentsline {subsection}{\numberline {2.3.2}What grammar is needed ?}{6}{subsection.2.3.2}%
-\contentsline {subsection}{\numberline {2.3.3}Where to find this grammar ?}{6}{subsection.2.3.3}%
-\contentsline {subsection}{\numberline {2.3.4}Technical aspects}{7}{subsection.2.3.4}%
+\contentsline {subsection}{\numberline {2.3.1}What grammar is needed ?}{6}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Where to find this grammar ?}{6}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Technical aspects}{7}{subsection.2.3.3}%
 \contentsline {chapter}{\numberline {3}Implementation}{8}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Reading packages}{8}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}Bluetcl}{8}{subsection.3.1.1}%
-\contentsline {section}{\numberline {3.2}Parsing}{8}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Understanding abstract syntax tree (AST)}{9}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}Organizing data and functionality}{9}{subsection.3.2.2}%
+\contentsline {section}{\numberline {3.1}Reading descriptions of packages}{8}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}HandlerV2.py Todo rename}{8}{subsection.3.1.1}%
+\contentsline {section}{\numberline {3.2}Loading Bluespec packages' information (TODO check grammar of s')}{8}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Lexical and syntax analysis}{9}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Understanding abstract syntax tree (AST)}{9}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Organizing data and functionality}{9}{subsection.3.2.3}%
 \contentsline {section}{\numberline {3.3}Building the top level module}{9}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Resolving types}{9}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Provisos explained (intuition)}{9}{subsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.3.3}Resolving types (implementation)}{10}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Resolving types}{10}{subsection.3.3.1}%
+\contentsline {subsubsection}{Provisos explained (intuition)}{10}{section*.2}%
+\contentsline {subsubsection}{Provisos explained (formally)}{10}{section*.3}%
+\contentsline {subsection}{\numberline {3.3.2}Resolving types (implementation)}{10}{subsection.3.3.2}%
+\contentsline {subsubsection}{Apply variables function}{11}{section*.5}%
+\contentsline {subsubsection}{Resolve typeclass function}{11}{section*.6}%
 \contentsline {section}{\numberline {3.4}Synthesizing}{12}{section.3.4}%
-\contentsline {subsubsection}{Adding busses}{13}{section*.12}%
+\contentsline {subsubsection}{Adding busses}{13}{section*.13}%
 \contentsline {subsection}{\numberline {3.4.1}GUI}{15}{subsection.3.4.1}%

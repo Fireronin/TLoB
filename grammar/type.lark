@@ -170,7 +170,7 @@ tcl_imm_prefix: "{" "(" "*" "prefix" "=" "\"" "\""  "*" ")" "}"
 
 tcl_imm_result: "{" "(" "*" "result" "=" "\"UNUSED\"" "*" ")" "}"
 
-tcl_imm_input_types:  (type | "{" type* "}" ) -> list_of
+tcl_imm_input_types:  (type_def_type | "{" type_def_type* "}" ) -> list_of
 
 //tcl_imm_input_types:  (type_def_type | "{" type_def_type* "}" ) -> list_of
 

@@ -64,19 +64,12 @@ class Type_ide:
             same &= self.package == __o.package
             same &= self.formals == __o.formals
             return same
-
-    def populate(self,other:Type_ide):
-        if other.name == "nothing":
-            return
-        if self.name == "nothing":
-            self.name = other.name
-            self.package = other.package
-            self.formals = other.formals
-            self.is_polymorphic = other.is_polymorphic
-            self.is_primary = other.is_primary
-        else:
-            if self != other:
-                raise Exception("Population failed, types are not equal"+str(self)+" "+str(other))
+        if type(self) == Function:
+            same = True
+            same &= self.return_type == __o.return_type
+            for argumentA,argumentB in zip(self.arguments.values(),__o.arguments.values()):
+                same &= argumentA == argumentB
+            return same
 
     @property
     def children(self):
@@ -105,6 +98,7 @@ class Type_ide:
     def json(self) -> Dict:
         out = {'name':self.__str__()}
         out["acessName"] = self.accessName
+        out["type"] = "Type_ide"
         if len(self.children) ==0:
             return out
         out["children"] = []
@@ -114,6 +108,8 @@ class Type_ide:
             if type(child) == Value:
                 processed = str(child.value)
             if type(child) == Type_ide:
+                processed = child.json
+            if type(child) == Function:
                 processed = child.json
             out["children"].append(processed)
         out["members"] = []
@@ -137,17 +133,6 @@ class Value(Type_ide):
     
     def __repr__(self) -> str:
         return "Value "+f"{self.value}"
-
-    def populate(self,other):
-        if other.name == "nothing":
-            return
-        if self.name != "nothing":
-            if self.value != other.value:
-                raise Exception("Population failed, types are not equal "+str(self)+" "+str(other))
-        else:
-            self.value = other.value
-            if type(self.value) == str:
-                self.is_string = True
 
 class Type:
     position: Position
@@ -199,7 +184,7 @@ class Interface(Type):
 class Interface_method:
     def __init__(self,name,type,input_types,ports) -> None:
         self.name = name
-        self.type = type
+        self.type_ide = type
         self.input_types = input_types
         self.ports = ports
 
@@ -270,13 +255,13 @@ class GetItemTypes(Type):
 
 class Alias:
     type_ide: Type_ide
-    type: Type
+    result_type_ide: Type_ide
     position: Position
 
-    def __init__(self,type_ide:Type_ide,type,position:Position) -> None:
+    def __init__(self,type_ide:Type_ide,result_type_ide:Type_ide,position:Position) -> None:
         self.name = type_ide
         self.type_ide = type_ide
-        self.type = type
+        self.result_type_ide = result_type_ide
         self.position = position
 
     def __str__(self) -> str:
@@ -308,14 +293,15 @@ class Type_formal:
         return self.type_ide == __o.type_ide
 
 class Module(Type):
-    type_ide: Type_ide
+    return_type: Type_ide
+    arguments: Dict[str,Type_ide] = {}
 
     def __init__(self,name,interface,package=None,position=None,arguments={},provisos=[]) -> None:
         Type.__init__(self,name=name,package=package,position=position)
         self.interface = interface
         self.arguments = arguments
         self.provisos = provisos
-        self.type_ide = interface
+        self.return_type = interface
     
     def __str__(self) -> str:
         if self.package is None:
@@ -331,19 +317,19 @@ class Module(Type):
             return self.name
         return f"{self.package}::{self.name}"
 
-class Function(Type):
-    type_ide: Type_ide #result
-    arguments: Dict[str,Type] = {}
+class Function(Type_ide):
+    return_type: Type_ide
+    arguments: Dict[str,Type_ide] = {}
 
-    def __init__(self,name,package=None,arguments: Dict[Union[str,int],Type]={},result=None,provisos=[],position=None,argument_names=None) -> None:
-        Type.__init__(self,name=name,package=package,position=position)
-        self.result = result
-        self.type_ide = result
+    def __init__(self,name,package=None,arguments: Dict[Union[str,int],Type_ide]={},result=None,provisos=[],position=None,ports=None) -> None:
+        super().__init__(name,package,position)
+        #Type.__init__(self,name=name,package=package,position=position)
+        self.return_type = result
         self.provisos = provisos
         self.arguments = arguments
     
     def __str__(self) -> str:
-        return f"{self.type_ide} ({','.join([str(aa) for aa in self.arguments.values()])})"
+        return f"{self.return_type} ({','.join([str(aa) for aa in self.arguments.values()])})"
     
     def __repr__(self) -> str:
         return "Function "+self.__str__()
@@ -353,6 +339,25 @@ class Function(Type):
         if self.package is None:
             return self.name
         return f"{self.package}::{self.name}"
+
+    @property
+    def json(self) -> Dict:
+        out = {'name':self.__str__()}
+        out["acessName"] = self.accessName
+        out["arguments"] = []
+        out["type"] = "function"
+        out["result"] = self.result.json
+        for i,argument in enumerate(self.arguments):
+            if type(argument) == str:
+                processed = argument
+            if type(argument) == Value:
+                processed = str(argument.value)
+            if type(argument) == Type_ide:
+                processed = argument.json
+            if type(argument) == Function:
+                processed = argument.json
+            out["arguments"].append(processed)
+        return out
 
 class Proviso(Type):
     type_ide: Type_ide
@@ -396,24 +401,30 @@ class Typeclass_instance():
 
 class Typeclass():
     type_ide: Type_ide
+    type_ideAlpha: Type_ide
     position: Position
     instances: List[Typeclass_instance]
 
-    def __init__(self,type_ide,position=None,members={},superclasses=None,dependencies=[],instances=None) -> None:
+    def __init__(self,type_ide,position=None,members={},superclasses=None,dependencies=[],instances=[]) -> None:
         self.type_ide = type_ide
         self.position = position
         self.members = members
         try:
             for name,member in members.items():
                 if type(member) == Function:
-                    member.provisos.append(Proviso(self.type_ide))
+                    member.provisos.append(Proviso(deepcopy(self.type_ide)))
                     member.name = name
         except Exception as e:
             pass
+        self.type_ideAlpha = deepcopy(self.type_ide)
+        #avoids name clashes with instances
+        for i,formal in enumerate(self.type_ideAlpha.formals):
+            if type(formal.type_ide) == str:
+                  self.type_ideAlpha.formals[i].type_ide = self.type_ideAlpha.formals[i].type_ide+"$"
         self.superclasses = superclasses
         self.dependencies = dependencies
         self.instances = instances
-    
+
     def __str__(self) -> str:
         return f"{self.type_ide}"
 
@@ -455,7 +466,7 @@ class ModuleTransformer(Transformer):
                 members = args[i][1]
                 break
         # find in args ("instances",x)
-        instances = None
+        instances = []
         for i,arg in enumerate(args):
             if type(arg)==tuple and isinstance(arg[0],str) and arg[0] == "instances":
                 instances = args[i][1]
@@ -666,7 +677,7 @@ class ModuleTransformer(Transformer):
             return None
         
     def tcl_alias(self, args):
-        return Alias(type_ide=args[0],type=args[1],position=args[2])
+        return Alias(type_ide=args[0],result_type_ide=args[1],position=args[2])
 
     def tcl_interface_dec(self, args):
         args = [x for x in args if x is not None]
@@ -680,7 +691,10 @@ class ModuleTransformer(Transformer):
         return (args[1],Interface(type_ide=args[0],members=None))
 
     def tcl_im_method(self,args):
-        return (args[1],Interface_method(name=args[1],type=args[0],input_types=None,ports=None))
+        arguments = {}
+        for i,argument in enumerate(args[2]):
+            arguments[str(i)] = argument
+        return (args[1],Function(name=args[1],result=args[0],arguments=arguments,ports=None))
 
     def struct(self, args):
         type_ide = args[0]

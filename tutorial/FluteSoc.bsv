@@ -1,11 +1,11 @@
 package FluteSoc;
 // necessary packages
-import Core::*;
 import GetPut::*;
-import MemUtils::*;
 import Connectable::*;
 import AXI4_Interconnect::*;
 import AXI4_Fake_16550::*;
+import Core::*;
+import MemUtils::*;
 
 typedef 64 DATASIZE;
 
@@ -29,6 +29,11 @@ module top();
 
 	mkConnection(core.core_mem_master,memory);
 	mkConnection(core.core_mem_master,memory);
+	Vector::Vector#(1,AXI4_Types::AXI4_Master#(6,64,64,0,0,0,0,0)) bus1_masters;
+	bus1_masters[0] = core.core_mem_master;
+	Vector::Vector#(2,AXI4_Types::AXI4_Slave#(6,64,64,0,0,0,0,0)) bus1_slaves;
+	bus1_slaves[0] = memory;
+	bus1_slaves[1] = aXI4_Fake_16550;
 	AXI4_Interconnect::mkAXI4Bus(route_bus1,bus1_masters,bus1_slaves);
 
 endmodule

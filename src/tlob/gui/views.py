@@ -45,7 +45,8 @@ def addModule(request):
         'creator':creator,
         'exception':exception,
         'arguments': {f'arg_{i}':arg.json for i,arg in creatorFunc.arguments.items()},
-        'interface': creatorFunc.type_ide.json,
+        'validArguments': topLevel.validArguments(creatorFunc),
+        'interface': creatorFunc.return_type.json,
     }
     return HttpResponse(json.dumps(response))
 
@@ -72,7 +73,7 @@ def confirmModule(request):
         'creator':creator,
         'exception':exception,
         'arguments': {f'arg_{i}':arg.json for i,arg in module.creator.arguments.items()},
-        'interface': module.creator.type_ide.json,
+        'interface': module.creator.return_type.json,
     }
     return HttpResponse(json.dumps(response))
 

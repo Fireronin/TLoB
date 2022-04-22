@@ -69,7 +69,7 @@ Welp, there is a ton of them. (TODO: say few thign about them)
 Types classes in Bluespec are used to group types for which specific functions are implemented. TODO:
 
 \section{Choosing tools}
-I had effectively 3 choices for a language to this project in:
+I had effectively 3 choices for a language to this project in. Here is some justification why I have chosen Python. 
 \subsection{Haskell}'
 Compiler of Bluespec is written in Haskell. Therefore there are seweral reason why Haskell would be right choice. Here are some of them:
 \begin{itemize}
@@ -100,26 +100,36 @@ The two arguments against using python are:
     \item Haskell would be better suited for this task. I explaing above why it doesn't make sense for me to use Haskell. 
     \item Python is quite slow, Fortunately this isn't a big issue thanks to cashing.
 \end{itemize}
+\subsection{Postmortem}
+Looking at those choices now(after finishing project and knowing all encountered difficulties) I think a could also consider \verb!C#!, due to its speed and similar typing flexibility to Python. I also think Haskell would be a better choice if this was more like my pet project that I would work for few years with the intention of making it commercially viable product.
+
 \section{Creating a grammar}
+This section could be moved into implementation.
 
-\subsection{Why grammar is needed ?}
-
-
+\begin{tcolorbox}[title=Bluetcl]
+    Bluetcl is a tool written in Tcl language that allows for inspection of Bluespec packages. It's a first party tool that included with Bluespec compiler. There isn't much documentation about it, but from my understanding it's some sort of wrapper around Haskell code, as I couldn't sufficient amount of logic for it to parse packages by itself.
+    From the user perspective it's just a bash script that starts Tcl terminal compiled with some libraries. From my perspective I use it as an arbitrary command line program, as this method of using is intended by the authors and contains some documentation.
+\end{tcolorbox}
 \subsection{What grammar is needed ?}
-Bluetcl produces many, outputs but two of them that we are going to focus on are: descriptions of functions and descriptions of types. To simplify parsing of those I will have one grammar capable of parsing both outputs at the same time, as some grammar structures are reued in both outputs.
+Because I'm using Bluetcl as a command line tool, communication with it is done via text. 
+While synthesizing commands is easy, parsing outputs is a bit more difficult, and I decided to do it in systematic way. 
+To do this I need grammar of all possible outputs that I'm interested in. 
+Bluetcl produces many, outputs but two of them that we are going to focus on are: descriptions of functions and descriptions of types.
 \subsection{Where to find this grammar ?}
-Unfortunately this grammar is not documented anywhere, so I needed to reverse engineer it. This grammar might not be perfect and might not cover every input, but if created carfuly to allow for as much flexibility as possible, and use of large body of test input in from of standard library during creation of it we should be exposed to enough examples to be able to parse decently large subset of future inputs.
+Unfortunately this grammar is not documented anywhere, so I had to reverse engineer it. This approach might not be perfect and might not cover every input, but It's good enough to parse every standard package and every package used to compile Flute(RISC-V CPU with 5 stage pipeline).
 Here are other reasons to justify this approach:
 \begin{itemize}
     \item Heaps' law suggests that number of unique words in given body of text is proportional to roughly square root of number of words in the text. I think it's fair to assume that something similar will be true if we consider number of unique grammar rules.
-    \item This grammar while different from grammar of Bluespec language maps subset of Bluespec grammar, so we can supplement our deductions with cases that we expect to arise.
-    \item We don't need to understand everything to just connect modules, and because at the module level, things need to be less abstract as they need to be synthesizable, we don't expect highly exotic things to appear in higher level modules.
-    \item This approach is probably the best way for me anyway.
+    \item This grammar while different from grammar of Bluespec language maps subset of Bluespec grammar, so we can supplement our deductions with reference guide for Bluespec.
+    \item We don't need to understand everything to connect modules, and because at the module level, things need to be less abstract as they need to be synthesizable, we don't expect highly exotic things to appear in higher level modules. 
 \end{itemize}
 
 \subsection{Technical aspects}
-This is EBNF grammar, I parse it using Lark library for Python, and I'm using Earley parser, as it is capable of arbitrary length lookahead. Grammar I created contains roughly 90 rules, and I won't include all of them here, but I will show few examples to give a feel of what is happening.
+This is EBNF grammar, I parse it using Lark library for Python, and I'm using Earley parser, as it is capable of arbitrary length lookahead. Grammar I created contains roughly 90 rules, and I won't include all of them here, but I will show few examples to give a feel of what is happening. 
+\\
+A nice feature supported by Lark is ability to have regular expressions in the grammar, I'm mentioning this as it is effectively having parser inside a parser. It's also worth mentioning that there exists a handy tool for debugging and creating grammar. It's located at this website: \href{https://www.lark-parser.org/ide/}{https://www.lark-parser.org/ide/}, it can run parser online, and show output tree.
 \begin{tcolorbox}[title = Parsing position TODO maybe find a better example with shorter line]
+    Here is an example of parsing subsection of output that describes location of piece of code that is being described. I decided to show it as it's simple and shows different features of that I needed to use.
     \begin{verbatim}
 tcl_position: "{" "position" "{" tcl_path NUMBER NUMBER ["{" "Library" identifier_u "}" ]"}""}"
 // todo check paths with spaces
@@ -130,43 +140,45 @@ tcl_path: ["%/"] /(([.]{1,2})|(\w+))/ ["/" /(([.][.])|([.])|(\w+))/]* "." /\w+/
     \end{verbatim}
     \includegraphics[width=0.4\textwidth]{images/TCLPath.png}
 \end{tcolorbox}
-A nice feature supported by Lark is ability to have regular expressions in the grammar, I'm mentioning this as is effectively having parser in side of parser. A handy tool for debuging and creating grammar was this website: \href{https://www.lark-parser.org/ide/}{https://www.lark-parser.org/ide/}, it can run parser online, and show output tree.
+
 
 \chapter{Implementation}
-\section{Reading packages}
-\subsection{Bluetcl}
-As mentioned before, bluetcl is a tool written in bash that starts Tcl terminal and sets up environment to use certain Tcl commands thanks to which one can inspect packages. To interact with this tool I have written a script using Pexpect library. This script works by creating subprocess of bluetcl, and exposes functions that allow for performing quarries. Core of this script is a function called \verb!call! that takes as input a string that is a command and returns output of stripped of warnings or raises an exception if error occurred(for example in case where package was not found). To remove warnings I make some assumptions.
+\section{Reading descriptions of packages}
+\subsection{HandlerV2.py Todo rename}
+To interact with Bluetcl I have written a script using Pexpect library. This script works by creating subprocess of Bluetcl, and exposes functions that allow for performing of quarries. Core of this script is a function called \verb!call! that takes as input a string that is a command and returns output of stripped of warnings or raises an exception if error occurred(for example in case where package was not found). To remove warnings I make some assumptions.
 \begin{itemize}
-    \item I only use fixed set of commands.
+    \item I only use fixed set of commands(like list packages, describe a type).
     \item For those commands important output about is always on the last line. (this was checked empirically)
     \item Output of a command is always followed by $\%$ a character that never occurs in the rest of the output and marks the end of the output.
 \end{itemize}
-Thanks to them I don't need sophisticated system for parsing error, and or warnings. I can just make a quick search for error, and if needed forward this to user otherwise drop all warnings.
+Thanks to them, I don't need sophisticated system for parsing error, and or warnings. I can just make a quick search for error, and if needed forward this to user.
 \\ 
-\\
 In total this script allows me for:
 \begin{itemize}
     \item Initialize subprocess
-    \item Add folder to search path of bluetcl
-    \item Load package (bluetcl takes care of loading dependencies)
+    \item Add folder to search path of Bluetcl
+    \item Load package (Bluetcl takes care of finding and loading dependencies)
     \item Get list of loaded packages
     \item List functions in package
     \item List types in package
     \item Get information about types and function in the package
 \end{itemize}
 
-\section{Parsing}
-Output of bluetcl is text, and I need it in some better organized form, so I can parse it. I decided to use Lark library for parsing, and I'm using Earley parser. At this step I encountered first major difficulty that is total lack of documentation on form bluetcl output. I decided to reverse engineer it, and I'm using this website: \href{https://www.lark-parser.org/ide/}{https://www.lark-parser.org/ide/} to debug and create grammar, it can run parser online, and show output tree. To aid myself in this process I consulted Bluespec reference guide. While bluetcl output was undocumented it still needed to map to features of Bluespec. In total, I produced grammar with roughly 80 non-terminals.
+\section{Loading Bluespec packages' information (TODO check grammar of s')}
+As mentioned earlier output of bluetcl is text, and I need it in some better organized form. In this section I describe process of doing this.
+\subsection{Lexical and syntax analysis}
+I decided to use Lark library for lexical and syntax analysis. This library takes grammar and string of text as input and returns an abstract syntax tree. The only difficult part here to create a grammar that works. (TODO improve this last sentence)
 
 \subsection{Understanding abstract syntax tree (AST)}
-Given AST I needed to turn it into a more useful form. To do this I used \verb!Transformer! class provided by Lark. The way it worked is that I created subclass of \verb!Transformer! that implemented a function for each non-terminal / rule(Each non-terminal can have multiple rules and Lark allows for renaming individual of rules, this for example allows parsing different non-terminals using same function or parsing single non-terminal using different function depending on constructing rule). \verb!Transformer! will then perform bottom up transformation of AST, and for each rule it will call respective member function, with parsed children as arguments. At the end of the transforming process I would have a list of objects that represented data from Blutecl.
+Given AST I needed to turn it into a more useful form. To do this I used \verb!Transformer! class provided by Lark. The way it worked is that I created subclass of \verb!Transformer! that implemented a function for each non-terminal / rule(Each non-terminal can have multiple rules and Lark allows for renaming individual of rules, this for example allows parsing different non-terminals using same function or parsing single non-terminal using different function depending on rule that was used). \verb!Transformer! will then perform bottom up transformation of AST, and for each rule it will call respective member function, with parsed children(non-terminals used by rule) as arguments. At the end of the transforming process I have a list of objects that represented data from Blutecl.
 \\
 One of the bigger inconveniences I encounter is the fact that Lark passes parsed children, as a simple list. This doesn't provide information about what exactly is each child, this isn't a problem if rule contains fixed number of non-terminals, but otherwise I employ mix of length based inference, or I wrap data from children into tuples, to provide remove ambiguity.
 \\
-What was quite useful at this stage is Python's type system flexibility, I was able to gradually build up system and add typing information only after I had firm understand what type something needs to be. For some things it wasn't imminently obvious, what is the best way to represent type, and what often happen is that I would shape type to needs of the functions using it and not other way. 
+What was quite useful at this stage is Python's type system flexibility, I was able to gradually build up \verb!Transformer! class and add typing information only after I had firm understand what type something needs to be. For some things it wasn't immediately obvious, what is the best way to represent them, and what often happen is I would first leave them as lists of unparsed things. Then after I got to the point where I needed to use them I would decide what is an optimal way to represent them.
 
 \subsection{Organizing data and functionality}
-I created a class called \verb!TypeDatabase! it is basically a wrapper over previously mentioned functionality that manages organizing parsed output into separate dictionaries, like types, functions, type classes ect. It is also capable of loading and storing it's state to pickle file. This saves a lot of time as all this parsing and communication with bluetcl isn't particularly fast. TODO some break down of the speed.
+I created a class called \verb!TypeDatabase! that provides simple functions that manage loading and parsing packages information. It is also capable of loading and storing it's state to pickle file. This saves a lot of time as all this parsing and communication with bluetcl isn't particularly fast. This class is also a home to set of functionality used to resolve types.
+TODO some break down of the speed.
 
 \section{Building the top level module}
 Building the top level module can be broken down into few operations.
@@ -176,34 +188,34 @@ Building the top level module can be broken down into few operations.
     \item Connecting modules using busses.
     \item Synthesizing Bluespec.
 \end{itemize} 
-Those operations if implemented naively would be almost as simple as formatting a string. But If this was the only thing that this project provided I wouldn't need to go through all the trouble of parsing Bluespec grammar, and generally users would be better off just writing Bluespec code. My unique proposition is effectively running something similar to a language server, that will be capable of dynamically resolving types, and aiding user in the design process by providing possible connections, informing whether values passed to initialize module are correct, and informing about subinterfaces that can be found in the instantiated modules. 
-At the basis of all those features will be type resolution, and to do it we first need to talk about do we do this.
+Those operations if implemented naively would be almost as simple as formatting a string. But If this was the only thing that this project provided I wouldn't need to go through all the trouble of parsing Bluespec grammar, and generally users would be better off just writing Bluespec code. My unique value proposition is running something similar to a language server, that will be capable of dynamically resolving types, and aiding user in the design process by providing possible connections, informing whether values passed to initialize module are correct, and informing about subinterfaces that can be found in the instantiated modules. 
+At the basis of all those features will be type resolution, and I will first explain how it works.
 \subsection{Resolving types}
-\subsection{Provisos explained (intuition)}
-On big feature of Bluespec typing is support for provisos. They create constraints on types that can be used with given function and give information about expected type of output of the function. This is similar to how C++ has template types, but it is much more powerful. For example, we can have a polymorphic function from \verb!Bit#(a)! to \verb!Bit#(b)! and $a=b+1$ where \verb!Bit#(x)! a vector of $x$ bits.  To do something like this we would write a proviso \verb!Add#(b,1,a)! which means that $b+1$ must be equal to $a$.
+\subsubsection{Provisos explained (intuition)}
+On big feature of Bluespec typing is support for provisos. They create constraints on types that can be used with given function and give information about expected type of output of the function. This is similar to Java's generic types, but it is much more powerful. For example, we can have a polymorphic function extend of a type \verb!Bit#(a)! to \verb!Bit#(b)! where \verb!Bit#(x)! a vector of $x$ bits, which accepts any length a and always return vector of length $b=a+1$. To do something like this we would write a proviso \verb!Add#(a,1,b)! which means that $a+1$ must be equal to $b$. This was example of Size relationship proviso.
 \\
-System of provisos and typeclass work similarly to Prolog. We have variables that are lowercase names, we have values that are either strings or integers, and we have parametric types that are like compound terms. Typeclass instances are like rules and provisos attached to it are like predicates. To resolve types I do something I run Prolog style resolution. 
+There is also other type of provisos that are typeclass based and work similarly to Prolog. We have variables that are lowercase names, we have values that are either strings or integers, and we have parametric types that are like Prolog's compound terms. Typeclass instances are like rules and provisos attached to it are like predicates. To resolve types I do something similar to Prolog's resolution. I don't have a proof of this, but I think my resolution procedure is Turing complete.
 
-\subsubsection*{Provisos explained (formally)}
+\subsubsection{Provisos explained (formally)}
 There are two types of provisos: Size Relationship provisos, and typeclass based provisos.
 
 Mentioned above \verb!Add! is one of Size Relationship provisos, other such provisos are \verb!Mul Div Max Min Log!. Those provisos can't be nested, but we still can express complex arithmetic constraints, thanks to size relationship type functions. They essentially represent result of the operation on values on that were supplied. There are only 8 of them, and they are \verb!TAdd TSub TDiv TMul TMax TMin TLog TExp!.
 To better explain this let's look at some simple example: \\
-\verb!Add#(TExp#(a),TMul#(a,8),c)! is a proviso that says that following equation on values must be satisfied $2^a+a*8 = c$. \\
+\verb!Add#(TExp#(a),TMul#(a,8),c)! is a proviso that says that following equation on values must be satisfied $2^a+a*8 = c$.
 Of course, we can have multiple provisos that together create a set of equations. 
 
-Typeclass based provisos, allow us to either check if certain functions are defined for given type or to deuce something. For example \verb!Bits#(a,b)! means that type \verb!a! must be convertible to vector of $b$ bits. This can be used to get the length in bits of given objects, on which we can later put constraints using Size Relationship provisos.
+Typeclass based provisos, allow us to either to ensure certain functions are defined for given type or to deuce something. For example \verb!Bits#(a,b)! means that type \verb!a! must be convertible to vector of $b$ bits. This can be used to get the length in bits of given objects, on which we can later put constraints using Size Relationship provisos.
 In my project I will often check if there exists instance of the \verb!Connectable#(a,b)! typeclass to check if function \verb!mkConnection!(used to connect two interfaces together) is defined for given types.
 
 \subsection{Resolving types (implementation)}
 In my code there are 4 main functions that combined allow for type resolution:
 \begin{itemize}
-    \item \verb!merge! function takes two type identifiers and returns dictionary from names of variables to theirs values.
-    \item \verb!applyVariables! function takes a dictionary and a type and returns a type with all variables replaced by their values.
-    \item \verb!resolveTypeclass! function that takes a type identifiers that is an instance of a typeclass and returns dictionary similarly to merge.
-    \item \verb!solveProvisos! function that takes a dictionary and a list of provisos and returns a dictionary with all provisos resolved.
+    \item \verb!merge! function takes two type identifiers and returns map (dictionary) from names of variables to theirs values. It's similar to Prolog's unification operator.
+    \item \verb!applyVariables! function takes a dictionary and a type and returns a type with all variables replaced by their values. This is more of a utility function.
+    \item \verb!resolveTypeclass! function that takes a type identifier that is an instance of a typeclass and returns dictionary of resolved variables. This is like looking which rule can be applied and returning result of applying that rule.
+    \item \verb!solveProvisos! function that takes a dictionary and a list of provisos and returns a dictionary with variables. This is like checking predicates in Prolog.
 \end{itemize}
-Those functions can also fail with exception if something is impossible.
+Those functions can also fail with exception if something is impossible / wrong data is provided.
 
 Type identifier is a tree where every non leaf node is another type identifier, and leaf nodes are either variables or values(strings, ints). Example type identifier \verb!Foo#(a,42,"file.hex")! is a type with name \verb!Foo! and three arguments \verb!a! (variable) and \verb!42! (int value) and \verb!"file.hex"! (string value).
 
@@ -215,25 +227,31 @@ This function needs to account for quite a lot of special cases here are some of
     \item If both nodes, are type identifiers, we run merge recursively on pairs of theirs children. We also check if type identifiers share the same name.
     \item If one of the nodes is a value, then other node must be either a value with same value, or a variable.
 \end{itemize}
-The most complicated case is when both nodes are variables, this is because we need to account for the case where both variables have a value and check if this value is equal. If only one of them has value and this value needs to be copied to other one, or if neither of them has value, then we we must create dummy object and set it as a value of both of them, then if one of them is resolved it will such resolution will resolve other one, by virtue of shared pointer.
+The most complicated case is when both nodes are variables. There is a breakdown what happens then. 
+\begin{itemize}
+    \item Case 1 - Both variables have a value, so I need to check if value is the same.
+    \item Case 2 - One of the variables has a value, and other variable has no value. In this case I can just copy value from one variable to other.
+    \item Case 3 - Neither of the variables has a value. In this case I create a dummy object and set it as a value of both of variables, then resolving one of them will update the value of both.
+\end{itemize}
+If done carefully, this is quite efficient as we don't need to manage propagation of values of variables, everything is done by just writing to shard object.
 
-\subsubsection*{Apply variables function}
+\subsubsection{Apply variables function}
 This function is quite simple, it just traverses a type identifier and replaces all variables with their values.
-\subsubsection*{Resolve typeclass function}
-Earlier, I compared typeclass to groups of Prolog rules, one thing I didn't mention that typeclasses can also contain something called dependencies, they are something like marking inputs and outputs in Prolog. Those dependencies are used for typeclasses like \verb!Bits#(a,b)! that are used to determine something, and they make are there to use of typeclass is always unambiguous. \\
-For example, \verb!Bits#(a,b)! has a dependency \verb!a determines b! which means that you can use it to determine \verb!b! from \verb!a!, but if you know only \verb!b! then you can't use it to determine \verb!a! because there may be multiple types that can be packed to a bit vector of length \verb!b!. 
+\subsubsection{Resolve typeclass function}
+Earlier, I compared typeclass to groups of Prolog rules with the same name, one thing I didn't mention that typeclasses can also contain something called dependencies, they are something like marking inputs and outputs in Prolog. Those dependencies are used in typeclasses like \verb!Bits#(a,b)! which are used to determine something, and they make sure that resolution of a typeclass is always unambiguous. \\
+For example, \verb!Bits#(a,b)! has a dependency \verb!a determines b! which means that you can use it to determine \verb!b! from \verb!a!, but if you know only \verb!b! then you can't use it to determine \verb!a! because there may be multiple types that can be packed to the bit vector of the same length \verb!b!. (TODO check use of 'the' in last sentence)
 \\  
 To check if proposed instance of a typeclass is a valid instance we perform following algorithm:
 \begin{enumerate}
     \item Check if a proposed instance of a typeclass is an instance of a known typeclass, otherwise fail.
-    \item Check if all dependencies of the typeclass are satisfied, otherwise fail.
-    \item Iterate over all known templates of an instance of a typeclass, then attempt to merge function between a template and the proposed instance. 
+    \item If dependencies for a typeclass are defined check if information provided within proposed instance is enough to satisfy one of them.
+    \item Iterate over all templates of an instance of a typeclass, then attempt to merge function between a template and the proposed instance. 
     \item If merging failed, jump back to step 3 and continue iteration.
     \item If merging succeeded, attempt to solve provisos.
     \item If provisos were successfully solved, return the dictionary of resolved variables, otherwise continue iteration.
     \item If all iterations failed, fail.
 \end{enumerate}
-This procedure is a bit slow, so I also allow a passing of an suggested list of instances of a typeclass, which will be iterated over. In specific scenarios like, when user creates connection between two interfaces, I can run a heuristic that only checks if names of type identifiers match, to quickly trim search space. Doing this in general is non-trivial, due to existence of dependencies. As it's possible to have typeclass like this:
+This procedure is a bit slow, so I speed it up by creating look up dictionaries that take as a key a dictionary  In specific scenarios like, when user creates connection between two interfaces, I can run a heuristic that only checks if names of type identifiers match, to quickly trim search space. Doing this in general is non-trivial, due to existence of dependencies. As it's possible to have typeclass like this:
 \\
 \verb!Foo#(a,b,c)! where \verb!a determines b,c! and \verb!b,c determines a! then I would need to check which case this is then to do lookup in a dictionary corresponding to that dependency. Preprocessing of such dictionaries would take something like $O(nInstances^2*nDependencies)$ time, and it would add unnecessary complexity. (Though it's something that might be worth looking in the future.)
 

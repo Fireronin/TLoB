@@ -12,3 +12,5 @@ Xilinx
 Vivado
 Pylance
 SymPy
+Bluetcl
+lookahead

@@ -38,8 +38,8 @@ import SpecialFIFOs :: *;
 import List :: *;
 import Vector :: *;
 
-typedef 2 NMASTERS;
-typedef 2 NSLAVES;
+typedef 1 NMASTERS;
+typedef 1 NSLAVES;
 
 typedef 4096 SlaveWidth;
 
@@ -145,24 +145,24 @@ endmodule
 
 // //`define DEBUG
 // `ifdef DEBUG
-// module top (Empty);
-//   let m <- axiMaster;
-//   let s <- axiSlave(2);
-//   mkConnection(m, s);
-// endmodule
-// `else
 module top (Empty);
-  Vector#(NMASTERS, `MASTER_T) ms;
-  Vector#(NSLAVES, `SLAVE_T)   ss;
-  for (Integer i = 0; i < valueOf(NMASTERS); i = i + 1)
-    ms[i] <- axiMaster;
-  MappingTable#(NSLAVES, ADDR_sz) maptab = newVector;
-  for (Integer i = 0; i < valueOf(NSLAVES); i = i + 1) begin
-    maptab[i] = Range{base: fromInteger(i*valueOf(SlaveWidth)), size: fromInteger(valueOf(SlaveWidth))};
-    ss[i] <- axiSlave(2);
-  end
-  mkAXI4Bus(routeFromMappingTable(maptab), ms, ss);
+  let m <- axiMaster(2);
+  let s <- axiSlave(2);
+  mkConnection(m, s);
 endmodule
+// `else
+// module top (Empty);
+//   Vector#(NMASTERS, `MASTER_T) ms;
+//   Vector#(NSLAVES, `SLAVE_T)   ss;
+//   for (Integer i = 0; i < valueOf(NMASTERS); i = i + 1)
+//     ms[i] <- axiMaster;
+//   MappingTable#(NSLAVES, ADDR_sz) maptab = newVector;
+//   for (Integer i = 0; i < valueOf(NSLAVES); i = i + 1) begin
+//     maptab[i] = Range{base: fromInteger(i*valueOf(SlaveWidth)), size: fromInteger(valueOf(SlaveWidth))};
+//     ss[i] <- axiSlave(2);
+//   end
+//   mkAXI4Bus(routeFromMappingTable(maptab), ms, ss);
+// endmodule
 // `endif
 
 `undef PARAMS

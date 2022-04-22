@@ -25,6 +25,6 @@ else
     fi
 fi
 
-bsc -p  .:./tutorial:./BlueStuff/build/bdir:+ -u ./tutorial/Simplefifo.bsv
-bsc -g mkSimpleFIFO -verilog  ./tutorial/Simplefifo.bsv
-bsc -g mkPolyFIFO -verilog  ./tutorial/Polyfifo.bsv
+# bsc -p  .:./tutorial:./BlueStuff/build/bdir:+ -u ./tutorial/Simplefifo.bsv
+# bsc -g mkSimpleFIFO -verilog  ./tutorial/Simplefifo.bsv
+# bsc -g mkPolyFIFO -verilog  ./tutorial/Polyfifo.bsv

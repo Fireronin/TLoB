@@ -63,18 +63,15 @@ class InstanceV2():
         def visitRecursively(parent_name: str, interface: Type_ide,depth:int=1):
             if depth > 1:
                 pass
-            if len(interface.members) == 0:
-                return
             for name,value in interface.members.items():
-                if type(value) == Type_ide:
-                    full_name = f"{parent_name}.{name}"
-                    yield AccessTuple(full_name,value)
-                    yield from visitRecursively(full_name,value,depth+1) 
-        return [AccessTuple(self.instance_name,self.creator.type_ide)] + list(visitRecursively(self.instance_name,self.creator.type_ide))
+                full_name = f"{parent_name}.{name}"
+                yield AccessTuple(full_name,value)
+                yield from visitRecursively(full_name,value,depth+1) 
+        return [AccessTuple(self.instance_name,self.creator.return_type)] + list(visitRecursively(self.instance_name,self.creator.return_type))
 
     def update(self):
         print(f"Updating {self.instance_name}")
-        self.creator.type_ide.accessName = self.instance_name
+        self.creator.return_type.accessName = self.instance_name
         
         if len(self.creator_args) != len(self.creator.arguments):
             print(f"{self.instance_name} has {len(self.creator_args)} arguments, but {self.creator.name} has {len(self.creator.arguments)}")
@@ -86,8 +83,6 @@ class InstanceV2():
         context = deepcopy(self.input_context)
         for i,pair in  enumerate( zip(self.creator.arguments.items(),creator_args)):
             arg,value = pair
-            if type(value) == ExFunction:
-                continue
             if type(value) == InstanceV2:
                 value = value.type_ide
             if isinstance(value, Type_ide):
@@ -95,28 +90,28 @@ class InstanceV2():
             #this is just to check if everything is ok
             self.db.applyVariables(deepcopy(self.creator.arguments[arg[0]]),context)
 
-        ideCopy  = deepcopy(self.creator.type_ide)
+        ideCopy  = deepcopy(self.creator.return_type)
         if len(module_args) == 0:
             module_args = ["a"+str(i) for i in range(len(ideCopy.formals))]
         for i,field in enumerate(ideCopy.formals):
             ideCopy.formals[i].type_ide = module_args[i]
 
-        context |= self.db.merge(self.creator.type_ide,ideCopy,context)
+        context |= self.db.merge(self.creator.return_type,ideCopy,context)
 
         #account for provisos
         context |= self.db.solveProvisos(self.creator.provisos,context)
         
-        self.creator.type_ide = self.db.applyVariables(self.creator.type_ide,context)
+        self.creator.return_type = self.db.applyVariables(self.creator.return_type,context)
         if self.creator.name == "mkConnection":
             return
-        self.creator.type_ide.accessName = self.instance_name
-        self.db.populateMembers(self.creator.type_ide)
+        self.creator.return_type.accessName = self.instance_name
+        self.db.populateMembers(self.creator.return_type)
         self.interfaces = self.list_all_Interfaces()
         for interface in self.interfaces:
             self.topLevel.addName(interface.access_name,interface.thing)
 
     def get(self):
-        return AccessTuple(self.instance_name,self.creator.type_ide)
+        return AccessTuple(self.instance_name,self.creator.return_type)
 
     def to_string(self):
         if type(self.creator) == ExFunction:
@@ -215,7 +210,7 @@ class BusInstanceV3(InstanceV2):
 
         functionString = \
         """
-        {function route_{busName} {result Vector#({NSlaves}, Bool)
+        {function route_{busName} {result Vector::Vector#({NSlaves}, Bool)
         } {arguments {
                 {r_t 
                 }
@@ -288,6 +283,33 @@ class TopLevelModule():
     knownNames:Dict[str,Type_ide] = {}
     subscribers:Dict[str,Set[str]] = {}
 
+    def validArguments(self,function:Union[ExFunction,ExModule])->bool:
+        validOptions = {}
+        for key,arg in function.arguments.items():
+            validList = []
+            for name,value in self.knownNames.items():
+                try:
+                    self.db.merge(arg,value,{})
+                except Exception as e:
+                    continue
+                validList.append(name)
+            for name,value in self.db.aliases.items():
+                try:
+                    self.db.merge(arg,value.result_type_ide,{})
+                except Exception as e:
+                    continue
+                validList.append(name)
+            if type(arg) == ExFunction:
+                for name,value in self.db.functions.items():
+                    if type(value) == ExModule:
+                        continue
+                    try:
+                        self.db.merge(arg,value,{})
+                    except Exception as e:
+                        continue
+                    validList.append(name)
+            validOptions[key] = validList
+        return validOptions
 
     #region utility functions (should be wrapped into toplevel module class)
     name_counter = 0
@@ -523,7 +545,7 @@ class TopLevelModule():
                 continue
             s.append("\t")
         
-            s.append(str(m.creator.type_ide))
+            s.append(str(m.creator.return_type))
             s.append(" " + m.instance_name)
             s.append(" <- " + m.creator.name + "(")
             for i in range(len(m.creator_args)):
@@ -533,11 +555,14 @@ class TopLevelModule():
             s.append(");\n")
         s.append("\n")
 
+
         # add connections
         for c in self.connections.values():
             s.append("\t"+c.to_string())
 
         for bus in self.buses.values():
+            s.append(str(bus.mastersV))
+            s.append(str(bus.slavesV))
             s.append(str(bus))
 
         s.append("\n")

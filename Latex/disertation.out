@@ -11,20 +11,20 @@
 \BOOKMARK [2][-]{subsection.2.2.1}{Haskell}{section.2.2}% 11
 \BOOKMARK [2][-]{subsection.2.2.2}{Tcl \(pronounced "tickle"\)}{section.2.2}% 12
 \BOOKMARK [2][-]{subsection.2.2.3}{Python}{section.2.2}% 13
-\BOOKMARK [1][-]{section.2.3}{Creating a grammar}{chapter.2}% 14
-\BOOKMARK [2][-]{subsection.2.3.1}{Why grammar is needed ?}{section.2.3}% 15
-\BOOKMARK [2][-]{subsection.2.3.2}{What grammar is needed ?}{section.2.3}% 16
-\BOOKMARK [2][-]{subsection.2.3.3}{Where to find this grammar ?}{section.2.3}% 17
-\BOOKMARK [2][-]{subsection.2.3.4}{Technical aspects}{section.2.3}% 18
+\BOOKMARK [2][-]{subsection.2.2.4}{Postmortem}{section.2.2}% 14
+\BOOKMARK [1][-]{section.2.3}{Creating a grammar}{chapter.2}% 15
+\BOOKMARK [2][-]{subsection.2.3.1}{What grammar is needed ?}{section.2.3}% 16
+\BOOKMARK [2][-]{subsection.2.3.2}{Where to find this grammar ?}{section.2.3}% 17
+\BOOKMARK [2][-]{subsection.2.3.3}{Technical aspects}{section.2.3}% 18
 \BOOKMARK [0][-]{chapter.3}{Implementation}{}% 19
-\BOOKMARK [1][-]{section.3.1}{Reading packages}{chapter.3}% 20
-\BOOKMARK [2][-]{subsection.3.1.1}{Bluetcl}{section.3.1}% 21
-\BOOKMARK [1][-]{section.3.2}{Parsing}{chapter.3}% 22
-\BOOKMARK [2][-]{subsection.3.2.1}{Understanding abstract syntax tree \(AST\)}{section.3.2}% 23
-\BOOKMARK [2][-]{subsection.3.2.2}{Organizing data and functionality}{section.3.2}% 24
-\BOOKMARK [1][-]{section.3.3}{Building the top level module}{chapter.3}% 25
-\BOOKMARK [2][-]{subsection.3.3.1}{Resolving types}{section.3.3}% 26
-\BOOKMARK [2][-]{subsection.3.3.2}{Provisos explained \(intuition\)}{section.3.3}% 27
-\BOOKMARK [2][-]{subsection.3.3.3}{Resolving types \(implementation\)}{section.3.3}% 28
+\BOOKMARK [1][-]{section.3.1}{Reading descriptions of packages}{chapter.3}% 20
+\BOOKMARK [2][-]{subsection.3.1.1}{HandlerV2.py Todo rename}{section.3.1}% 21
+\BOOKMARK [1][-]{section.3.2}{Loading Bluespec packages' information \(TODO check grammar of s'\)}{chapter.3}% 22
+\BOOKMARK [2][-]{subsection.3.2.1}{Lexical and syntax analysis}{section.3.2}% 23
+\BOOKMARK [2][-]{subsection.3.2.2}{Understanding abstract syntax tree \(AST\)}{section.3.2}% 24
+\BOOKMARK [2][-]{subsection.3.2.3}{Organizing data and functionality}{section.3.2}% 25
+\BOOKMARK [1][-]{section.3.3}{Building the top level module}{chapter.3}% 26
+\BOOKMARK [2][-]{subsection.3.3.1}{Resolving types}{section.3.3}% 27
+\BOOKMARK [2][-]{subsection.3.3.2}{Resolving types \(implementation\)}{section.3.3}% 28
 \BOOKMARK [1][-]{section.3.4}{Synthesizing}{chapter.3}% 29
 \BOOKMARK [2][-]{subsection.3.4.1}{GUI}{section.3.4}% 30

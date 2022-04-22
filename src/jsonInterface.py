@@ -7,77 +7,6 @@ from handlerV2 import *
 import argparse
 import os
 
-example_string = r"""{
-    "aditional folders" : ["Flute/src_SSITH_P2/build_dir","tutorial"],
-    "packages": ["FIFO","AddressFlit","GetPut","AXI4_Interconnect","SourceSink","Routable","Core","MemSim"],
-    "name" : "top",
-    "package_name" : "fifoChain",
-    "typedefs": [
-        {
-            "name" : "DATASIZE",
-            "value" : 1
-        },
-        {
-            "name" : "ADDRWIDTH",
-            "value" : 4
-        }
-    ],
-    "modules" : [
-        {
-            "name" : "ff1",
-            "function": "mkFIFO",
-            "function_params": [],
-            "interface_params": ["Bit#(8)"]
-        },
-        {
-            "name" : "ff1get",
-            "function": "get",
-            "function_params": ["ff1"]
-        },
-        {
-            "name" : "ff2",
-            "function": "mkFIFO",
-            "function_params": [],
-            "interface_params": ["Bit#(8)"]
-        },
-        {
-            "name" : "ff2put",
-            "function": "put",
-            "function_params": ["ff2"]
-        },
-        {
-            "name" : "core",
-            "function": "mkCore"
-        },
-        {
-            "name" : "memory",
-            "function": "mkAXI4SimpleMem",
-            "function_params": [4096,"Maybe#('xddd')"],
-            "interface_params": [6, 64, 64, 0, 0, 0, 0, 0]
-        }
-    ],
-
-    "connections": [
-        {
-            "from" : "ff1get",
-            "to" : "ff2put"
-        }
-    ],
-    
-    "busses": [
-        {
-            "name" : "mainBus",
-            "function": "mkAXI4Bus",
-            "masters" : ["core.core_mem_master"],
-            "slaves" : [{
-                "name" : "memory",
-                "routes" : [[0,4096],[5096,6400]]
-            }]
-        }
-    ]
-}"""
-example_json = json.loads(example_string)
-# %%
 
 def lookForKeyword(keyword,dictionary):
     if keyword in dictionary:
@@ -180,4 +109,8 @@ if __name__ == "__main__":
         print("Infered Interfaces:")
         for name,value in topLevel.knownNames.items():
             print(f"{name} : {value}")
+    if True:
+        print("Valid arguments:")
+        for name,instance in topLevel.instances.items():
+            print(f"{name} : {topLevel.validArguments(instance.creator)}")
     print("Finished")

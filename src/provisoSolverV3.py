@@ -11,7 +11,7 @@ def solveNumerical(provisos:List[Proviso],variables):
         if type(proviso) == str:
             if proviso in sym:
                 return sym[proviso]
-            if proviso in variables and variables[proviso].full_name != 'nothing':
+            if proviso in variables and variables[proviso].value != None:
                 if type(variables[proviso].value) == int:
                     return variables[proviso].value
                 else:

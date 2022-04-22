@@ -1,8 +1,8 @@
 package fifoChain;
 // necessary packages
-import Connectable::*;
 import GetPut::*;
 import Simplefifo::*;
+import Connectable::*;
 
 
 module top();

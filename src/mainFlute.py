@@ -6,7 +6,7 @@ from bsvSynthesizer import *
 from typeDatabase import TypeDatabase as tdb
 #%% initalize bluetcl
 # initalize tdb
-db = tdb(load=True)
+db = tdb(load=False)
 
 db.addLibraryFolder("Flute/src_SSITH_P2/build_dir")
 # Read contents of package
@@ -27,6 +27,7 @@ SPARAMS = [6, 64, "DATASIZE", 0, 0, 0, 0, 0]
 
 tdtSPARAMS = [evaluateCustomStart(str(x),"type_def_type") for x in SPARAMS]
 
+
 core = topLevel.add_moduleV2("Core::mkCore","core",[],[])
 memory = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",SPARAMS,[4096,'Maybe#("xddd")'])
 
@@ -35,12 +36,6 @@ fakeAXI = topLevel.add_moduleV2("AXI4_Fake_16550::mkAXI4_Fake_16550_Simple","aXI
 topLevel.add_connectionV2("core.core_mem_master","memory")
 topLevel.add_busV3("bus1","mkAXI4Bus",["core.core_mem_master"],[("memory",[(0,4096)]),("aXI4_Fake_16550",[(4096,8192)])])
 
-
-topLevel.add_connectionV2("core.core_mem_master","memory")
-topLevel.add_busV3("bus1","mkAXI4Bus",["core.core_mem_master"],[("memory",[(0,4096)]),("aXI4_Fake_16550",[(4096,8192)])])
-
-# memory = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",SPARAMS,[4096,'Maybe#("xddd")'])
-# memory2 = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",[],['4096', 'Maybe#(34)'])
 
 print(topLevel.to_string())
 topLevel.to_file("/mnt/e/Mega/Documents/CS/TLoB/tutorial/")

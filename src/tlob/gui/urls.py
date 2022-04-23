@@ -12,4 +12,6 @@ urlpatterns = [
     path('confirmBus/', views.confirmBus, name='confirmBus'),
     path('removeNode/', views.removeNode, name='removeNode'),
     path('fullClear/', views.fullClear, name='fullClear'),  
+    path('findConnections/', views.findConnections, name='findConnections'),
+    path('knownNames/', views.knownNames, name='knownNames'),
 ]

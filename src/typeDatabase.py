@@ -27,6 +27,8 @@ class Variable():
         self.value = value
 
 def CAdd(variables:Dict[str,Variable],s,value):
+    if type(value) == Variable:
+        value = value.value
     if s not in variables:
         variables[s] = Variable(deepcopy(value))
     else:
@@ -176,8 +178,8 @@ class TypeDatabase():
             return typedef
         if type(typedef) == Value:
             return typedef
-        if typedef.name in self.aliases:
-            return self.aliases[typedef.name].result_type_ide
+        if typedef.full_name in self.aliases:
+            return self.aliases[typedef.full_name].result_type_ide
         else:
             return typedef
 
@@ -218,15 +220,16 @@ class TypeDatabase():
                 loaded.append(package_name)
         for package_name in loaded:
             self._addPackage(package_name)
-        self.saveStateToPickle()
         self.populateFunctionNames()
+        self.saveStateToPickle()
+        
     
     def loadDependencies(self):
         known_packages = self.handler.list_packages()
         self.addPackages(known_packages)
 
     def merge(self,a: Union[Value,Type_ide,str,Function],b: Union[Value,Type_ide,str,Function],variables: Dict[str,Variable]):
-        a,b = deepcopy(self.evaluateTypedef(a)),deepcopy(self.evaluateTypedef(b))
+        a,b = self.evaluateTypedef(a),self.evaluateTypedef(b)
         if type(a) == Type_ide and a.is_polymorphic:
             a = a.name
         if type(b) == Type_ide and b.is_polymorphic:
@@ -240,9 +243,9 @@ class TypeDatabase():
             if a in variables and b in variables:
                 assert variables[a] == variables[b]
             elif a in variables:
-                CAdd(variables,b,variables[a])
+                CAdd(variables,b,variables[a].value)
             elif b in variables:
-                CAdd(variables,a,variables[b])
+                CAdd(variables,a,variables[b].value)
             else: 
                 CAdd(variables,a,None)
                 variables[b] = variables[a]         
@@ -263,7 +266,7 @@ class TypeDatabase():
                 if a.full_name != "String":
                     raise Exception(f"Cannot merge {a} and {b} because {a} is not a string")
             if type(b.value) == int:
-                if a.full_name == "String":
+                if a.full_name == "String" or len(a.formals) > 0:
                     raise Exception(f"Cannot merge {a} and {b} because {a} is a string and {b} is an int")
             return variables
         if type(a) == Type_ide and type(b) == Type_ide:
@@ -433,10 +436,6 @@ class TypeDatabase():
                 
                     for key,val in solvedVariables.items():
                         CAdd(variables,key,val)        
-
-                    # for key in variables.keys():
-                    #     if type(variables[key].value.name) == Value:
-                    #         variables[key] = variables[key].name
                 except Exception as e:
                     numericalProgress = False
 
@@ -448,8 +447,8 @@ class TypeDatabase():
                 except Exception as e:
                     toDo.append(proviso)
                     continue
-                
-                variables |= newVariables
+                for key,val in newVariables.items():
+                        CAdd(variables,key,val)   
                 
             
             if len(toDo) == len(lastTodo) and not numericalProgress:  

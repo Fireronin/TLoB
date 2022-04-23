@@ -9,15 +9,18 @@ from bsvSynthesizer import *
 
 
 print(os.getcwd())
+
 db = tdb(load=True,saveLocation=os.path.join("../../saved"))
 topLevel = TopLevelModule("top",db,package_name="GUITEST")
+print(len(db.functions))
+print
 
 # Create your views here.
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 def listFunctions(request):
-    names = list(db.functionNameCache.keys())
+    names = list(db.functions.keys())
     # trim to fist 3 names
     #names = names[:3]
     #crate json with list of names without dumps
@@ -44,10 +47,12 @@ def addModule(request):
         'name':name,
         'creator':creator,
         'exception':exception,
-        'arguments': {f'arg_{i}':arg.json for i,arg in creatorFunc.arguments.items()},
+        'defaultArguments': {str(i):str(arg) for i,arg in creatorFunc.arguments.items()},
         'validArguments': topLevel.validArguments(creatorFunc),
         'interface': creatorFunc.return_type.json,
     }
+    
+    print(response)
     return HttpResponse(json.dumps(response))
 
 def confirmModule(request):
@@ -55,7 +60,7 @@ def confirmModule(request):
     name = json_data['name']
     creator = json_data['creator']
     creator_args = list( json_data['creator_args'].values())
-    module_args = json_data['module_args']
+    module_args = [evaluateCustomStart(arg) for arg in json_data['module_args']]
     context = json_data['context']
     print("name:",name,"creator:",creator,"creator_args:",creator_args,"module_args:",module_args)
     exception = ""
@@ -164,6 +169,34 @@ def removeNode(request):
     print(topLevel.instances)
     return HttpResponse(json.dumps(response))
 
+def findConnections(request):
+    print(request.body)
+    json_data = json.loads(request.body)
+    try:
+        print(json_data)
+        name = json_data['name']
+        print("name:",name)
+   
+        connections = topLevel.possibleConnections[name]
+    except Exception as e:
+        tb = traceback.format_exc()
+        print(tb)
+        exception = str(e)
+        print(e)
+        return HttpResponse(json.dumps({'exception':str(e)}))
+    response = {
+        'name':name,
+        'exception':"",
+        'connections':connections,
+    }
+    return HttpResponse(json.dumps(response))
+
+def knownNames(request):
+    names = list(topLevel.knownNames.keys())
+    response = {
+        'names':names,
+    }
+    return HttpResponse(json.dumps(response))
 
 def fullClear(request):
     global db,topLevel

@@ -16,7 +16,7 @@ from extractor import Typeclass_instance as ExTypeclassInstance
 
 from typing import Dict, List, Union,Set,Tuple
 
-from typeDatabase import TypeDatabase
+from typeDatabase import TypeDatabase,CAdd,Variable
 from tqdm import tqdm
 
 class AccessTuple():
@@ -45,7 +45,7 @@ class InstanceV2():
     def __init__(self,topLevel:TopLevelModule,creator: ExType,
                 creator_args : List[Union[InstanceV2,Type_ide]] =[],
                 module_args:List[Type_ide]=[],
-                instance_name:str=None,
+                instance_name:str="",
                 input_context:Dict[str,str]={}):
         self.topLevel = topLevel
         self.db = topLevel.db
@@ -53,7 +53,7 @@ class InstanceV2():
         self.creator_args = creator_args
         self.instance_name = instance_name
         self.module_args = module_args
-        self.input_context = {key:evaluateCustomStart(val) for key,val in input_context.items()}
+        self.input_context = {key:Variable(evaluateCustomStart(val)) for key,val in input_context.items()}
         self.topLevel.addInstance(self,instance_name)
         if creator_args is not None:
             self.update()
@@ -87,7 +87,9 @@ class InstanceV2():
             if type(value) == InstanceV2:
                 value = value.type_ide
             if isinstance(value, Type_ide):
-                context |= self.db.merge(arg[1],value,{}) 
+                newVariables = self.db.merge(arg[1],value,{}) 
+                for key,val in newVariables.items():
+                    CAdd(context,key,val)
             #this is just to check if everything is ok
             self.db.applyVariables(deepcopy(self.creator.arguments[arg[0]]),context)
 
@@ -97,11 +99,10 @@ class InstanceV2():
         for i,field in enumerate(ideCopy.formals):
             ideCopy.formals[i].type_ide = module_args[i]
 
-        context |= self.db.merge(self.creator.return_type,ideCopy,context)
+        context = self.db.merge(self.creator.return_type,ideCopy,context)
 
         #account for provisos
-        context |= self.db.solveProvisos(self.creator.provisos,context)
-        
+        context = self.db.solveProvisos(self.creator.provisos,context)
         self.creator.return_type = self.db.applyVariables(self.creator.return_type,context)
         if self.creator.name == "mkConnection":
             return
@@ -310,6 +311,7 @@ class TopLevelModule():
                     self.db.merge(arg,value.result_type_ide,{})
                 except Exception as e:
                     continue
+                print(name,value.result_type_ide,arg)
                 validList.append(name)
             if type(arg) == ExFunction:
                 for name,value in self.db.functions.items():
@@ -381,7 +383,7 @@ class TopLevelModule():
             creator_func = self.db.getFunctionByName(creator_func)
         #try:
         start_time = time.time()
-        newModule = InstanceV2(self,creator_func,func_args,interface_args,instance_name,input_context)
+        newModule = InstanceV2(self,creator_func,func_args,interface_args,instance_name,input_context=input_context)
         print(f"Created module {instance_name} in {time.time()-start_time}s")
         # except Exception as e:
         #     raise Exception(f"""Error creating module {instance_name}: {e}

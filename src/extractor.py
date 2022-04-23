@@ -346,7 +346,7 @@ class Function(Type_ide):
         out["acessName"] = self.accessName
         out["arguments"] = []
         out["type"] = "function"
-        out["result"] = self.result.json
+        out["result"] = self.return_type.json
         for i,argument in enumerate(self.arguments):
             if type(argument) == str:
                 processed = argument

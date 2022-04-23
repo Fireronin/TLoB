@@ -114,6 +114,9 @@ class TypeDatabase():
         else:
             if name in self.functionNameCache:
                 return deepcopy(self.functions[self.functionNameCache[name]])
+        package,name = name.split("::")
+        if package in self.packages:
+            return deepcopy(self.functions[name])
         fuzzyException(name,list(self.functions), "Function {} not found. \n Do you mean: \n{}")
     
     def getTypeByName(self,name):

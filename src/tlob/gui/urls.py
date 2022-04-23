@@ -14,4 +14,5 @@ urlpatterns = [
     path('fullClear/', views.fullClear, name='fullClear'),  
     path('findConnections/', views.findConnections, name='findConnections'),
     path('knownNames/', views.knownNames, name='knownNames'),
+    path('possibleConnectionStarts/', views.possibleConnectionStarts, name='possibleConnectionStarts'),
 ]

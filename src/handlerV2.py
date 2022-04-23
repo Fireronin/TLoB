@@ -36,7 +36,9 @@ class Handler():
                 s = self.child.before
                 full_text += s
         except pexpect.TIMEOUT:
-            print("Warrning: TIMEOUT")
+            #decode bytes to string
+            strCommand = str(command, encoding='utf-8')
+            print("Warrning: TIMEOUT, whem calling "+strCommand)
             s = b""
         if full_text.find(b"Error: ")!=-1:
             raise Exception("Error:",full_text)
@@ -64,19 +66,21 @@ class Handler():
         try:
             funcs = self.call("defs func " + package_name )
         except Exception as e:
-            print("Warrning:" + package_name + "failed to load")
+            print("Warrning:" + package_name + " failed to load")
             return b""   
         return funcs
 
     def read_type(self,type_string=b"Polyfifo::FIFOIfc"):
         type_name = type_string.split(b"::")[-1]
+        if type_name == "Generic":
+            return ""
         print("Currently reading type: "+str(type_name, encoding='utf-8') )
         # if type_name in [b"Bits",b"SizedLiteral"]:
         #     return b""
         try:
             constr = self.call(b"type constr "+type_name,only_last_line=False)
         except Exception as e:
-            print("Warrning:" + str(type_name, encoding='utf-8') + "is probably a keyword")
+            print("Warrning:" + str(type_name, encoding='utf-8') + " is probably a keyword")
             return b""
         try:
             #remove spaces

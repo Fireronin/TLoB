@@ -363,7 +363,8 @@ class TopLevelModule():
         self.knownNames[name] = type_ide
         if name in self.subscribers:
             for subscriber in self.subscribers[name]:
-                self.instances[subscriber].update()
+                pass
+                #self.instances[subscriber].update()
     #endregion
 
     def __init__(self,name,db,package_name=None) -> None:

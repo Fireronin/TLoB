@@ -6,14 +6,14 @@ from bsvSynthesizer import *
 from typeDatabase import TypeDatabase as tdb
 #%% initalize bluetcl
 # initalize tdb
-db = tdb(load=False)
+db = tdb(load=True)
 
 db.addLibraryFolder("Flute/src_SSITH_P2/build_dir")
 # Read contents of package
-packages_to_load = ["Core","Prelude","OneWayBus","MemUtils","Connectable","FIFO","FIFOF","GetPut","AXI4_Types","AXI4_Interconnect","SourceSink","Routable","Core_IFC","ClientServer","MasterSlave","AXI4_Common_Types","MemSim","AXI4_Fake_16550","AXI4Stream_Types","AXI4Lite_Types"]
+packages_to_load = ["Core","MemUtils","Connectable","AXI4_Fake_16550","AXI4_Interconnect"]
 
 db.addPackages(packages_to_load)
-
+db.loadDependencies()
 
 # todo read json file
 # %% Build bluespcefile

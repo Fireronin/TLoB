@@ -115,7 +115,7 @@ class TypeDatabase():
             if name in self.functionNameCache:
                 return deepcopy(self.functions[self.functionNameCache[name]])
         package,name = name.split("::")
-        if package in self.packages:
+        if package in self.packages and name in self.functions:
             return deepcopy(self.functions[name])
         fuzzyException(name,list(self.functions), "Function {} not found. \n Do you mean: \n{}")
     
@@ -225,8 +225,7 @@ class TypeDatabase():
             self._addPackage(package_name)
         self.populateFunctionNames()
         self.saveStateToPickle()
-        
-    
+          
     def loadDependencies(self):
         known_packages = self.handler.list_packages()
         self.addPackages(known_packages)

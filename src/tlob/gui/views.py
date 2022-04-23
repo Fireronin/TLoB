@@ -20,10 +20,24 @@ def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 def listFunctions(request):
-    names = list(db.functions.keys())
-    # trim to fist 3 names
-    #names = names[:3]
-    #crate json with list of names without dumps
+    json_data = json.loads(request.body)
+    kind = json_data['type']
+    names = []
+    if kind == 'bus':
+        for key,val in db.functions.items():
+            try:
+                if val.arguments[1].full_name == 'Vector::Vector' and \
+                     val.arguments[2].full_name == 'Vector::Vector' and\
+                     val.arguments[0].return_type.full_name == 'Vector::Vector':
+                    names.append(key)
+                    # val = db.functions['AXI4_Interconnect::mkAXI4Bus_Sig']
+                    # print(val.arguments[1].full_name == 'Vector::Vector',\
+                    #  val.arguments[2].full_name == 'Vector::Vector',\
+                    #  type(val.arguments[0]) == ExFunction)
+            except Exception as e:
+                continue
+    elif kind == 'all':
+        names = list(db.functions.keys())
     namesList = json.dumps({'names':names})
     return HttpResponse(namesList)
 
@@ -108,34 +122,37 @@ def confirmConnection(request):
 
 def confirmBus(request):
     json_data = json.loads(request.body)
+    print(json_data)
     busName = json_data['name']
     creator = json_data['creator']
     inputs = json_data['inputs']
     ranges = json_data['ranges']
-
-    print("name:",busName,"creator:",creator,"masters:",inputs,"ranges:",ranges)
-    masters = {}
-    slaves = {}
-    for name,value in inputs.items():
-        kind,id = name.split(" ")
-        if kind == "master":
-            masters[int(id)] = value
-        else:
-            slaves[int(id)] = (value,None)
-    for name,range in ranges.items():
-        kind,id = name.split(" ")
-        if kind == "master":
-            raise Exception("Master range not supported")
-        else:
-            #I'm using eval this is a bit sus
-            print(eval(range))
-            slaves[int(id)] = (slaves[int(id)][0],eval(range))
-    #convert masters and slaves to lists
-    masters = list(masters.values())
-    slaves = list(slaves.values())
     exception = ""
     try:
+        print("name:",busName,"creator:",creator,"masters:",inputs,"ranges:",ranges)
+        masters = {}
+        slaves = {}
+        for name,value in inputs.items():
+            kind,id = name.split(" ")
+            if kind == "master":
+                masters[int(id)] = value
+            else:
+                slaves[int(id)] = (value,None)
+        for name,range in ranges.items():
+            kind,id = name.split(" ")
+            if kind == "master":
+                raise Exception("Master range not supported")
+            else:
+                #I'm using eval this is a bit sus
+                slaves[int(id)] = (slaves[int(id)][0],eval(range))
+        #convert masters and slaves to lists
+        masters = list(masters.values())
+        slaves = list(slaves.values())
+        
+    
         topLevel.add_busV3(busName,creator,masters,slaves)
+        possibleMasters = topLevel.buses[busName].mastersV.listAddable(topLevel.knownNames.items())
+        possibleSlaves = topLevel.buses[busName].slavesV.listAddable(topLevel.knownNames.items())
     except Exception as e:
         tb = traceback.format_exc()
         print(tb)
@@ -147,6 +164,8 @@ def confirmBus(request):
         'name':name,
         'creator':creator,
         'exception':exception,
+        'masters':possibleMasters,
+        'slaves':possibleSlaves,
     }
     return HttpResponse(json.dumps(response))
 
@@ -178,6 +197,7 @@ def findConnections(request):
         print("name:",name)
    
         connections = topLevel.possibleConnections[name]
+        print(connections)
     except Exception as e:
         tb = traceback.format_exc()
         print(tb)
@@ -191,8 +211,12 @@ def findConnections(request):
     }
     return HttpResponse(json.dumps(response))
 
-def knownNames(request):
-    names = list(topLevel.knownNames.keys())
+def possibleConnectionStarts(request):
+    names = []
+    for key,value in  topLevel.possibleConnections.items():
+        if value != []:
+            names.append(key)
+    #names = list(topLevel.knownNames.keys())
     response = {
         'names':names,
     }
@@ -204,5 +228,12 @@ def fullClear(request):
     topLevel = TopLevelModule("top",db,package_name="GUITEST")
     response = {
         'exception':"",
+    }
+    return HttpResponse(json.dumps(response))
+
+def knownNames(request):
+    names = list(topLevel.knownNames.keys())
+    response = {
+        'names':names,
     }
     return HttpResponse(json.dumps(response))

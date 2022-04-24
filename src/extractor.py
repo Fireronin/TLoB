@@ -5,8 +5,6 @@ from typing import Dict, List, Tuple, Union
 from lark import Lark, Transformer, v_args
 import os
 
-from sympy import EX, arg
-
 
 
 with open(os.path.join(os.path.join(os.path.dirname(__file__),"..","grammar","tests"), "testFunc.json")) as f:
@@ -268,7 +266,7 @@ class Alias:
         return f"{self.type_ide}"
 
     def __repr__(self) -> str:
-        return f"alias {self.type_ide} {self.type}"
+        return f"alias {self.type_ide} {self.result_type_ide}"
     
     @property
     def full_name(self) -> str:
@@ -859,23 +857,19 @@ class ModuleTransformer(Transformer):
     #endregion
 
 parser: Lark = None
-typeParser: Lark = None
 
-def initalize_parser(start: str="start"):
-    global parser
-    global typeParser
-    with open(os.path.join(os.path.join(os.path.dirname(__file__),"..","grammar"), "type.lark")) as f:
-        lark_string = f.read()
-    parser = Lark(lark_string, parser="earley",start=start)
-    typeParser = Lark(lark_string, parser="earley",start="type")
-    return parser
+with open(os.path.join(os.path.join(os.path.dirname(__file__),"..","grammar"), "type.lark")) as f:
+    lark_string = f.read()
+
+
+parser = Lark(lark_string, parser="earley",start=["type_def_type","tcl_type_full_list","tcl_function"])
 
 def parse_and_transform(tcl_string: Union[str,bytes]):
     if type(tcl_string) == bytes:
         tcl_string = tcl_string.decode("utf-8")
     global parser
     try:
-        parsed = parser.parse(tcl_string)
+        parsed = parser.parse(tcl_string,start="tcl_type_full_list")
     except Exception as e:
         if tcl_string == 'can\'t read "Cons": no such variable' or 'Typeclass {Generic#' in tcl_string:
             raise Exception("Failed to parse: \n")
@@ -883,25 +877,15 @@ def parse_and_transform(tcl_string: Union[str,bytes]):
     result = ModuleTransformer().transform(parsed)
     return result
 
-def evaluateType(type_string: Union[str,bytes]):
-    if type(type_string) == bytes:
-        type_string = type_string.decode("utf-8")
-    global typeParser
-    parsed = typeParser.parse(type_string)
-    result = ModuleTransformer().transform(parsed)
-    return result
-
 def evaluateCustomStart(type_string: Union[str,bytes],start:str = "type_def_type"):
+    global parser
     if type(type_string) == bytes:
         type_string = type_string.decode("utf-8")
-    with open(os.path.join(os.path.join(os.path.dirname(__file__),"..","grammar"), "type.lark")) as f:
-        lark_string = f.read()
-    customParser = Lark(lark_string, parser="earley",start=start)
-    parsed = customParser.parse(type_string,start=start)
+    
+    parsed = parser.parse(type_string,start=start)
     result = ModuleTransformer().transform(parsed)
     return result
 
 if __name__ == "__main__":
-    parser = initalize_parser(start="tcl_type_full")
     result = parse_and_transform(example_text)
     print(result)

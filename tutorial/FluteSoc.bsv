@@ -1,11 +1,10 @@
 package FluteSoc;
 // necessary packages
-import GetPut::*;
+import Connectable::*;
 import Core::*;
 import MemUtils::*;
 import AXI4_Fake_16550::*;
 import AXI4_Interconnect::*;
-import Connectable::*;
 
 typedef 64 DATASIZE;
 

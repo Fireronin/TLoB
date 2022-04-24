@@ -1,14 +1,13 @@
 from copy import deepcopy, copy
 from typing import Dict, Set
 
-from numpy import var
 from extractor import Type as ExType
 from extractor import *
 from handlerV2 import Handler
 from thefuzz import process
 import pickle
 from provisoSolverV3 import solveNumerical
-
+from wrapt_timeout_decorator import *
 
 def fuzzyException(name,list,exception_string):
     potential_matches = process.extract(name, list, limit=5)
@@ -55,7 +54,8 @@ class TypeDatabase():
     logged_types: bytes = b""
     handler: Handler
 
-    def __init__(self,load=True,saveLocation=os.path.join(".","saved"),librariesRoot='/mnt/e/Mega/Documents/CS/TLoB'):
+    def __init__(self,load=True,saveLocation=os.path.join(".","saved"),librariesRoot='/mnt/e/Mega/Documents/CS/TLoB',lazy=False):
+        self.lazy = lazy
         self.saveLocation = saveLocation
         #check if saveLocation exists
         if not os.path.exists(saveLocation):
@@ -66,11 +66,10 @@ class TypeDatabase():
             try:
                 self.loadStateFromPickle()
                 loaded = True
-                self.functionNameCache = {function.name:function.full_name for function in self.functions.values()}
                 print("Loaded state from pickle")
             except Exception as e:
                 print("Failed to load typeDatabase state from pickle")
-        self.parser = initalize_parser(start="tcl_type_full_list")
+        #self.parser = initalize_parser()
         # remove file failed_types.json and failed_functions.json
         if not loaded:
             FILES = ["failed_types.json","failed_functions.json","typeDatabase.pickle","typeDatabaseFunctions.json","typeDatabaseTypes.json"]
@@ -88,11 +87,7 @@ class TypeDatabase():
     
     def populateFunctionNames(self):
         
-        # add functions from typeclasses
-        for typeclass in self.typeclasses:
-            for member in self.typeclasses[typeclass].members.values():
-                if type(member) == Function:
-                    self.functions[member.full_name] = member
+
 
         proposedAdditions = {}
         duplicateNames = set()
@@ -115,19 +110,45 @@ class TypeDatabase():
             if name in self.functionNameCache:
                 return deepcopy(self.functions[self.functionNameCache[name]])
         package,name = name.split("::")
-        if package in self.packages and name in self.functions:
-            return deepcopy(self.functions[name])
+        if package in self.packages:
+            if name in self.functions:
+                return deepcopy(self.functions[name])
+            else:
+                funcs = self.handler.list_funcs(package_name=package)
+                self.addUnparsedFunctions(funcs)
+                self.populateFunctionNames()
+                if name in self.functions:
+                    return deepcopy(self.functions[name])
+                if name in self.functionNameCache:
+                    return deepcopy(self.functions[self.functionNameCache[name]])
+        
         fuzzyException(name,list(self.functions), "Function {} not found. \n Do you mean: \n{}")
     
-    def getTypeByName(self,name):
-        if name in self.types:
-            return self.types[name]
-        fuzzyException(name,list(self.types), "Type {} not found. \n Do you mean: \n{}")
+    def getTypeByName(self,t_type:Union[Type,str]):
+        if type(t_type) == Type:
+            tname = t_type.name
+            tfullNmae = t_type.full_name
+            tpackage = t_type.package
+        if type(t_type) == str:
+            tpackage,tname = t_type.split("::")
+            tfullNmae = t_type
+        if tfullNmae in self.types:
+            return self.types[tfullNmae]
+        if tpackage in self.packages:
+            typeString = self.handler.read_type(bytes(tfullNmae, encoding= "raw_unicode_escape"))
+            #decode typeString to str
+            typeString = typeString.decode("utf-8")
+            self.addUnparsedTypes([typeString])
+            if tfullNmae in self.types:
+                return self.types[tfullNmae]
+        fuzzyException(tfullNmae,list(self.types), "Type {} not found. \n Do you mean: \n{}")
     
-    def getTypeclassByName(self,name):
-        if name in self.typeclasses:
-            return self.typeclasses[name]
-        fuzzyException(name,list(self.typeclasses), "Typeclass {} not found. \n Do you mean: \n{}")
+    # def getTypeclassByName(self,type):
+    #     if name in self.typeclasses:
+    #         return self.typeclasses[name]
+    #     else:
+    #         getTypeByName()
+    #     fuzzyException(name,list(self.typeclasses), "Typeclass {} not found. \n Do you mean: \n{}")
 
     def addUnparsedTypes(self,types):
         for type_string in types:
@@ -150,8 +171,14 @@ class TypeDatabase():
             if type(t_type) == Struct:
                 self.structs[t_type.full_name] = t_type
             if type(t_type)== Typeclass:
+                self.types[t_type.full_name] = t_type
                 self.typeclasses[t_type.full_name] = t_type
                 self.preprocessTypeclass(t_type)
+                # add functions from typeclasses
+                for typeclass in self.typeclasses:
+                    for member in self.typeclasses[typeclass].members.values():
+                        if type(member) == Function:
+                            self.functions[member.full_name] = member
             elif type(t_type) == Alias:
                 self.aliases[t_type.full_name] = t_type
             else:
@@ -196,7 +223,7 @@ class TypeDatabase():
             with open("failed_loads.json","a") as f:
                 f.write("Failed to load package {} \n".format(package_name))
                 f.write(str(e) + "\n")
-            return package_name
+            return None
         return package_name
     
     def _addPackage(self,package_name):
@@ -206,6 +233,8 @@ class TypeDatabase():
         if self._loadPackage(package_name) == None:
             return
         self.packages.add(package_name)
+        if self.lazy:
+            return 
         funcs = self.handler.list_funcs(package_name=package_name)
         types = self.handler.read_all_types(package_name=package_name)
         self.logged_funcs += funcs + b"\n"
@@ -215,6 +244,10 @@ class TypeDatabase():
         self.addUnparsedFunctions(funcs)
         
     def addPackages(self,packages):
+        mustHaves = ["Connectable","Vector"]
+        for musthave in mustHaves:
+            if musthave not in packages:
+                packages.append(musthave)
         loaded = []
         for package_name in packages:
             if package_name in self.packages:
@@ -228,6 +261,10 @@ class TypeDatabase():
           
     def loadDependencies(self):
         known_packages = self.handler.list_packages()
+        if self.lazy:
+            for package_name in known_packages:
+                self.packages.add(package_name)
+            return
         self.addPackages(known_packages)
 
     def merge(self,a: Union[Value,Type_ide,str,Function],b: Union[Value,Type_ide,str,Function],variables: Dict[str,Variable]):
@@ -362,8 +399,9 @@ class TypeDatabase():
         typeclass.lookUpDictionaries = lookUpDictionaries
         typeclass.universalInstances = universalInstances
 
+    @timeout(60)
     def resolveTypeclass(self,typeclass: Typeclass,t_type: Type_ide,instance_hint:Typeclass_instance=None) -> Type_ide:
-        typeclass = self.getTypeclassByName(typeclass.full_name)
+        typeclass = self.getTypeByName(typeclass.full_name)
         variables = self.merge(typeclass.type_ideAlpha,t_type,{})
         #append vars
         keyDict = {}
@@ -405,6 +443,7 @@ class TypeDatabase():
             return solvedVariables
         raise Exception(f"Cannot solve {typeclass} {t_type}")
 
+    @timeout(60)
     def solveProvisos(self,provisos,variables):
         if provisos == []:
             return variables
@@ -466,12 +505,13 @@ class TypeDatabase():
         if type(t_type) == Value or type(t_type) == Function:
             t_type.members = {}
             return
-        if t_type.full_name not in self.types:
-            if t_type.full_name == "nothing":
-                raise Exception("Cannot populate members of nothing")
-            if t_type.full_name != "nothing":
-                print(f"{t_type.full_name} not found")
-            return
+        # if t_type.full_name not in self.types:
+        #     if t_type.full_name == "nothing":
+        #         raise Exception("Cannot populate members of nothing")
+        #     if t_type.full_name != "nothing":
+        #         print(f"{t_type.full_name} not found")
+        #     return
+        
         other = self.types[t_type.full_name]
         variables = self.merge(t_type,other.type_ide,{})
         t_type.members = {}

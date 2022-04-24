@@ -1,15 +1,12 @@
 from copy import deepcopy
-import enum
 import os
-from re import S
-from tempfile import TemporaryFile
 import time
 
 from extractor import Position, Type as ExType, Type_ide, Value as ExValue
 from extractor import Interface as ExInterface
 from extractor import Type_formal as ExType_formal
 from extractor import Function as ExFunction, Module as ExModule
-from extractor import evaluateType,evaluateCustomStart
+from extractor import evaluateCustomStart
 from extractor import Alias as ExAlias
 from extractor import Typeclass as ExTypeclass
 from extractor import Typeclass_instance as ExTypeclassInstance
@@ -74,7 +71,7 @@ class InstanceV2():
         print(f"Updating {self.instance_name}")
         self.creator.return_type.accessName = self.instance_name
         
-        if len(self.creator_args) != len(self.creator.arguments):
+        if len(self.creator_args) < len(self.creator.arguments):
             print(f"{self.instance_name} has {len(self.creator_args)} arguments, but {self.creator.name} has {len(self.creator.arguments)}")
             raise Exception("Number of function arguments do not match the number of arguments required")
         #convert to TypeIde arguments
@@ -311,7 +308,6 @@ class TopLevelModule():
                     self.db.merge(arg,value.result_type_ide,{})
                 except Exception as e:
                     continue
-                print(name,value.result_type_ide,arg)
                 validList.append(name)
             if type(arg) == ExFunction:
                 for name,value in self.db.functions.items():
@@ -404,7 +400,8 @@ class TopLevelModule():
             for interface in self.accessableInterfaces:
                 if interface.access_name not in self.possibleConnections:
                     self.possibleConnections[interface.access_name] = []
-                self.possibleConnections[interface.access_name] +=[x.access_name for x in self.list_connectableV3(interface,[current])]
+                if current.access_name not in self.possibleConnections[interface.access_name]: 
+                    self.possibleConnections[interface.access_name] +=[x.access_name for x in self.list_connectableV3(interface,[current])]
 
         self.accessableInterfaces += newModule.list_all_Interfaces()
 
@@ -494,7 +491,7 @@ class TopLevelModule():
         return connectable_ends
 
     def list_connectableV3(self,start:AccessTuple,ends:List[AccessTuple]=[]):
-        connectableTypeclass : ExTypeclass = self.db.getTypeclassByName("Connectable::Connectable")
+        connectableTypeclass : ExTypeclass = self.db.getTypeByName("Connectable::Connectable")
         connectable_ends : List[AccessTuple]  = []
         for end in ends:
             if end.access_name.count(".") > 1:
@@ -546,7 +543,7 @@ class TopLevelModule():
         s = []
         s.append("package "+self.package_name + ";\n")
         self.packages.add("Connectable")
-        self.packages.add("GetPut")
+        self.packages.add("Vector")
         for m in self.modules.values():
             if m.creator.package is not None:
                 self.packages.add(m.creator.package)
@@ -557,15 +554,8 @@ class TopLevelModule():
         s.append("// necessary packages\n")
         for p in self.packages:
             s.append("import "+p+"::*;\n")
-        # imported packages
-        #s.append("// imported packages\n")
-        # for p in self.db.packages:
-        #     #check if package is already imported
-        #     if p not in self.packages:
-        #         s.append("import "+p+"::*;\n")
         s.append("\n")
-        
-        # typedefs example. typedef 1 DATASIZE;
+
         for t in self.typedefs.keys():
             s.append("typedef " + str(self.typedefs[t]) + " " + str(t) + ";\n")
         s.append("\n")

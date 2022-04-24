@@ -1,0 +1,73 @@
+{
+    "aditional folders" : ["Flute/src_SSITH_P2/build_dir","tutorial"],
+    "packages": ["Core","MemUtils","Connectable","AXI4_Fake_16550","AXI4_Interconnect"],
+    "name" : "top",
+    "package_name" : "fluteSOC",
+    "typedefs": [
+        {
+            "name" : "ID",
+            "value" : 6
+        },
+        {
+            "name" : "ADDR",
+            "value" : 64
+        },
+        {
+            "name" : "DATA",
+            "value" : 64
+        },
+        {
+            "name" : "AWUSER",
+            "value" : 0
+        },
+        {
+            "name" : "WUSER",
+            "value" : 0
+        },
+        {
+            "name" : "BUSER",
+            "value" : 0
+        },
+        {
+            "name" : "ARUSER",
+            "value" : 0
+        },
+        {
+            "name" : "RUSER",
+            "value" : 0
+        }
+    ],
+    "modules" : [
+        {
+            "name" : "core",
+            "function": "mkCore"
+        },
+        {
+            "name" : "memory",
+            "function": "mkAXI4SimpleMem",
+            "function_params": [4096,"Maybe#('xddd')"],
+            "interface_params": ["ID","ADDR","DATA","AWUSER","WUSER","BUSER","ARUSER","RUSER"]
+        },
+        {
+            "name" : "fakeExternalConnection",
+            "function": "mkAXI4_Fake_16550_Simple",
+            "function_params": [],
+            "interface_params": ["ID","ADDR","DATA","AWUSER","WUSER","BUSER","ARUSER","RUSER"]
+        }
+    ],
+    "busses": [
+        {
+            "name" : "mainBus",
+            "function": "mkAXI4Bus",
+            "masters" : ["core.core_mem_master"],
+            "slaves" : [{
+                "name" : "memory",
+                "routes" : [[0,4096]]
+            },
+            {
+                "name" : "fakeExternalConnection",
+                "routes" : [[4096,8192],[16384,32768]]
+            }]
+        }
+    ]
+}

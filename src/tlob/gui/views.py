@@ -30,10 +30,6 @@ def listFunctions(request):
                      val.arguments[2].full_name == 'Vector::Vector' and\
                      val.arguments[0].return_type.full_name == 'Vector::Vector':
                     names.append(key)
-                    # val = db.functions['AXI4_Interconnect::mkAXI4Bus_Sig']
-                    # print(val.arguments[1].full_name == 'Vector::Vector',\
-                    #  val.arguments[2].full_name == 'Vector::Vector',\
-                    #  type(val.arguments[0]) == ExFunction)
             except Exception as e:
                 continue
     elif kind == 'all':
@@ -169,6 +165,19 @@ def confirmBus(request):
     }
     return HttpResponse(json.dumps(response))
 
+def getPossible(request):
+    json_data = json.loads(request.body)
+    name = json_data['name']
+    possibleMasters = topLevel.buses[name].mastersV.listAddable(topLevel.knownNames.items())
+    possibleSlaves = topLevel.buses[name].slavesV.listAddable(topLevel.knownNames.items())
+    response = {
+        'busname':name,
+        'possibleMasters':possibleMasters,
+        'possibleSlaves':possibleSlaves,
+        'exception':"",
+    }
+    return HttpResponse(json.dumps(response))
+
 def removeNode(request):
     json_data = json.loads(request.body)
     name = json_data['name']
@@ -197,6 +206,7 @@ def findConnections(request):
         print("name:",name)
    
         connections = topLevel.possibleConnections[name]
+        connections = list(set(connections))
         print(connections)
     except Exception as e:
         tb = traceback.format_exc()
@@ -216,6 +226,7 @@ def possibleConnectionStarts(request):
     for key,value in  topLevel.possibleConnections.items():
         if value != []:
             names.append(key)
+    names = list(set(names))
     #names = list(topLevel.knownNames.keys())
     response = {
         'names':names,

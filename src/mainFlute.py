@@ -34,7 +34,7 @@ memory = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",SPARAMS,[409
 fakeAXI = topLevel.add_moduleV2("AXI4_Fake_16550::mkAXI4_Fake_16550_Simple","aXI4_Fake_16550",SPARAMS,[])
 
 topLevel.add_connectionV2("core.core_mem_master","memory")
-topLevel.add_busV3("bus1","mkAXI4Bus",["core.core_mem_master"],[("memory",[(0,4096)]),("aXI4_Fake_16550",[(4096,8192)])])
+topLevel.add_busV3("bus1","AXI4_Interconnect::mkAXI4Bus",["core.core_mem_master"],[("memory",[(0,4096)]),("aXI4_Fake_16550",[(4096,8192)])])
 
 
 print(topLevel.to_string())

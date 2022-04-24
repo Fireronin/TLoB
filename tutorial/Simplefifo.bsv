@@ -1,20 +1,22 @@
 
 package Simplefifo;
 import GetPut :: *;
+import Connectable::*;
 
-interface FIFOIfc;
-    method Action enq(Bit#(32) value);
+interface FIFOIfc#(type value_size);
+    method Action enq(value_size value);
     method Action deq();
-    method Bit#(32) first();
+    method value_size first();
 endinterface
 
-instance ToPut#(FIFOIfc, Bit#(32));
+
+instance ToPut#(FIFOIfc#(value_size), value_size);
     function toPut (s) = interface Put;
       method put = s.enq;
     endinterface;
 endinstance
 
-instance ToGet#(FIFOIfc, Bit#(32));
+instance ToGet#(FIFOIfc#(value_size), value_size);
     function toGet (s) = interface Get;
       method get = actionvalue
         s.deq;
@@ -23,12 +25,20 @@ instance ToGet#(FIFOIfc, Bit#(32));
     endinterface;
 endinstance
 
+instance Connectable#(FIFOIfc#(value_size),FIFOIfc#(value_size));
+    module mkConnection#(
+        FIFOIfc#(value_size) s,
+        FIFOIfc#(value_size) m)
+        (Empty);
+        mkConnection(toGet(m), toPut(s));
+    endmodule
+endinstance
 
-module mkSimpleFIFO(FIFOIfc);
-    Reg#(Bit#(32)) data <- mkReg(0);
+module mkSimpleFIFO(FIFOIfc#(value_size)) provisos(Bits#(value_size, a__), Literal#(value_size));
+    Reg#(value_size) data <- mkReg(0);
     Reg#(Bool) isFull <- mkReg(False);
 
-    method Action enq(Bit#(32) value) if (isFull==False);
+    method Action enq(value_size value) if (isFull==False);
         data <= value;
         isFull <= True;
     endmethod
@@ -37,10 +47,18 @@ module mkSimpleFIFO(FIFOIfc);
         isFull <= False;
     endmethod
 
-    method Bit#(32) first() if (isFull==True);
+    method value_size first() if (isFull==True);
         return data;
     endmethod
 
+endmodule
+
+(* synthesize *)
+module mkSimpleFIFO_Synth(FIFOIfc#(Bit#(32)));
+    FIFOIfc#(Bit#(32)) fifo <- mkSimpleFIFO();
+    method enq = fifo.enq;
+    method deq = fifo.deq;
+    method first = fifo.first;
 endmodule
 
 endpackage

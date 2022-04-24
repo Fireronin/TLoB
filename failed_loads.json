@@ -1,0 +1,4 @@
+Failed to load package None 
+unsupported operand type(s) for +: 'str' and 'NoneType'
+Failed to load package ExampleAXI4 
+('Error:', b"Error: Unknown position: (S0003)\r\r\n  Cannot find the binary file `ExampleAXI4.bo' for package `ExampleAXI4'\r\r\n\r\r\n")

@@ -6,7 +6,7 @@ from typeDatabase import TypeDatabase as tdb
 from handlerV2 import *
 import argparse
 import os
-
+from colorama import Fore
 
 def lookForKeyword(keyword,dictionary):
     if keyword in dictionary:
@@ -97,7 +97,7 @@ if __name__ == "__main__":
     with open(args.json_file) as json_file:
         topLevel = load_json(json.load(json_file),args.reload)
     if args.showPossibleConnections:
-        print("Potential connections:")
+        print(Fore.BLUE + "Potential connections:" + Fore.RESET)
         for start,ends in topLevel.possibleConnections.items():
             print(f"{start} -> {[end for end in ends]}")
         for busName,busInstance in topLevel.buses.items():
@@ -106,11 +106,13 @@ if __name__ == "__main__":
             print(f"Possible slaves for {busName} {busInstance.slavesV.flit_type_ide}:")
             print(topLevel.buses['mainBus'].slavesV.listAddable(topLevel.knownNames.items()))
     if args.showTypes:
-        print("Infered Interfaces:")
+        print(Fore.BLUE + "Infered Interfaces:"+ Fore.RESET)
         for name,value in topLevel.knownNames.items():
             print(f"{name} : {value}")
     if True:
-        print("Valid arguments:")
+        print(Fore.BLUE + "Valid arguments:" + Fore.RESET)
         for name,instance in topLevel.instances.items():
+            if type(instance) != InstanceV2 or instance.creator.name == "mkConnection":
+                continue
             print(f"{name} : {topLevel.validArguments(instance.creator)}")
-    print("Finished")
+    print(Fore.GREEN + "Finished" + Fore.RESET)

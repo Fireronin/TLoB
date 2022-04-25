@@ -172,13 +172,12 @@ I decided to use Lark library for lexical and syntax analysis. This library take
 \subsection{Understanding abstract syntax tree (AST)}
 Given AST I needed to turn it into a more useful form. To do this I used \verb!Transformer! class provided by Lark. The way it worked is that I created subclass of \verb!Transformer! that implemented a function for each non-terminal / rule(Each non-terminal can have multiple rules and Lark allows for renaming individual of rules, this for example allows parsing different non-terminals using same function or parsing single non-terminal using different function depending on rule that was used). \verb!Transformer! will then perform bottom up transformation of AST, and for each rule it will call respective member function, with parsed children(non-terminals used by rule) as arguments. At the end of the transforming process I have a list of objects that represented data from Blutecl.
 \\
-One of the bigger inconveniences I encounter is the fact that Lark passes parsed children, as a simple list. This doesn't provide information about what exactly is each child, this isn't a problem if rule contains fixed number of non-terminals, but otherwise I employ mix of length based inference, or I wrap data from children into tuples, to provide remove ambiguity.
+One of the bigger inconveniences I encounter is the fact that Lark passes parsed children, as a simple list. This doesn't provide information about what exactly each child is, this isn't a problem if rule contains fixed number of non-terminals, but otherwise I employ mix of length based inference, and wrapping of data from children into tuples, to provide remove ambiguity.
 \\
 What was quite useful at this stage is Python's type system flexibility, I was able to gradually build up \verb!Transformer! class and add typing information only after I had firm understand what type something needs to be. For some things it wasn't immediately obvious, what is the best way to represent them, and what often happen is I would first leave them as lists of unparsed things. Then after I got to the point where I needed to use them I would decide what is an optimal way to represent them.
 
 \subsection{Organizing data and functionality}
-I created a class called \verb!TypeDatabase! that provides simple functions that manage loading and parsing packages information. It is also capable of loading and storing it's state to pickle file. This saves a lot of time as all this parsing and communication with bluetcl isn't particularly fast. This class is also a home to set of functionality used to resolve types.
-TODO some break down of the speed.
+I created a class called \verb!TypeDatabase! that provides simple functions that manage loading and parsing packages information. It is also capable of loading and storing it's state to pickle file. This saves a lot of time as all this parsing and communication with bluetcl isn't particularly fast. This class is also a home to set of functionality used to resolve types. From my testing it takes about 370s to load roughly 250 packages that I found included with Bluespec compiler and created to compile Flute CPU. Loading those packages from cached files takes only few seconds.
 
 \section{Building the top level module}
 Building the top level module can be broken down into few operations.
@@ -194,7 +193,7 @@ At the basis of all those features will be type resolution, and I will first exp
 \subsubsection{Provisos explained (intuition)}
 On big feature of Bluespec typing is support for provisos. They create constraints on types that can be used with given function and give information about expected type of output of the function. This is similar to Java's generic types, but it is much more powerful. For example, we can have a polymorphic function extend of a type \verb!Bit#(a)! to \verb!Bit#(b)! where \verb!Bit#(x)! a vector of $x$ bits, which accepts any length a and always return vector of length $b=a+1$. To do something like this we would write a proviso \verb!Add#(a,1,b)! which means that $a+1$ must be equal to $b$. This was example of Size relationship proviso.
 \\
-There is also other type of provisos that are typeclass based and work similarly to Prolog. We have variables that are lowercase names, we have values that are either strings or integers, and we have parametric types that are like Prolog's compound terms. Typeclass instances are like rules and provisos attached to it are like predicates. To resolve types I do something similar to Prolog's resolution. I don't have a proof of this, but I think my resolution procedure is Turing complete.
+There is also other type of provisos that are typeclass based and work similarly to Prolog. We have variables that are lowercase names, we have values that are either strings or integers, and we have parametric types that are like Prolog's compound terms. Typeclass instances are like rules and provisos attached to it are like predicates. To resolve types I do something similar to Prolog's resolution. I don't have a proof of this, but I think my resolution procedure is Turing complete, on a basis that Prolog is Turing complete.
 
 \subsubsection{Provisos explained (formally)}
 There are two types of provisos: Size Relationship provisos, and typeclass based provisos.
@@ -212,12 +211,12 @@ In my code there are 4 main functions that combined allow for type resolution:
 \begin{itemize}
     \item \verb!merge! function takes two type identifiers and returns map (dictionary) from names of variables to theirs values. It's similar to Prolog's unification operator.
     \item \verb!applyVariables! function takes a dictionary and a type and returns a type with all variables replaced by their values. This is more of a utility function.
-    \item \verb!resolveTypeclass! function that takes a type identifier that is an instance of a typeclass and returns dictionary of resolved variables. This is like looking which rule can be applied and returning result of applying that rule.
+    \item \verb!resolveTypeclass! function that takes a type identifier that is an instance of a typeclass and returns dictionary of resolved variables. In Prolog this is like looking which rule can be applied and returning result of applying that rule.
     \item \verb!solveProvisos! function that takes a dictionary and a list of provisos and returns a dictionary with variables. This is like checking predicates in Prolog.
 \end{itemize}
 Those functions can also fail with exception if something is impossible / wrong data is provided.
 
-Type identifier is a tree where every non leaf node is another type identifier, and leaf nodes are either variables or values(strings, ints). Example type identifier \verb!Foo#(a,42,"file.hex")! is a type with name \verb!Foo! and three arguments \verb!a! (variable) and \verb!42! (int value) and \verb!"file.hex"! (string value).
+Type identifier is a tree where every non leaf node is another type identifier, and leaf nodes are either variables or values(strings, ints). Example type identifier \verb!Foo#(a,42,"file.hex")! is a type with name \verb!Foo! and three arguments \verb!a! (variable) and \verb!42! (int value) and \verb!"file.hex"! (string value). Type identifiers can also describe functions, and those just need to run unification on both result and arguments of a function.
 
 \subsubsection*{Merge function}
 This function works like a two synchronized dfs's, that go through the trees (type identifiers) and apply logic based on nodes that are beginning currently visited.
@@ -230,10 +229,10 @@ This function needs to account for quite a lot of special cases here are some of
 The most complicated case is when both nodes are variables. There is a breakdown what happens then. 
 \begin{itemize}
     \item Case 1 - Both variables have a value, so I need to check if value is the same.
-    \item Case 2 - One of the variables has a value, and other variable has no value. In this case I can just copy value from one variable to other.
-    \item Case 3 - Neither of the variables has a value. In this case I create a dummy object and set it as a value of both of variables, then resolving one of them will update the value of both.
+    \item Case 2 - One of the variables has a value, and other variable doesn't value assigned. In this case I can just copy reference to a value to the other variable.
+    \item Case 3 - Neither of the variables has a value. In this case I create a new dummy object and give reference to it to both of the variables. Using references makes it so resolving value of one of the variables will resolve all of them. 
 \end{itemize}
-If done carefully, this is quite efficient as we don't need to manage propagation of values of variables, everything is done by just writing to shard object.
+If done carefully, this is quite efficient as we don't need to manage propagation of values of variables, everything is done by just writing to shared object.
 
 \subsubsection{Apply variables function}
 This function is quite simple, it just traverses a type identifier and replaces all variables with their values.
@@ -251,31 +250,29 @@ To check if proposed instance of a typeclass is a valid instance we perform foll
     \item If provisos were successfully solved, return the dictionary of resolved variables, otherwise continue iteration.
     \item If all iterations failed, fail.
 \end{enumerate}
-This procedure is a bit slow, so I speed it up by creating look up dictionaries that take as a key a dictionary  In specific scenarios like, when user creates connection between two interfaces, I can run a heuristic that only checks if names of type identifiers match, to quickly trim search space. Doing this in general is non-trivial, due to existence of dependencies. As it's possible to have typeclass like this:
-\\
-\verb!Foo#(a,b,c)! where \verb!a determines b,c! and \verb!b,c determines a! then I would need to check which case this is then to do lookup in a dictionary corresponding to that dependency. Preprocessing of such dictionaries would take something like $O(nInstances^2*nDependencies)$ time, and it would add unnecessary complexity. (Though it's something that might be worth looking in the future.)
+This procedure is a bit slow, so I speed it up by creating look up dictionaries that take as a key a dictionary and as a value a typeclass instance. This method can cut down search time significantly, but there are still rules that use polymorphic functions and those can't be preprocessed away so easily, therefore I call them universal instances and search through them every time. While I could invent many heuristics to speed up this process in general this is still as difficult as halting problem.
 
-\subsubsection*{Solve provisos function}
-TODO (I think my implementation is bugged as it can fail, in an edge case due to ordering of provisos)
+\subsubsection{Solve provisos function}
+As established earlier, provisos can be of two types, one are based on typeclasses and those can be resolved using above described function, and the other ones are size based and require solving sets of equations on integers. To do this I use library called SymPy. SymPy is a symbolic math library that can be used to solve equations on integers. All I need to do is convert set of provisos into set of equations, and then extract data and put it back into dictionary used to store variables. 
 
-\subsubsection*{How those functions can be used}
-Thanks to those functions, my code can check if types of arguments given by the user are correct (thanks to merge function). I can check if enough information about expected resulting type of overloaded function was given and if so, I can use it to deduce types of subinterfaces.
+One big problem is that order in which provisos must be solved is not defined, so I handle this by creating set of provisos to be solved. Then I repeatedly iterate over this set and remove solved provisos. If set didn't change after iteration, and it's not empty this means not further progress can be made and raise an exception.
+
+\subsubsection{How those functions can are used}
+Thanks to those functions, I can tell user what values can be put into each argument in a function. I can check if arguments passed to a function satisfy provisos when combined. I can give user a list of all possible connection that can be made. 
 
 \section{Synthesizing}
-The goal of the project is to be able to take a JSON with some data and synthesize a top module in the Bluespec language from it. This goal is more like a justification to create a language server like API. With this approach I have some simple core goal, but in the later sections we will see how thanks to all the work I can use this API to support GUI that aids the user in creating a top module. Therefore, I will focus in this section on how the API works, and only later how is it used when reading JSON or as a backend to the GUI based app.
+The main goal of the project is to be able to take a JSON with some data and synthesize a top module in the Bluespec language from it. This goal is more like a justification to create a language server like API. With this approach I have some simple core goal, but in the later sections we will see how thanks to all the work I have done, this API can be used to support GUI that aids the user in creating a top module. Therefore, I will focus in this section on how the API works, and only later how is it used when reading JSON or as a backend to the GUI based app.
 
-\subsubsection*{Top level module object}
-Let's start with quick overview of the functions found in API.
+\subsubsection{Top level module object}
+Let's start with quick overview of the main functions found in API.
 \begin{itemize}
-    \item \verb!addModule! as the name suggest this function adds an instance of a module.
-    \item \verb!addConnection! Essentially a wrapper on a \verb!addModule! function that adds connection between two interfaces.
-    \item \verb!addBus! given list of slaves and masters it adds a bus with those interfaces connected.
-    \item \verb!listConnectable! is a function not meant to be called directly by the user, it will be called by the \verb!addModule!, and it will populate the dictionary of possible connections (that user can use).
-    \item \verb!remove! to remove previously added things.
+    \item \verb!addModule! as the name suggest this function adds an instance of a module, or (TODO how result of a function is called)
+    \item \verb!addConnection! This creates a connection between two interfaces or members of interfaces between previously instantiated things. Essentially a wrapper on a \verb!addModule! function.
+    \item \verb!addBus! given list of slaves(with ranges on which they are accessible) and masters it adds a bus with those interfaces connected.
     \item \verb!to_string! that returns a string representing \verb!.bsv! file with top module as defined by previous calls.
 \end{itemize}
 
-\subsubsection*{Adding modules (introduction)}
+\subsubsection{Adding modules (introduction)}
 Adding an instance of a module in Bluespec is done by calling function used to instantiatie chosen module, and potentially assigning it to a variable of a type of interface produced by a function. It's worth keeping in mind that not all such functions can create new modules (those who do are called modules and one that don't are called functions in Bluespec), for example \verb!fromAXI4LiteToAXI4_Master! is a function that will take already existing instance with \verb!AXI4_Master! interface and return \verb!AXI4Lite_Master! interface, and all of this will be done by just assigning functions and subinterfaces found in one to the other one. Fortunately, there is no need for me to treat modules different from the functions. The only thing that will be treated differently are busses and connections, as they are functions like described above but theirs result interface is \verb!Empty!(similar to void in C++), so there is no need to assign them to a variable.
 \\
 One more decision I had to make was whether I want to support \verb!let! as a type. \verb!let! keyword is used to omit writing type of variable explicitly. This makes it so compiler has to deduce it from the output of a function defining such variable. While Bluespec is strongly typed language it's not always possible to use \verb!let!. For example, in cases where you create a module with polymorphic interface, there might not be enough information to deduce the full type of the interface. What's even more confusing is that sometimes you only need to provide some subset of variables in the type of interface, and the rest can be deduced using provisos. (TODO check this) Bluespec doesn't support something like this, but I do. On the other hand I don't support \verb!let! keyword and I will always write out full type explicitly, this makes it harder to modify the code, as some changes might require more changes down the line, but this produces more readable code, also making such changes is still quick if done before code generation.
@@ -312,7 +309,14 @@ Routing function is a function that takes a route and produces one hot vector, t
 To create a routing function two things must be created. First I need to create a new function to be added to the database of known functions. To do this I just reuse my parsing tooling. As for creating code for it, I generate it by simply adding \verb!if! statement for each address region. I also generate comments giving information about which slave occupy which address region.
 
 \subsection*{JSON interface}
-I decided that my \say{human-readable format} will be JSON. This is because wide support for JSON is already available in many languages. The only problem of JSON is that it's more verbose than Bluespec, and in theory it would make more sense to use Bluespec. However, this could introduce user confusion, as I wouldn't be able to support arbitrary Bluespec features. My understanding is that supporting something only partially could lead users to think that my tool is broken, because it doesn't match theirs assumptions about what it can do. While it can be argued that if I had written this project as extension of Bluespec compiler I could have supported all features of Bluespec (thanks to already written logic). As explained at the beginning of this document, doing this was infeasible for me as a part II project. \\
+I decided that my \say{human-readable format} will be JSON. This is because wide support for JSON is already available in many languages. 
+The only problem of JSON is that it's more verbose than Bluespec, and in theory it would make more sense to use Bluespec. 
+However, this could introduce user confusion, as I wouldn't be able to support arbitrary Bluespec features.
+My understanding is that supporting something only partially could lead users to think that my tool is broken, because it doesn't match theirs assumptions about what it can do. 
+While it can be argued that if I had written this project as extension of Bluespec compiler I could have supported all features of Bluespec (thanks to already written logic). 
+As explained at the beginning of this document, doing this was infeasible for me as a part II project. 
+At the same time using JSON allows me to support simplified semantics for bus creation, and features not found in Bluespec like specification of folders with libraries imported.
+
 With this out of the way let's talk about how I'm using JSON files.
 \subsubsection*{Structure of JSON file}
 At the top level of the file user can define following things:(TODO change those names to something more descriptive)
@@ -332,7 +336,7 @@ At the top level of the file user can define following things:(TODO change those
         \item \say{function} - Name of the function that will be used to instantiate the module.
         \item \say{function\_params} - List of parameters that will be passed to the function. (optional if function dose not take any parameters)
         \item \say{interface\_params} - List of the parameters of created interface. (optional if it's possible to deduce them from functions type)
-        \item \say{context} - TODO implement, ability to pass only specific interface parameters
+        \item \say{context} - This adds ability to pass interface parameters in unordered maner. This is useful if actual type is quite complex, but most of the parameters can be deduced.
     \end{itemize}
     \item \say{connections} - List of connections that will be added to the global scope. \\
     \begin{itemize}
@@ -344,28 +348,29 @@ At the top level of the file user can define following things:(TODO change those
         \item \say{name} - Name of the bus. (optional)
         \item \say{function} - Name of the function that will be used to instantiate the bus.
         \item \say{masters} - List of names used to access interfaces that will be used as masters.
-        \item \say{slaves} - List of slaves. \\
+        \item \say{slaves} - List of slaves. 
         \begin{itemize}
             \item \say{name} - Name used to access the interface.
-            \item \say{routes} - List of lists length two that specify starts and ends of address regions that will be used by this slave. \\
+            \item \say{routes} - List of lists length two that specify starts and ends of address regions that will be used by this slave. 
         \end{itemize}
     \end{itemize}
 \end{itemize}
 
-\subsubsection*{Using JSON interface}
-At this point if all I did was simply synthesizing a Bluespec file from JSON, it would be possible to do that just by doing simple string manipulation. I know this because my initial iterations were doing this. However, my tool can do more than that, the important feature is this tools ability to display all possible connections' user can make between interfaces and subinterfaces. It is also able to show what possible valid master and slaves are for a given bus(Assuming at least one master and slave are present as otherwise it doesn't make sense). Finally, it can also display types of all interfaces and subinterfaces. This can be useful when using complex modules, like a core that doesn't have any direct connections, but It has many subinterfaces that can be connected to things like memory, external devices, etc. \\
+\subsubsection{Using JSON interface} 
+If all I did was simply synthesizing a Bluespec file from JSON, it would be possible to do that just by doing simple string manipulation.
+I know this because my initial iterations were doing this. However, my tool can do more than that. One important feature is this tools ability to display all possible connections' user can make between interfaces and subinterfaces. It is also able to show what possible valid master and slaves are for a given bus(Assuming at least one master and slave are present as otherwise it doesn't make sense). Finally, it can also display types of all interfaces and subinterfaces. This can be useful when using complex modules, like a CPU core that doesn't have any direct connections, but It has many subinterfaces that can be connected to things like memory, external devices, etc.
 
 \subsection{GUI}
-Adding GUI was an optional goal mentioned in the project proposal. I originally intended to use some game engine to create a GUI, but Bluespec compiler is a Linux tool and game engines like Unreal Engine 4 or Unity3d are meant to be used on Windows, I decided against that idea. Instead, I found a library called React Flow, that provided nice API for creating graph based user interfaces. After some though I decided to create a GUI as a website. This was quite an adventure as It was my first contact with full stack web development. (I have done backend in .NET and \verb!C#! for group project in last term, but it was mostly focused on writing queries to database)
+Adding GUI was an optional goal mentioned in the project proposal. I originally intended to use a game engine, but Bluespec compiler is a Linux tool and game engines like Unreal Engine 4 or Unity3d are optimized to be used on Windows, so I decided against that idea. Instead, I found a library called React Flow, that provided simple API for creating graph based user interfaces. Therefore I decided to create a GUI as a website. This was quite an adventure as It was my first contact with web development. (I have done backend in .NET and \verb!C#! for group project in last term, but it was mostly focused on writing queries to database)
 
 
-\subsubsection*{Backend}
-For backend, I had a choice between Django and Flask. After reading about them in theory Flask was supposed to be better for small projects, like this one. However, I decided to use Django because I wanted to learn technology that might be more useful in the future. I followed official tutorial on Django and after initial pain with security adding functionality was easy.
+\subsubsection{Backend}
+For backend, I had a choice between Django and Flask (as those are main python libraries). After reading about them in theory Flask was supposed to be better for small projects, like this one. However, I decided to use Django because I wanted to learn technology that will be more useful in the future. I followed official tutorial on Django and after initial pain with security adding functionality was easy.
 
-\subsubsection*{Frontend (React)}
+\subsubsection{Frontend (React)}
 Frontend was written in React.js as you might have guessed from the name of the library I wanted to use. According to \href{https://insights.stackoverflow.com/survey/2021#most-popular-technologies-webframe}{Stack Overflow 2021 survey} React.js is the most popular frontend technology in 2021, so again I considered time spent on learning it to be good investment. One thing that took me quite a bit to get used to is everything being a function(React.js supports classes, but it's an old paradigm and I wanted to learn doing thing the \say{correct} way). This makes working with variables a bit tricky, as changes to state variable cause re-rendering of the whole component, and if variable is not a state variable, then it's value is going to be lost after re-rendering. If not careful is easy to cause feedback loop causing infinite re-rendering and subsequent crash of the application. 
 
-\subsubsection*{Frontend (React Flow)}
+\subsubsection{Frontend (React Flow)}
 \begin{tcolorbox}[title=Vocabulary]
     \begin{itemize}
         \item Handle - Is a component of node that is used to start or end a connection. TODO include a image of a handle.
@@ -377,11 +382,52 @@ For example position of a handle is constrained to the middle of side of a node,
 Therefore, I needed to write some finicky CSS to align handle with text displaying its name. [TODO improve this sentence.]
 \\
 Another thing that is problematic about React Flow is that it will cause node component to update every time it is moved. 
-What I found is that if you wrap larger subcomponents of a node in \verb!memo! from React, then performance stays quite good even if multiple nodes are moving.   
+What I found is that if you wrap larger subcomponents of a node in \verb!memo! from React, then performance stays quite good even if multiple nodes are moving as React will cache rendered subcomponents.  
 \\
 On the bright side after I figured out workarounds for those issues, I was left with many other things being handled by library. This included automatic graph formatting, and pretty Bézier curves for edges. 
 
-\subsubsection*{Frontend (MUI)}
-My default HTML buttons, and text boxes are ugly. So I decided to use React UI component library called MUI (previously Material UI). I don't have much to say about it except that use of it was seamless, at least in my humble option made my application look modern. I'm mentioning this as one of my complaints about Intel's QSys was that it's UI is decades old.
+\subsubsection{Frontend (MUI)}
+My default HTML buttons, and text boxes are ugly. So I decided to use React UI component library called MUI (previously Material UI). I don't have much to say about it except that use of it was frictionless, at least in my humble opinion it made my application look modern. I'm mentioning this as one of my complaints about Intel's QSys was that it's UI is decades old.
+
+\subsubsection{Functionality}
+Using this GUI user can do following things. 
+\begin{itemize}
+    \item Instantiate new module. 
+    \item Connect two interfaces.
+    \item Create a bus.
+    \item Look at created Bluespec file.
+\end{itemize}
+Almost all the fields that user needs to fill have context based autocompletion. 
+\begin{itemize}
+    \item There are autocompletion for functions that can be used to instantiate a module, and for possible valid arguments of that function that include previously created interfaces and typedefs found in loaded packages.
+    \item After user selects one side of the connection the other side will have completions only for interfaces that are compatible with the selected interface. 
+    \item When creating a bus it will only show functions that have a characteristic of a bus creating function.
+    \item After initialization of a bus, autocompletion will show valid masters and slaves. 
+\end{itemize}
+Also, user can just drag and drop connections between interfaces and fields, and if user types in name of interface connection will be automatically created.
+
+\begin{tcolorbox}[title=Futher work]
+    It's worth keeping in mind that for GUI like this there is multitude of things that can be added. Like an option to filter functions based on input that we want to use. Running and showing output of the simulation or an ability to collapse and expand nodes to make the graph more readable(currently some parts of nodes allow for this already). Adding comments that partition the graph (like in UE4).
+\end{tcolorbox}
+
+\chapter{Evaluation}
+
+\section{Overview}
+My evaluation will be divided into two sections each with three subsections. First section will compare text file formats of QSys and mine and second section will compare GUI of QSys and mine.
+Each of the subsection will go through three examples:
+\begin{itemize}
+    \item First one will show simple example of two connected fifos, and difficulty of connecting a thrid one.
+    \item Second will show an example of simple system-on-chip (SOC). With one Flute core, memory module and fake interface with outside world, all connected by a bus.
+    \item Third example will two AXI4 masters and two AXI4 slaves connected by a bus. 
+\end{itemize}
+First two examples will produce valid devices, but they won't do anything interesting. Last example will produce a working top level module that will demonstrate practical use of the tool.
+
+\subsection{Polymorphism disclaimer}
+Before we even create text files that we are going to compare we talk about an issue when working with QSys and Bluespec. That is the fact that Bluespec can't generate Verilog code of functions that are polymorphic. Nor there is support for Bluespec in QSys nor Xilinx Vivado. My understanding is Verilog type system is not rich enough to express things that would be needed to support complex polymorphism found in Bluespec. Therefore, any module used with QSys will need to be converted into it's synthesizable version stripped of any arguments and transpiled into Verilog. One might argue that this is an issue with Bluespec and not QSys, but I would argue that it is still a problem that needs fixing I have solution for It, that is working with Bluespec natively rather than Verilog files. 
+
+
+\section{Text file format}
+\subsection{Connected FIFOs}
+
 
 \end{document}

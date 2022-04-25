@@ -15,4 +15,6 @@ urlpatterns = [
     path('findConnections/', views.findConnections, name='findConnections'),
     path('knownNames/', views.knownNames, name='knownNames'),
     path('possibleConnectionStarts/', views.possibleConnectionStarts, name='possibleConnectionStarts'),
+    path('buildAndRun/', views.buildAndRun, name='buildAndRun'),
+    path('getPossible/', views.getPossible, name='getPossible'),
 ]

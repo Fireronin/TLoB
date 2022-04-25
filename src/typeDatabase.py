@@ -25,16 +25,7 @@ class Variable():
     def __init__(self,value=None):
         self.value = value
 
-def CAdd(variables:Dict[str,Variable],s,value):
-    if type(value) == Variable:
-        value = value.value
-    if s not in variables:
-        variables[s] = Variable(deepcopy(value))
-    else:
-        if variables[s].value != value:
-            raise Exception("Conflicting values for variable: "+s)
-        else:
-            variables[s].value = value
+
 
 def variablesToStr(variables:Dict[str,Variable]):
     string = ""
@@ -50,6 +41,7 @@ class TypeDatabase():
     structs: Dict[str,Struct] = {}
     functionNameCache: Dict[str,str] = {}
     packages: Set[str] = set()
+    additionalLibraryFolders: Set[str] = set()
     logged_funcs: bytes = b""
     logged_types: bytes = b""
     handler: Handler
@@ -82,8 +74,20 @@ class TypeDatabase():
                     print("Failed to remove file: " + file)
     
     def addLibraryFolder(self,folder):
+        self.additionalLibraryFolders.add(folder)
         self.handler.add_folder(folder)
 
+    def CAdd(self,variables:Dict[str,Variable],s,value):
+        if type(value) == Variable:
+            value = value.value
+        if s not in variables:
+            variables[s] = Variable(deepcopy(value))
+        else:
+            try:
+                self.merge(variables[s].value,value,{})
+            except Exception as e:
+                raise Exception("Conflicting values for variable: "+s)
+            variables[s].value = value
     
     def populateFunctionNames(self):
         
@@ -125,7 +129,7 @@ class TypeDatabase():
         fuzzyException(name,list(self.functions), "Function {} not found. \n Do you mean: \n{}")
     
     def getTypeByName(self,t_type:Union[Type,str]):
-        if type(t_type) == Type:
+        if type(t_type) == Type or type(t_type) == Type_ide:
             tname = t_type.name
             tfullNmae = t_type.full_name
             tpackage = t_type.package
@@ -274,19 +278,19 @@ class TypeDatabase():
         if type(b) == Type_ide and b.is_polymorphic:
             b = b.name
         if type(a) == str and type(b) != str:
-            CAdd(variables,a,b)
+            self.CAdd(variables,a,b)
         if type(b) == str and type(a) != str:
-            CAdd(variables,b,a)
+            self.CAdd(variables,b,a)
         
         if type(a) == str and type(b) == str:
             if a in variables and b in variables:
                 assert variables[a] == variables[b]
             elif a in variables:
-                CAdd(variables,b,variables[a].value)
+                self.CAdd(variables,b,variables[a].value)
             elif b in variables:
-                CAdd(variables,a,variables[b].value)
+                self.CAdd(variables,a,variables[b].value)
             else: 
-                CAdd(variables,a,None)
+                self.CAdd(variables,a,None)
                 variables[b] = variables[a]         
         
         if type(a) == Value and type(b) == Value:
@@ -308,6 +312,10 @@ class TypeDatabase():
                 if a.full_name == "String" or len(a.formals) > 0:
                     raise Exception(f"Cannot merge {a} and {b} because {a} is a string and {b} is an int")
             return variables
+        if type(b) == Function and type(a) != Function:
+            a,b = b,a
+        if type(a) == Function and len(a.arguments)==0 and type(b) == Type_ide:
+            a = a.return_type
         if type(a) == Type_ide and type(b) == Type_ide:
             if a.full_name != b.full_name:
                 raise Exception(f"Cannot merge different types, {a} and {b}")
@@ -315,22 +323,21 @@ class TypeDatabase():
                 fa,fb = pair
                 newVariables = self.merge(fa,fb,variables)
                 for key in newVariables:
-                    CAdd(variables,key,newVariables[key].value)
-        if type(b) == Function and type(a) != Function:
-            a,b = b,a
+                    self.CAdd(variables,key,newVariables[key].value)
+        
         if type(a) == Function and type(b) != Function and type(b) != str:
             raise Exception(f"Cannot merge {a} and {b}")
         if type(a) == Function and type(b) == Function:
             newVariables = self.merge(a.return_type,b.return_type,variables)
             for key in newVariables.keys():
-                CAdd(variables,key,newVariables[key].value)
+                self.CAdd(variables,key,newVariables[key].value)
             if len(a.arguments) != len(b.arguments):
                 raise Exception(f"Cannot merge functions with different number of arguments, {a} and {b}")
             for pair in zip(a.arguments.values(),b.arguments.values()):
                 fa,fb = pair
                 newVariables = self.merge(fa,fb,variables)
                 for key in newVariables.keys():
-                    CAdd(variables,key,newVariables[key].value)
+                    self.CAdd(variables,key,newVariables[key].value)
 
         return variables
 
@@ -399,9 +406,9 @@ class TypeDatabase():
         typeclass.lookUpDictionaries = lookUpDictionaries
         typeclass.universalInstances = universalInstances
 
-    @timeout(60)
+    #@timeout(60)
     def resolveTypeclass(self,typeclass: Typeclass,t_type: Type_ide,instance_hint:Typeclass_instance=None) -> Type_ide:
-        typeclass = self.getTypeByName(typeclass.full_name)
+        typeclass = self.getTypeByName(typeclass.type_ide)
         variables = self.merge(typeclass.type_ideAlpha,t_type,{})
         #append vars
         keyDict = {}
@@ -443,7 +450,7 @@ class TypeDatabase():
             return solvedVariables
         raise Exception(f"Cannot solve {typeclass} {t_type}")
 
-    @timeout(60)
+    #@timeout(60)
     def solveProvisos(self,provisos,variables):
         if provisos == []:
             return variables
@@ -476,7 +483,7 @@ class TypeDatabase():
                     solvedVariables = solveNumerical(numerical,variables)
                 
                     for key,val in solvedVariables.items():
-                        CAdd(variables,key,val)        
+                        self.CAdd(variables,key,val)        
                 except Exception as e:
                     numericalProgress = False
 
@@ -489,10 +496,11 @@ class TypeDatabase():
                     toDo.append(proviso)
                     continue
                 for key,val in newVariables.items():
-                        CAdd(variables,key,val)   
+                    self.CAdd(variables,key,val)   
                 
             
-            if len(toDo) == len(lastTodo) and not numericalProgress:  
+            if len(toDo) == len(lastTodo) and not numericalProgress:
+                self.resolveTypeclass(self.typeclasses[proviso.full_name],transformed)
                 raise Exception(f"Cannot solve provisos {provisos} with variables \
                 {variablesToStr(variables)}")
             else:
@@ -511,10 +519,14 @@ class TypeDatabase():
         #     if t_type.full_name != "nothing":
         #         print(f"{t_type.full_name} not found")
         #     return
-        
-        other = self.types[t_type.full_name]
-        variables = self.merge(t_type,other.type_ide,{})
         t_type.members = {}
+        try:
+            other = self.types[t_type.full_name]
+        except Exception as e:
+            print("Warning: ",e)
+            return
+        variables = self.merge(t_type,other.type_ide,{})
+        
         for key in other.members.keys():
             if type(other.members[key]) == Function:
                 t_type.members[key] = self.applyVariables(deepcopy(other.members[key]),variables)
@@ -587,6 +599,7 @@ class TypeDatabase():
             d["logged_funcs"] = self.logged_funcs
             d["logged_types"] = self.logged_types
             d["functionNameCache"] = self.functionNameCache
+            d["additionalLibraryFolders"] = self.additionalLibraryFolders
             pickle.dump(d,f)
             f.close()
 
@@ -602,4 +615,5 @@ class TypeDatabase():
             self.logged_funcs = d["logged_funcs"]
             self.logged_types = d["logged_types"]
             self.functionNameCache = d["functionNameCache"]
+            self.additionalLibraryFolders = d["additionalLibraryFolders"]
             f.close()

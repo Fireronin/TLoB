@@ -2,6 +2,7 @@
 package Simplefifo;
 import GetPut :: *;
 import Connectable::*;
+import FIFO::*;
 
 interface FIFOIfc#(type value_size);
     method Action enq(value_size value);
@@ -9,6 +10,10 @@ interface FIFOIfc#(type value_size);
     method value_size first();
 endinterface
 
+interface FIFOIfcConnector#(type value_size);
+    interface FIFOIfc#(value_size) ff1;
+    interface FIFOIfc#(value_size) ff2;
+endinterface
 
 instance ToPut#(FIFOIfc#(value_size), value_size);
     function toPut (s) = interface Put;
@@ -34,9 +39,15 @@ instance Connectable#(FIFOIfc#(value_size),FIFOIfc#(value_size));
     endmodule
 endinstance
 
+
+
 module mkSimpleFIFO(FIFOIfc#(value_size)) provisos(Bits#(value_size, a__), Literal#(value_size));
     Reg#(value_size) data <- mkReg(0);
     Reg#(Bool) isFull <- mkReg(False);
+
+    FIFO#(Bit#(32)) fifo <- mkFIFO();
+    FIFO#(Bit#(32)) fifo2 <- mkFIFO();
+    mkConnection(fifo.enq, fifo2.first);
 
     method Action enq(value_size value) if (isFull==False);
         data <= value;
@@ -60,5 +71,17 @@ module mkSimpleFIFO_Synth(FIFOIfc#(Bit#(32)));
     method deq = fifo.deq;
     method first = fifo.first;
 endmodule
+
+// module mkConnectionFIFOs#(FIFOIfc#(value_size) f1, FIFOIfc#(value_size) f2) (FIFOIfcConnector#(value_size));
+//     interface ff1 = f1;
+//     interface ff2 = f2;
+//     mkConnection(f1,f2);
+// endmodule
+
+// (* synthesize *)
+// module mkConnectionFIFOs_Synth (FIFOIfcConnector#(Bit#(32)));
+//     interface ff1  
+//     mkConnection(toGet(m), toPut(s));
+// endmodule
 
 endpackage

@@ -6,7 +6,7 @@ import traceback
 sys.path.append("..")
 from typeDatabase import TypeDatabase as tdb
 from bsvSynthesizer import *
-
+from django.views.decorators.cache import never_cache
 
 print(os.getcwd())
 
@@ -16,9 +16,13 @@ print(len(db.functions))
 print
 
 # Create your views here.
+
+
+@never_cache
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
+@never_cache
 def listFunctions(request):
     json_data = json.loads(request.body)
     kind = json_data['type']
@@ -42,6 +46,7 @@ testRequestAddModule = {
     "creator":"mkCore"
 }
 
+@never_cache
 def addModule(request):
     # parse post request with json
     
@@ -65,6 +70,7 @@ def addModule(request):
     print(response)
     return HttpResponse(json.dumps(response))
 
+@never_cache
 def confirmModule(request):
     json_data = json.loads(request.body)
     name = json_data['name']
@@ -92,11 +98,13 @@ def confirmModule(request):
     }
     return HttpResponse(json.dumps(response))
 
+@never_cache
 def confirmDesign(request):
     bsvText = topLevel.to_string()
     responseJson = {"bsvText" : bsvText}
     return HttpResponse(json.dumps(responseJson))
 
+@never_cache
 def confirmConnection(request):
     json_data = json.loads(request.body)
 
@@ -116,6 +124,7 @@ def confirmConnection(request):
     }
     return HttpResponse(json.dumps(response))
 
+@never_cache
 def confirmBus(request):
     json_data = json.loads(request.body)
     print(json_data)
@@ -165,6 +174,7 @@ def confirmBus(request):
     }
     return HttpResponse(json.dumps(response))
 
+@never_cache
 def getPossible(request):
     json_data = json.loads(request.body)
     name = json_data['name']
@@ -178,6 +188,7 @@ def getPossible(request):
     }
     return HttpResponse(json.dumps(response))
 
+@never_cache
 def removeNode(request):
     json_data = json.loads(request.body)
     name = json_data['name']
@@ -197,6 +208,7 @@ def removeNode(request):
     print(topLevel.instances)
     return HttpResponse(json.dumps(response))
 
+@never_cache
 def findConnections(request):
     print(request.body)
     json_data = json.loads(request.body)
@@ -221,6 +233,7 @@ def findConnections(request):
     }
     return HttpResponse(json.dumps(response))
 
+@never_cache
 def possibleConnectionStarts(request):
     names = []
     for key,value in  topLevel.possibleConnections.items():
@@ -233,6 +246,7 @@ def possibleConnectionStarts(request):
     }
     return HttpResponse(json.dumps(response))
 
+@never_cache
 def fullClear(request):
     global db,topLevel
     db = tdb(load=True,saveLocation=os.path.join("../../saved"))
@@ -242,9 +256,27 @@ def fullClear(request):
     }
     return HttpResponse(json.dumps(response))
 
+@never_cache
 def knownNames(request):
     names = list(topLevel.knownNames.keys())
     response = {
         'names':names,
+    }
+    return HttpResponse(json.dumps(response))
+
+@never_cache
+def buildAndRun(request):
+    try:
+        buildOuput,simulationBuildOutput,simulationRunOutput = topLevel.buildAndRun(".")
+    except Exception as e:
+        tb = traceback.format_exc()
+        print(tb)
+        print(e)
+        return HttpResponse(json.dumps({'exception':"Something bad happend"}))
+    response = {
+        'exception':"",
+        'buildOutput':buildOuput,
+        'simulationBuildOutput':simulationBuildOutput,
+        'simulationRunOutput':simulationRunOutput,
     }
     return HttpResponse(json.dumps(response))

@@ -28,12 +28,14 @@ master2 = topLevel.add_moduleV2("axiMaster","master2",[],[11])
 slave1 = topLevel.add_moduleV2("axiSlave","slave1",[],[12])
 slave2 = topLevel.add_moduleV2("axiSlave","slave2",[],[13])
 
+#topLevel.add_connectionV2("master1","slave1")
 topLevel.add_busV3("mainBus","AXI4_Interconnect::mkAXI4Bus",["master1","master2"],[("slave1",[(0,1)]),("slave2",[(1,2)])])
 
 
 
 print(topLevel.to_string())
 topLevel.to_file("/mnt/e/Mega/Documents/CS/TLoB/tutorial/")
-
+bO,sBO,sO = topLevel.buildAndRun(".")
+print(bO,sBO,sO)
 # %%
 

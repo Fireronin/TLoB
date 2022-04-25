@@ -2,3 +2,5 @@ Failed to load package None
 unsupported operand type(s) for +: 'str' and 'NoneType'
 Failed to load package ExampleAXI4 
 ('Error:', b"Error: Unknown position: (S0003)\r\r\n  Cannot find the binary file `ExampleAXI4.bo' for package `ExampleAXI4'\r\r\n\r\r\n")
+Failed to load package ExampleAXI4 
+('Error:', b'Error: "../libs/BlueStuff/AXI/AXI4_Common_Types.bsv", line 39, column 9: (S0027)\r\r\n  The package `ExampleAXI4\' was compiled using a different version of the file\r\r\n  `AXI4_Common_Types.bo\' than what was found in the path.\r\r\n  Please recompile the affected packages in dependency order or with -u.\r\r\n\r\r\n')

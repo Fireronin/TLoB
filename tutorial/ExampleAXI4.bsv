@@ -144,6 +144,20 @@ module axiSlave#(Integer nr) (`SLAVE_T);
 
 endmodule
 
+(* synthesize *)
+module axiMaster_synth  (AXI4_Master_Sig#(`MPARAMS));
+  let master <- axiMaster(1);
+  let axi_sig <- toAXI4_Master_Sig(master);
+  return axi_sig;
+endmodule
+
+(* synthesize *)
+module axiSlave_synth  (AXI4_Slave_Sig#(`SPARAMS));
+  let slave <- axiSlave(1);
+  let axi_sig <- toAXI4_Slave_Sig(slave);
+  return axi_sig;
+endmodule
+
 `undef PARAMS
 `undef MPARAMS
 `undef SPARAMS

@@ -97,8 +97,6 @@ class Type_ide:
         out = {'name':self.__str__()}
         out["acessName"] = self.accessName
         out["type"] = "Type_ide"
-        if len(self.children) ==0:
-            return out
         out["children"] = []
         for i,child in enumerate(self.children):
             if type(child) == str:
@@ -112,8 +110,7 @@ class Type_ide:
             out["children"].append(processed)
         out["members"] = []
         for name,member in self.members.items():
-            if type(member) ==Type_ide:
-                out["members"].append(member.json)
+            out["members"].append(member.json)
         return out
          
 
@@ -342,9 +339,9 @@ class Function(Type_ide):
     def json(self) -> Dict:
         out = {'name':self.__str__()}
         out["acessName"] = self.accessName
-        out["arguments"] = []
         out["type"] = "function"
         out["result"] = self.return_type.json
+        out["arguments"] = []
         for i,argument in enumerate(self.arguments):
             if type(argument) == str:
                 processed = argument

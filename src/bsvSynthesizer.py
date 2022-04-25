@@ -1,5 +1,6 @@
 from copy import deepcopy
 import os
+import subprocess
 import time
 
 from extractor import Position, Type as ExType, Type_ide, Value as ExValue
@@ -13,7 +14,7 @@ from extractor import Typeclass_instance as ExTypeclassInstance
 
 from typing import Dict, List, Union,Set,Tuple
 
-from typeDatabase import TypeDatabase,CAdd,Variable
+from typeDatabase import TypeDatabase,Variable
 from tqdm import tqdm
 
 class AccessTuple():
@@ -86,13 +87,13 @@ class InstanceV2():
             if isinstance(value, Type_ide):
                 newVariables = self.db.merge(arg[1],value,{}) 
                 for key,val in newVariables.items():
-                    CAdd(context,key,val)
+                    self.db.CAdd(context,key,val)
             #this is just to check if everything is ok
             self.db.applyVariables(deepcopy(self.creator.arguments[arg[0]]),context)
 
         ideCopy  = deepcopy(self.creator.return_type)
         if len(module_args) == 0:
-            module_args = ["a"+str(i) for i in range(len(ideCopy.formals))]
+            module_args = ["unknownArg$"+str(i) for i in range(len(ideCopy.formals))]
         for i,field in enumerate(ideCopy.formals):
             ideCopy.formals[i].type_ide = module_args[i]
 
@@ -602,5 +603,44 @@ class TopLevelModule():
         with open(os.path.join(folder,self.package_name+".bsv"),'w') as f:
             f.write(self.to_string())
 
+    def buildAndRun(self,folder="."):
+        cwd = os.path.join(self.db.saveLocation,"..")
+        self.to_file(cwd)
+        additionalFoldersStr =".:"+ ":./".join(self.db.additionalLibraryFolders) + ":+"
+        buildOuput,simulationBuildOutput,simulationRunOutput = "","",""
+        buildFolder = "./bscBuild/"
+        bscLocation = "bsc"
 
+        buildString = f"{bscLocation} -p {additionalFoldersStr} -sim -bdir {buildFolder} -g {self.name} -u {self.package_name}.bsv"
+        print("Building with: " + buildString)
         
+        try:
+            buildOuput = subprocess.check_output([buildString],shell=True,cwd=cwd)
+        except subprocess.CalledProcessError as e:
+            buildOuput = e.output
+            buildOuput = str(buildOuput, encoding='utf-8')
+            return buildOuput,simulationBuildOutput,simulationRunOutput
+        buildOuput = str(buildOuput, encoding='utf-8')
+        cFiles ="Flute/libs/BlueStuff/BlueUtils/MemSim.c Flute/libs/BlueStuff/BlueUtils/SimUtils.c"
+        simulationString = f"{bscLocation} -p {additionalFoldersStr} -sim -simdir {buildFolder} -o {buildFolder}{self.name} -e {self.name} {buildFolder}{self.name}.ba {cFiles}"
+        print("Building simulation with: " + simulationString)
+        try:
+            simulationBuildOutput = subprocess.check_output([simulationString],shell=True,cwd=cwd)
+        except subprocess.CalledProcessError as e:
+            simulationBuildOutput = e.output
+            print("Failed to generate executable simulation model")
+            simulationBuildOutput = str(simulationBuildOutput, encoding='utf-8')
+            return buildOuput,simulationBuildOutput,simulationRunOutput
+        simulationBuildOutput = str(simulationBuildOutput, encoding='utf-8')
+        try:
+            simulationRunOutput = subprocess.check_output([f"{buildFolder}{self.name}"],timeout=10,shell=True,cwd=cwd)
+        except subprocess.TimeoutExpired as timeout:
+            simulationRunOutput = timeout.output
+            if simulationRunOutput is None:
+                simulationRunOutput = b"Timeout"
+            simulationRunOutput = str(simulationRunOutput, encoding='utf-8')
+            return buildOuput,simulationBuildOutput,simulationRunOutput
+        simulationRunOutput = str(simulationRunOutput, encoding='utf-8')
+        return buildOuput,simulationBuildOutput,simulationRunOutput
+        
+

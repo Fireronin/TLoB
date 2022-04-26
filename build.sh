@@ -28,6 +28,6 @@ else
 fi
 
 # bsc -p  .:./tutorial:./BlueStuff/build/bdir:+ -u -verilog  ./tutorial/ExampleAXI4.bsv
-# bsc -p  .:./tutorial:./BlueStuff/build/bdir:+ -u ./tutorial/Simplefifo.bsv
+# bsc -p  .:./tutorial:./Flute/src_SSITH_P2/build_dir:+ -u ./tutorial/Simplefifo.bsv
 # bsc -g mkSimpleFIFO -verilog  ./tutorial/Simplefifo.bsv
 # bsc -g mkPolyFIFO -verilog  ./tutorial/Polyfifo.bsv

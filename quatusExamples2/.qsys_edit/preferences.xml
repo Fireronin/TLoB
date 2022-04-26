@@ -3,10 +3,11 @@
  <debug showDebugMenu="0" />
  <systemtable filter="All Interfaces">
   <columns>
-   <connections preferredWidth="47" />
+   <connections preferredWidth="79" />
    <irq preferredWidth="34" />
   </columns>
  </systemtable>
- <library expandedCategories="Project,Library" />
- <window width="1100" height="800" x="728" y="235" />
+ <library
+   expandedCategories="Library/Processors and Peripherals,Library,Library/Qsys Interconnect/Memory-Mapped Alpha,Library/Memory Interfaces and Controllers/Memory Interfaces with AltMemPHY,Library/Memory Interfaces and Controllers/Flash,Library/Qsys Interconnect/Memory-Mapped,Project,Library/Qsys Interconnect,Library/Memory Interfaces and Controllers,Library/Memory Interfaces and Controllers/Memory Interfaces with UniPHY,Library/Processors and Peripherals/Hard Processor Components,Library/University Program/Memory,Library/University Program" />
+ <window width="2576" height="1416" x="-8" y="-8" />
 </preferences>

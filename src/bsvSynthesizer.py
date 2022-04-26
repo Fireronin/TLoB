@@ -334,6 +334,15 @@ class TopLevelModule():
         if isinstance(arg,Type_ide) or type(arg) == ExFunction:
             return arg
         arg = str(arg)
+        if arg.startswith("tagged"):
+            #for each struct in data base find struck with member with that name
+            splited = arg.split(" ")
+            for name,value in db.structs.items():
+                for name in value.members.keys():
+                    if name == splited[1]:
+                        return value.type_ide  
+            raise Exception(f"Could not find struct with member {splited[1]}")
+
         if arg[0].islower():
             if caller is not None:
                 self.subscribers
@@ -415,82 +424,6 @@ class TopLevelModule():
         self.db.aliases[alias.full_name] = alias
         return name
 
-    def list_connectableV2(self,start:AccessTuple,ends:List[AccessTuple]=[]):
-        if len(ends) == 0:
-            return []
-
-        connectableTypeclass : ExTypeclass = self.db.getTypeclassByName("Connectable::Connectable")
-        #ends = []
-        connectable_ends : List[AccessTuple]  = []
-        
-        #inital triming of connectable rules
-        #it cashes results, allowing for this function to be roughly O(len(ends))
-        if start.access_name in self.cashed_considered_instances:
-            considered_instances = self.cashed_considered_instances[start.access_name]
-        else:   
-            considered_instances : List[ExTypeclassInstance] = []
-            for instance in connectableTypeclass.instances:
-                instanceFields = instance.inputs
-                #check if both Fields are types
-                if type(instanceFields[0].type_ide) == Type_ide and type(instanceFields[1].type_ide) == Type_ide:
-                    #check if name matches start point
-                    if instanceFields[0].type_ide.full_name == start.thing.full_name:
-                        considered_instances.append(instance)
-            self.cashed_considered_instances[start.access_name] = considered_instances
-        
-        connectable_instances : Dict[str,ExTypeclassInstance] = {}
-        #check if end is a connectable
-        for end in ends:
-            for instance in considered_instances:
-                instanceFields = instance.inputs
-                #check if both Fields are types
-                if instanceFields[1].type_ide.full_name != end.thing.full_name:
-                    continue
-                variables = {}
-                def add_variable(name,value):
-                    if name in variables:
-                        old = variables[name]
-                        try:
-                            self.db.merge(old,value,{})
-                        except Exception as e:
-                            raise Exception(f"Variable {name} has different values")
-                    else:
-                        variables[name] = value
-
-                #check if values that can be polymorphic are the same
-                variableMissmatch = False
-                for i,field in enumerate(instanceFields[0].type_ide.children):
-                    try:
-                        add_variable(str(field),start.thing.children[i])
-                    except Exception as e:
-                        variableMissmatch = True
-                        break
-                for i,field in enumerate(instanceFields[1].type_ide.children):
-                    try:
-                        add_variable(str(field),end.thing.children[i])
-                    except Exception as e:
-                        variableMissmatch = True
-                        break
-                if variableMissmatch:
-                    continue
-
-                connectable_instances[end.access_name] = instance
-                break
-        for end in ends:
-            if end.access_name not in connectable_instances:
-                continue
-            result = None
-            try:
-                connection = deepcopy(connectableTypeclass.type_ide)
-                connection.formals[0].type_ide = start.thing
-                connection.formals[1].type_ide = end.thing
-                result = self.db.resolveTypeclass(connectableTypeclass, connection,connectable_instances[end.access_name])
-            except Exception as e:
-                continue
-            if result is not None:
-                connectable_ends.append(end)
-        return connectable_ends
-
     def list_connectableV3(self,start:AccessTuple,ends:List[AccessTuple]=[]):
         connectableTypeclass : ExTypeclass = self.db.getTypeByName("Connectable::Connectable")
         connectable_ends : List[AccessTuple]  = []
@@ -548,6 +481,8 @@ class TopLevelModule():
         for m in self.modules.values():
             if m.creator.package is not None:
                 self.packages.add(m.creator.package)
+            if m.creator.return_type.package is not None:
+                self.packages.add(m.creator.return_type.package)
         for b in self.buses.values():
             if b.creator.package is not None:
                 self.packages.add(b.creator.package)
@@ -614,33 +549,44 @@ class TopLevelModule():
         buildString = f"{bscLocation} -p {additionalFoldersStr} -sim -bdir {buildFolder} -g {self.name} -u {self.package_name}.bsv"
         print("Building with: " + buildString)
         
-        try:
-            buildOuput = subprocess.check_output([buildString],shell=True,cwd=cwd)
-        except subprocess.CalledProcessError as e:
-            buildOuput = e.output
-            buildOuput = str(buildOuput, encoding='utf-8')
-            return buildOuput,simulationBuildOutput,simulationRunOutput
+        
+        process = subprocess.run([buildString],shell=True,cwd=cwd,capture_output = True)
+        stdout = (process.stdout if process.stdout is not None else b"")
+        stderr = (process.stderr if process.stderr is not None else b"")
+        buildOuput = stdout+b"STDERR:\n"+stderr
         buildOuput = str(buildOuput, encoding='utf-8')
+        if process.returncode != 0:
+            print("Build failed")
+            return buildOuput,simulationBuildOutput,simulationRunOutput
+
         cFiles ="Flute/libs/BlueStuff/BlueUtils/MemSim.c Flute/libs/BlueStuff/BlueUtils/SimUtils.c"
         simulationString = f"{bscLocation} -p {additionalFoldersStr} -sim -simdir {buildFolder} -o {buildFolder}{self.name} -e {self.name} {buildFolder}{self.name}.ba {cFiles}"
         print("Building simulation with: " + simulationString)
-        try:
-            simulationBuildOutput = subprocess.check_output([simulationString],shell=True,cwd=cwd)
-        except subprocess.CalledProcessError as e:
-            simulationBuildOutput = e.output
-            print("Failed to generate executable simulation model")
-            simulationBuildOutput = str(simulationBuildOutput, encoding='utf-8')
-            return buildOuput,simulationBuildOutput,simulationRunOutput
+        process = subprocess.run([simulationString],shell=True,cwd=cwd,capture_output = True)
+        stdout = (process.stdout if process.stdout is not None else b"")
+        stderr = (process.stderr if process.stderr is not None else b"")
+        simulationBuildOutput = stdout+b"STDERR:\n"+stderr
         simulationBuildOutput = str(simulationBuildOutput, encoding='utf-8')
-        try:
-            simulationRunOutput = subprocess.check_output([f"{buildFolder}{self.name}"],timeout=10,shell=True,cwd=cwd)
-        except subprocess.TimeoutExpired as timeout:
-            simulationRunOutput = timeout.output
-            if simulationRunOutput is None:
-                simulationRunOutput = b"Timeout"
-            simulationRunOutput = str(simulationRunOutput, encoding='utf-8')
+        if process.returncode != 0:
+            print("Build failed")
             return buildOuput,simulationBuildOutput,simulationRunOutput
+        process = subprocess.run([simulationString],shell=True,cwd=cwd,timeout=10,capture_output = True)
+        stdout = (process.stdout if process.stdout is not None else b"")
+        stderr = (process.stderr if process.stderr is not None else b"")
+        simulationRunOutput = stdout+b"STDERR:\n"+stderr
         simulationRunOutput = str(simulationRunOutput, encoding='utf-8')
+        if process.returncode != 0:
+            print("Build failed")
+            return buildOuput,simulationBuildOutput,simulationRunOutput
+        # try:
+        #     simulationRunOutput = subprocess.check_output([f"{buildFolder}{self.name}"],timeout=10,shell=True,cwd=cwd)
+        # except subprocess.CalledProcessError as timeout:
+        #     simulationRunOutput = timeout.output
+        #     if simulationRunOutput is None:
+        #         simulationRunOutput = b"Timeout"
+        #     simulationRunOutput = str(simulationRunOutput, encoding='utf-8')
+        #     return buildOuput,simulationBuildOutput,simulationRunOutput
+        # simulationRunOutput = str(simulationRunOutput, encoding='utf-8')
         return buildOuput,simulationBuildOutput,simulationRunOutput
         
 

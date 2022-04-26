@@ -3,6 +3,7 @@ package ConnectedAXI4;
 import Connectable::*;
 import Vector::*;
 import ExampleAXI4::*;
+import AXI4_Types::*;
 import AXI4_Interconnect::*;
 
 

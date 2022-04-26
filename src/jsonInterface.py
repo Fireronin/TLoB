@@ -76,6 +76,28 @@ def load_json(json_file,reload=False,output_dir=None):
         topLevel.to_file(output_dir)
     return topLevel
 
+def showPossibleConnections(topLevel):
+    print(Fore.BLUE + "Potential connections:" + Fore.RESET)
+    for start,ends in topLevel.possibleConnections.items():
+        print(f"{start} -> {[end for end in ends]}")
+    for busName,busInstance in topLevel.buses.items():
+        print(f"Possible masters for {busName} {busInstance.mastersV.flit_type_ide}:")
+        print(topLevel.buses['mainBus'].mastersV.listAddable(topLevel.knownNames.items()))
+        print(f"Possible slaves for {busName} {busInstance.slavesV.flit_type_ide}:")
+        print(topLevel.buses['mainBus'].slavesV.listAddable(topLevel.knownNames.items()))
+
+def showTypes(topLevel):
+    print(Fore.BLUE + "Infered Interfaces:"+ Fore.RESET)
+    for name,value in topLevel.knownNames.items():
+        print(f"{name} : {value}")
+
+def showValidArguments(topLevel):
+    print(Fore.BLUE + "Valid arguments:" + Fore.RESET)
+    for name,instance in topLevel.instances.items():
+        if type(instance) != InstanceV2 or instance.creator.name == "mkConnection":
+            continue
+        print(f"{name} : {topLevel.validArguments(instance.creator)}")
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Convert a json file to a bsv file')
     parser.add_argument('-json_file', default="example.json", type=str, help='The json file to convert')
@@ -86,6 +108,7 @@ if __name__ == "__main__":
     # parser.add_argument("-showExample",action="store_true",help="Prints the json file as a example of how to use the json file")
     parser.add_argument("-showPossibleConnections",action="store_true",default=True,help="Prints the possible connections between modules")
     parser.add_argument("-showTypes",action="store_true",default=True,help="Prints the type indentifiers of interfaces in defined modules")
+    parser.add_argument("-showValidArguments",action="store_true",default=True,help="Prints the valid arguments for each instance")
 
     args = parser.parse_args()
     
@@ -97,24 +120,12 @@ if __name__ == "__main__":
     with open(args.json_file) as json_file:
         topLevel = load_json(json.load(json_file),args.reload,args.output_folder)
     if args.showPossibleConnections:
-        print(Fore.BLUE + "Potential connections:" + Fore.RESET)
-        for start,ends in topLevel.possibleConnections.items():
-            print(f"{start} -> {[end for end in ends]}")
-        for busName,busInstance in topLevel.buses.items():
-            print(f"Possible masters for {busName} {busInstance.mastersV.flit_type_ide}:")
-            print(topLevel.buses['mainBus'].mastersV.listAddable(topLevel.knownNames.items()))
-            print(f"Possible slaves for {busName} {busInstance.slavesV.flit_type_ide}:")
-            print(topLevel.buses['mainBus'].slavesV.listAddable(topLevel.knownNames.items()))
+        showPossibleConnections(topLevel)
     if args.showTypes:
-        print(Fore.BLUE + "Infered Interfaces:"+ Fore.RESET)
-        for name,value in topLevel.knownNames.items():
-            print(f"{name} : {value}")
-    if True:
-        print(Fore.BLUE + "Valid arguments:" + Fore.RESET)
-        for name,instance in topLevel.instances.items():
-            if type(instance) != InstanceV2 or instance.creator.name == "mkConnection":
-                continue
-            print(f"{name} : {topLevel.validArguments(instance.creator)}")
+        showTypes(topLevel)
+    if args.showValidArguments:
+        showValidArguments(topLevel)
+
     print(Fore.GREEN + "Finished" + Fore.RESET)
 
     

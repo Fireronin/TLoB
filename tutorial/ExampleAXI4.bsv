@@ -78,33 +78,29 @@ module axiMaster#(Integer nr) (`MASTER_T);
   // arbitrary work for each channel
   rule putAXI4_AWFlit (!awSent);
     AXI4_AWFlit#(MID_sz, ADDR_sz, AWUSER_sz) f = ?;
-    f.awaddr  = nextWriteAddr*10;
+    f.awaddr  = nextWriteAddr;
     f.awburst = INCR;
-    f.awlen   = 1;
+    f.awlen   = 0;
     nextWriteAddr <= nextWriteAddr + 1;
+    if (nextWriteAddr==1)
+      awSent <= True;
     shim.slave.aw.put(f);
-    awSent <= nextWriteAddr==2 ? True : awSent;
-    //$display("%0t - MASTER %d - sending ", $time,nr, fshow(f));
-  endrule
-  rule putAXI4_WFlit (!reqSent);
-    AXI4_WFlit#(DATA_sz, WUSER_sz) f = AXI4_WFlit{
-      wdata: zeroExtend (cnt+1000*fromInteger(nr)), wstrb: ?, wlast: True, wuser: ?
+    
+    
+    AXI4_WFlit#(DATA_sz, WUSER_sz) wf = AXI4_WFlit{
+      wdata: zeroExtend (cnt+1000*fromInteger(nr)), wstrb: -1, wlast: True, wuser: ?
     };
-    shim.slave.w.put(f);
-    if (cnt == fromInteger (nb_flit - 1)) begin
-      cnt <= 0;
-      reqSent <= True;
-    end else cnt <= cnt + 1;
+    shim.slave.w.put(wf);
     $display("%0t - MASTER %d - to %d - payload %d ", $time,nr,nextWriteAddr , cnt+1000*fromInteger(nr));
   endrule
-  // rule getAXI4_BFlit (awSent && reqSent);
-  //   let rsp <- get(shim.slave.b);
-  //   $display("%0t - MASTER - received ", $time, fshow(rsp));
-  //   reqSent <= False;
-  //   awSent <= False;
-  //   if (rspCnt == fromInteger (nb_rsp - 1)) $finish(0);
-  //   else rspCnt <= rspCnt + 1;
-  // endrule
+  rule getAXI4_BFlit;
+    let rsp <- get(shim.slave.b);
+    //$display("%0t - MASTER - received ", $time, fshow(rsp));
+    // reqSent <= False;
+    // awSent <= False;
+    if (rspCnt == fromInteger (2)) $finish(0);
+    else rspCnt <= rspCnt + 1;
+  endrule
 
   // return AXI interface
   return shim.master;
@@ -117,27 +113,27 @@ module axiSlave#(Integer nr) (`SLAVE_T);
   AXI4_Shim#(`SPARAMS) shim <- mkAXI4Shim;
 
   // arbitrary work for each channel
-  //let awResp <- mkFIFOF;
-  //let wResp <- mkFIFOF;
+  let awResp <- mkFIFOF;
+  let wResp <- mkFIFOF;
   rule getAXI4_AWFlit;
     let req <- get(shim.master.aw);
-    // awResp.enq(AXI4_BFlit{
-    //   bid: req.awid, bresp: OKAY, buser: ?
-    // });
+    awResp.enq(AXI4_BFlit{
+      bid: req.awid, bresp: OKAY, buser: ?
+    });
     //$display("%0t ---- SLAVE %d - received ", $time,nr, fshow(req));
   endrule
   rule getAXI4_WFlit;
     let req <- get(shim.master.w);
-    // if (req.wlast) wResp.enq(True);
+    if (req.wlast) wResp.enq(True);
     let val = req.wdata*req.wdata * 1000*fromInteger(nr);
     $display("%0t - SLAVE %d - computed %d", $time,nr,val);
   endrule
-  // rule putAXI4_BFlit;
-  //   awResp.deq;
-  //   wResp.deq;
-  //   shim.master.b.put(awResp.first);
-  //   $display("%0t ---- SLAVE - sending ", $time, fshow(awResp.first));
-  // endrule
+  rule putAXI4_BFlit;
+    awResp.deq;
+    wResp.deq;
+    shim.master.b.put(awResp.first);
+    //$display("%0t ---- SLAVE - sending ", $time, fshow(awResp.first));
+  endrule
 
   // return AXI interface
   return shim.slave;

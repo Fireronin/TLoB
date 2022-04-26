@@ -20,8 +20,12 @@ db.loadDependencies()
 
 
 topLevel = TopLevelModule("top",db,package_name="FIFOChain")
-fifo3 = topLevel.add_moduleV2("mkFIFO","fifo3",["Bit#(32)"],[])
-topLevel.add_connectionV2("fifo3.enq","fifo3.first")
+# fifo3 = topLevel.add_moduleV2("mkFIFO","fifo3",["Bit#(32)"],[])
+# reg = topLevel.add_moduleV2("mkRegU","reg",["Bit#(32)"],[])
+# uprint = topLevel.add_moduleV2("mkReg","reg2",[],["reg._read"])
+# a,b,c = topLevel.buildAndRun(".")
+# print(a,b,c)    
+# # topLevel.add_connectionV2("fifo3.enq","fifo3.first")
 
 fifo1 = topLevel.add_moduleV2("mkSimpleFIFO","fifo1",["Bit#(32)"],[])
 fifo2 = topLevel.add_moduleV2("mkSimpleFIFO","fifo2",["Bit#(32)"],[])

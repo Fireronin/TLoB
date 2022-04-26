@@ -146,13 +146,6 @@ class TypeDatabase():
             if tfullNmae in self.types:
                 return self.types[tfullNmae]
         fuzzyException(tfullNmae,list(self.types), "Type {} not found. \n Do you mean: \n{}")
-    
-    # def getTypeclassByName(self,type):
-    #     if name in self.typeclasses:
-    #         return self.typeclasses[name]
-    #     else:
-    #         getTypeByName()
-    #     fuzzyException(name,list(self.typeclasses), "Typeclass {} not found. \n Do you mean: \n{}")
 
     def addUnparsedTypes(self,types):
         for type_string in types:
@@ -163,6 +156,8 @@ class TypeDatabase():
             except Exception as e:
                 # type_string from str to bytes
                 type_string = str(type_string, encoding='utf-8')
+                if "Typeclass {Generic" in type_string:
+                    continue
                 #save type_string to file failed_types.json
                 with open("failed_types.json","a") as f:
                     f.write(type_string + "\n")
@@ -282,7 +277,11 @@ class TypeDatabase():
         
         if type(a) == str and type(b) == str:
             if a in variables and b in variables:
-                assert variables[a] == variables[b]
+                try:
+                    self.merge(variables[a].value,variables[b].value,variables)
+                except Exception as e:
+                    raise Exception("Failed to merge {} and {}".format(a,b))
+                return variables
             elif a in variables:
                 self.CAdd(variables,b,variables[a].value)
             elif b in variables:
@@ -421,7 +420,10 @@ class TypeDatabase():
                         if variables[var].value == None:
                             ok = False
                             break
-                        keyDict[var] = variables[var].value.full_name
+                        if type(variables[var].value) == Function and len(variables[var].value.arguments) == 0:
+                            keyDict[var] = variables[var].value.result_type.full_name
+                        else:
+                            keyDict[var] = variables[var].value.full_name
                 if ok:
                     considered_instances = typeclass.lookUpDictionaries[str(keyDict)]+typeclass.universalInstances
                     break

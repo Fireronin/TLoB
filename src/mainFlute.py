@@ -29,16 +29,15 @@ tdtSPARAMS = [evaluateCustomStart(str(x),"type_def_type") for x in SPARAMS]
 
 
 core = topLevel.add_moduleV2("Core::mkCore","core",[],[])
-memory = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",SPARAMS,[4096,'Maybe#("xddd")'])
+memory = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",SPARAMS,[4096,'tagged Invalid'])
 
 fakeAXI = topLevel.add_moduleV2("AXI4_Fake_16550::mkAXI4_Fake_16550_Simple","aXI4_Fake_16550",SPARAMS,[])
 
-topLevel.add_connectionV2("core.core_mem_master","memory")
 topLevel.add_busV3("bus1","AXI4_Interconnect::mkAXI4Bus",["core.core_mem_master"],[("memory",[(0,4096)]),("aXI4_Fake_16550",[(4096,8192)])])
 
 
 print(topLevel.to_string())
 topLevel.to_file("/mnt/e/Mega/Documents/CS/TLoB/tutorial/")
-
+topLevel.buildAndRun()
 # %%
 

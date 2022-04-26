@@ -72,16 +72,16 @@ module mkSimpleFIFO_Synth(FIFOIfc#(Bit#(32)));
     method first = fifo.first;
 endmodule
 
-// module mkConnectionFIFOs#(FIFOIfc#(value_size) f1, FIFOIfc#(value_size) f2) (FIFOIfcConnector#(value_size));
-//     interface ff1 = f1;
-//     interface ff2 = f2;
-//     mkConnection(f1,f2);
-// endmodule
+module mkConnectionFIFOs#(FIFOIfc#(value_size) f1, FIFOIfc#(value_size) f2) (FIFOIfcConnector#(value_size));
+    interface ff1 = f1;
+    interface ff2 = f2;
+    mkConnection(f1,f2);
+endmodule
 
-// (* synthesize *)
-// module mkConnectionFIFOs_Synth (FIFOIfcConnector#(Bit#(32)));
-//     interface ff1  
-//     mkConnection(toGet(m), toPut(s));
-// endmodule
+(* synthesize *)
+module mkConnectionFIFOs_Synth (FIFOIfcConnector#(Bit#(32)) );
+    interface ff1  
+    mkConnection(toGet(m), toPut(s));
+endmodule
 
 endpackage

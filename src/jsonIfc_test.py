@@ -8,22 +8,19 @@ from extractor import *
 from handlerV2 import *
 from bsvSynthesizer import *
 from typeDatabase import TypeDatabase as tdb
-# import mainAXI4
-# import mainFIFOs
-# import mainFlute
 
 def test_example():
-    with open("example.json") as json_file:
-        topLevel = jsonInterface.load_json(json.load(json_file),False)
-        assert(topLevel.name == "top")  
+    with open("exampleFIFOs.json") as json_file:
+        topLevel = jsonInterface.load_json(json.load(json_file),True)
+        assert(topLevel.name == "top")
+        jsonInterface.showTypes(topLevel)
+        jsonInterface.showPossibleConnections(topLevel)
+        jsonInterface.showValidArguments(topLevel)
+        assert(True)
 
-
-
-#%% initalize bluetcl
-# initalize tdb
 
 def test_buildAndRun():
-    db = tdb(load=True)
+    db = tdb(load=False)
 
     db.addLibraryFolder("Flute/src_SSITH_P2/build_dir")
     db.addLibraryFolder("tutorial")
@@ -48,5 +45,8 @@ def test_buildAndRun():
     #topLevel.add_connectionV2("master1","slave1")
     topLevel.add_busV3("mainBus","AXI4_Interconnect::mkAXI4Bus",["master1","master2"],[("slave1",[(0,1)]),("slave2",[(1,2)])])
     bO,sBO,sO = topLevel.buildAndRun(".")
-    print(bO,sBO,sO)
+    print("bO:",bO)
+    print("sBO:",sBO)
+    print("sO:",sO)
+
     assert(sO != "")

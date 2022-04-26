@@ -45,7 +45,7 @@
         {
             "name" : "memory",
             "function": "mkAXI4SimpleMem",
-            "function_params": [4096,"Maybe#('xddd')"],
+            "function_params": [4096,"tagged Invalid"],
             "interface_params": ["ID","ADDR","DATA","AWUSER","WUSER","BUSER","ARUSER","RUSER"]
         },
         {

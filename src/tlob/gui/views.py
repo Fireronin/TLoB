@@ -178,8 +178,27 @@ def confirmBus(request):
 def getPossible(request):
     json_data = json.loads(request.body)
     name = json_data['name']
-    possibleMasters = topLevel.buses[name].mastersV.listAddable(topLevel.knownNames.items())
-    possibleSlaves = topLevel.buses[name].slavesV.listAddable(topLevel.knownNames.items())
+    initalized = json_data['initalized']
+    creator = json_data['creator']
+    if initalized:
+        possibleMasters = topLevel.buses[name].mastersV.listAddable(topLevel.knownNames.items())
+        possibleSlaves = topLevel.buses[name].slavesV.listAddable(topLevel.knownNames.items())
+    else:
+        possibleMasters = []
+        cretorFunc = topLevel.db.getFunctionByName(creator)
+        for name,value in topLevel.knownNames.items():
+            try:
+                topLevel.db.merge(cretorFunc.arguments[1].children[1],value,{})
+            except Exception as e:
+                continue
+            possibleMasters.append(name)
+        possibleSlaves = []
+        for name,value in topLevel.knownNames.items():
+            try:
+                topLevel.db.merge(cretorFunc.arguments[2].children[1],value,{})
+            except Exception as e:
+                continue
+            possibleSlaves.append(name)
     response = {
         'busname':name,
         'possibleMasters':possibleMasters,

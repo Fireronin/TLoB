@@ -1,0 +1,10 @@
+# pyproject.toml
+#pytest --cov-report=term-missing  --cov=src src src/mainAXI4.py 
+#[tool:pytest]
+
+[tool.pytest.ini_options]
+addopts = "--cov=src --cov-report=html"
+testpaths = [
+    "src",
+    #"src/mainAXI4.py"
+]

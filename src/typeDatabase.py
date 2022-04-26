@@ -234,8 +234,6 @@ class TypeDatabase():
         # add package to database
         if package_name in self.packages:
             return
-        if self._loadPackage(package_name) == None:
-            return
         self.packages.add(package_name)
         if self.lazy:
             return 

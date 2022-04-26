@@ -1,4 +1,6 @@
 #%%
+import sys
+sys.path.append("src")
 from os import read
 from extractor import *
 from handlerV2 import *
@@ -37,5 +39,7 @@ print(topLevel.to_string())
 topLevel.to_file("/mnt/e/Mega/Documents/CS/TLoB/tutorial/")
 bO,sBO,sO = topLevel.buildAndRun(".")
 print(bO,sBO,sO)
+
+
 # %%
 

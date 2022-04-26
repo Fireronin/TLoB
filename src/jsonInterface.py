@@ -7,6 +7,8 @@ from handlerV2 import *
 import argparse
 import os
 from colorama import Fore
+import mock
+import pytest
 
 def lookForKeyword(keyword,dictionary):
     if keyword in dictionary:
@@ -19,7 +21,7 @@ def lookForKeyword(keyword,dictionary):
             print(f"While parsing we exprected a keyword: {keyword}.")
         raise Exception(f"Keyword {keyword} not found")
 
-def load_json(json_file,reload=False):
+def load_json(json_file,reload=False,output_dir=None):
     db = tdb(load=not reload)
     
     if "aditional folders" in json_file:  
@@ -70,12 +72,13 @@ def load_json(json_file,reload=False):
             topLevel.add_busV3(name,function,masters,slaves)
 
     print(topLevel.to_string())
-    topLevel.to_file(args.output_folder)
+    if output_dir!=None:
+        topLevel.to_file(output_dir)
     return topLevel
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Convert a json file to a bsv file')
-    parser.add_argument('-json_file', default="exampleFifos.json", type=str, help='The json file to convert')
+    parser.add_argument('-json_file', default="example.json", type=str, help='The json file to convert')
     parser.add_argument('-of','--output_folder', type=str, help='The folder of output',default="./tutorial")
     # argument reload values True of False
     parser.add_argument("-reload",type=bool,default=False,help="If packages haven't changed since last run, use false to skip reloading")
@@ -85,9 +88,6 @@ if __name__ == "__main__":
     parser.add_argument("-showTypes",action="store_true",default=True,help="Prints the type indentifiers of interfaces in defined modules")
 
     args = parser.parse_args()
-    # if args.showExample:
-    #     print(json.dumps(example_json,indent=4))
-    #     exit()
     
     #check if the json file was passed as argument
     if args.json_file == None:
@@ -95,7 +95,7 @@ if __name__ == "__main__":
         parser.print_help()
         exit()
     with open(args.json_file) as json_file:
-        topLevel = load_json(json.load(json_file),args.reload)
+        topLevel = load_json(json.load(json_file),args.reload,args.output_folder)
     if args.showPossibleConnections:
         print(Fore.BLUE + "Potential connections:" + Fore.RESET)
         for start,ends in topLevel.possibleConnections.items():
@@ -116,3 +116,5 @@ if __name__ == "__main__":
                 continue
             print(f"{name} : {topLevel.validArguments(instance.creator)}")
     print(Fore.GREEN + "Finished" + Fore.RESET)
+
+    

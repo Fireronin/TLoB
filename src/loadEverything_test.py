@@ -45,8 +45,9 @@ def loadAllAndDoQuickRun():
     # %% Build bluespcefile
 
 
-    topLevel = TopLevelModule("top",db,package_name="FIFOChain")
+    topLevel = TopLevelModule("top",db,package_name="LoadAllTestWithFLute")
     SPARAMS = [6, 64, "DATASIZE", 0, 0, 0, 0, 0]
+    topLevel.add_typedef("DATASIZE", evaluateCustomStart("64"))
 
     core = topLevel.add_moduleV2("Core::mkCore","core",[],[])
     memory = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",SPARAMS,[4096,'tagged Invalid'])

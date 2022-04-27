@@ -10,13 +10,14 @@ from bsvSynthesizer import *
 from typeDatabase import TypeDatabase as tdb
 
 def test_example():
-    with open("exampleFIFOs.json") as json_file:
-        topLevel = jsonInterface.load_json(json.load(json_file),True)
-        assert(topLevel.name == "top")
-        jsonInterface.showTypes(topLevel)
-        jsonInterface.showPossibleConnections(topLevel)
-        jsonInterface.showValidArguments(topLevel)
-        assert(True)
+    jsons = ["exampleFIFOs.json","exampleFlute.json"]
+    for json_name in jsons:
+        with open(json_name) as json_file:
+            topLevel = jsonInterface.load_json(json.load(json_file),True)
+            jsonInterface.showTypes(topLevel)
+            jsonInterface.showPossibleConnections(topLevel)
+            jsonInterface.showValidArguments(topLevel)
+            assert(True)
 
 
 def test_buildAndRun():
@@ -49,4 +50,7 @@ def test_buildAndRun():
     print("sBO:",sBO)
     print("sO:",sO)
 
-    assert(sO != "")
+    assert(sO != "","No output")
+
+# test_example()
+# test_buildAndRun()

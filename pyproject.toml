@@ -5,6 +5,6 @@
 [tool.pytest.ini_options]
 addopts = "--cov=src --cov-report=html"
 testpaths = [
-    "src/jsonIfc_test.py",
-    #"src/mainAXI4.py",
+    #"src/jsonIfc_test.py",
+    "src",
 ]

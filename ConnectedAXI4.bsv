@@ -3,27 +3,42 @@ package ConnectedAXI4;
 import Connectable::*;
 import Vector::*;
 import Simplefifo::*;
-import ExampleAXI4::*;
+import Core::*;
+import Core_IFC::*;
+import MemUtils::*;
 import AXI4_Types::*;
+import AXI4_Fake_16550::*;
+import ExampleAXI4::*;
 import AXI4_Interconnect::*;
 
+typedef 6 ID;
+typedef 64 ADDR;
+typedef 64 DATA;
+typedef 0 AWUSER;
+typedef 0 WUSER;
+typedef 0 BUSER;
+typedef 0 ARUSER;
+typedef 0 RUSER;
 
 function Vector #(2, Bool) route_mainBus (r_t x) provisos ( Bits#(r_t,r_l) );
-	Bit#(r_l) adress = pack(x);
-	Vector#(2, Bool) oneHotAdress = replicate (False);
+	Bit#(r_l) address = pack(x);
+	Vector#(2, Bool) oneHotaddress = replicate (False);
 	// slave1 -> 0
-	if (adress >= 0 && adress < 1)
-		oneHotAdress[0] = True;
+	if (address >= 0 && address < 1)
+		oneHotaddress[0] = True;
 	// slave2 -> 1
-	if (adress >= 1 && adress < 2)
-		oneHotAdress[1] = True;
-	return oneHotAdress;
+	if (address >= 1 && address < 2)
+		oneHotaddress[1] = True;
+	return oneHotaddress;
 endfunction
 
 module top();
  
 	Simplefifo::FIFOIfc#(Bit#(32)) fifo1 <- mkSimpleFIFO();
 	Simplefifo::FIFOIfc#(Bit#(32)) fifo2 <- mkSimpleFIFO();
+	Core_IFC::Core_IFC#(SoC_Map::N_External_Interrupt_Sources) core <- mkCore();
+	AXI4_Types::AXI4_Slave#(6,64,64,0,0,0,0,0) memory <- mkAXI4SimpleMem(4096, tagged Invalid);
+	AXI4_Types::AXI4_Slave#(6,64,64,0,0,0,0,0) fakeExternalConnection <- mkAXI4_Fake_16550_Simple();
 	AXI4_Types::AXI4_Master#(ExampleAXI4::MID_sz,ExampleAXI4::ADDR_sz,ExampleAXI4::DATA_sz,ExampleAXI4::AWUSER_sz,ExampleAXI4::WUSER_sz,ExampleAXI4::BUSER_sz,ExampleAXI4::ARUSER_sz,ExampleAXI4::RUSER_sz) master1 <- axiMaster(10);
 	AXI4_Types::AXI4_Master#(ExampleAXI4::MID_sz,ExampleAXI4::ADDR_sz,ExampleAXI4::DATA_sz,ExampleAXI4::AWUSER_sz,ExampleAXI4::WUSER_sz,ExampleAXI4::BUSER_sz,ExampleAXI4::ARUSER_sz,ExampleAXI4::RUSER_sz) master2 <- axiMaster(11);
 	AXI4_Types::AXI4_Slave#(ExampleAXI4::SID_sz,ExampleAXI4::ADDR_sz,ExampleAXI4::DATA_sz,ExampleAXI4::AWUSER_sz,ExampleAXI4::WUSER_sz,ExampleAXI4::BUSER_sz,ExampleAXI4::ARUSER_sz,ExampleAXI4::RUSER_sz) slave1 <- axiSlave(12);

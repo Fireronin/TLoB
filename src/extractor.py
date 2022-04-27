@@ -824,12 +824,6 @@ class ModuleTransformer(Transformer):
     def t_single(self, args):
         return args[0]
 
-    def tcl_arguments(self, args):
-        return args
-
-    def tcl_interface_use(self, args):
-        return Type(name="Interface",fields=args[1])
-
     def identifier_u(self, name):
         return name[0].value
     
@@ -847,9 +841,6 @@ class ModuleTransformer(Transformer):
 
     def list_of(self,args):
         return args
-
-    def tcl_polymorphic(self, args):
-        return (args[0],"polyTAG")
     
     #endregion
 

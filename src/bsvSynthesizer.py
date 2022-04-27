@@ -251,16 +251,16 @@ class BusInstanceV3(InstanceV2):
         for i, slave in enumerate(self.slaves):
             slave_to_id[slave[0]] = i
         output_str.append(f"function Vector #({r_s}, Bool) route_{self.instance_name} (r_t x) provisos ( Bits#(r_t,r_l) );\n")
-        output_str.append(f"\tBit#(r_l) adress = pack(x);\n")
-        output_str.append(f"\tVector#({r_s}, Bool) oneHotAdress = replicate (False);\n")
+        output_str.append(f"\tBit#(r_l) address = pack(x);\n")
+        output_str.append(f"\tVector#({r_s}, Bool) oneHotaddress = replicate (False);\n")
         
         for name, route in self.slaves:
             slave_id = slave_to_id[name]
             output_str.append(f"\t// {name} -> {slave_id}\n")
             for start, end in route:
-                output_str.append(f"\tif (adress >= {start} && adress < {end})\n")
-                output_str.append(f"\t\toneHotAdress[{slave_id}] = True;\n")
-        output_str.append(f"\treturn oneHotAdress;\n")
+                output_str.append(f"\tif (address >= {start} && address < {end})\n")
+                output_str.append(f"\t\toneHotaddress[{slave_id}] = True;\n")
+        output_str.append(f"\treturn oneHotaddress;\n")
         output_str.append(f"endfunction\n\n")
         return "".join(output_str)
 
@@ -542,51 +542,38 @@ class TopLevelModule():
         cwd = os.path.join(self.db.saveLocation,"..")
         self.to_file(cwd)
         additionalFoldersStr =".:"+ ":./".join(self.db.additionalLibraryFolders) + ":+"
-        buildOuput,simulationBuildOutput,simulationRunOutput = "","",""
         buildFolder = "./bscBuild/"
         bscLocation = "bsc"
-
-        buildString = f"{bscLocation} -p {additionalFoldersStr} -sim -bdir {buildFolder} -g {self.name} -u {self.package_name}.bsv"
-        print("Building with: " + buildString)
-        
-        
-        process = subprocess.run([buildString],shell=True,cwd=cwd,capture_output = True)
-        stdout = (process.stdout if process.stdout is not None else b"")
-        stderr = (process.stderr if process.stderr is not None else b"")
-        buildOuput = stdout+b"STDERR:\n"+stderr
-        buildOuput = str(buildOuput, encoding='utf-8')
-        if process.returncode != 0:
-            print("Build failed")
-            return buildOuput,simulationBuildOutput,simulationRunOutput
-
         cFiles ="Flute/libs/BlueStuff/BlueUtils/MemSim.c Flute/libs/BlueStuff/BlueUtils/SimUtils.c"
+        buildString = f"{bscLocation} -p {additionalFoldersStr} -sim -bdir {buildFolder} -g {self.name} -u {self.package_name}.bsv"
         simulationString = f"{bscLocation} -p {additionalFoldersStr} -sim -simdir {buildFolder} -o {buildFolder}{self.name} -e {self.name} {buildFolder}{self.name}.ba {cFiles}"
-        print("Building simulation with: " + simulationString)
-        process = subprocess.run([simulationString],shell=True,cwd=cwd,capture_output = True)
-        stdout = (process.stdout if process.stdout is not None else b"")
-        stderr = (process.stderr if process.stderr is not None else b"")
-        simulationBuildOutput = stdout+b"STDERR:\n"+stderr
-        simulationBuildOutput = str(simulationBuildOutput, encoding='utf-8')
-        if process.returncode != 0:
-            print("Build failed")
-            return buildOuput,simulationBuildOutput,simulationRunOutput
-        process = subprocess.run([simulationString],shell=True,cwd=cwd,timeout=10,capture_output = True)
-        stdout = (process.stdout if process.stdout is not None else b"")
-        stderr = (process.stderr if process.stderr is not None else b"")
-        simulationRunOutput = stdout+b"STDERR:\n"+stderr
-        simulationRunOutput = str(simulationRunOutput, encoding='utf-8')
-        if process.returncode != 0:
-            print("Build failed")
-            return buildOuput,simulationBuildOutput,simulationRunOutput
-        # try:
-        #     simulationRunOutput = subprocess.check_output([f"{buildFolder}{self.name}"],timeout=10,shell=True,cwd=cwd)
-        # except subprocess.CalledProcessError as timeout:
-        #     simulationRunOutput = timeout.output
-        #     if simulationRunOutput is None:
-        #         simulationRunOutput = b"Timeout"
-        #     simulationRunOutput = str(simulationRunOutput, encoding='utf-8')
-        #     return buildOuput,simulationBuildOutput,simulationRunOutput
-        # simulationRunOutput = str(simulationRunOutput, encoding='utf-8')
-        return buildOuput,simulationBuildOutput,simulationRunOutput
+        
+        def runAndGrabOutput(string,timeout=15):
+            Error = False
+            try:
+                process = subprocess.run([string],shell=True,cwd=cwd,capture_output = True,timeout=timeout)
+                Error = process.returncode != 0
+            except subprocess.SubprocessError as e:
+                Error = True
+                process = e
+            stdout = (process.stdout if process.stdout is not None else b"")
+            stderr = (process.stderr if process.stderr is not None else b"")
+            processOuput = stdout+b"STDERR:\n"+stderr
+            processOuput = str(processOuput, encoding='utf-8')
+            return Error,processOuput
+                
+        toRun = [buildString,simulationString,os.path.join(buildFolder,self.name)]
+        outputs = ["","",""]
+
+        for i,string in enumerate(toRun):
+            Error,processOuput = runAndGrabOutput(string)
+            outputs[i] = processOuput
+            if Error:
+                print("Error with: " + string)
+                print(processOuput)
+                return outputs
+        return outputs   
+
+        
         
 

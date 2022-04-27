@@ -74,7 +74,7 @@ class Handler():
         type_name = type_string.split(b"::")[-1]
         if type_name == "Generic":
             return ""
-        print("Currently reading type: "+str(type_name, encoding='utf-8') )
+        #print("Currently reading type: "+str(type_name, encoding='utf-8') )
         # if type_name in [b"Bits",b"SizedLiteral"]:
         #     return b""
         try:
@@ -93,7 +93,7 @@ class Handler():
         return type_full
 
     def read_all_types(self,package_name="Polyfifo"):
-        print("Reading types in package: "+package_name)
+        #print("Reading types in package: "+package_name)
         types = self.list_types(package_name)
         type_strings = []
         for type_name in types:

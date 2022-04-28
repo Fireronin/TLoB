@@ -13,7 +13,7 @@ def clean_response(s):
 class Handler():
     child = None
 
-    def __init__(self,cwd='/mnt/e/Mega/Documents/CS/TLoB'):
+    def __init__(self,cwd='.'):
         self.child = pexpect.spawn('/opt/tools/bsc/latest/bin/bluetcl',cwd=cwd)
         self.child.setecho(True)
         self.child.sendline(b'namespace import ::Bluetcl::*')

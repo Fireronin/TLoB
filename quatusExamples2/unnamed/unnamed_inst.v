@@ -1,0 +1,44 @@
+	unnamed u0 (
+		.CLK      (<connected-to-CLK>),      //             clock.clk
+		.araddr   (<connected-to-araddr>),   // altera_axi4_slave.araddr
+		.arburst  (<connected-to-arburst>),  //                  .arburst
+		.arcache  (<connected-to-arcache>),  //                  .arcache
+		.arid     (<connected-to-arid>),     //                  .arid
+		.arlen    (<connected-to-arlen>),    //                  .arlen
+		.arlock   (<connected-to-arlock>),   //                  .arlock
+		.arprot   (<connected-to-arprot>),   //                  .arprot
+		.arqos    (<connected-to-arqos>),    //                  .arqos
+		.arready  (<connected-to-arready>),  //                  .arready
+		.arregion (<connected-to-arregion>), //                  .arregion
+		.arsize   (<connected-to-arsize>),   //                  .arsize
+		.arvalid  (<connected-to-arvalid>),  //                  .arvalid
+		.awaddr   (<connected-to-awaddr>),   //                  .awaddr
+		.awburst  (<connected-to-awburst>),  //                  .awburst
+		.awcache  (<connected-to-awcache>),  //                  .awcache
+		.awid     (<connected-to-awid>),     //                  .awid
+		.awlen    (<connected-to-awlen>),    //                  .awlen
+		.awlock   (<connected-to-awlock>),   //                  .awlock
+		.awprot   (<connected-to-awprot>),   //                  .awprot
+		.awqos    (<connected-to-awqos>),    //                  .awqos
+		.awready  (<connected-to-awready>),  //                  .awready
+		.awregion (<connected-to-awregion>), //                  .awregion
+		.awsize   (<connected-to-awsize>),   //                  .awsize
+		.awvalid  (<connected-to-awvalid>),  //                  .awvalid
+		.bid      (<connected-to-bid>),      //                  .bid
+		.bready   (<connected-to-bready>),   //                  .bready
+		.bresp    (<connected-to-bresp>),    //                  .bresp
+		.bvalid   (<connected-to-bvalid>),   //                  .bvalid
+		.rdata    (<connected-to-rdata>),    //                  .rdata
+		.rid      (<connected-to-rid>),      //                  .rid
+		.rlast    (<connected-to-rlast>),    //                  .rlast
+		.rready   (<connected-to-rready>),   //                  .rready
+		.rresp    (<connected-to-rresp>),    //                  .rresp
+		.rvalid   (<connected-to-rvalid>),   //                  .rvalid
+		.wdata    (<connected-to-wdata>),    //                  .wdata
+		.wlast    (<connected-to-wlast>),    //                  .wlast
+		.wready   (<connected-to-wready>),   //                  .wready
+		.wstrb    (<connected-to-wstrb>),    //                  .wstrb
+		.wvalid   (<connected-to-wvalid>),   //                  .wvalid
+		.RST_N    (<connected-to-RST_N>)     //        reset_sink.reset_n
+	);
+

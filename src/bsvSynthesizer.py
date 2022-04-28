@@ -541,7 +541,7 @@ class TopLevelModule():
     def buildAndRun(self,folder="."):
         cwd = os.path.join(self.db.saveLocation,"..")
         self.to_file(cwd)
-        additionalFoldersStr =".:"+ ":./".join(self.db.additionalLibraryFolders) + ":+"
+        additionalFoldersStr =".:"+ ":.".join(self.db.additionalLibraryFolders) + ":+"
         buildFolder = "./bscBuild/"
         bscLocation = "bsc"
         cFiles ="Flute/libs/BlueStuff/BlueUtils/MemSim.c Flute/libs/BlueStuff/BlueUtils/SimUtils.c"

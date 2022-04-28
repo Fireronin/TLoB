@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simPackage>
+ <file
+   path="Example3/testbench/Example3_tb/simulation/submodules/verbosity_pkg.sv"
+   type="SYSTEM_VERILOG"
+   library="altera_common_sv_packages"
+   systemVerilogPackageName="avalon_vip_verbosity_pkg" />
+ <file
+   path="Example3/testbench/Example3_tb/simulation/submodules/altera_avalon_reset_source.sv"
+   type="SYSTEM_VERILOG"
+   library="Example3_inst_reset_bfm" />
+ <file
+   path="Example3/testbench/Example3_tb/simulation/submodules/altera_avalon_clock_source.sv"
+   type="SYSTEM_VERILOG"
+   library="Example3_inst_clk_bfm" />
+ <file
+   path="Example3/testbench/Example3_tb/simulation/submodules/Example3.v"
+   type="VERILOG"
+   library="Example3_inst" />
+ <file
+   path="Example3/testbench/Example3_tb/simulation/Example3_tb.v"
+   type="VERILOG" />
+ <topLevel name="Example3_tb" />
+ <deviceFamily name="cyclonev" />
+</simPackage>

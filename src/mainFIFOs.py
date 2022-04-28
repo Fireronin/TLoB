@@ -32,7 +32,7 @@ fifo2 = topLevel.add_moduleV2("mkSimpleFIFO","fifo2",["Bit#(32)"],[])
 topLevel.add_connectionV2("fifo1","fifo2")
 
 print(topLevel.to_string())
-topLevel.to_file("/mnt/e/Mega/Documents/CS/TLoB/tutorial/")
+topLevel.to_file()
 
 # %%
 

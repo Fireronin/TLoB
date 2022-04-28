@@ -1,0 +1,133 @@
+Info: Starting: Create testbench Platform Designer system
+Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/Example3.ipx
+Info: qsys-generate E:\Mega\Documents\CS\TLoB\quatusExamples2\Example3.qsys --testbench=SIMPLE --output-directory=E:\Mega\Documents\CS\TLoB\quatusExamples2 --family="Cyclone V" --part=5CGXFC7C7F23C8
+Progress: Loading quatusExamples2/Example3.qsys
+Progress: Reading input file
+Progress: Adding axi4Slave_0 [axi4Slave 1.0]
+Progress: Parameterizing module axi4Slave_0
+Progress: Adding axiMaster_0 [axiMaster 1.0]
+Progress: Parameterizing module axiMaster_0
+Progress: Adding clk_0 [clock_source 21.1]
+Progress: Parameterizing module clk_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: qsys-generate succeeded.
+Info: Loading IP catalog for testbench.
+Progress: 
+Progress: 
+Progress: 
+Progress: (2) searching C:/intelfpga/21.1/quartus/sopc_builder/bin/root_components.ipx (ipx file)
+Info: Reading index C:\intelfpga\21.1\quartus\sopc_builder\bin\root_components.ipx
+Info: C:\intelfpga\21.1\quartus\sopc_builder\bin\root_components.ipx: Loading now from components.ipx
+Info: Reading index C:\intelfpga\21.1\quartus\sopc_builder\bin\ip_component_categories.ipx
+Info: C:\intelfpga\21.1\quartus\sopc_builder\bin\ip_component_categories.ipx described 0 plugins, 0 paths, in 0.00 seconds
+Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/ip_component_categories.ipx matched 1 files in 0.00 seconds
+Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/ip/**/* matched 0 files in 0.00 seconds
+Info: Reading index E:\Mega\Documents\CS\TLoB\quatusExamples2\Example3\testbench\Example3.ipx
+Progress: Loading quatusExamples2/axi4Slave_hw.tcl
+Progress: Loading quatusExamples2/aximaster1_hw.tcl
+Progress: Loading quatusExamples2/axiMaster_hw.tcl
+Progress: Loading quatusExamples2/Example1.qsys
+Progress: Loading quatusExamples2/Example2.qsys
+Progress: Loading quatusExamples2/Example3.qsys
+Progress: Loading quatusExamples2/fake16550_hw.tcl
+Progress: Loading quatusExamples2/fluteCore_hw.tcl
+Progress: Loading quatusExamples2/simpleFifo_hw.tcl
+Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/* matched 20 files in 0.08 seconds
+Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/ip/**/* matched 0 files in 0.00 seconds
+Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/*/* matched 27 files in 0.00 seconds
+Info: E:\Mega\Documents\CS\TLoB\quatusExamples2\Example3\testbench\Example3.ipx described 0 plugins, 3 paths, in 0.08 seconds
+Progress: Loading testbench/Example3_tb.qsys
+Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/* matched 8 files in 0.08 seconds
+Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/*/* matched 1 files in 0.00 seconds
+Info: C:/Users/nudy1/.altera.quartus/ip/21.1/**/* matched 0 files in 0.00 seconds
+Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/$$QUARTUS_IP_PROJECTDIR/* matched 0 files in 0.00 seconds
+Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/$$QUARTUS_IP_USERDIR/* matched 0 files in 0.00 seconds
+Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/$$QUARTUS_IP_GLOBALDIR/* matched 0 files in 0.00 seconds
+Info: Reading index C:\intelfpga\21.1\ip\altera\altera_components.ipx
+Info: C:\intelfpga\21.1\ip\altera\altera_components.ipx described 1966 plugins, 0 paths, in 0.07 seconds
+Info: C:/intelfpga/21.1/ip/**/* matched 106 files in 0.07 seconds
+Info: C:/intelfpga/ip/**/* matched 0 files in 0.00 seconds
+Info: Reading index C:\intelfpga\21.1\quartus\sopc_builder\builtin.ipx
+Info: C:\intelfpga\21.1\quartus\sopc_builder\builtin.ipx described 83 plugins, 0 paths, in 0.00 seconds
+Info: C:/intelfpga/21.1/quartus/sopc_builder/**/* matched 8 files in 0.00 seconds
+Info: C:/intelfpga/21.1/quartus/common/librarian/factories/**/* matched 0 files in 0.00 seconds
+Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/$IP_IPX_PATH matched 1 files in 0.00 seconds
+Info: C:\intelfpga\21.1\quartus\sopc_builder\bin\root_components.ipx described 0 plugins, 13 paths, in 0.16 seconds
+Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/root_components.ipx matched 1 files in 0.16 seconds
+Progress: 
+Progress: 
+Progress: 
+Info: Running script C:/intelfpga/21.1/quartus/sopc_builder/bin/tbgen.tcl
+Info: send_message Info TB_Gen: QSYS Testbench Generator Rev: $Revision: #1 $
+Info: TB_Gen: QSYS Testbench Generator Rev: $Revision: #1 $
+Info: get_module_property NAME
+Info: send_message Info TB_Gen: System design is: Example3
+Info: TB_Gen: System design is: Example3
+Info: get_interfaces 
+Info: get_connections 
+Info: get_interface_property clk EXPORT_OF
+Info: get_instance_property clk_0 CLASS_NAME
+Info: get_instance_assignment clk_0 testbench.partner.map.clk_in
+Info: get_interface_property reset EXPORT_OF
+Info: get_instance_property clk_0 CLASS_NAME
+Info: get_instance_assignment clk_0 testbench.partner.map.clk_in_reset
+Info: send_message Info TB_Gen: Creating testbench system : Example3_tb with clock and reset BFMs
+Info: TB_Gen: Creating testbench system : Example3_tb with clock and reset BFMs
+Info: create_system Example3_tb
+Info: add_instance Example3_inst Example3 
+Info: set_use_testbench_naming_pattern true Example3
+Info: get_instance_interfaces Example3_inst
+Info: get_instance_interface_property Example3_inst clk CLASS_NAME
+Info: get_instance_interface_property Example3_inst reset CLASS_NAME
+Info: get_instance_interface_property Example3_inst clk CLASS_NAME
+Info: send_message Info TB_Gen: clock_sink found: clk
+Info: TB_Gen: clock_sink found: clk
+Info: get_instance_interface_property Example3_inst clk CLASS_NAME
+Info: add_instance Example3_inst_clk_bfm altera_avalon_clock_source 
+Info: get_instance_property Example3_inst_clk_bfm CLASS_NAME
+Info: get_instance_interface_parameter_value Example3_inst clk clockRate
+Info: set_instance_parameter_value Example3_inst_clk_bfm CLOCK_RATE 50000000.0
+Info: set_instance_parameter_value Example3_inst_clk_bfm CLOCK_UNIT 1
+Info: get_instance_property Example3_inst_clk_bfm CLASS_NAME
+Info: get_instance_interface_property Example3_inst clk CLASS_NAME
+Info: get_instance_interfaces Example3_inst_clk_bfm
+Info: get_instance_interface_property Example3_inst_clk_bfm clk CLASS_NAME
+Info: add_connection Example3_inst_clk_bfm.clk Example3_inst.clk
+Info: get_instance_interface_property Example3_inst reset CLASS_NAME
+Info: send_message Info TB_Gen: reset_sink found: reset
+Info: TB_Gen: reset_sink found: reset
+Info: get_instance_interface_property Example3_inst reset CLASS_NAME
+Info: add_instance Example3_inst_reset_bfm altera_avalon_reset_source 
+Info: get_instance_property Example3_inst_reset_bfm CLASS_NAME
+Info: get_instance_interface_ports Example3_inst reset
+Info: get_instance_interface_port_property Example3_inst reset reset_reset_n ROLE
+Info: get_instance_interface_port_property Example3_inst reset reset_reset_n ROLE
+Info: set_instance_parameter_value Example3_inst_reset_bfm ASSERT_HIGH_RESET 0
+Info: set_instance_parameter_value Example3_inst_reset_bfm INITIAL_RESET_CYCLES 50
+Info: get_instance_property Example3_inst_reset_bfm CLASS_NAME
+Info: get_instance_interfaces Example3_inst_reset_bfm
+Info: get_instance_interface_property Example3_inst_reset_bfm clk CLASS_NAME
+Info: get_instance_interface_property Example3_inst_reset_bfm reset CLASS_NAME
+Info: get_instance_property Example3_inst_reset_bfm CLASS_NAME
+Info: get_instance_interface_parameter_value Example3_inst reset associatedClock
+Info: get_instance_interfaces Example3_inst_clk_bfm
+Info: get_instance_interface_property Example3_inst_clk_bfm clk CLASS_NAME
+Info: send_message Warning TB_Gen: Example3_inst_reset_bfm is not associated to any clock; connecting Example3_inst_reset_bfm to 'Example3_inst_clk_bfm.clk'
+Warning: TB_Gen: Example3_inst_reset_bfm is not associated to any clock; connecting Example3_inst_reset_bfm to 'Example3_inst_clk_bfm.clk'
+Info: add_connection Example3_inst_clk_bfm.clk Example3_inst_reset_bfm.clk
+Info: get_instance_interface_property Example3_inst reset CLASS_NAME
+Info: get_instance_interfaces Example3_inst_reset_bfm
+Info: get_instance_interface_property Example3_inst_reset_bfm clk CLASS_NAME
+Info: get_instance_interface_property Example3_inst_reset_bfm reset CLASS_NAME
+Info: add_connection Example3_inst_reset_bfm.reset Example3_inst.reset
+Info: send_message Info TB_Gen: Saving testbench system: Example3_tb.qsys
+Info: TB_Gen: Saving testbench system: Example3_tb.qsys
+Info: save_system Example3_tb.qsys
+Info: send_message Info TB_Gen: TBGEN SUCCESSFUL
+Info: TB_Gen: TBGEN SUCCESSFUL
+Info: Testbench system: E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/Example3_tb.qsys
+Info: Done
+Info: Finished: Create testbench Platform Designer system

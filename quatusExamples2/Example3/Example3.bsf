@@ -43,7 +43,7 @@ https://fpgasoftware.intel.com/eula.
 		(text "clk" (rect 85 67 188 144)(font "Arial" (color 0 0 0)))
 		(text "reset" (rect 51 83 132 179)(font "Arial" (color 128 0 0)(font_size 9)))
 		(text "reset_n" (rect 85 107 212 224)(font "Arial" (color 0 0 0)))
-		(text " system " (rect 189 128 426 266)(font "Arial" ))
+		(text " Example3 " (rect 179 128 418 266)(font "Arial" ))
 		(line (pt 80 32)(pt 144 32)(line_width 1))
 		(line (pt 144 32)(pt 144 128)(line_width 1))
 		(line (pt 80 128)(pt 144 128)(line_width 1))

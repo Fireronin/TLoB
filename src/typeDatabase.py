@@ -46,7 +46,7 @@ class TypeDatabase():
     logged_types: bytes = b""
     handler: Handler
 
-    def __init__(self,load=True,saveLocation=os.path.join(".","saved"),librariesRoot='/mnt/e/Mega/Documents/CS/TLoB',lazy=False):
+    def __init__(self,load=True,saveLocation=os.path.join(".","saved"),librariesRoot='.',lazy=False):
         self.lazy = lazy
         self.saveLocation = saveLocation
         #check if saveLocation exists

@@ -1,0 +1,28 @@
+# system info Example3_tb on 2022.04.27.13:13:38
+system_info:
+name,value
+DEVICE,5CGXFC7C7F23C8
+DEVICE_FAMILY,Cyclone V
+GENERATION_ID,1651058014
+#
+#
+# Files generated for Example3_tb on 2022.04.27.13:13:38
+files:
+filepath,kind,attributes,module,is_top
+Example3/testbench/Example3_tb/simulation/Example3_tb.v,VERILOG,,Example3_tb,true
+Example3/testbench/Example3_tb/simulation/submodules/Example3.v,VERILOG,,Example3,false
+Example3/testbench/Example3_tb/simulation/submodules/verbosity_pkg.sv,SYSTEM_VERILOG, COMMON_SYSTEMVERILOG_PACKAGE=avalon_vip_verbosity_pkg,altera_avalon_clock_source,false
+Example3/testbench/Example3_tb/simulation/submodules/altera_avalon_clock_source.sv,SYSTEM_VERILOG,,altera_avalon_clock_source,false
+Example3/testbench/Example3_tb/simulation/submodules/verbosity_pkg.sv,SYSTEM_VERILOG, COMMON_SYSTEMVERILOG_PACKAGE=avalon_vip_verbosity_pkg,altera_avalon_reset_source,false
+Example3/testbench/Example3_tb/simulation/submodules/altera_avalon_reset_source.sv,SYSTEM_VERILOG,,altera_avalon_reset_source,false
+#
+# Map from instance-path to kind of module
+instances:
+instancePath,module
+Example3_tb.Example3_inst,Example3
+Example3_tb.Example3_inst.axi4Slave_0,Example3_axi4Slave_0
+Example3_tb.Example3_inst.axiMaster_0,Example3_axiMaster_0
+Example3_tb.Example3_inst.mm_interconnect_0,Example3_mm_interconnect_0
+Example3_tb.Example3_inst.rst_controller,altera_reset_controller
+Example3_tb.Example3_inst_clk_bfm,altera_avalon_clock_source
+Example3_tb.Example3_inst_reset_bfm,altera_avalon_reset_source

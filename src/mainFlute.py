@@ -37,7 +37,7 @@ topLevel.add_busV3("bus1","AXI4_Interconnect::mkAXI4Bus",["core.core_mem_master"
 
 
 print(topLevel.to_string())
-topLevel.to_file("/mnt/e/Mega/Documents/CS/TLoB/tutorial/")
+topLevel.to_file()
 topLevel.buildAndRun()
 # %%
 

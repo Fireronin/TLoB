@@ -36,8 +36,8 @@ topLevel.add_busV3("mainBus","AXI4_Interconnect::mkAXI4Bus",["master1","master2"
 
 
 print(topLevel.to_string())
-topLevel.to_file("/mnt/e/Mega/Documents/CS/TLoB/tutorial/")
-bO,sBO,sO = topLevel.buildAndRun(".")
+topLevel.to_file()
+bO,sBO,sO = topLevel.buildAndRun()
 print(bO,sBO,sO)
 
 

@@ -26,3 +26,11 @@ Failed to load package SourceSink
 ('Error:', b"Error: Unknown position: (S0003)\r\r\n  Cannot find the binary file `SourceSink.bo' for package `SourceSink'\r\r\n\r\r\n")
 Failed to load package Routable 
 ('Error:', b"Error: Unknown position: (S0003)\r\r\n  Cannot find the binary file `Routable.bo' for package `Routable'\r\r\n\r\r\n")
+Failed to load package ClockHacks 
+('Error:', b"Error: Unknown position: (S0003)\r\r\n  Cannot find the binary file `ClockHacks.bo' for package `ClockHacks'\r\r\n\r\r\n")
+Failed to load package Giraffe_IFC 
+('Error:', b"Error: Unknown position: (S0003)\r\r\n  Cannot find the binary file `Giraffe_IFC.bo' for package `Giraffe_IFC'\r\r\n\r\r\n")
+Failed to load package JtagTap 
+('Error:', b"Error: Unknown position: (S0003)\r\r\n  Cannot find the binary file `JtagTap.bo' for package `JtagTap'\r\r\n\r\r\n")
+Failed to load package P2_Core 
+('Error:', b"Error: Unknown position: (S0003)\r\r\n  Cannot find the binary file `P2_Core.bo' for package `P2_Core'\r\r\n\r\r\n")

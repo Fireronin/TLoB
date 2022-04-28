@@ -7,7 +7,11 @@
    <irq preferredWidth="34" />
   </columns>
  </systemtable>
- <library
-   expandedCategories="Library/Processors and Peripherals,Library,Library/Qsys Interconnect/Memory-Mapped Alpha,Library/Memory Interfaces and Controllers/Memory Interfaces with AltMemPHY,Library/Memory Interfaces and Controllers/Flash,Library/Qsys Interconnect/Memory-Mapped,Project,Library/Qsys Interconnect,Library/Memory Interfaces and Controllers,Library/Memory Interfaces and Controllers/Memory Interfaces with UniPHY,Library/Processors and Peripherals/Hard Processor Components,Library/University Program/Memory,Library/University Program" />
+ <library expandedCategories="Project,Library" />
  <window width="2576" height="1416" x="-8" y="-8" />
+ <generation
+   testbench_system="SIMPLE"
+   testbench_simulation="NONE"
+   path="_PROJECT_NAME_"
+   simulation="VERILOG" />
 </preferences>

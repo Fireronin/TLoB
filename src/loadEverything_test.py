@@ -1,7 +1,5 @@
 #%%
 import os
-#print curent directory
-print(os.getcwd())
 import importlib
 # load packages from /src
 import sys
@@ -19,8 +17,8 @@ def loadAllAndDoQuickRun():
     start_time = time.time()
     db = tdb(load=False)
 
-    db.addLibraryFolder("Flute/src_SSITH_P2/build_dir")
-    db.addLibraryFolder("tutorial")
+    db.addLibraryFolder("/Flute/src_SSITH_P2/build_dir")
+    db.addLibraryFolder("/tutorial")
 
     # find all folder in "/opt/tools/bsc/bsc-2021/lib/Libraries" and add them to the database
     for root, dirs, files in os.walk("/opt/tools/bsc/bsc-2021/lib/Libraries"):
@@ -58,7 +56,7 @@ def loadAllAndDoQuickRun():
 
 
     print(topLevel.to_string())
-    topLevel.to_file("/mnt/e/Mega/Documents/CS/TLoB/tutorial/")
+    topLevel.to_file(".")
     bO,sBO,sO = topLevel.buildAndRun()
     return sO
 

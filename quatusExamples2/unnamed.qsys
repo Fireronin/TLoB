@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system name="$${FILENAME}">
+ <component
+   name="$${FILENAME}"
+   displayName="$${FILENAME}"
+   version="1.0"
+   description=""
+   tags="INTERNAL_COMPONENT=true"
+   categories="" />
+ <parameter name="bonusData"><![CDATA[bonusData 
+{
+   element axi4Slave_0
+   {
+      datum _sortIndex
+      {
+         value = "0";
+         type = "int";
+      }
+   }
+}
+]]></parameter>
+ <parameter name="clockCrossingAdapter" value="HANDSHAKE" />
+ <parameter name="device" value="5CGXFC7C7F23C8" />
+ <parameter name="deviceFamily" value="Cyclone V" />
+ <parameter name="deviceSpeedGrade" value="8_H7" />
+ <parameter name="fabricMode" value="QSYS" />
+ <parameter name="generateLegacySim" value="false" />
+ <parameter name="generationId" value="0" />
+ <parameter name="globalResetBus" value="false" />
+ <parameter name="hdlLanguage" value="VERILOG" />
+ <parameter name="hideFromIPCatalog" value="true" />
+ <parameter name="lockedInterfaceDefinition" value="" />
+ <parameter name="maxAdditionalLatency" value="1" />
+ <parameter name="projectName" value="" />
+ <parameter name="sopcBorderPoints" value="false" />
+ <parameter name="systemHash" value="0" />
+ <parameter name="testBenchDutName" value="" />
+ <parameter name="timeStamp" value="0" />
+ <parameter name="useTestBenchNamingPattern" value="false" />
+ <instanceScript></instanceScript>
+ <interface
+   name="altera_axi4_slave"
+   internal="axi4Slave_0.altera_axi4_slave"
+   type="axi4"
+   dir="end">
+  <port name="araddr" internal="araddr" />
+  <port name="arburst" internal="arburst" />
+  <port name="arcache" internal="arcache" />
+  <port name="arid" internal="arid" />
+  <port name="arlen" internal="arlen" />
+  <port name="arlock" internal="arlock" />
+  <port name="arprot" internal="arprot" />
+  <port name="arqos" internal="arqos" />
+  <port name="arready" internal="arready" />
+  <port name="arregion" internal="arregion" />
+  <port name="arsize" internal="arsize" />
+  <port name="arvalid" internal="arvalid" />
+  <port name="awaddr" internal="awaddr" />
+  <port name="awburst" internal="awburst" />
+  <port name="awcache" internal="awcache" />
+  <port name="awid" internal="awid" />
+  <port name="awlen" internal="awlen" />
+  <port name="awlock" internal="awlock" />
+  <port name="awprot" internal="awprot" />
+  <port name="awqos" internal="awqos" />
+  <port name="awready" internal="awready" />
+  <port name="awregion" internal="awregion" />
+  <port name="awsize" internal="awsize" />
+  <port name="awvalid" internal="awvalid" />
+  <port name="bid" internal="bid" />
+  <port name="bready" internal="bready" />
+  <port name="bresp" internal="bresp" />
+  <port name="bvalid" internal="bvalid" />
+  <port name="rdata" internal="rdata" />
+  <port name="rid" internal="rid" />
+  <port name="rlast" internal="rlast" />
+  <port name="rready" internal="rready" />
+  <port name="rresp" internal="rresp" />
+  <port name="rvalid" internal="rvalid" />
+  <port name="wdata" internal="wdata" />
+  <port name="wlast" internal="wlast" />
+  <port name="wready" internal="wready" />
+  <port name="wstrb" internal="wstrb" />
+  <port name="wvalid" internal="wvalid" />
+ </interface>
+ <interface name="clock" internal="axi4Slave_0.clock" type="clock" dir="end">
+  <port name="CLK" internal="CLK" />
+ </interface>
+ <interface
+   name="reset_sink"
+   internal="axi4Slave_0.reset_sink"
+   type="reset"
+   dir="end">
+  <port name="RST_N" internal="RST_N" />
+ </interface>
+ <module
+   name="axi4Slave_0"
+   kind="axi4Slave"
+   version="1.0"
+   enabled="1"
+   autoexport="1" />
+ <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
+ <interconnectRequirement for="$system" name="qsys_mm.enableEccProtection" value="FALSE" />
+ <interconnectRequirement for="$system" name="qsys_mm.insertDefaultSlave" value="FALSE" />
+ <interconnectRequirement for="$system" name="qsys_mm.maxAdditionalLatency" value="1" />
+</system>

@@ -1,0 +1,20 @@
+# system info Example3 on 2022.04.27.13:17:28
+system_info:
+name,value
+DEVICE,5CGXFC7C7F23C8
+DEVICE_FAMILY,Cyclone V
+GENERATION_ID,1651058246
+#
+#
+# Files generated for Example3 on 2022.04.27.13:17:28
+files:
+filepath,kind,attributes,module,is_top
+simulation/Example3.v,VERILOG,,Example3,true
+#
+# Map from instance-path to kind of module
+instances:
+instancePath,module
+Example3.axi4Slave_0,Example3_axi4Slave_0
+Example3.axiMaster_0,Example3_axiMaster_0
+Example3.mm_interconnect_0,Example3_mm_interconnect_0
+Example3.rst_controller,altera_reset_controller

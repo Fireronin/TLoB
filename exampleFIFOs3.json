@@ -1,0 +1,36 @@
+{
+    "aditional folders" : ["tutorial"],
+    "packages": ["Simplefifo"],
+    "name" : "top",
+    "package_name" : "FIFOChain",
+    "modules" : [
+        {
+            "name" : "fifo1",
+            "function": "mkSimpleFIFO",
+            "function_params": [],
+            "interface_params": ["Bit#(32)"]
+        },
+        {
+            "name" : "fifo2",
+            "function": "mkSimpleFIFO",
+            "function_params": [],
+            "interface_params": ["Bit#(32)"]
+        },
+        {
+            "name" : "fifo3",
+            "function": "mkSimpleFIFO",
+            "function_params": [],
+            "interface_params": ["Bit#(32)"]
+        }
+    ],
+    "connections": [
+        {
+            "from" : "fifo1",
+            "to" : "fifo2"
+        },
+        {
+            "from" : "fifo2",
+            "to" : "fifo3"
+        }
+    ]
+}

@@ -411,6 +411,7 @@ Also, user can just drag and drop connections between interfaces and fields, and
 \end{tcolorbox}
 
 \chapter{Evaluation}
+Throughout working on this project I have learned a lot about QSys and Bluespec, and how they interact. This means that I will need to adjust slightly it from the project proposal to better represent problems that are solved. Firstly my understanding is that Platform Designer tool is shared between QSys and QSys Pro.
 
 \section{Overview}
 My evaluation will be divided into two sections each with three subsections. First section will compare text file formats of QSys and mine and second section will compare GUI of QSys and mine.
@@ -426,8 +427,58 @@ First two examples will produce valid devices, but they won't do anything intere
 Before we even create text files that we are going to compare we talk about an issue when working with QSys and Bluespec. That is the fact that Bluespec can't generate Verilog code of functions that are polymorphic. Nor there is support for Bluespec in QSys nor Xilinx Vivado. My understanding is Verilog type system is not rich enough to express things that would be needed to support complex polymorphism found in Bluespec. Therefore, any module used with QSys will need to be converted into it's synthesizable version stripped of any arguments and transpiled into Verilog. One might argue that this is an issue with Bluespec and not QSys, but I would argue that it is still a problem that needs fixing I have solution for It, that is working with Bluespec natively rather than Verilog files. 
 
 
-\section{Text file format}
-\subsection{Connected FIFOs}
+\section{Example 1 - Connecting FIFOs}
+In this example our goal is to create two connected FIFOs and then modify the file to connect a third one. FIFOs that I will be using have a copy of FIFO interface found in default Bluespec libraries.
+\begin{itemize}
+    \item Enq - If queue is not full then enqueue the data.
+    \item Deq - If queue is not empty then remove first element.
+    \item first - If queue is not empty then return first element.
+\end{itemize}
+In Bluespec there are provisos attached to those functions, and if in given cycle user will want to perform illegal operation (like dequeue when queue is empty) then rule in which this operation would be performed simply won't fire in that cycle. In verilog there is no notion of such provisos nor method so everything needs to be synthesized to wires to aid this process Bluespec uses Ready-Enable micro protocol. Every method has Ready and Enable wires. When Ready is high, then method is allowed to be executed. When Enable is high, it signifies that method must be executed.
+\subsection{Platform Designer}
+To create a system with two connected FIFOs, we first need to import them into platform designer. Here we encounter first problems. As mentioned before, Bluespec can't generate Verilog code of functions that are polymorphic. So we must decide on the width of the data stored in such FIFO before transpiling to Verilog. After analysis of Verilog file by platform designer it decides that all wires found are parts of Avalon slave interface. This is an obvious error, and we need to correct it. \\
+\includegraphics{images/Example1BeforeOranization.png} \\
+This is unfortunately easier said than done. There are few options of assigning those wires, but neither of them perfect. Firstly we will need to choose a type of interface those will represent. We have over 30 options to chose from, but most of them are variants of larger protocols like AXI4. The only option that will make sense for us is Conduit, which basically meaningless bank canvas. We could create a conduit for each method but after consultation with my supervisor he recommended creating a conduit for each wire. So I did as he recommended, and this produces following set of interfaces. This requires quite a bit of manual work, listed bellow.
+\begin{itemize}
+    \item Create 8 new interfaces (QSys figured out what to do with clock wire on its own, so we have one for free) this includes giving them a name and assigning a reset signal.
+    \item More each wire to its respective interface and change signal type of each wire to something generic like wire from type given to it as part of Avalon slave interface. 
+\end{itemize}
 
+\begin{figure}
+    \caption{After assigning wires and Interfaces}
+    \includegraphics[width=\textwidth]{images/Example1AfterOrganization.png} \\
+    \centering
+\end{figure}
 
+With all of those wires we can connect obvious things together like \verb!first! to \verb!enq_value! and clock signals, but then we run into a problem that with all wires that represent Ready-Enable micro protocol because we would like to enable enqueue in second queue only if both wires \verb!ready_deq! and \verb!ready_first! are high in the first queue, otherwise because we don't know how our FIFO is implemented we might run into a problem where we might get bugs(for example we lose data because we \verb!ready_deq! became high cycle faster than \verb!ready_first!, or in opposite scenario we would read stale/corrupted data). Unfortunately we can't create such logic using platform designer and one way of solving this would be to create special connector module that would do this logic(I'm going to come back later to explain why this approach might be infeasible in general case). 
+
+\subsection{My tool}
+Using my tool whole phase of importing and setting up wires can be skipped. Connecting is as simple as creating a new node connection node and selecting chosen FIFO's interface. Extending two connected FIFOs to three is as simple as adding one more FIFO and one more connection node.
+
+\begin{figure}
+    \caption{Three connected FIFOs using my tool}
+    \includegraphics[width=0.7\textwidth]{images/Example1MySolution.png} \\
+    \centering
+\end{figure}
+
+\subsection{Using text format to do same things and Qualitative metrics}
+To count number of tokens I'm using following regexp \verb!(\w|\.)+!. This regexp will match sequences of alphanumerical characters with dots and underscores. (TODO draw graphs)
+Raw numbers: 431 tokens to import FIFO, 347 for two connected FIFOs, and 415 for three connected FIFOs.
+My solution: 31 for two connected FIFOs and 43 for three connected FIFOs.
+
+\section{Example 2 - Simple System-on-Chip}
+In this example we will create a simple system-on-chip (SOC) with one Flute core, memory module and fake interface with outside world, all connected by a bus. This example is designed to even out playing field by making all connections use AXI4 interface which is undestood by platform designer.
+
+\subsection{Platform Designer}
+Again we start with importing our modules. This time we need to import two of them, one for fake interface and one for flute core module. As for memory module we will use one from QSys library to save time and effort.
+Unfortunately platform designer can't figure out how to organize wires into interfaces like AXI4 master or AXI4 slave. So we need to do it manually. This wouldn't be so painful if not for the fact that we need to set type of each wire according to it's name(for example \verb!cpu_imem_master_awready! has type \verb!awready!). Each of those AXI4 interfaces has 37 wires, and if we account for all other interfaces of Flute core we get 150 wires that individually need to be assigned to interfaces. Similarly, our fake 16550 interfaces also uses 40 wires in total. When assigning this through GUI it took me around 16 minutes to click through all the assignments. (For context tools like Xilinx Vivado have heuristics that are able to do a lot of this automatically, but my understanding is that still this works only for certain known interfaces)
+\\
+\begin{figure}
+    \caption{Connected Sys-on-Chip}
+    \includegraphics[width=0.7\textwidth]{images/Example2QSys.png} \\
+    \centering
+\end{figure}
+After initial pain of importing modules we arrive at the place where Platform designer shines. It is able to show possible connections between AXI4 masters and slaves, on a two 2 grid-like layout. Then connecting two together is as simple as clicking cross-section of two wires on the screen.  
+
+\subsection{My tool}
 \end{document}

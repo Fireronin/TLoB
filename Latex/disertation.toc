@@ -46,5 +46,10 @@
 \contentsline {chapter}{\numberline {4}Evaluation}{17}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Overview}{17}{section.4.1}%
 \contentsline {subsection}{\numberline {4.1.1}Polymorphism disclaimer}{17}{subsection.4.1.1}%
-\contentsline {section}{\numberline {4.2}Text file format}{17}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Connected FIFOs}{17}{subsection.4.2.1}%
+\contentsline {section}{\numberline {4.2}Example 1 - Connecting FIFOs}{17}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Platform Designer}{18}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}My tool}{20}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Using text format to do same things and Qualitative metrics}{20}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}Example 2 - Simple System-on-Chip}{21}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Platform Designer}{21}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}My tool}{21}{subsection.4.3.2}%

@@ -32,3 +32,4 @@ fi
 # bsc -g mkSimpleFIFO -verilog  ./tutorial/Simplefifo.bsv
 # bsc -g mkPolyFIFO -verilog  ./tutorial/Polyfifo.bsv
 # bsc -p  .:./tutorial:./Flute/src_SSITH_P2/build_dir:+ -u ./tutorial/AddressFlit.bsv
+# bsc -g mkSimpleFIFO_Synth -verilog  ./tutorial/Simplefifo.bsv

@@ -31,3 +31,4 @@ fi
 # bsc -p  .:./tutorial:./Flute/src_SSITH_P2/build_dir:+ -u ./tutorial/Simplefifo.bsv
 # bsc -g mkSimpleFIFO -verilog  ./tutorial/Simplefifo.bsv
 # bsc -g mkPolyFIFO -verilog  ./tutorial/Polyfifo.bsv
+# bsc -p  .:./tutorial:./Flute/src_SSITH_P2/build_dir:+ -u ./tutorial/AddressFlit.bsv

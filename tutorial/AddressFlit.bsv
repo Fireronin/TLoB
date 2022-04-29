@@ -16,9 +16,9 @@ endinstance
 instance Has_isLast #(AFlit#(i,o));
   function isLast = constFn(True);
 endinstance
-instance Bits#(AFlit#(d,o),d);
-  function pack = constFn(d);
-  function unPack = constFn(d.data);
-endinstance
+// instance Bits#(AFlit#(d,o),d);
+//   function pack = constFn(d);
+//   function unPack = constFn(d.data);
+// endinstance
 
 endpackage

@@ -1,4 +1,5 @@
 import json
+from tkinter import Toplevel
 from django.shortcuts import render
 from django.http import HttpResponse
 import sys
@@ -13,7 +14,6 @@ print(os.getcwd())
 db = tdb(load=True,saveLocation=os.path.join("../../saved"))
 topLevel = TopLevelModule("top",db,package_name="GUITEST")
 print(len(db.functions))
-print
 
 # Create your views here.
 
@@ -268,8 +268,11 @@ def possibleConnectionStarts(request):
 @never_cache
 def fullClear(request):
     global db,topLevel
+    del db
+    del topLevel
     db = tdb(load=True,saveLocation=os.path.join("../../saved"))
     topLevel = TopLevelModule("top",db,package_name="GUITEST")
+    print(topLevel.possibleConnections)
     response = {
         'exception':"",
     }

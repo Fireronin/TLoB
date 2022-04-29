@@ -2,37 +2,24 @@ package GUITEST;
 // necessary packages
 import Connectable::*;
 import Vector::*;
-import ExampleAXI4::*;
+import Simplefifo::*;
+import Core::*;
+import Core_IFC::*;
+import MemUtils::*;
+import AXI4Lite_Types::*;
+import AXI4_AXI4Lite_Bridges::*;
 import AXI4_Types::*;
-import AXI4_Interconnect::*;
 
-
-function Vector #(2, Bool) route_bus5 (r_t x) provisos ( Bits#(r_t,r_l) );
-	Bit#(r_l) address = pack(x);
-	Vector#(2, Bool) oneHotaddress = replicate (False);
-	// instance4 -> 0
-	if (address >= 0 && address < 1)
-		oneHotaddress[0] = True;
-	// instance3 -> 1
-	if (address >= 1 && address < 2)
-		oneHotaddress[1] = True;
-	return oneHotaddress;
-endfunction
 
 module top();
  
-	AXI4_Types::AXI4_Master#(ExampleAXI4::MID_sz,ExampleAXI4::ADDR_sz,ExampleAXI4::DATA_sz,ExampleAXI4::AWUSER_sz,ExampleAXI4::WUSER_sz,ExampleAXI4::BUSER_sz,ExampleAXI4::ARUSER_sz,ExampleAXI4::RUSER_sz) instance1 <- axiMaster(1 );
-	AXI4_Types::AXI4_Master#(ExampleAXI4::MID_sz,ExampleAXI4::ADDR_sz,ExampleAXI4::DATA_sz,ExampleAXI4::AWUSER_sz,ExampleAXI4::WUSER_sz,ExampleAXI4::BUSER_sz,ExampleAXI4::ARUSER_sz,ExampleAXI4::RUSER_sz) instance2 <- axiMaster(2 );
-	AXI4_Types::AXI4_Slave#(ExampleAXI4::SID_sz,ExampleAXI4::ADDR_sz,ExampleAXI4::DATA_sz,ExampleAXI4::AWUSER_sz,ExampleAXI4::WUSER_sz,ExampleAXI4::BUSER_sz,ExampleAXI4::ARUSER_sz,ExampleAXI4::RUSER_sz) instance3 <- axiSlave(3 );
-	AXI4_Types::AXI4_Slave#(ExampleAXI4::SID_sz,ExampleAXI4::ADDR_sz,ExampleAXI4::DATA_sz,ExampleAXI4::AWUSER_sz,ExampleAXI4::WUSER_sz,ExampleAXI4::BUSER_sz,ExampleAXI4::ARUSER_sz,ExampleAXI4::RUSER_sz) instance4 <- axiSlave(13413413);
+	Simplefifo::FIFOIfc#(Bit#(32)) instance1 <- mkSimpleFIFO();
+	Simplefifo::FIFOIfc#(Bit#(32)) instance3 <- mkSimpleFIFO();
+	Core_IFC::Core_IFC#(SoC_Map::N_External_Interrupt_Sources) instance4 <- mkCore();
+	AXI4Lite_Types::AXI4Lite_Slave#(64,64,0,0,0,0,0) instance5 <- mkAXI4LiteMem(ExampleAXI4::ADDR_sz, tagged Invalid);
+	AXI4_Types::AXI4_Slave#(6,64,64,0,0,0,0,0) instance6 <- fromAXI4LiteToAXI4_Slave(instance5);
 
-	Vector::Vector#(2,AXI4_Types::AXI4_Master#(ExampleAXI4::MID_sz,ExampleAXI4::ADDR_sz,ExampleAXI4::DATA_sz,ExampleAXI4::AWUSER_sz,ExampleAXI4::WUSER_sz,ExampleAXI4::BUSER_sz,ExampleAXI4::ARUSER_sz,ExampleAXI4::RUSER_sz)) bus5_masters;
-	bus5_masters[0] = instance1;
-	bus5_masters[1] = instance2;
-	Vector::Vector#(2,AXI4_Types::AXI4_Slave#(ExampleAXI4::SID_sz,ExampleAXI4::ADDR_sz,ExampleAXI4::DATA_sz,ExampleAXI4::AWUSER_sz,ExampleAXI4::WUSER_sz,ExampleAXI4::BUSER_sz,ExampleAXI4::ARUSER_sz,ExampleAXI4::RUSER_sz)) bus5_slaves;
-	bus5_slaves[0] = instance4;
-	bus5_slaves[1] = instance3;
-	AXI4_Interconnect::mkAXI4Bus(route_bus5,bus5_masters,bus5_slaves);
+	mkConnection(instance1,instance3);
 
 endmodule
 endpackage

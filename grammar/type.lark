@@ -40,7 +40,10 @@ type_def_type: tcl_package_name (type_formals)*
             | type_ide_poly (type_formals)*
             | "{" tcl_package_name (type_formals)* "}"
             | "{" type_ide_poly (type_formals)* "}"
+            | tcl_tc_m_f_function
+            | "{" tcl_tc_m_f_function "}"
             | type_def_type_value
+            | "{" type_def_type_value "}"
 
 type_formals: "#(" type_formal ("," type_formal)* ")" -> list_of
 
@@ -150,6 +153,7 @@ tcl_stu_members: "{" "members" "{" tcl_stu_member* "}" "}"
 
 tcl_stu_member: "{" type_def_type (identifier_u|identifier_l) [tcl_width] "}"
             | "{" "{" type_def_type "}" (identifier_u|identifier_l) [tcl_width] "}"
+            //| tcl_tc_m_function // special case for module type inside a struct
 // Interface
 atribute_instances: "ATRIBUTE INSTANCES TODO"
 
@@ -166,9 +170,9 @@ tcl_im_method: "method" "{" type_def_type identifier_l tcl_imm_input_types "{"  
 
 tcl_imm_other: "{" "(" "*" identifier_l "*" ")" "}" -> string_placeholder
 
-tcl_imm_prefix: "{" "(" "*" "prefix" "=" "\"" "\""  "*" ")" "}"
+tcl_imm_prefix: "{" "(" "*" "prefix" "=" (tcl_immp_name | "\"" "\"")  "*" ")" "}"
 
-tcl_imm_result: "{" "(" "*" "result" "=" "\"UNUSED\"" "*" ")" "}"
+tcl_imm_result: "{" "(" "*" "result" "="  tcl_immp_name "*" ")" "}"
 
 tcl_imm_input_types:  (type_def_type | "{" type_def_type* "}" ) -> list_of
 
@@ -176,7 +180,7 @@ tcl_imm_input_types:  (type_def_type | "{" type_def_type* "}" ) -> list_of
 
 tcl_imm_ports: "{" "(*" "ports =" "[" [tcl_immp_name ( "," tcl_immp_name )* ] "]" "*)" "}" -> list_of
 
-tcl_immp_name: "\""  identifier_l "\"" -> string_placeholder
+tcl_immp_name: "\""  /\w+/ "\"" -> string_placeholder
 
 tcl_i_attributes: "{" "attributes" "{" tcl_ia_attribute* "}" "}"
 

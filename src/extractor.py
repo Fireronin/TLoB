@@ -316,7 +316,7 @@ class Function(Type_ide):
     return_type: Type_ide
     arguments: Dict[str,Type_ide] = {}
 
-    def __init__(self,name,package=None,arguments: Dict[Union[str,int],Type_ide]={},result=None,provisos=[],position=None,ports=None) -> None:
+    def __init__(self,name,package=None,arguments: Dict[Union[str,int],Type_ide]={},result="resultVar",provisos=[],position=None,ports=None) -> None:
         super().__init__(name,package,position)
         #Type.__init__(self,name=name,package=package,position=position)
         self.return_type = result
@@ -340,6 +340,8 @@ class Function(Type_ide):
         out = {'name':self.__str__()}
         out["acessName"] = self.accessName
         out["type"] = "function"
+        if self.return_type == None:
+            print("Warning: function has no return type",self)
         out["result"] = self.return_type.json
         out["arguments"] = []
         for i,argument in enumerate(self.arguments):
@@ -538,8 +540,8 @@ class ModuleTransformer(Transformer):
     def tcl_tc_m_f_module(self, args):
         arguments = {}
         for argument in args[1:-1]:
-            if issubclass(type(argument),Type):
-                arguments[argument.name] = argument
+            if type(argument[1]) == Function or type(argument[1]) == Module:
+                arguments[argument[1].name] = argument
             else:
                 arguments[argument[2]] = argument[1]
         return Module(name=args[0],arguments=arguments,interface=args[-1])
@@ -729,11 +731,20 @@ class ModuleTransformer(Transformer):
         return ("members_widths",members,widths)
 
     def tcl_stu_member(self,args):
-        width = None
-        if type(args[-1]) == tuple and args[-1][0] == "width":
-            width = args[-1][1]
+        try:
+            # if len(args) == 1 and args[0][0] == "function":
+            #     return ("member",args[0][2],args[0][1],None)
+
+            width = None
+            if type(args[-1]) == tuple and args[-1][0] == "width":
+                width = args[-1][1]
         
-        return ("member",args[0],args[1],width)
+        
+            return ("member",args[0],args[1],width)
+        except Exception as e:
+                    print(e)
+                    print(args)
+                    raise e
 
     def tcl_v_elem(self, args):
         return args[0]
@@ -758,6 +769,8 @@ class ModuleTransformer(Transformer):
         return Value(args[0])
 
     def type_def_type(self, args):
+        if type(args[0]) == Function or type(args[0]) == Module:
+            return args[0]
         if type(args[0]) == Value:
             return args[0]
         args = [x for x in args if x is not None]
@@ -772,6 +785,9 @@ class ModuleTransformer(Transformer):
             else:
                 name = args[0][1]
                 package = args[0][0]
+        else:
+            print(args)
+            pass
         return Type_ide(name=name,package=package,formals=([] if len(args)==1 else args[name_len]),is_polymorphic=poly)
         
     def type_formal(self, args):
@@ -860,8 +876,8 @@ def parse_and_transform(tcl_string: Union[str,bytes]):
         parsed = parser.parse(tcl_string,start="tcl_type_full_list")
     except Exception as e:
         if tcl_string == 'can\'t read "Cons": no such variable' or 'Typeclass {Generic#' in tcl_string:
-            raise Exception("Failed to parse: \n")
-        raise Exception("Failed to parse: \n")
+            raise Exception("Special case\n")
+        raise Exception(f"Failed to parse: {tcl_string}\n")
     result = ModuleTransformer().transform(parsed)
     return result
 

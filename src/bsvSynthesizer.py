@@ -105,6 +105,7 @@ class InstanceV2():
         if self.creator.name == "mkConnection":
             return
         self.creator.return_type.accessName = self.instance_name
+        
         self.db.populateMembers(self.creator.return_type)
         self.interfaces = self.list_all_Interfaces()
         for interface in self.interfaces:
@@ -283,6 +284,26 @@ class TopLevelModule():
     knownNames:Dict[str,Type_ide] = {}
     subscribers:Dict[str,Set[str]] = {}
 
+    def __init__(self,name,db,package_name=None) -> None:
+        self.possibleConnections = {}
+        self.accessableInterfaces = []
+        self.cashed_considered_instances = {}
+        self.db = db
+        self.modules = {}
+        self.connections = {}
+        self.buses = {}
+        self.typedefs = {}
+        self.instances = {}
+        self.knownNames = {}
+        self.subscribers = {}
+        self.name = name
+        if package_name is None:
+            self.package_name = name
+        else:
+            self.package_name = package_name
+        self.db = db
+        self.packages = set()
+
     @property
     def reversedPossibleConnections(self):
         out = {}
@@ -350,7 +371,7 @@ class TopLevelModule():
                     self.subscribers[arg] = set()
                 self.subscribers[arg].add(caller)
             if arg not in self.knownNames:
-                raise Exception(f"Unknown name {arg}")
+                return arg
             return self.knownNames[arg]
         if arg[0].isupper():
             type_t = evaluateCustomStart(arg,"type_def_type")
@@ -373,14 +394,7 @@ class TopLevelModule():
                 #self.instances[subscriber].update()
     #endregion
 
-    def __init__(self,name,db,package_name=None) -> None:
-        self.name = name
-        if package_name is None:
-            self.package_name = name
-        else:
-            self.package_name = package_name
-        self.db = db
-        self.packages = set()
+
 
     def add_moduleV2(self,creator_func,instance_name,interface_args=[],func_args=[],input_context={}) -> InstanceV2:
         #check if instance name starts with upercase character

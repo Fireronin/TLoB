@@ -1,62 +1,108 @@
-{function GetPut::peekGet {result a
-    } {arguments GetPut::Get#(a)
-    } {position {%/Libraries/GetPut.bs 142 0 {Library GetPut
+Interface {DDR3: :DDR3_Pins#(numeric type ddr3addrsize, numeric type ddr3datasize, numeric type ddr3besize, numeric type ddr3beats, numeric type datawidth, numeric type bewidth, numeric type rowwidth, numeric type colwidth, numeric type bankwidth, numeric type rankwidth, numeric type clkwidth, numeric type cswidth, numeric type ckewidth, numeric type odtwidth)
+} polymorphic {members {
+        {method {Bit#(clkwidth) clk_p {} {
+                    {(* ports = [] *)
+                    } {(* result = "CLK_P" *)
+                    } {(* prefix = "" *)
+                    }
+                }
+            }
+        } {method {Bit#(clkwidth) clk_n {} {
+                    {(* ports = [] *)
+                    } {(* result = "CLK_N" *)
+                    } {(* prefix = "" *)
+                    }
+                }
+            }
+        } {method {Bit#(rowwidth) a {} {
+                    {(* ports = [] *)
+                    } {(* result = "A" *)
+                    } {(* prefix = "" *)
+                    }
+                }
+            }
+        } {method {Bit#(bankwidth) ba {} {
+                    {(* ports = [] *)
+                    } {(* result = "BA" *)
+                    } {(* prefix = "" *)
+                    }
+                }
+            }
+        } {method {Bit#(1) ras_n {} {
+                    {(* ports = [] *)
+                    } {(* result = "RAS_N" *)
+                    } {(* prefix = "" *)
+                    }
+                }
+            }
+        } {method {Bit#(1) cas_n {} {
+                    {(* ports = [] *)
+                    } {(* result = "CAS_N" *)
+                    } {(* prefix = "" *)
+                    }
+                }
+            }
+        } {method {Bit#(1) we_n {} {
+                    {(* ports = [] *)
+                    } {(* result = "WE_N" *)
+                    } {(* prefix = "" *)
+                    }
+                }
+            }
+        } {method {Bit#(1) reset_n {} {
+                    {(* ports = [] *)
+                    } {(* result = "RESET_N" *)
+                    } {(* prefix = "" *)
+                    }
+                }
+            }
+        } {method {Bit#(cswidth) cs_n {} {
+                    {(* ports = [] *)
+                    } {(* result = "CS_N" *)
+                    } {(* prefix = "" *)
+                    }
+                }
+            }
+        } {method {Bit#(odtwidth) odt {} {
+                    {(* ports = [] *)
+                    } {(* result = "ODT" *)
+                    } {(* prefix = "" *)
+                    }
+                }
+            }
+        } {method {Bit#(ckewidth) cke {} {
+                    {(* ports = [] *)
+                    } {(* result = "CKE" *)
+                    } {(* prefix = "" *)
+                    }
+                }
+            }
+        } {method {Bit#(bewidth) dm {} {
+                    {(* ports = [] *)
+                    } {(* result = "DM" *)
+                    } {(* prefix = "" *)
+                    }
+                }
+            }
+        } {interface Inout#(Bit#(datawidth)) dq {
+                {(* prefix = "DQ" *)
+                }
+            }
+        } {interface Inout#(Bit#(bewidth)) dqs_p {
+                {(* prefix = "DQS_P" *)
+                }
+            }
+        } {interface Inout#(Bit#(bewidth)) dqs_n {
+                {(* prefix = "DQS_N" *)
+                }
             }
         }
     }
-} {function GetPut::fifoToGet {result GetPut: :Get#(a)
-    } {arguments FIFO: :FIFO#(a)
-    } {position {%/Libraries/GetPut.bs 162 0 {Library GetPut
-            }
-        }
+} {position {DDR3.bsv 99 11
     }
-} {function GetPut:fifoToGetS {result GetPut: :GetS#(a)
-    } {arguments FIFO: :FIFO#(a)
-    } {position {%/Libraries/GetPut.bs 169 0 {Library GetPut
-            }
-        }
-    }
-} {function GetPut: :fifoToPut {result GetPut: :Put#(a)
-    } {arguments FIFO: :FIFO#(a)
-    } {position {%/Libraries/GetPut.bs 229 0 {Library GetPut
-            }
-        }
-    }
-} {module GetPut: :mkGetPut {interface GetPut: :GetPut#(a)
-    } {provisos {
-            {Bits#(a, sa)
-            }
-        }
-    } {position {%/Libraries/GetPut.bs 241 0 {Library GetPut
-            }
-        }
-    }
-} {module GetPut: :mkGPFIFO {interface GetPut: :GetPut#(a)
-    } {provisos {
-            {Bits#(a, sa)
-            }
-        }
-    } {position {%/Libraries/GetPut.bs 272 0 {Library GetPut
-            }
-        }
-    }
-} {module GetPut: :mkGPFIFO1 {interface GetPut: :GetPut#(a)
-    } {provisos {
-            {Bits#(a, sa)
-            }
-        }
-    } {position {%/Libraries/GetPut.bs 284 0 {Library GetPut
-            }
-        }
-    }
-} {module GetPut: :mkGPSizedFIFO {interface GetPut: :GetPut#(a)
-    } {arguments Integer
-    } {provisos {
-            {Bits#(a, sa)
-            }
-        }
-    } {position {%/Libraries/GetPut.bs 296 0 {Library GetPut
-            }
+} {attributes {
+        {(* always_ready  *)
+        } {(* always_enabled  *)
         }
     }
 }

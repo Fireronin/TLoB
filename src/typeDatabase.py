@@ -1,4 +1,5 @@
 from copy import deepcopy, copy
+import profile
 from typing import Dict, Set
 
 from extractor import Type as ExType
@@ -81,18 +82,17 @@ class TypeDatabase():
         if type(value) == Variable:
             value = value.value
         if s not in variables:
-            variables[s] = Variable(deepcopy(value))
+            variables[s] = Variable(value)
         else:
             try:
+                #check if both are strings
+                if type(variables[s].value) == str and type(value) == str:
+                    return
                 self.merge(variables[s].value,value,{})
             except Exception as e:
-                raise Exception("Conflicting values for variable: "+s)
-            variables[s].value = value
+                raise Exception("Conflicting values for variable: "+s + " " + str(variables[s].value) + " " + str(value))
     
     def populateFunctionNames(self):
-        
-
-
         proposedAdditions = {}
         duplicateNames = set()
         for function in self.functions.values():
@@ -156,7 +156,7 @@ class TypeDatabase():
             except Exception as e:
                 # type_string from str to bytes
                 type_string = str(type_string, encoding='utf-8')
-                if "Typeclass {Generic" in type_string:
+                if "Special case" in str(e):
                     continue
                 #save type_string to file failed_types.json
                 with open("failed_types.json","a") as f:
@@ -343,13 +343,13 @@ class TypeDatabase():
             if t_type in variables:
                 if variables[t_type].value == None:
                     return t_type
-                return variables[t_type].value
+                return deepcopy(variables[t_type].value)
             return t_type
         if type(t_type) == Value:
             return t_type
         if type(t_type) == Type_ide:
             if t_type.full_name in variables:
-                return variables[t_type.full_name].value
+                return deepcopy(variables[t_type.full_name].value)
             for i,field in enumerate(t_type.formals):
                 t_type.formals[i].type_ide = self.applyVariables(t_type.formals[i].type_ide,variables)
             return t_type
@@ -380,7 +380,7 @@ class TypeDatabase():
                     keyDict = {}
                     for var in left:
                         if var in variables:
-                            value = variables[var].value
+                            value = deepcopy(variables[var].value)
                             if value == None:
                                 fail = True
                             else:
@@ -393,7 +393,7 @@ class TypeDatabase():
                 keyDict = {}
                 for member in typeclass.type_ideAlpha.children:
                     if member in variables:
-                        memberValue = variables[member].value
+                        memberValue = deepcopy(variables[member].value)
                         if memberValue == None:
                             universalInstances.append(instance)
                             break
@@ -403,7 +403,6 @@ class TypeDatabase():
         typeclass.lookUpDictionaries = lookUpDictionaries
         typeclass.universalInstances = universalInstances
 
-    #@timeout(60)
     def resolveTypeclass(self,typeclass: Typeclass,t_type: Type_ide,instance_hint:Typeclass_instance=None) -> Type_ide:
         typeclass = self.getTypeByName(typeclass.type_ide)
         variables = self.merge(typeclass.type_ideAlpha,t_type,{})
@@ -446,7 +445,6 @@ class TypeDatabase():
                 solvedVariables = self.merge(typeclass.type_ide,solvedInstance,{})
             except Exception as e:
                 continue
-            self.merge(t_type,instance.type_ide,variables={})
             return solvedVariables
         raise Exception(f"Cannot solve {typeclass} {t_type}")
 
@@ -495,8 +493,12 @@ class TypeDatabase():
                 except Exception as e:
                     toDo.append(proviso)
                     continue
-                for key,val in newVariables.items():
-                    self.CAdd(variables,key,val)   
+                try:
+                    for key,val in newVariables.items():
+                        self.CAdd(variables,key,val)
+                except Exception as e:
+                    raise Exception(f"Cannot solve provisos {provisos} with variables \
+                {variablesToStr(variables)}")
                 
             
             if len(toDo) == len(lastTodo) and not numericalProgress:

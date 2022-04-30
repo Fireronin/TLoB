@@ -79,6 +79,7 @@ Module is unit of organization of logic. Modules don't have types, instead they 
 \end{itemize}
 
 \subsection{Typeclasses}
+\label{sec:Typeclasses}
 Typesclasses in Bluespec are used to group types for which specific functions or modules are implemented. Typeclass instance is (TODO describe what is it) and it can have provisos attached to it.
 
 \subsection{Provisos}
@@ -179,8 +180,7 @@ tcl_path: ["%/"] /((\.{1,2})|(\w|-|\s)+)/
 
 
 \chapter{Implementation}
-\section{Reading descriptions of packages}
-\subsection{HandlerV2.py Todo rename}
+\section{Crawling the packages}
 To interact with Bluetcl I have written a script using Pexpect library. This script works by creating subprocess of Bluetcl, and exposes functions that allow for performing of quarries. Core of this script is a function called \verb!call! that takes as input a string that is a command and returns output of stripped of warnings or raises an exception if error occurred(for example in case where package was not found). To remove warnings I make some assumptions.
 \begin{itemize}
     \item I only use fixed set of commands(like list packages, describe a type).
@@ -189,7 +189,7 @@ To interact with Bluetcl I have written a script using Pexpect library. This scr
 \end{itemize}
 Thanks to them, I don't need sophisticated system for parsing error, and or warnings. I can just make a quick search for error, and if needed forward this to user.
 \\ 
-In total this script allows me for:
+In total this script allows me to:
 \begin{itemize}
     \item Initialize subprocess
     \item Add folder to search path of Bluetcl
@@ -203,7 +203,7 @@ In total this script allows me for:
 \section{Loading Bluespec packages' information (TODO check grammar of s')}
 As mentioned earlier output of bluetcl is text, and I need it in some better organized form. In this section I describe process of doing this.
 \subsection{Lexical and syntax analysis}
-I decided to use Lark library for lexical and syntax analysis. This library takes grammar and string of text as input and returns an abstract syntax tree. The only difficult part here to create a grammar that works. (TODO improve this last sentence)
+I decided to use Lark library for lexical and syntax analysis. This library takes grammar and string of text as input and returns an abstract syntax tree. The only difficult part here is creating grammar, but we have taken care of it during preparation. (TODO improve this last sentence)
 
 \subsection{Understanding abstract syntax tree (AST)}
 Given AST I needed to turn it into a more useful form. To do this I used \verb!Transformer! class provided by Lark. The way it worked is that I created subclass of \verb!Transformer! that implemented a function for each non-terminal / rule(Each non-terminal can have multiple rules and Lark allows for renaming individual of rules, this for example allows parsing different non-terminals using same function or parsing single non-terminal using different function depending on rule that was used). \verb!Transformer! will then perform bottom up transformation of AST, and for each rule it will call respective member function, with parsed children(non-terminals used by rule) as arguments. At the end of the transforming process I have a list of objects that represented data from Blutecl.
@@ -222,12 +222,12 @@ Building the top level module can be broken down into few operations.
     \item Connecting modules using \verb!mkConnection! function.
     \item Connecting modules using busses.
     \item Synthesizing Bluespec.
+    \item Automated compilation and run of simulation.
 \end{itemize} 
 Those operations if implemented naively would be almost as simple as formatting a string. But If this was the only thing that this project provided I wouldn't need to go through all the trouble of parsing Bluespec grammar, and generally users would be better off just writing Bluespec code. My unique value proposition is running something similar to a language server, that will be capable of dynamically resolving types, and aiding user in the design process by providing possible connections, informing whether values passed to initialize module are correct, and informing about subinterfaces that can be found in the instantiated modules. 
 At the basis of all those features will be type resolution, and I will first explain how it works.
 \subsection{Resolving types}
-
-\subsection{Resolving types (implementation)}
+This section assumes that one have read about typeclasses and provisos from \hyperref[sec:Typeclasses]{previous chapter}.
 In my code there are 4 main functions that combined allow for type resolution:
 \begin{itemize}
     \item \verb!merge! function takes two type identifiers and returns map (dictionary) from names of variables to theirs values. It's similar to Prolog's unification operator.

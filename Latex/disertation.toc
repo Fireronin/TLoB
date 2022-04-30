@@ -18,27 +18,25 @@
 \contentsline {subsection}{\numberline {2.3.2}Where to find this grammar ?}{8}{subsection.2.3.2}%
 \contentsline {subsection}{\numberline {2.3.3}Technical aspects}{8}{subsection.2.3.3}%
 \contentsline {chapter}{\numberline {3}Implementation}{10}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Reading descriptions of packages}{10}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}HandlerV2.py Todo rename}{10}{subsection.3.1.1}%
+\contentsline {section}{\numberline {3.1}Crawling the packages}{10}{section.3.1}%
 \contentsline {section}{\numberline {3.2}Loading Bluespec packages' information (TODO check grammar of s')}{10}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Lexical and syntax analysis}{11}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.1}Lexical and syntax analysis}{10}{subsection.3.2.1}%
 \contentsline {subsection}{\numberline {3.2.2}Understanding abstract syntax tree (AST)}{11}{subsection.3.2.2}%
 \contentsline {subsection}{\numberline {3.2.3}Organizing data and functionality}{11}{subsection.3.2.3}%
 \contentsline {section}{\numberline {3.3}Building the top level module}{11}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Resolving types}{12}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Resolving types (implementation)}{12}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.1}Resolving types}{11}{subsection.3.3.1}%
 \contentsline {subsubsection}{Merge function}{12}{section*.2}%
 \contentsline {subsubsection}{Apply variables function}{12}{section*.3}%
-\contentsline {subsubsection}{Resolve typeclass function}{13}{section*.4}%
+\contentsline {subsubsection}{Resolve typeclass function}{12}{section*.4}%
 \contentsline {subsubsection}{Solve provisos function}{13}{section*.5}%
 \contentsline {subsubsection}{How those functions can are used}{13}{section*.6}%
 \contentsline {section}{\numberline {3.4}Synthesizing}{13}{section.3.4}%
-\contentsline {subsubsection}{Top level module object}{14}{section*.7}%
+\contentsline {subsubsection}{Top level module object}{13}{section*.7}%
 \contentsline {subsubsection}{Adding modules (introduction)}{14}{section*.8}%
 \contentsline {subsubsection}{Adding busses}{15}{section*.11}%
 \contentsline {subsubsection}{Using JSON interface}{16}{section*.14}%
 \contentsline {subsection}{\numberline {3.4.1}GUI}{16}{subsection.3.4.1}%
-\contentsline {subsubsection}{Backend}{17}{section*.15}%
+\contentsline {subsubsection}{Backend}{16}{section*.15}%
 \contentsline {subsubsection}{Frontend (React)}{17}{section*.16}%
 \contentsline {subsubsection}{Frontend (React Flow)}{17}{section*.17}%
 \contentsline {subsubsection}{Frontend (MUI)}{17}{section*.18}%

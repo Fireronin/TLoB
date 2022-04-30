@@ -18,26 +18,24 @@
 \BOOKMARK [2][-]{subsection.2.3.2}{Where to find this grammar ?}{section.2.3}% 18
 \BOOKMARK [2][-]{subsection.2.3.3}{Technical aspects}{section.2.3}% 19
 \BOOKMARK [0][-]{chapter.3}{Implementation}{}% 20
-\BOOKMARK [1][-]{section.3.1}{Reading descriptions of packages}{chapter.3}% 21
-\BOOKMARK [2][-]{subsection.3.1.1}{HandlerV2.py Todo rename}{section.3.1}% 22
-\BOOKMARK [1][-]{section.3.2}{Loading Bluespec packages' information \(TODO check grammar of s'\)}{chapter.3}% 23
-\BOOKMARK [2][-]{subsection.3.2.1}{Lexical and syntax analysis}{section.3.2}% 24
-\BOOKMARK [2][-]{subsection.3.2.2}{Understanding abstract syntax tree \(AST\)}{section.3.2}% 25
-\BOOKMARK [2][-]{subsection.3.2.3}{Organizing data and functionality}{section.3.2}% 26
-\BOOKMARK [1][-]{section.3.3}{Building the top level module}{chapter.3}% 27
-\BOOKMARK [2][-]{subsection.3.3.1}{Resolving types}{section.3.3}% 28
-\BOOKMARK [2][-]{subsection.3.3.2}{Resolving types \(implementation\)}{section.3.3}% 29
-\BOOKMARK [1][-]{section.3.4}{Synthesizing}{chapter.3}% 30
-\BOOKMARK [2][-]{subsection.3.4.1}{GUI}{section.3.4}% 31
-\BOOKMARK [0][-]{chapter.4}{Evaluation}{}% 32
-\BOOKMARK [1][-]{section.4.1}{Overview}{chapter.4}% 33
-\BOOKMARK [2][-]{subsection.4.1.1}{Polymorphism disclaimer}{section.4.1}% 34
-\BOOKMARK [1][-]{section.4.2}{Example 1 - Connecting FIFOs}{chapter.4}% 35
-\BOOKMARK [2][-]{subsection.4.2.1}{Platform Designer}{section.4.2}% 36
-\BOOKMARK [2][-]{subsection.4.2.2}{My tool}{section.4.2}% 37
-\BOOKMARK [2][-]{subsection.4.2.3}{Using text format to do same things and Qualitative metrics}{section.4.2}% 38
-\BOOKMARK [1][-]{section.4.3}{Example 2 - Simple System-on-Chip}{chapter.4}% 39
-\BOOKMARK [2][-]{subsection.4.3.1}{Platform Designer}{section.4.3}% 40
-\BOOKMARK [2][-]{subsection.4.3.2}{My tool}{section.4.3}% 41
-\BOOKMARK [2][-]{subsection.4.3.3}{Other differences}{section.4.3}% 42
-\BOOKMARK [1][-]{section.4.4}{Example 3 - Working AXI4 masters and slaves}{chapter.4}% 43
+\BOOKMARK [1][-]{section.3.1}{Crawling the packages}{chapter.3}% 21
+\BOOKMARK [1][-]{section.3.2}{Loading Bluespec packages' information \(TODO check grammar of s'\)}{chapter.3}% 22
+\BOOKMARK [2][-]{subsection.3.2.1}{Lexical and syntax analysis}{section.3.2}% 23
+\BOOKMARK [2][-]{subsection.3.2.2}{Understanding abstract syntax tree \(AST\)}{section.3.2}% 24
+\BOOKMARK [2][-]{subsection.3.2.3}{Organizing data and functionality}{section.3.2}% 25
+\BOOKMARK [1][-]{section.3.3}{Building the top level module}{chapter.3}% 26
+\BOOKMARK [2][-]{subsection.3.3.1}{Resolving types}{section.3.3}% 27
+\BOOKMARK [1][-]{section.3.4}{Synthesizing}{chapter.3}% 28
+\BOOKMARK [2][-]{subsection.3.4.1}{GUI}{section.3.4}% 29
+\BOOKMARK [0][-]{chapter.4}{Evaluation}{}% 30
+\BOOKMARK [1][-]{section.4.1}{Overview}{chapter.4}% 31
+\BOOKMARK [2][-]{subsection.4.1.1}{Polymorphism disclaimer}{section.4.1}% 32
+\BOOKMARK [1][-]{section.4.2}{Example 1 - Connecting FIFOs}{chapter.4}% 33
+\BOOKMARK [2][-]{subsection.4.2.1}{Platform Designer}{section.4.2}% 34
+\BOOKMARK [2][-]{subsection.4.2.2}{My tool}{section.4.2}% 35
+\BOOKMARK [2][-]{subsection.4.2.3}{Using text format to do same things and Qualitative metrics}{section.4.2}% 36
+\BOOKMARK [1][-]{section.4.3}{Example 2 - Simple System-on-Chip}{chapter.4}% 37
+\BOOKMARK [2][-]{subsection.4.3.1}{Platform Designer}{section.4.3}% 38
+\BOOKMARK [2][-]{subsection.4.3.2}{My tool}{section.4.3}% 39
+\BOOKMARK [2][-]{subsection.4.3.3}{Other differences}{section.4.3}% 40
+\BOOKMARK [1][-]{section.4.4}{Example 3 - Working AXI4 masters and slaves}{chapter.4}% 41

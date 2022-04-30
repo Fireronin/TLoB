@@ -69,7 +69,7 @@ method_proto_formal: [atribute_instances] type identifier_l
 
 tcl_position: "{" "position" "{" tcl_path NUMBER NUMBER ["{" "Library" identifier_u "}"] "}" "}"
 
-tcl_path: ["%/"] /(([.]{1,2})|(\w|-|\s)+)/ ["/" /(([.][.])|([.])|((\w|-|\s)+))/]* "." /\w+/
+tcl_path: ["%/"] /((\.{1,2})|(\w|-|\s)+)/ ["/" /((\.\.)|(\.)|((\w|-|\s)+))/]* "." /\w+/
 
 tcl_type_full: tcl_interface_dec
             | tcl_typeclass

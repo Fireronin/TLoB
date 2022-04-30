@@ -26,7 +26,7 @@ endfunction
 
 interface SocExport;
 	interface AXI4_Types::AXI4_Master#(5,64,64,0,0,0,0,0) coreImem;
-	method Action ffG(Bit#(32) 0);
+	method Action ffG(Bit#(32) arg0);
 	method Bit#(32) ffG2();
 endinterface
 

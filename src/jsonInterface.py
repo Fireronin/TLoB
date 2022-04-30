@@ -3,7 +3,7 @@ from bsvSynthesizer import *
 import json
 from thefuzz import process
 from typeDatabase import TypeDatabase as tdb
-from handlerV2 import *
+from crawler import *
 import argparse
 import os
 from colorama import Fore

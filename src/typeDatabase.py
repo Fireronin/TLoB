@@ -2,12 +2,12 @@ from copy import deepcopy, copy
 import profile
 from typing import Dict, Set
 
-from extractor import Type as ExType
-from extractor import *
-from handlerV2 import Handler
+from parsing_formating import Type as ExType
+from parsing_formating import *
+from crawler import Handler
 from thefuzz import process
 import pickle
-from provisoSolverV3 import solveNumerical
+from provisoSolver import solveNumerical
 from wrapt_timeout_decorator import *
 
 def fuzzyException(name,list,exception_string):

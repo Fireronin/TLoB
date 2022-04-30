@@ -54,12 +54,12 @@ My project will try to tackle a subset of functionality provided by a tool calle
 During my project I created an alternative JSON based file format that is much simpler and human-readable, that can be interpreted using my tool to produce Bluespec code of a top level module.
 This file format is rather unimpressive on its own, and one might argue that it would be better to use Bluespec code instead of it. Interesting part of this project lie in the backend that is able to verify correctness of this file and produce set of typing information about produced Bluespec code.
 But to truly appreciate work I have done during this project I also implemented GUI, which uses same backend as one used to interpret JSON files, and it is able to supply user with typing information and possible choices when connecting components. 
-One can think of it as a Bluespec native high level integration tool that uses simple language server in the backend. 
+One can think of it as a Bluespec native high level integration tool that uses simple language server in the backend. This way Bluespec user can do high level integration in the realm of not transpiled Bluespec. Then after satisfactory top level module is created, it can be transpiled to Verilog and then imported into IQP.
 
 \chapter{Preparation}
 
-\section{Understanding Bluespec (This section is to be pruned or rewritten)}
-To begin working with Bluespec we first need to understand the language. This subsection is meant to be a brief overview of the language.
+\section{Understanding Bluespec}
+Before I started this project my only knowledge about Bluespec was from \href{https://www-bluespec.cl.cam.ac.uk/}{Cambridge Bluespec Tutor} which covers basics, and It was completed by me few weeks prior to the start of this project. For the purposes of understanding this project I've learned about most of the typing system of Bluespec, but for You the reader most of it is not relevant. Therefore, I prepared a short tour of things that will be important to understand in this project. 
 \subsection{Rules}
  In Bluespec all computation is done in form of rules. Each cycle we will take a subset of all rules that we are going to execute in this cycle, rule is fired (executed) in cycle only if it's ready (or will be ready) and it's not conflicting with other rules (If this happens compiler must issue a warning, and picks arbitrary rule to fire from subset of conflicting rules). Each rule can fire at most one time per cycle. For rule to be ready to fire it needs it's implicit and explicit conditions to be true. Rule can be fired in a cycle even if it's not ready at the start of cycle, for example if you add item on an empty queue and then pop can happen in same cycle. \\
 \includegraphics[width=\textwidth]{Rulemapping.png}
@@ -72,24 +72,40 @@ To begin working with Bluespec we first need to understand the language. This su
 \end{verbatim}
 
 \subsection{Modules and interfaces}
-Module is something (TODO: I have no Idea how to call it). Modules don't have types, instead they implement some interface. This means that you can have multiple different modules that implement the same interface and makes interoperability much easier. Interfaces are made up out of two types of things:
-    \begin{itemize}
-        \item Methods - that allow for interaction with the module.
-        \item Subinterfaces - That allow for more generalization, for example if you want to implement module that contains two copies of the same interface, you can just create a new interface that contains two subinterfaces and assign them accordingly.
-    \end{itemize}
+Module is unit of organization of logic. Modules don't have types, instead they implement some interface. This means that you can have multiple modules with different behaviour that implement the same interface. It might be helpful to think about similarly to different physical connectors(like USB-C, PCI-e). Interfaces are made up out of two types of things:
+\begin{itemize}
+    \item Methods - that allow for interaction with the module, they come with few variants, but this is not important for now.
+    \item Subinterfaces - That allow for more generalization, for example if you want to implement module that contains two copies of the same interface, you can just create a new interface that contains two instances of that subinterface and assign them accordingly.
+\end{itemize}
 
-\subsection{Types}
-Welp, there is a ton of them. (TODO: say few thign about them)
 \subsection{Typeclasses}
-Types classes in Bluespec are used to group types for which specific functions are implemented. TODO:
+Typesclasses in Bluespec are used to group types for which specific functions or modules are implemented. Typeclass instance is (TODO describe what is it) and it can have provisos attached to it.
+
+\subsection{Provisos}
+On big feature of Bluespec typing is support for provisos. They create constraints on types that can be used with given function and give information about expected type of output of the function. For example, we can have a polymorphic function \verb!extend! of a type \verb!Bit#(a)! $\rightarrow$ \verb!Bit#(b)! where \verb!Bit#(x)! is a vector of $x$ bits, such function accepts any length and always return vector of length $b=a+1$. To make sure this relations stays like this we would attach a proviso \verb!Add#(a,1,b)! which means that $a+1$ must be equal to $b$. 
+\par
+Mentioned above \verb!Add! is one of Size Relationship provisos, other such provisos are \verb!Mul Div Max Min Log!.
+Those provisos can't be nested, but we still can express complex arithmetic constraints, thanks to size relationship type functions.
+They essentially represent result of the operation on values on that were supplied. There are only 8 of them, and they are \verb!TAdd TSub TDiv TMul TMax TMin TLog TExp!.
+To better explain this let's look at some simple example: \\
+\verb!Add#(TExp#(a),TDiv#(a,8),c)! is a proviso that says that following equation on parameters must be satisfied $2^a+\lceil\frac{a}{8}\rceil = c$ otherwise it will mean that supplied parameters are not valid. Those equations can be also solved to deduce unknown parameters.
+\par
+There is also other type of provisos that are typeclass based.
+Typeclass based provisos, allow us to either to ensure certain functions are defined for given type or to deuce something. For example \verb!Bits#(a,b)! means that type \verb!a! must be convertible to vector of $b$ bits. This can be used to get the length in bits of given objects, on which we can later put constraints using Size Relationship provisos.
+\\
+In my project I will often check if there exists instance of the \verb!Connectable#(a,b)! typeclass to check if function \verb!mkConnection!(used to connect two interfaces together) is defined for given types \verb!a! and \verb!b!.
+
+This can be a bit confusing, but if one look closely this is very similar to Prolog. We have variables that are effectively the same as in Prolog, we have values that are integers, and we have parametric types /functions that are like Prolog's compound terms. Typeclass are like groups of rules with same name and provisos attached to Typeclass instances are like predicates.
+One big difference is that provisos can be solved in arbitrary order, which means that unlike in Prolog we need ability to solve sets of equations on integers.
+
 
 \section{Choosing tools}
 I had effectively 3 choices for a language to this project in. Here is some justification why I have chosen Python. 
-\subsection{Haskell}'
+\subsection{Haskell}
 Compiler of Bluespec is written in Haskell. Therefore there are seweral reason why Haskell would be right choice. Here are some of them:
 \begin{itemize}
     \item I can reuse already written logic.
-    \item I won't diverge in terms of logic.
+    \item I won't diverge in terms of logic from Bluespec compiler.
     \item I won't need to write grammar to load packages.
 \end{itemize}
 But there are also few very good reasons why I didn't used Haskell.
@@ -101,9 +117,9 @@ But there are also few very good reasons why I didn't used Haskell.
 While each of those reasons on its own is something that can be managed. All of them combined would create unacceptable amount of risk of not delivering the project. There was also a risk that use of Haskell wouldn't create a good story for the project. (This is quite subtle).
 
 \subsection{Tcl (pronounced "tickle")}
-This language is used as a scripting language in both Intel and Xilinx tools, I will be reading packages using Tcl scripts provided by the creators of the Bluespec compiler (BSC), but my understanding is that those scripts are just handy wrappers for some Haskell functions. This is also foreign language to me with minimal presence online, and negligible learning resources, making it difficult to learn. It's also quite obsolete and there is not much tooling for it making it undesirable as a time investment(As an example of desirable to learn technology. I learned for this project JavaScript, just to create a GUI).
+This language is used as a scripting language in both Intel and Xilinx tools, While I will be reading packages using Tcl scripts provided by the creators of the Bluespec compiler (BSC), my understanding is that those scripts are just handy wrappers for some Haskell functions. This is also foreign language to me with minimal presence online, and negligible learning resources, making it difficult to learn. It's also quite obsolete and there is not much tooling for it making it undesirable as a time investment(As an example of desirable to learn technology. I learned for this project JavaScript, just to create a GUI).
 \subsection{Python}
-Firstly this is a language I have experience working with, secondly it's widely supported, and there is extensive tooling for it. It's flexible typing system allows for rapid experimenting, this was especially handy when I wasn't sure how structure of the data would look like. It's also worth mentioning that at some point I decided to start adding typing hints around. My rule of thumb that I used was that if Pylance (python language server) can't deduce type of something I need more hints.
+Firstly this is a language I have experience working with, secondly it's widely supported, and there is extensive tooling for it. It's flexible typing system allows for rapid experimenting, which was especially handy when I wasn't sure how structure of the data would look like. It's also worth mentioning that it has support for typing and at some point I decided to started adding typing hints around. My rule of thumb that I used was that if Pylance (python language server) can't deduce type of something I need more hints.
 Other reasons for using python are:
 \begin{itemize}
     \item I will have many interesting problems to solve. Like creating and interpreting grammar.
@@ -112,43 +128,48 @@ Other reasons for using python are:
 \end{itemize}
 The two arguments against using python are:
 \begin{itemize}
-    \item Haskell would be better suited for this task. I explaing above why it doesn't make sense for me to use Haskell. 
-    \item Python is quite slow, Fortunately this isn't a big issue thanks to cashing.
+    \item Haskell would be better suited for this task. I explained above why it doesn't make sense for me to use Haskell. 
+    \item Python is usually slow. Fortunately this isn't a big issue thanks to cashing and use of PyPy (implementation of Python using JIT compiler).
 \end{itemize}
 \subsection{Postmortem}
-Looking at those choices now(after finishing project and knowing all encountered difficulties) I think a could also consider \verb!C#!, due to its speed and similar typing flexibility to Python. I also think Haskell would be a better choice if this was more like my pet project that I would work for few years with the intention of making it commercially viable product.
+Looking at those choices now(after finishing project and knowing all encountered difficulties) I think a could also consider \verb!C#!, due to its speed and similar typing flexibility to Python. I also think Haskell would be a better choice if this was more like my pet project on which I would work for few years with the intention of making it commercially viable product.
 
 \section{Creating a grammar}
 This section could be moved into implementation.
 
 \begin{tcolorbox}[title=Bluetcl]
-    Bluetcl is a tool written in Tcl language that allows for inspection of Bluespec packages. It's a first party tool that included with Bluespec compiler. There isn't much documentation about it, but from my understanding it's some sort of wrapper around Haskell code, as I couldn't sufficient amount of logic for it to parse packages by itself.
+    Bluetcl is a tool written in Tcl language that allows for inspection of Bluespec packages. It's a first party tool that included with Bluespec compiler. There isn't much documentation about it, but from my understanding it's a wrapper around Haskell code.
     From the user perspective it's just a bash script that starts Tcl terminal compiled with some libraries. From my perspective I use it as an arbitrary command line program, as this method of using is intended by the authors and contains some documentation.
 \end{tcolorbox}
 \subsection{What grammar is needed ?}
 Because I'm using Bluetcl as a command line tool, communication with it is done via text. 
 While synthesizing commands is easy, parsing outputs is a bit more difficult, and I decided to do it in systematic way. 
 To do this I need grammar of all possible outputs that I'm interested in. 
-Bluetcl produces many, outputs but two of them that we are going to focus on are: descriptions of functions and descriptions of types.
+Bluetcl produces range of outputs but two of them that are particularly useful are descriptions of functions and descriptions of types.
 \subsection{Where to find this grammar ?}
 Unfortunately this grammar is not documented anywhere, so I had to reverse engineer it. This approach might not be perfect and might not cover every input, but It's good enough to parse every standard package and every package used to compile Flute(RISC-V CPU with 5 stage pipeline).
 Here are other reasons to justify this approach:
 \begin{itemize}
     \item Heaps' law suggests that number of unique words in given body of text is proportional to roughly square root of number of words in the text. I think it's fair to assume that something similar will be true if we consider number of unique grammar rules.
-    \item This grammar while different from grammar of Bluespec language maps subset of Bluespec grammar, so we can supplement our deductions with reference guide for Bluespec.
-    \item We don't need to understand everything to connect modules, and because at the module level, things need to be less abstract as they need to be synthesizable, we don't expect highly exotic things to appear in higher level modules. 
+    \item This grammar while different from grammar of Bluespec language maps subset of Bluespec grammar, so we can supplement our deductions with reference guide for Bluespec language. Therefore, accounting for cases we haven't seen, but are possible.
+    \item There is also some limit on how exotic things can get in top modules. (TODO rephrase this)
 \end{itemize}
 
 \subsection{Technical aspects}
-This is EBNF grammar, I parse it using Lark library for Python, and I'm using Earley parser, as it is capable of arbitrary length lookahead. Grammar I created contains roughly 90 rules, and I won't include all of them here, but I will show few examples to give a feel of what is happening. 
+This is EBNF grammar, I parse it using Lark library for Python, and I'm using Earley parser, as it is capable of arbitrary length lookahead. Grammar I created contains roughly 90 rules, and I won't include all of them here, but I will show few examples to give a feel of what is happening. (TODO: Think about dumping them into an apendix) 
 \\
-A nice feature supported by Lark is ability to have regular expressions in the grammar, I'm mentioning this as it is effectively having parser inside a parser. It's also worth mentioning that there exists a handy tool for debugging and creating grammar. It's located at this website: \href{https://www.lark-parser.org/ide/}{https://www.lark-parser.org/ide/}, it can run parser online, and show output tree.
+A useful feature supported by Lark is ability to have regular expressions in the grammar, I'm mentioning this as it is effectively having parser inside a parser. It's also worth mentioning that there exists a handy tool for debugging and creating grammar. It's located at this website: \href{https://www.lark-parser.org/ide/}{https://www.lark-parser.org/ide/}, it can run parser online, and show outputed AST tree.
 \begin{tcolorbox}[title = Parsing position TODO maybe find a better example with shorter line]
-    Here is an example of parsing subsection of output that describes location of piece of code that is being described. I decided to show it as it's simple and shows different features of that I needed to use.
+    Here is an example of parsing small section of output that describes location of piece of code that is being described. I decided to show it as it's simple and shows different features of that I needed to use.
     \begin{verbatim}
-tcl_position: "{" "position" "{" tcl_path NUMBER NUMBER ["{" "Library" identifier_u "}" ]"}""}"
-// todo check paths with spaces
-tcl_path: ["%/"] /(([.]{1,2})|(\w+))/ ["/" /(([.][.])|([.])|(\w+))/]* "." /\w+/
+-------- Rules used ------------
+identifier_u: /[A-Z][\w$_']*/
+
+tcl_position: "{" "position" "{" tcl_path NUMBER NUMBER 
+ ["{" "Library" identifier_u "}" ]"}""}"
+
+tcl_path: ["%/"] /((\.{1,2})|(\w|-|\s)+)/ 
+ ["/" /((\.\.)|(\.)|((\w|-|\s)+))/]* "." /\w+/
 
 -------- Text to parse ---------
 {position {%/Libraries/Connectable.bs 25 1 {Library Connectable}}}
@@ -205,21 +226,6 @@ Building the top level module can be broken down into few operations.
 Those operations if implemented naively would be almost as simple as formatting a string. But If this was the only thing that this project provided I wouldn't need to go through all the trouble of parsing Bluespec grammar, and generally users would be better off just writing Bluespec code. My unique value proposition is running something similar to a language server, that will be capable of dynamically resolving types, and aiding user in the design process by providing possible connections, informing whether values passed to initialize module are correct, and informing about subinterfaces that can be found in the instantiated modules. 
 At the basis of all those features will be type resolution, and I will first explain how it works.
 \subsection{Resolving types}
-\subsubsection{Provisos explained (intuition)}
-On big feature of Bluespec typing is support for provisos. They create constraints on types that can be used with given function and give information about expected type of output of the function. This is similar to Java's generic types, but it is much more powerful. For example, we can have a polymorphic function extend of a type \verb!Bit#(a)! to \verb!Bit#(b)! where \verb!Bit#(x)! a vector of $x$ bits, which accepts any length a and always return vector of length $b=a+1$. To do something like this we would write a proviso \verb!Add#(a,1,b)! which means that $a+1$ must be equal to $b$. This was example of Size relationship proviso.
-\\
-There is also other type of provisos that are typeclass based and work similarly to Prolog. We have variables that are lowercase names, we have values that are either strings or integers, and we have parametric types that are like Prolog's compound terms. Typeclass instances are like rules and provisos attached to it are like predicates. To resolve types I do something similar to Prolog's resolution. I don't have a proof of this, but I think my resolution procedure is Turing complete, on a basis that Prolog is Turing complete.
-
-\subsubsection{Provisos explained (formally)}
-There are two types of provisos: Size Relationship provisos, and typeclass based provisos.
-
-Mentioned above \verb!Add! is one of Size Relationship provisos, other such provisos are \verb!Mul Div Max Min Log!. Those provisos can't be nested, but we still can express complex arithmetic constraints, thanks to size relationship type functions. They essentially represent result of the operation on values on that were supplied. There are only 8 of them, and they are \verb!TAdd TSub TDiv TMul TMax TMin TLog TExp!.
-To better explain this let's look at some simple example: \\
-\verb!Add#(TExp#(a),TMul#(a,8),c)! is a proviso that says that following equation on values must be satisfied $2^a+a*8 = c$.
-Of course, we can have multiple provisos that together create a set of equations. 
-
-Typeclass based provisos, allow us to either to ensure certain functions are defined for given type or to deuce something. For example \verb!Bits#(a,b)! means that type \verb!a! must be convertible to vector of $b$ bits. This can be used to get the length in bits of given objects, on which we can later put constraints using Size Relationship provisos.
-In my project I will often check if there exists instance of the \verb!Connectable#(a,b)! typeclass to check if function \verb!mkConnection!(used to connect two interfaces together) is defined for given types.
 
 \subsection{Resolving types (implementation)}
 In my code there are 4 main functions that combined allow for type resolution:
@@ -233,7 +239,7 @@ Those functions can also fail with exception if something is impossible / wrong 
 
 Type identifier is a tree where every non leaf node is another type identifier, and leaf nodes are either variables or values(strings, ints). Example type identifier \verb!Foo#(a,42,"file.hex")! is a type with name \verb!Foo! and three arguments \verb!a! (variable) and \verb!42! (int value) and \verb!"file.hex"! (string value). Type identifiers can also describe functions, and those just need to run unification on both result and arguments of a function.
 
-\subsubsection*{Merge function}
+\subsubsection{Merge function}
 This function works like a two synchronized dfs's, that go through the trees (type identifiers) and apply logic based on nodes that are beginning currently visited.
 This function needs to account for quite a lot of special cases here are some of them:
 \begin{itemize}

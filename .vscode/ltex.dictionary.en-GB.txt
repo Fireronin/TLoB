@@ -5,3 +5,7 @@ Xilinx
 IQP
 Quartus
 pexpect
+pronaunciated
+Subinterfaces
+subinterfaces
+subinterface

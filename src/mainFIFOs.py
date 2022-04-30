@@ -1,7 +1,6 @@
 #%%
 from os import read
-from extractor import *
-from handlerV2 import *
+from parsing_formating import *
 from bsvSynthesizer import *
 from typeDatabase import TypeDatabase as tdb
 #%% initalize bluetcl

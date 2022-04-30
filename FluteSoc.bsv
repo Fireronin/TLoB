@@ -12,21 +12,21 @@ import AXI4_Interconnect::*;
 typedef 64 DATASIZE;
 
 function Vector #(2, Bool) route_bus1 (r_t x) provisos ( Bits#(r_t,r_l) );
-	Bit#(r_l) adress = pack(x);
-	Vector#(2, Bool) oneHotAdress = replicate (False);
+	Bit#(r_l) address = pack(x);
+	Vector#(2, Bool) oneHotaddress = replicate (False);
 	// memory -> 0
-	if (adress >= 0 && adress < 4096)
-		oneHotAdress[0] = True;
+	if (address >= 0 && address < 4096)
+		oneHotaddress[0] = True;
 	// aXI4_Fake_16550 -> 1
-	if (adress >= 4096 && adress < 8192)
-		oneHotAdress[1] = True;
-	return oneHotAdress;
+	if (address >= 4096 && address < 8192)
+		oneHotaddress[1] = True;
+	return oneHotaddress;
 endfunction
 
-module top();
+module top ();
  
 	Core_IFC::Core_IFC#(SoC_Map::N_External_Interrupt_Sources) core <- mkCore();
-	AXI4_Types::AXI4_Slave#(6,64,64,0,0,0,0,0) memory <- mkAXI4SimpleMem(4096, tagged Valid "xddd");
+	AXI4_Types::AXI4_Slave#(6,64,64,0,0,0,0,0) memory <- mkAXI4SimpleMem(4096, tagged Invalid);
 	AXI4_Types::AXI4_Slave#(6,64,64,0,0,0,0,0) aXI4_Fake_16550 <- mkAXI4_Fake_16550_Simple();
 
 	Vector::Vector#(1,AXI4_Types::AXI4_Master#(6,64,64,0,0,0,0,0)) bus1_masters;

@@ -3,7 +3,7 @@ import os
 import subprocess
 import time
 
-from extractor import Position, Type as ExType, Type_ide, Value as ExValue
+from extractor import Function, Position, Type as ExType, Type_ide, Value as ExValue
 from extractor import Interface as ExInterface
 from extractor import Type_formal as ExType_formal
 from extractor import Function as ExFunction, Module as ExModule
@@ -76,8 +76,8 @@ class InstanceV2():
             print(f"{self.instance_name} has {len(self.creator_args)} arguments, but {self.creator.name} has {len(self.creator.arguments)}")
             raise Exception("Number of function arguments do not match the number of arguments required")
         #convert to TypeIde arguments
-        creator_args = [self.topLevel.convertToTypeIde(self.db,arg,self.instance_name) for arg in self.creator_args]
-        module_args = [self.topLevel.convertToTypeIde(self.db,arg,self.instance_name) for arg in self.module_args]
+        creator_args = [self.topLevel.convertToTypeIde(arg,self.instance_name) for arg in self.creator_args]
+        module_args = [self.topLevel.convertToTypeIde(arg,self.instance_name) for arg in self.module_args]
 
         context = deepcopy(self.input_context)
         for i,pair in  enumerate( zip(self.creator.arguments.items(),creator_args)):
@@ -120,11 +120,13 @@ class InstanceV2():
 
 class VectorInstance():
     items: List[str]
-    flit_type_ide:  Type_ide = evaluateCustomStart("flit","type_def_type")
-    type_ide: Type_ide = evaluateCustomStart(f"Vector::Vector#(0,flit)","type_def_type")
+    flit_type_ide:  Union[Type_ide,str]
+    type_ide: Type_ide
     instance_name: str = None
 
     def __init__(self,topLevel,name):
+        self.flit_type_ide= "flit"
+        self.type_ide = evaluateCustomStart(f"Vector::Vector#(0,flit)","type_def_type")
         self.items = []
         self.instance_name = name
         self.db = topLevel.db
@@ -135,23 +137,23 @@ class VectorInstance():
     def remove(self,item:str):
         self.items.remove(item)
         if len(self.items) == 0:
-            self.flit_type_ide = evaluateCustomStart("flit","type_def_type")
+            self.flit_type_ide = "flit"
         self.type_ide = evaluateCustomStart(f"Vector::Vector#({len(self.items)},{self.flit_type_ide})","type_def_type")
 
 
     def add(self,item:str):
-        itemType_ide = self.topLevel.convertToTypeIde(self.db,item,self.instance_name)
+        itemType_ide = self.topLevel.convertToTypeIde(item,self.instance_name)
         try:
             context = self.db.merge(self.flit_type_ide,itemType_ide,{})
         except Exception as e:
             raise Exception("Adding item to vector failed types don't match")
         if len(self.items) == 0:
-            self.flit_type_ide = self.db.applyVariables(self.flit_type_ide,context)
+            self.flit_type_ide = itemType_ide
         self.items.append(item)
         self.type_ide = evaluateCustomStart(f"Vector::Vector#({len(self.items)},{self.flit_type_ide})","type_def_type")
 
     def update(self,silent=False):
-        items =[self.topLevel.convertToTypeIde(self.db,item,self.instance_name) for item in self.items]
+        items =[self.topLevel.convertToTypeIde(item,self.instance_name) for item in self.items]
         try:
             for item in items:
                 self.db.merge(self.flit_type_ide,item,{})
@@ -202,13 +204,11 @@ class BusInstanceV3(InstanceV2):
         self.creator_args = [f"route_{self.instance_name}",self.mastersV.type_ide,self.slavesV.type_ide]
         self.module_args = []
         self.input_context = {}
+        
         self.update()
 
 
     def update(self):    
-        # convertToTypeIde(self.mastersV.instance_name,self.instance_name)
-        # convertToTypeIde(self.slavesV.instance_name,self.instance_name)
-
         functionString = \
         """
         {function route_{busName} {result Vector::Vector#({NSlaves}, Bool)
@@ -283,6 +283,8 @@ class TopLevelModule():
     instances:Dict[str,InstanceV2] = {}
     knownNames:Dict[str,Type_ide] = {}
     subscribers:Dict[str,Set[str]] = {}
+    exported_interface: ExInterface
+    interface_members: Dict[str,str] = {}
 
     def __init__(self,name,db,package_name=None) -> None:
         self.possibleConnections = {}
@@ -296,6 +298,7 @@ class TopLevelModule():
         self.instances = {}
         self.knownNames = {}
         self.subscribers = {}
+        self.exported_interface: ExInterface = None
         self.name = name
         if package_name is None:
             self.package_name = name
@@ -351,14 +354,14 @@ class TopLevelModule():
 
 
 
-    def convertToTypeIde(self,db:TypeDatabase,arg,caller=None):
+    def convertToTypeIde(self,arg,caller=None):
         if isinstance(arg,Type_ide) or type(arg) == ExFunction:
             return arg
         arg = str(arg)
         if arg.startswith("tagged"):
             #for each struct in data base find struck with member with that name
             splited = arg.split(" ")
-            for name,value in db.structs.items():
+            for name,value in self.db.structs.items():
                 for name in value.members.keys():
                     if name == splited[1]:
                         return value.type_ide  
@@ -375,7 +378,7 @@ class TopLevelModule():
             return self.knownNames[arg]
         if arg[0].isupper():
             type_t = evaluateCustomStart(arg,"type_def_type")
-            return db.evaluateTypedef(type_t)
+            return self.db.evaluateTypedef(type_t)
         return evaluateCustomStart(arg,"type_def_type")
 
     def addInstance(self,instance,name):
@@ -393,8 +396,6 @@ class TopLevelModule():
                 pass
                 #self.instances[subscriber].update()
     #endregion
-
-
 
     def add_moduleV2(self,creator_func,instance_name,interface_args=[],func_args=[],input_context={}) -> InstanceV2:
         #check if instance name starts with upercase character
@@ -466,6 +467,28 @@ class TopLevelModule():
         bI = BusInstanceV3(self,name,busCreator,masters,slaves)
         self.buses[name] = bI
 
+    def setExportedInterface(self,name,members:List[Tuple[str,str]]):
+        if type(members) == str:
+            self.exported_interface = members
+            return
+        if name in self.db.types:
+            self.exported_interface = deepcopy(self.db.types[name])
+            variables = {}
+            for name,value in members:
+                try:
+                    variables = self.db.merge(self.exported_interface.members[name],self.knownNames[value],variables)
+                except Exception as e:
+                    raise Exception(f"Assigning member {name} to {value} failed: {e}")
+            self.interface_members = {name:value for name,value in members}
+            self.exported_interface = self.db.applyVariables(self.exported_interface,variables)
+        else:
+            self.exported_interface = ExInterface(Type_ide(deepcopy(name)),{})
+            for name,value in members:
+                self.exported_interface.members[name] = self.knownNames[value]
+            #self.db.types[name] = self.exported_interface
+            self.interface_members = {name:value for name,value in members}
+        
+
     def remove(self,name:str):
         #in accessable interfaces find name* use start with and fiter
         self.accessableInterfaces = list(filter(lambda x: not x.access_name.startswith(name),self.accessableInterfaces))
@@ -513,7 +536,30 @@ class TopLevelModule():
         for bus in self.buses.values():
             s.append(bus.routingFunctionString())
 
-        s.append("module "+self.name+"();\n \n")
+        if self.exported_interface is not None and type(self.exported_interface) == ExInterface:
+            if self.exported_interface.name not in self.db.types:
+                s.append(f"interface {self.exported_interface.name};\n")
+                for name,value in self.interface_members.items():
+                    typeName = ""
+                    value = self.knownNames[value]
+                    if type(value) == Function:
+                        typeName = "method"
+                        value_copy = deepcopy(value)
+                        value_copy.name = name
+                        s.append(f"\t{typeName} {value_copy};\n")  
+                    elif type(value) == Type_ide:
+                        typeName = "interface"
+                        s.append(f"\t{typeName} {value} {name};\n")  
+                s.append(f"endinterface\n\n")
+
+        interfaceString = ""
+        if self.exported_interface is not None:
+            if type(self.exported_interface) == str:
+                interfaceString = str(self.knownNames[self.exported_interface])
+            else:
+                interfaceString = str(self.exported_interface.type_ide)
+
+        s.append(f"module {self.name} ({interfaceString});\n \n")
         
         # add modules
         for m in self.modules.values():
@@ -532,7 +578,6 @@ class TopLevelModule():
             s.append(");\n")
         s.append("\n")
 
-
         # add connections
         for c in self.connections.values():
             s.append("\t"+c.to_string())
@@ -541,6 +586,18 @@ class TopLevelModule():
             s.append(str(bus.mastersV))
             s.append(str(bus.slavesV))
             s.append(str(bus))
+
+        if self.exported_interface is not None:
+            if type(self.exported_interface) == str:
+                s.append(f"\treturn {self.exported_interface};\n")
+            else:
+                for name,value in self.interface_members.items():
+                    typeName = ""
+                    if type(self.knownNames[value]) == Function:
+                        typeName = "method"
+                    elif type(self.knownNames[value]) == Type_ide:
+                        typeName = "interface"
+                    s.append(f"\t{typeName} {name} = {value};\n")
 
         s.append("\n")
         s.append("endmodule\n")

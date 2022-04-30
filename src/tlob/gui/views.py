@@ -302,3 +302,34 @@ def buildAndRun(request):
         'simulationRunOutput':simulationRunOutput,
     }
     return HttpResponse(json.dumps(response))
+
+@never_cache
+def setExportedInterface(request):
+    json_data = json.loads(request.body)
+    topLevelName = json_data['topLevelName']
+    nameIfc = json_data['name']
+    memberNames = json_data['memberNames']
+    memberValues = json_data['memberValues']
+    topLevel.name = topLevelName
+    if len(memberValues) != 0:
+        try:
+            # if len(memberNames) != len(memberValues):
+            #     raise Exception("memberNames and memberValues must be the same length \n probably didn't assigned names to all the values")
+            assignments = []
+            for slot,name in memberNames.items():
+                value = memberValues[slot]
+                assignments.append((name,value))
+            if len(assignments) == 1:
+                topLevel.setExportedInterface(nameIfc,assignments[0][1])
+            else:
+                topLevel.setExportedInterface(nameIfc,assignments)
+        except Exception as e:
+            tb = traceback.format_exc()
+            print(tb)
+            print(e)
+            return HttpResponse(json.dumps({'exception':str(e)}))
+    response = {
+        'name':name,
+        'exception':"",
+    }
+    return HttpResponse(json.dumps(response))

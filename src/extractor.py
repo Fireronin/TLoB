@@ -163,7 +163,7 @@ class Interface(Type):
     def __init__(self,type_ide,members,position=None,attributes=None) -> None:
         super().__init__(type_ide.name,type_ide.package,position)
         self.type_ide = type_ide
-        self.members = members
+        self.members: Dict[str,Type_ide] = members
         self.attributes = attributes
 
     def __str__(self) -> str:
@@ -287,14 +287,14 @@ class Type_formal:
     def __eq__(self, __o: object) -> bool:
         return self.type_ide == __o.type_ide
 
-class Module(Type):
+class Module(Type_ide):
     return_type: Type_ide
     arguments: Dict[str,Type_ide] = {}
 
     def __init__(self,name,interface,package=None,position=None,arguments={},provisos=[]) -> None:
         Type.__init__(self,name=name,package=package,position=position)
         self.interface = interface
-        self.arguments = arguments
+        self.arguments = {giveArguementName(name):value for name,value in arguments.items() }
         self.provisos = provisos
         self.return_type = interface
     
@@ -312,6 +312,11 @@ class Module(Type):
             return self.name
         return f"{self.package}::{self.name}"
 
+def giveArguementName(name):
+        if type(name) == str and not name[0].isnumeric():
+            return name
+        return f"arg{name}"
+
 class Function(Type_ide):
     return_type: Type_ide
     arguments: Dict[str,Type_ide] = {}
@@ -321,10 +326,12 @@ class Function(Type_ide):
         #Type.__init__(self,name=name,package=package,position=position)
         self.return_type = result
         self.provisos = provisos
-        self.arguments = arguments
+        
+        self.arguments = {giveArguementName(name):value for name,value in arguments.items() }
     
     def __str__(self) -> str:
-        return f"{self.return_type} ({','.join([str(aa) for aa in self.arguments.values()])})"
+        
+        return f"{self.return_type} {self.name}({','.join([f'{t_type} {name}'  for name,t_type in self.arguments.items()])})"
     
     def __repr__(self) -> str:
         return "Function "+self.__str__()

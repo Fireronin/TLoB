@@ -17,4 +17,5 @@ urlpatterns = [
     path('possibleConnectionStarts/', views.possibleConnectionStarts, name='possibleConnectionStarts'),
     path('buildAndRun/', views.buildAndRun, name='buildAndRun'),
     path('getPossible/', views.getPossible, name='getPossible'),
+    path('setExportedInterface/', views.setExportedInterface, name='setExportedInterface'),
 ]

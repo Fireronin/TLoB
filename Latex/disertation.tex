@@ -28,18 +28,33 @@
 
 Making hardware is hard, and similarly to other problems in computer science, we make it easier by adding layers of abstraction. There are many layers involved in making hardware from that abstract transistors to gates to logical operations to functions to modules to chips to multi-chip modules to whole devices. The layer this project focuses on is going from modules to chips(TODO: this probably need renaming, add graph showing layers). At this layer we already have code for modules like memory, CPU-cores, interconnects and so on. Now what we need is an ability to compose them in such a way that they create a whole device.
 
-\section{Already existing tools}
-Creating custom hardware has gotten expensive in last few decades both in therms of money but also in terms of man-hours needed to create it. 
-This creates barriers to entry for new players, and also reinforces strong positions of already adopted standards. 
-Two monoliths that I will focus on are language Verilog and design software Intel Quartus Prime(IQP). 
-In my work I will work with Bluespec language which can be compiled down to Verilog. 
-\begin{tcolorbox}[title=Market share and justification for focusing entirely on comparisons with Intel Quartus Prime]
-    It's a bit difficult to accurately judge market share of IQP, but It is produced by one of the biggest chip manufacturer and designer in the world, and it's also used by Qualcomm according to \href{https://discovery.hgdata.com/product/intel-quartus-prime}{HG Insights}. Using Google trends tool we can see that while in recent years(since 2016) competitor Xilinx Vivado has overtaken, IQP in interest at the global scale, in most developed countries like US, Europe, and parts of Asia. There is roughly 50/50 split between IQP and Vivado. My personal observations suggest that Xilinx Vivado became highly popular in India which is a large country with history of chip design, and this might be strongly skewing data in favor of Xilinx's product. Another argument to compare against IQP is that it was used last year as a part of the course, and it can't be irrelevant if it's taught at Cambridge. Therefore, it's fair to not investigate Xilinx's software during evaluation(TODO: check if this has changed).
+\section{Motivation}
+\begin{tcolorbox}[title=Vocabulary]
+    \begin{itemize}
+        \item Verilog - Hardware description language
+        \item Bluespec - Hardware description language
+        \item Intel Quartus Prime (IQP) - programmable logic device design software produced by Intel. (source Wikipedia)
+        \item Platform Designer - Tool inside IQP used to connect high level components.
+    \end{itemize}
 \end{tcolorbox}
-My project will try to tackle a subset of functionality provided by a tool called Platform Designer that is a part of Intel Quartus Prime package. Platform Designer is a GUI tool for connecting modules, it is capable of saving and loading designs, from proprietary plain text file format. Unfortunately, those files are not exactly what one might call "Human readable" as they have a tendency to be megabytes long(millions of characters). This tool also have some other issues that will be explained later, one of which is its lack of support for Bluespec.
+Verilog is an old language with minimal type system. This forces people to encode more complex interfaces using finicky naming conventions. To simplify process of connecting components with many wires, people tend to use high level tools like Platform Designer, that have built in logic allowing for easy connection of components. This approach is not perfect and as we will see during evaluation, a better option might be to move away from Verilog and to use more modern language like Bluespec. The problem with that is that tools like Intel Quartus Prime(IQP) don't have native support for Bluespec, and it forces Bluespec users to work with transpiled Verilog (from Bluespec) code. Unfortunately, because typing richness of Bluespec(comparable to Haskell), arbitrary code cannot be transpiled, and before code can be transpiled it needs to be stripped of any arguments or other kinds of polymorphism. Process of transpiration also destroys high level interfaces, and they must be recreated manually after importing Verilog code into IQP. 
+
+\section{Already existing tools}
+Creating custom hardware has got expensive in last few decades both in therms of money but also in terms of man-hours needed to create it. 
+This creates barriers to entry for new players, and also reinforces strong positions of already adopted standards. 
+This also means that there isn't as large open source community as around hardware and therefore one cannot simply use plugin for Bluespec of Bluespec native high level integration tool because there are none.
+
+My project will try to tackle a subset of functionality provided by a tool called Platform Designer that is a part of Intel Quartus Prime package. Platform Designer is a GUI tool for high-level integration, designs generated by it are kept in verbose text file format. Unfortunately, those files have a tendency to be megabytes long, making them hard to read and edit, by humans. There are other problems with using Platform Designer, like cumbersomeness of importing new components.
+
+\begin{tcolorbox}[title=Market share and justification for focusing entirely on comparisons with Intel Quartus Prime]
+    It's a bit difficult to accurately judge market share of IQP, but It is produced by one of the biggest designer and manufacturer in the world, and it's also used by Qualcomm according to \href{https://discovery.hgdata.com/product/intel-quartus-prime}{HG Insights}. Using Google trends we can see that while in recent years(since 2016) competitor Xilinx Vivado has overtaken, IQP in interest at the global scale, in most developed countries like US, Europe, and parts of Asia. There is roughly 50/50 split between IQP and Vivado. My personal observations suggest that Xilinx Vivado became highly popular in India which is a large country with history of chip design, and this might be strongly skewing data in favor of Xilinx's product. Another argument to compare against IQP is that it was used last year as a part of the course, and it can't be irrelevant if it was taught at Cambridge. Therefore, it's fair to not investigate Xilinx's software during evaluation(TODO: check if this has changed).
+\end{tcolorbox}
 
 \section{Proposed solution}
-During my project I created an alternative file format that is much simpler and allows for editing by a human. It archives this by harnessing power of types in Bluespec language. My tool will be able to operate on Bluespec packages, but thanks to other tools that allow for interoperability of Bluespec and Verilog, it is still technically possible to use my tool within wider Verilog ecosystem. I have also created a GUI that provides similar functionality to Platform Designer, but it is designed to be used with Bluespec.
+During my project I created an alternative JSON based file format that is much simpler and human-readable, that can be interpreted using my tool to produce Bluespec code of a top level module.
+This file format is rather unimpressive on its own, and one might argue that it would be better to use Bluespec code instead of it. Interesting part of this project lie in the backend that is able to verify correctness of this file and produce set of typing information about produced Bluespec code.
+But to truly appreciate work I have done during this project I also implemented GUI, which uses same backend as one used to interpret JSON files, and it is able to supply user with typing information and possible choices when connecting components. 
+One can think of it as a Bluespec native high level integration tool that uses simple language server in the backend. 
 
 \chapter{Preparation}
 
@@ -470,15 +485,35 @@ My solution: 31 for two connected FIFOs and 43 for three connected FIFOs.
 In this example we will create a simple system-on-chip (SOC) with one Flute core, memory module and fake interface with outside world, all connected by a bus. This example is designed to even out playing field by making all connections use AXI4 interface which is undestood by platform designer.
 
 \subsection{Platform Designer}
-Again we start with importing our modules. This time we need to import two of them, one for fake interface and one for flute core module. As for memory module we will use one from QSys library to save time and effort.
-Unfortunately platform designer can't figure out how to organize wires into interfaces like AXI4 master or AXI4 slave. So we need to do it manually. This wouldn't be so painful if not for the fact that we need to set type of each wire according to it's name(for example \verb!cpu_imem_master_awready! has type \verb!awready!). Each of those AXI4 interfaces has 37 wires, and if we account for all other interfaces of Flute core we get 150 wires that individually need to be assigned to interfaces. Similarly, our fake 16550 interfaces also uses 40 wires in total. When assigning this through GUI it took me around 16 minutes to click through all the assignments. (For context tools like Xilinx Vivado have heuristics that are able to do a lot of this automatically, but my understanding is that still this works only for certain known interfaces)
+Again we start with importing our modules. 
+This time we need to import two of them, one for fake 16550 interface and one for flute core. 
+As for memory module we will use one from QSys library to save time and effort.
+
+Unfortunately platform designer can't figure out how to organize wires into interfaces like AXI4 master or AXI4 slave. 
+So we need to do it manually. This wouldn't be so painful if not for the fact that we need to set type of each wire according to it's name(for example \verb!cpu_imem_master_awready! has type \verb!awready!). Each of those AXI4 interfaces has 37 wires, and if we account for all other interfaces of Flute core we get 150 wires that individually need to be assigned to interfaces. Similarly, our fake 16550 interfaces also uses 40 wires in total. When assigning this through GUI it took me around 16 minutes to click through all the assignments. (For context tools like Xilinx Vivado have heuristics that are able to do a lot of this automatically, but my understanding is that still this works only for certain known interfaces)
 \\
 \begin{figure}
-    \caption{Connected Sys-on-Chip}
+    \caption{Connected Sys-on-Chip using Platform designer}
     \includegraphics[width=0.7\textwidth]{images/Example2QSys.png} \\
     \centering
 \end{figure}
 After initial pain of importing modules we arrive at the place where Platform designer shines. It is able to show possible connections between AXI4 masters and slaves, on a two 2 grid-like layout. Then connecting two together is as simple as clicking cross-section of two wires on the screen.  
 
 \subsection{My tool}
+Again using my tool we don't need to do anything to import modules, as all the typing information is provided by the package. To connect those together we create a special bus node, select function for creating a bus, select number of masters and slaves, then assign each accordingly. While I'm unable to show nice 2d grid of possible connections, I have two-stage autocompletion. Stage 1 autocompletion becomes available after user selects function to create a bus. Such functions can be polymorphic, so I show all interfaces that might be valid individually, but not necessarily together. Stage 2 autocompletion becomes available after user selects at least one master and at least one slave, and clicks confirm update. After that bus is locked to specific type of masters and slaves and autocompletion narrows to show only masters and slaves that will work together.
+\begin{figure}
+    \caption{Connected Sys-on-Chip using my tool}
+    \includegraphics[width=0.8\textwidth]{images/Example2MySolution.png} \\
+    \centering
+\end{figure}
+
+\subsection{Other differences}
+There is a number of subtle differences that are worth talking about, but were not pronounced by this example.
+\\
+Platform designer has ability to automatically convert between AXI4 interfaces and Avalon ones, and also within those families it allows for some degree of flexibility when parameters don't match exactly.
+When I create busses I'm limited by typing system, and way functions for creating buses were defined. Therefore, if user wants to do similar conversions they would need to use some functions and perform those conversions by themselves.
+\\
+Another slight difference is the fact that in Platform designer, each master has its own bus, and while slaves can be connected to any number of masters they need to be connected individually. 
+\section{Example 3 - Working AXI4 masters and slaves}
+This example 
 \end{document}

@@ -1,6 +1,6 @@
 Info: Starting: Create testbench Platform Designer system
 Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/Example3.ipx
-Info: qsys-generate E:\Mega\Documents\CS\TLoB\quatusExamples2\Example3.qsys --testbench=STANDARD --output-directory=E:\Mega\Documents\CS\TLoB\quatusExamples2 --family="Cyclone V" --part=5CGXFC7C7F23C8
+Info: qsys-generate E:\Mega\Documents\CS\TLoB\quatusExamples2\Example3.qsys --testbench=SIMPLE --output-directory=E:\Mega\Documents\CS\TLoB\quatusExamples2 --family="Cyclone V" --part=5CGXFC7C7F23C8
 Progress: Loading quatusExamples2/Example3.qsys
 Progress: Reading input file
 Progress: Adding axi4Slave_0 [axi4Slave 1.0]
@@ -35,18 +35,19 @@ Progress: Loading quatusExamples2/Example3.qsys
 Progress: Loading quatusExamples2/fake16550_hw.tcl
 Progress: Loading quatusExamples2/fluteCore_hw.tcl
 Progress: Loading quatusExamples2/simpleFifo_hw.tcl
-Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/* matched 18 files in 0.09 seconds
+Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/* matched 20 files in 0.08 seconds
 Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/ip/**/* matched 0 files in 0.00 seconds
 Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/*/* matched 27 files in 0.00 seconds
-Info: E:\Mega\Documents\CS\TLoB\quatusExamples2\Example3\testbench\Example3.ipx described 0 plugins, 3 paths, in 0.09 seconds
-Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/* matched 4 files in 0.09 seconds
-Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/*/* matched 0 files in 0.00 seconds
+Info: E:\Mega\Documents\CS\TLoB\quatusExamples2\Example3\testbench\Example3.ipx described 0 plugins, 3 paths, in 0.08 seconds
+Progress: Loading testbench/Example3_tb.qsys
+Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/* matched 8 files in 0.08 seconds
+Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/*/* matched 1 files in 0.00 seconds
 Info: C:/Users/nudy1/.altera.quartus/ip/21.1/**/* matched 0 files in 0.00 seconds
 Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/$$QUARTUS_IP_PROJECTDIR/* matched 0 files in 0.00 seconds
 Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/$$QUARTUS_IP_USERDIR/* matched 0 files in 0.00 seconds
 Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/$$QUARTUS_IP_GLOBALDIR/* matched 0 files in 0.00 seconds
 Info: Reading index C:\intelfpga\21.1\ip\altera\altera_components.ipx
-Info: C:\intelfpga\21.1\ip\altera\altera_components.ipx described 1966 plugins, 0 paths, in 0.06 seconds
+Info: C:\intelfpga\21.1\ip\altera\altera_components.ipx described 1966 plugins, 0 paths, in 0.07 seconds
 Info: C:/intelfpga/21.1/ip/**/* matched 106 files in 0.07 seconds
 Info: C:/intelfpga/ip/**/* matched 0 files in 0.00 seconds
 Info: Reading index C:\intelfpga\21.1\quartus\sopc_builder\builtin.ipx
@@ -54,8 +55,8 @@ Info: C:\intelfpga\21.1\quartus\sopc_builder\builtin.ipx described 83 plugins, 0
 Info: C:/intelfpga/21.1/quartus/sopc_builder/**/* matched 8 files in 0.00 seconds
 Info: C:/intelfpga/21.1/quartus/common/librarian/factories/**/* matched 0 files in 0.00 seconds
 Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/$IP_IPX_PATH matched 1 files in 0.00 seconds
-Info: C:\intelfpga\21.1\quartus\sopc_builder\bin\root_components.ipx described 0 plugins, 13 paths, in 0.17 seconds
-Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/root_components.ipx matched 1 files in 0.17 seconds
+Info: C:\intelfpga\21.1\quartus\sopc_builder\bin\root_components.ipx described 0 plugins, 13 paths, in 0.16 seconds
+Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/root_components.ipx matched 1 files in 0.16 seconds
 Progress: 
 Progress: 
 Progress: 
@@ -73,8 +74,8 @@ Info: get_instance_assignment clk_0 testbench.partner.map.clk_in
 Info: get_interface_property reset EXPORT_OF
 Info: get_instance_property clk_0 CLASS_NAME
 Info: get_instance_assignment clk_0 testbench.partner.map.clk_in_reset
-Info: send_message Info TB_Gen: Creating testbench system : Example3_tb with all standard BFMs
-Info: TB_Gen: Creating testbench system : Example3_tb with all standard BFMs
+Info: send_message Info TB_Gen: Creating testbench system : Example3_tb with clock and reset BFMs
+Info: TB_Gen: Creating testbench system : Example3_tb with clock and reset BFMs
 Info: create_system Example3_tb
 Info: add_instance Example3_inst Example3 
 Info: set_use_testbench_naming_pattern true Example3
@@ -129,38 +130,4 @@ Info: send_message Info TB_Gen: TBGEN SUCCESSFUL
 Info: TB_Gen: TBGEN SUCCESSFUL
 Info: Testbench system: E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/Example3_tb.qsys
 Info: Done
-Info: qsys-generate E:\Mega\Documents\CS\TLoB\quatusExamples2\Example3.qsys --simulation=VERILOG --allow-mixed-language-simulation --testbench=STANDARD --testbench-simulation=VERILOG --allow-mixed-language-testbench-simulation --output-directory=E:\Mega\Documents\CS\TLoB\quatusExamples2\Example3\testbench\Example3_tb\simulation --family="Cyclone V" --part=5CGXFC7C7F23C8
-Progress: Loading testbench/Example3_tb.qsys
-Progress: Reading input file
-Progress: Adding Example3_inst [Example3 1.0]
-Progress: Parameterizing module Example3_inst
-Progress: Adding Example3_inst_clk_bfm [altera_avalon_clock_source 21.1]
-Progress: Parameterizing module Example3_inst_clk_bfm
-Progress: Adding Example3_inst_reset_bfm [altera_avalon_reset_source 21.1]
-Progress: Parameterizing module Example3_inst_reset_bfm
-Progress: Building connections
-Progress: Parameterizing connections
-Progress: Validating
-Progress: Done reading input file
-Info: Example3_tb.Example3_inst_clk_bfm: Elaborate: altera_clock_source
-Info: Example3_tb.Example3_inst_clk_bfm:            $Revision: #1 $
-Info: Example3_tb.Example3_inst_clk_bfm:            $Date: 2020/06/22 $
-Info: Example3_tb.Example3_inst_reset_bfm: Elaborate: altera_reset_source
-Info: Example3_tb.Example3_inst_reset_bfm:            $Revision: #1 $
-Info: Example3_tb.Example3_inst_reset_bfm:            $Date: 2020/06/22 $
-Info: Example3_tb.Example3_inst_reset_bfm: Reset is negatively asserted.
-Info: Example3_tb: Generating Example3_tb "Example3_tb" for SIM_VERILOG
-Info: Interconnect is inserted between master axiMaster_0.altera_axi4_master and slave axi4Slave_0.altera_axi4_slave because the master has arid signal 1 bit wide, but the slave is 2 bit wide.
-Info: Interconnect is inserted between master axiMaster_0.altera_axi4_master and slave axi4Slave_0.altera_axi4_slave because the master has awid signal 1 bit wide, but the slave is 2 bit wide.
-Info: Interconnect is inserted between master axiMaster_0.altera_axi4_master and slave axi4Slave_0.altera_axi4_slave because the master has bid signal 1 bit wide, but the slave is 2 bit wide.
-Info: Interconnect is inserted between master axiMaster_0.altera_axi4_master and slave axi4Slave_0.altera_axi4_slave because the master has rid signal 1 bit wide, but the slave is 2 bit wide.
-Info: Example3_inst: "Example3_tb" instantiated Example3 "Example3_inst"
-Info: Example3_inst_clk_bfm: "Example3_tb" instantiated altera_avalon_clock_source "Example3_inst_clk_bfm"
-Info: Example3_inst_reset_bfm: "Example3_tb" instantiated altera_avalon_reset_source "Example3_inst_reset_bfm"
-Info: Reusing file E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/Example3_tb/simulation/submodules/verbosity_pkg.sv
-Error: axi4Slave_0: axi4Slave does not support generation for Verilog Simulation. Generation is available for: Quartus Synthesis.
-Error: Generation stopped, 3 or more modules remaining
-Info: Example3_tb: Done "Example3_tb" with 8 modules, 5 files
-Error: qsys-generate failed with exit code 1: 2 Errors, 0 Warnings
-Error: There were errors creating the testbench system.
 Info: Finished: Create testbench Platform Designer system

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deploy
- date="2022.04.27.13:17:34"
- outputDirectory="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/">
+ date="2022.04.30.13:27:41"
+ outputDirectory="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/">
  <perimeter>
   <parameter
      name="AUTO_GENERATION_ID"
@@ -65,13 +65,13 @@
  </perimeter>
  <entity
    path=""
-   parameterizationKey="Example3:1.0:AUTO_CLK_CLOCK_DOMAIN=-1,AUTO_CLK_CLOCK_RATE=-1,AUTO_CLK_RESET_DOMAIN=-1,AUTO_DEVICE=5CGXFC7C7F23C8,AUTO_DEVICE_FAMILY=Cyclone V,AUTO_DEVICE_SPEEDGRADE=8_H7,AUTO_GENERATION_ID=1651058251,AUTO_UNIQUE_ID=(axi4Slave:1.0:)(axiMaster:1.0:)(clock_source:21.1:clockFrequency=50000000,clockFrequencyKnown=true,inputClockFrequency=0,resetSynchronousEdges=NONE)(avalon:21.1:arbitrationPriority=1,baseAddress=0x0000,defaultConnection=false)(clock:21.1:)(clock:21.1:)(reset:21.1:)(reset:21.1:)"
+   parameterizationKey="Example3:1.0:AUTO_CLK_CLOCK_DOMAIN=-1,AUTO_CLK_CLOCK_RATE=-1,AUTO_CLK_RESET_DOMAIN=-1,AUTO_DEVICE=5CGXFC7C7F23C8,AUTO_DEVICE_FAMILY=Cyclone V,AUTO_DEVICE_SPEEDGRADE=8_H7,AUTO_GENERATION_ID=1651321656,AUTO_UNIQUE_ID=(axi4Slave:1.0:)(axiMaster:1.0:)(clock_source:21.1:clockFrequency=50000000,clockFrequencyKnown=true,inputClockFrequency=0,resetSynchronousEdges=NONE)(avalon:21.1:arbitrationPriority=1,baseAddress=0x0000,defaultConnection=false)(clock:21.1:)(clock:21.1:)(reset:21.1:)(reset:21.1:)"
    instancePathKey="Example3"
    kind="Example3"
    version="1.0"
    name="Example3">
   <parameter name="AUTO_CLK_CLOCK_RATE" value="-1" />
-  <parameter name="AUTO_GENERATION_ID" value="1651058251" />
+  <parameter name="AUTO_GENERATION_ID" value="1651321656" />
   <parameter name="AUTO_DEVICE" value="5CGXFC7C7F23C8" />
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
   <parameter name="AUTO_CLK_RESET_DOMAIN" value="-1" />
@@ -80,50 +80,50 @@
   <parameter name="AUTO_DEVICE_SPEEDGRADE" value="8_H7" />
   <generatedFiles>
    <file
-       path="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/Example3.v"
+       path="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/Example3.v"
        type="VERILOG" />
   </generatedFiles>
   <childGeneratedFiles>
    <file
-       path="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/axiSlave_synth.v"
+       path="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/axiSlave_synth.v"
        type="VERILOG"
        attributes="TOP_LEVEL_FILE" />
    <file
-       path="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/axiMaster_synth.v"
+       path="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/axiMaster_synth.v"
        type="VERILOG"
        attributes="TOP_LEVEL_FILE" />
    <file
-       path="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/Example3_mm_interconnect_0.v"
+       path="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/Example3_mm_interconnect_0.v"
        type="VERILOG" />
    <file
-       path="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_merlin_axi_translator.sv"
+       path="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_merlin_axi_translator.sv"
        type="SYSTEM_VERILOG"
        attributes="" />
    <file
-       path="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_reset_controller.v"
+       path="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_reset_controller.v"
        type="VERILOG"
        attributes="" />
    <file
-       path="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_reset_synchronizer.v"
+       path="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_reset_synchronizer.v"
        type="VERILOG"
        attributes="" />
    <file
-       path="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_reset_controller.sdc"
+       path="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_reset_controller.sdc"
        type="SDC"
        attributes="" />
   </childGeneratedFiles>
   <sourceFiles>
-   <file path="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3.qsys" />
+   <file path="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3.qsys" />
   </sourceFiles>
   <childSourceFiles>
-   <file path="E:/Mega/Documents/CS/TLoB/quatusExamples2/axi4Slave_hw.tcl" />
-   <file path="E:/Mega/Documents/CS/TLoB/quatusExamples2/axiMaster_hw.tcl" />
+   <file path="D:/Mega/Documents/CS/TLoB/quatusExamples2/axi4Slave_hw.tcl" />
+   <file path="D:/Mega/Documents/CS/TLoB/quatusExamples2/axiMaster_hw.tcl" />
    <file
-       path="C:/intelfpga/21.1/ip/altera/merlin/altera_mm_interconnect/altera_mm_interconnect_hw.tcl" />
+       path="D:/programs/quartus/ip/altera/merlin/altera_mm_interconnect/altera_mm_interconnect_hw.tcl" />
    <file
-       path="C:/intelfpga/21.1/ip/altera/merlin/altera_merlin_axi_translator/altera_merlin_axi_translator_hw.tcl" />
+       path="D:/programs/quartus/ip/altera/merlin/altera_merlin_axi_translator/altera_merlin_axi_translator_hw.tcl" />
    <file
-       path="C:/intelfpga/21.1/ip/altera/merlin/altera_reset_controller/altera_reset_controller_hw.tcl" />
+       path="D:/programs/quartus/ip/altera/merlin/altera_reset_controller/altera_reset_controller_hw.tcl" />
   </childSourceFiles>
   <messages>
    <message level="Debug" culprit="Example3">queue size: 0 starting:Example3 "Example3"</message>
@@ -256,13 +256,13 @@
    name="axiSlave_synth">
   <generatedFiles>
    <file
-       path="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/axiSlave_synth.v"
+       path="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/axiSlave_synth.v"
        type="VERILOG"
        attributes="TOP_LEVEL_FILE" />
   </generatedFiles>
   <childGeneratedFiles/>
   <sourceFiles>
-   <file path="E:/Mega/Documents/CS/TLoB/quatusExamples2/axi4Slave_hw.tcl" />
+   <file path="D:/Mega/Documents/CS/TLoB/quatusExamples2/axi4Slave_hw.tcl" />
   </sourceFiles>
   <childSourceFiles/>
   <instantiator instantiator="Example3" as="axi4Slave_0" />
@@ -280,13 +280,13 @@
    name="axiMaster_synth">
   <generatedFiles>
    <file
-       path="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/axiMaster_synth.v"
+       path="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/axiMaster_synth.v"
        type="VERILOG"
        attributes="TOP_LEVEL_FILE" />
   </generatedFiles>
   <childGeneratedFiles/>
   <sourceFiles>
-   <file path="E:/Mega/Documents/CS/TLoB/quatusExamples2/axiMaster_hw.tcl" />
+   <file path="D:/Mega/Documents/CS/TLoB/quatusExamples2/axiMaster_hw.tcl" />
   </sourceFiles>
   <childSourceFiles/>
   <instantiator instantiator="Example3" as="axiMaster_0" />
@@ -310,22 +310,22 @@
      value="add_instance {axiMaster_0_altera_axi4_master_translator} {altera_merlin_axi_translator};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_AWID} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_AWREGION} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_AWREGION} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_AWLEN} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_AWSIZE} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_AWBURST} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_AWLOCK} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_AWLOCK} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_AWCACHE} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_AWCACHE} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_AWPROT} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_AWQOS} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_AWQOS} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_WSTRB} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_WLAST} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_BID} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_BRESP} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_BRESP} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_ARID} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_ARREGION} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_ARREGION} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_ARLEN} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_ARSIZE} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_ARBURST} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_ARLOCK} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_ARLOCK} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_ARCACHE} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_ARQOS} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_ARPROT} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_ARCACHE} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_ARQOS} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_RID} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_RRESP} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_RRESP} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_RLAST} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {M0_ID_WIDTH} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {DATA_WIDTH} {128};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {S0_ID_WIDTH} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {M0_ADDR_WIDTH} {14};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {S0_WRITE_ADDR_USER_WIDTH} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {S0_READ_ADDR_USER_WIDTH} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {M0_WRITE_ADDR_USER_WIDTH} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {M0_READ_ADDR_USER_WIDTH} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {S0_WRITE_DATA_USER_WIDTH} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {S0_WRITE_RESPONSE_DATA_USER_WIDTH} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {S0_READ_DATA_USER_WIDTH} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {M0_WRITE_DATA_USER_WIDTH} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {M0_WRITE_RESPONSE_DATA_USER_WIDTH} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {M0_READ_DATA_USER_WIDTH} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {S0_ADDR_WIDTH} {14};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_AWUSER} {0};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_ARUSER} {0};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_WUSER} {0};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_RUSER} {0};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_S0_BUSER} {0};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_AWUSER} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_ARUSER} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_WUSER} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_RUSER} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {USE_M0_BUSER} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {M0_AXI_VERSION} {AXI4};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {S0_AXI_VERSION} {AXI4};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {WRITE_ISSUING_CAPABILITY} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {READ_ISSUING_CAPABILITY} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {COMBINED_ISSUING_CAPABILITY} {1};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {WRITE_ACCEPTANCE_CAPABILITY} {16};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {READ_ACCEPTANCE_CAPABILITY} {16};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {COMBINED_ACCEPTANCE_CAPABILITY} {16};set_instance_parameter_value {axiMaster_0_altera_axi4_master_translator} {READ_DATA_REORDERING_DEPTH} {1};add_instance {axi4Slave_0_altera_axi4_slave_translator} {altera_merlin_axi_translator};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_AWID} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_AWREGION} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_AWREGION} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_AWLEN} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_AWSIZE} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_AWBURST} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_AWLOCK} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_AWLOCK} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_AWCACHE} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_AWCACHE} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_AWPROT} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_AWQOS} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_AWQOS} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_WSTRB} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_WLAST} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_BID} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_BRESP} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_BRESP} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_ARID} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_ARREGION} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_ARREGION} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_ARLEN} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_ARSIZE} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_ARBURST} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_ARLOCK} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_ARLOCK} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_ARCACHE} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_ARQOS} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_ARPROT} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_ARCACHE} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_ARQOS} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_RID} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_RRESP} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_RRESP} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_RLAST} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {M0_ID_WIDTH} {2};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {DATA_WIDTH} {128};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {S0_ID_WIDTH} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {M0_ADDR_WIDTH} {14};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {S0_WRITE_ADDR_USER_WIDTH} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {S0_READ_ADDR_USER_WIDTH} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {M0_WRITE_ADDR_USER_WIDTH} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {M0_READ_ADDR_USER_WIDTH} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {S0_WRITE_DATA_USER_WIDTH} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {S0_WRITE_RESPONSE_DATA_USER_WIDTH} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {S0_READ_DATA_USER_WIDTH} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {M0_WRITE_DATA_USER_WIDTH} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {M0_WRITE_RESPONSE_DATA_USER_WIDTH} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {M0_READ_DATA_USER_WIDTH} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {S0_ADDR_WIDTH} {14};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_AWUSER} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_ARUSER} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_WUSER} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_RUSER} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_S0_BUSER} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_AWUSER} {0};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_ARUSER} {0};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_WUSER} {0};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_RUSER} {0};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {USE_M0_BUSER} {0};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {M0_AXI_VERSION} {AXI4};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {S0_AXI_VERSION} {AXI4};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {WRITE_ISSUING_CAPABILITY} {16};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {READ_ISSUING_CAPABILITY} {16};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {COMBINED_ISSUING_CAPABILITY} {16};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {WRITE_ACCEPTANCE_CAPABILITY} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {READ_ACCEPTANCE_CAPABILITY} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {COMBINED_ACCEPTANCE_CAPABILITY} {1};set_instance_parameter_value {axi4Slave_0_altera_axi4_slave_translator} {READ_DATA_REORDERING_DEPTH} {1};add_instance {axiMaster_0_reset_sink_reset_bridge} {altera_reset_bridge};set_instance_parameter_value {axiMaster_0_reset_sink_reset_bridge} {ACTIVE_LOW_RESET} {0};set_instance_parameter_value {axiMaster_0_reset_sink_reset_bridge} {SYNCHRONOUS_EDGES} {deassert};set_instance_parameter_value {axiMaster_0_reset_sink_reset_bridge} {NUM_RESET_OUTPUTS} {1};set_instance_parameter_value {axiMaster_0_reset_sink_reset_bridge} {USE_RESET_REQUEST} {0};add_instance {clk_0_clk_clock_bridge} {altera_clock_bridge};set_instance_parameter_value {clk_0_clk_clock_bridge} {EXPLICIT_CLOCK_RATE} {50000000};set_instance_parameter_value {clk_0_clk_clock_bridge} {NUM_CLOCK_OUTPUTS} {1};add_connection {axiMaster_0_altera_axi4_master_translator.m0} {axi4Slave_0_altera_axi4_slave_translator.s0} {avalon};set_connection_parameter_value {axiMaster_0_altera_axi4_master_translator.m0/axi4Slave_0_altera_axi4_slave_translator.s0} {arbitrationPriority} {1};set_connection_parameter_value {axiMaster_0_altera_axi4_master_translator.m0/axi4Slave_0_altera_axi4_slave_translator.s0} {baseAddress} {0x0000};set_connection_parameter_value {axiMaster_0_altera_axi4_master_translator.m0/axi4Slave_0_altera_axi4_slave_translator.s0} {defaultConnection} {false};add_connection {axiMaster_0_reset_sink_reset_bridge.out_reset} {axiMaster_0_altera_axi4_master_translator.clk_reset} {reset};add_connection {axiMaster_0_reset_sink_reset_bridge.out_reset} {axi4Slave_0_altera_axi4_slave_translator.clk_reset} {reset};add_connection {clk_0_clk_clock_bridge.out_clk} {axiMaster_0_altera_axi4_master_translator.clk} {clock};add_connection {clk_0_clk_clock_bridge.out_clk} {axi4Slave_0_altera_axi4_slave_translator.clk} {clock};add_connection {clk_0_clk_clock_bridge.out_clk} {axiMaster_0_reset_sink_reset_bridge.clk} {clock};add_interface {axi4Slave_0_altera_axi4_slave} {axi4} {master};set_interface_property {axi4Slave_0_altera_axi4_slave} {EXPORT_OF} {axi4Slave_0_altera_axi4_slave_translator.m0};add_interface {axiMaster_0_altera_axi4_master} {axi4} {slave};set_interface_property {axiMaster_0_altera_axi4_master} {EXPORT_OF} {axiMaster_0_altera_axi4_master_translator.s0};add_interface {clk_0_clk} {clock} {slave};set_interface_property {clk_0_clk} {EXPORT_OF} {clk_0_clk_clock_bridge.in_clk};add_interface {axiMaster_0_reset_sink_reset_bridge_in_reset} {reset} {slave};set_interface_property {axiMaster_0_reset_sink_reset_bridge_in_reset} {EXPORT_OF} {axiMaster_0_reset_sink_reset_bridge.in_reset};set_module_assignment {interconnect_id.axi4Slave_0.altera_axi4_slave} {0};set_module_assignment {interconnect_id.axiMaster_0.altera_axi4_master} {0};" />
   <generatedFiles>
    <file
-       path="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/Example3_mm_interconnect_0.v"
+       path="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/Example3_mm_interconnect_0.v"
        type="VERILOG" />
   </generatedFiles>
   <childGeneratedFiles>
    <file
-       path="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_merlin_axi_translator.sv"
+       path="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_merlin_axi_translator.sv"
        type="SYSTEM_VERILOG"
        attributes="" />
   </childGeneratedFiles>
   <sourceFiles>
    <file
-       path="C:/intelfpga/21.1/ip/altera/merlin/altera_mm_interconnect/altera_mm_interconnect_hw.tcl" />
+       path="D:/programs/quartus/ip/altera/merlin/altera_mm_interconnect/altera_mm_interconnect_hw.tcl" />
   </sourceFiles>
   <childSourceFiles>
    <file
-       path="C:/intelfpga/21.1/ip/altera/merlin/altera_merlin_axi_translator/altera_merlin_axi_translator_hw.tcl" />
+       path="D:/programs/quartus/ip/altera/merlin/altera_merlin_axi_translator/altera_merlin_axi_translator_hw.tcl" />
   </childSourceFiles>
   <instantiator instantiator="Example3" as="mm_interconnect_0" />
   <messages>
@@ -383,22 +383,22 @@
    name="altera_reset_controller">
   <generatedFiles>
    <file
-       path="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_reset_controller.v"
+       path="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_reset_controller.v"
        type="VERILOG"
        attributes="" />
    <file
-       path="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_reset_synchronizer.v"
+       path="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_reset_synchronizer.v"
        type="VERILOG"
        attributes="" />
    <file
-       path="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_reset_controller.sdc"
+       path="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_reset_controller.sdc"
        type="SDC"
        attributes="" />
   </generatedFiles>
   <childGeneratedFiles/>
   <sourceFiles>
    <file
-       path="C:/intelfpga/21.1/ip/altera/merlin/altera_reset_controller/altera_reset_controller_hw.tcl" />
+       path="D:/programs/quartus/ip/altera/merlin/altera_reset_controller/altera_reset_controller_hw.tcl" />
   </sourceFiles>
   <childSourceFiles/>
   <instantiator instantiator="Example3" as="rst_controller" />
@@ -420,14 +420,14 @@
   <parameter name="S0_LOCK_WIDTH" value="1" />
   <generatedFiles>
    <file
-       path="E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_merlin_axi_translator.sv"
+       path="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_merlin_axi_translator.sv"
        type="SYSTEM_VERILOG"
        attributes="" />
   </generatedFiles>
   <childGeneratedFiles/>
   <sourceFiles>
    <file
-       path="C:/intelfpga/21.1/ip/altera/merlin/altera_merlin_axi_translator/altera_merlin_axi_translator_hw.tcl" />
+       path="D:/programs/quartus/ip/altera/merlin/altera_merlin_axi_translator/altera_merlin_axi_translator_hw.tcl" />
   </sourceFiles>
   <childSourceFiles/>
   <instantiator

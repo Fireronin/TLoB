@@ -280,18 +280,7 @@ Primary {Int#(numeric type n)} polymorphic
 Primary {UInt#(numeric type n)} polymorphic
 Alias Nat Bit#(32) {position {%/Libraries/Prelude.bs 1773 5 {Library Prelude}}}
 TaggedUnion {Either#(type a, type b)} polymorphic {members {{a Left} {b Right}}} {position {%/Libraries/Prelude.bs 1787 5 {Library Prelude}}}
-Interface {Reg#(type a)
-} polymorphic {members {
-        {method {Action _write a {}
-            }
-        } {method {a _read {} {}
-            }
-        }
-    }
-} {position {%/Libraries/Prelude.bs 1836 10 {Library Prelude
-        }
-    }
-}
+Interface {Reg#(type a)} polymorphic {members {{method {Action _write a {}}} {method {a _read {} {}}}}} {position {%/Libraries/Prelude.bs 1836 10 {Library Prelude}}}
 Interface {RevertingVirtualReg::VReg#(numeric type n)} polymorphic {members {{method {PrimAction write Bit#(n) {}}} {method {Bit#(n) read {} {}}}}} {position {%/Libraries/RevertingVirtualReg.bs 3 10 {Library RevertingVirtualReg}}}
 Primary Rules
 Primary String

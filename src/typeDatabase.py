@@ -26,6 +26,9 @@ class Variable():
     def __init__(self,value=None):
         self.value = value
 
+    def __repr__(self) -> str:
+        return self.value.__repr__()
+
 
 
 def variablesToStr(variables:Dict[str,Variable]):
@@ -134,17 +137,17 @@ class TypeDatabase():
             tfullNmae = t_type.full_name
             tpackage = t_type.package
         if type(t_type) == str:
-            tpackage,tname = t_type.split("::")
+            #tpackage,tname = t_type.split("::")
             tfullNmae = t_type
         if tfullNmae in self.types:
             return self.types[tfullNmae]
-        if tpackage in self.packages:
-            typeString = self.handler.read_type(bytes(tfullNmae, encoding= "raw_unicode_escape"))
-            #decode typeString to str
-            typeString = typeString.decode("utf-8")
-            self.addUnparsedTypes([typeString])
-            if tfullNmae in self.types:
-                return self.types[tfullNmae]
+        # if tpackage in self.packages:
+        #     typeString = self.handler.read_type(bytes(tfullNmae, encoding= "raw_unicode_escape"))
+        #     #decode typeString to str
+        #     typeString = typeString.decode("utf-8")
+        #     self.addUnparsedTypes([typeString])
+        #     if tfullNmae in self.types:
+        #         return self.types[tfullNmae]
         fuzzyException(tfullNmae,list(self.types), "Type {} not found. \n Do you mean: \n{}")
 
     def addUnparsedTypes(self,types):
@@ -473,7 +476,9 @@ class TypeDatabase():
 
         lastTodo = nonNumerical
         toDo = []
-        while len(lastTodo) != 0:
+        first = True
+        while len(lastTodo) != 0 or first:
+            first = False
             numericalProgress = False
             if len(numerical) != 0:
                 numericalProgress = True
@@ -502,7 +507,7 @@ class TypeDatabase():
                 
             
             if len(toDo) == len(lastTodo) and not numericalProgress:
-                self.resolveTypeclass(self.typeclasses[proviso.full_name],transformed)
+                # self.resolveTypeclass(self.typeclasses[proviso.full_name],transformed)
                 raise Exception(f"Cannot solve provisos {provisos} with variables \
                 {variablesToStr(variables)}")
             else:

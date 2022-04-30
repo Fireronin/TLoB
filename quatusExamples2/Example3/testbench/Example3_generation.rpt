@@ -1,6 +1,6 @@
 Info: Starting: Create testbench Platform Designer system
-Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/Example3.ipx
-Info: qsys-generate E:\Mega\Documents\CS\TLoB\quatusExamples2\Example3.qsys --testbench=SIMPLE --output-directory=E:\Mega\Documents\CS\TLoB\quatusExamples2 --family="Cyclone V" --part=5CGXFC7C7F23C8
+Info: D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/Example3.ipx
+Info: qsys-generate D:\Mega\Documents\CS\TLoB\quatusExamples2\Example3.qsys --testbench=STANDARD --output-directory=D:\Mega\Documents\CS\TLoB\quatusExamples2 --family="Cyclone V" --part=5CGXFC7C7F23C8
 Progress: Loading quatusExamples2/Example3.qsys
 Progress: Reading input file
 Progress: Adding axi4Slave_0 [axi4Slave 1.0]
@@ -18,14 +18,14 @@ Info: Loading IP catalog for testbench.
 Progress: 
 Progress: 
 Progress: 
-Progress: (2) searching C:/intelfpga/21.1/quartus/sopc_builder/bin/root_components.ipx (ipx file)
-Info: Reading index C:\intelfpga\21.1\quartus\sopc_builder\bin\root_components.ipx
-Info: C:\intelfpga\21.1\quartus\sopc_builder\bin\root_components.ipx: Loading now from components.ipx
-Info: Reading index C:\intelfpga\21.1\quartus\sopc_builder\bin\ip_component_categories.ipx
-Info: C:\intelfpga\21.1\quartus\sopc_builder\bin\ip_component_categories.ipx described 0 plugins, 0 paths, in 0.00 seconds
-Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/ip_component_categories.ipx matched 1 files in 0.00 seconds
-Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/ip/**/* matched 0 files in 0.00 seconds
-Info: Reading index E:\Mega\Documents\CS\TLoB\quatusExamples2\Example3\testbench\Example3.ipx
+Progress: (2) searching D:/programs/quartus/quartus/sopc_builder/bin/root_components.ipx (ipx file)
+Info: Reading index D:\programs\quartus\quartus\sopc_builder\bin\root_components.ipx
+Info: D:\programs\quartus\quartus\sopc_builder\bin\root_components.ipx: Loading now from components.ipx
+Info: Reading index D:\programs\quartus\quartus\sopc_builder\bin\ip_component_categories.ipx
+Info: D:\programs\quartus\quartus\sopc_builder\bin\ip_component_categories.ipx described 0 plugins, 0 paths, in 0.00 seconds
+Info: D:/programs/quartus/quartus/sopc_builder/bin/ip_component_categories.ipx matched 1 files in 0.00 seconds
+Info: D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/ip/**/* matched 0 files in 0.00 seconds
+Info: Reading index D:\Mega\Documents\CS\TLoB\quatusExamples2\Example3\testbench\Example3.ipx
 Progress: Loading quatusExamples2/axi4Slave_hw.tcl
 Progress: Loading quatusExamples2/aximaster1_hw.tcl
 Progress: Loading quatusExamples2/axiMaster_hw.tcl
@@ -35,32 +35,33 @@ Progress: Loading quatusExamples2/Example3.qsys
 Progress: Loading quatusExamples2/fake16550_hw.tcl
 Progress: Loading quatusExamples2/fluteCore_hw.tcl
 Progress: Loading quatusExamples2/simpleFifo_hw.tcl
-Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/* matched 20 files in 0.08 seconds
-Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/ip/**/* matched 0 files in 0.00 seconds
-Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/*/* matched 27 files in 0.00 seconds
-Info: E:\Mega\Documents\CS\TLoB\quatusExamples2\Example3\testbench\Example3.ipx described 0 plugins, 3 paths, in 0.08 seconds
+Progress: Loading quatusExamples2/unnamed.qsys
+Info: D:/Mega/Documents/CS/TLoB/quatusExamples2/* matched 23 files in 0.17 seconds
+Info: D:/Mega/Documents/CS/TLoB/quatusExamples2/ip/**/* matched 0 files in 0.00 seconds
+Info: D:/Mega/Documents/CS/TLoB/quatusExamples2/*/* matched 43 files in 0.00 seconds
+Info: D:\Mega\Documents\CS\TLoB\quatusExamples2\Example3\testbench\Example3.ipx described 0 plugins, 3 paths, in 0.17 seconds
 Progress: Loading testbench/Example3_tb.qsys
-Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/* matched 8 files in 0.08 seconds
-Info: E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/*/* matched 1 files in 0.00 seconds
+Info: D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/* matched 8 files in 0.17 seconds
+Info: D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/*/* matched 1 files in 0.00 seconds
 Info: C:/Users/nudy1/.altera.quartus/ip/21.1/**/* matched 0 files in 0.00 seconds
-Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/$$QUARTUS_IP_PROJECTDIR/* matched 0 files in 0.00 seconds
-Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/$$QUARTUS_IP_USERDIR/* matched 0 files in 0.00 seconds
-Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/$$QUARTUS_IP_GLOBALDIR/* matched 0 files in 0.00 seconds
-Info: Reading index C:\intelfpga\21.1\ip\altera\altera_components.ipx
-Info: C:\intelfpga\21.1\ip\altera\altera_components.ipx described 1966 plugins, 0 paths, in 0.07 seconds
-Info: C:/intelfpga/21.1/ip/**/* matched 106 files in 0.07 seconds
-Info: C:/intelfpga/ip/**/* matched 0 files in 0.00 seconds
-Info: Reading index C:\intelfpga\21.1\quartus\sopc_builder\builtin.ipx
-Info: C:\intelfpga\21.1\quartus\sopc_builder\builtin.ipx described 83 plugins, 0 paths, in 0.00 seconds
-Info: C:/intelfpga/21.1/quartus/sopc_builder/**/* matched 8 files in 0.00 seconds
-Info: C:/intelfpga/21.1/quartus/common/librarian/factories/**/* matched 0 files in 0.00 seconds
-Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/$IP_IPX_PATH matched 1 files in 0.00 seconds
-Info: C:\intelfpga\21.1\quartus\sopc_builder\bin\root_components.ipx described 0 plugins, 13 paths, in 0.16 seconds
-Info: C:/intelfpga/21.1/quartus/sopc_builder/bin/root_components.ipx matched 1 files in 0.16 seconds
+Info: D:/programs/quartus/quartus/sopc_builder/bin/$$QUARTUS_IP_PROJECTDIR/* matched 0 files in 0.00 seconds
+Info: D:/programs/quartus/quartus/sopc_builder/bin/$$QUARTUS_IP_USERDIR/* matched 0 files in 0.00 seconds
+Info: D:/programs/quartus/quartus/sopc_builder/bin/$$QUARTUS_IP_GLOBALDIR/* matched 0 files in 0.00 seconds
+Info: Reading index D:\programs\quartus\ip\altera\altera_components.ipx
+Info: D:\programs\quartus\ip\altera\altera_components.ipx described 1966 plugins, 0 paths, in 0.12 seconds
+Info: D:/programs/quartus/ip/**/* matched 106 files in 0.12 seconds
+Info: D:/programs/ip/**/* matched 0 files in 0.00 seconds
+Info: Reading index D:\programs\quartus\quartus\sopc_builder\builtin.ipx
+Info: D:\programs\quartus\quartus\sopc_builder\builtin.ipx described 83 plugins, 0 paths, in 0.01 seconds
+Info: D:/programs/quartus/quartus/sopc_builder/**/* matched 8 files in 0.01 seconds
+Info: D:/programs/quartus/quartus/common/librarian/factories/**/* matched 0 files in 0.00 seconds
+Info: D:/programs/quartus/quartus/sopc_builder/bin/$IP_IPX_PATH matched 1 files in 0.00 seconds
+Info: D:\programs\quartus\quartus\sopc_builder\bin\root_components.ipx described 0 plugins, 13 paths, in 0.30 seconds
+Info: D:/programs/quartus/quartus/sopc_builder/bin/root_components.ipx matched 1 files in 0.30 seconds
 Progress: 
 Progress: 
 Progress: 
-Info: Running script C:/intelfpga/21.1/quartus/sopc_builder/bin/tbgen.tcl
+Info: Running script D:/programs/quartus/quartus/sopc_builder/bin/tbgen.tcl
 Info: send_message Info TB_Gen: QSYS Testbench Generator Rev: $Revision: #1 $
 Info: TB_Gen: QSYS Testbench Generator Rev: $Revision: #1 $
 Info: get_module_property NAME
@@ -74,8 +75,8 @@ Info: get_instance_assignment clk_0 testbench.partner.map.clk_in
 Info: get_interface_property reset EXPORT_OF
 Info: get_instance_property clk_0 CLASS_NAME
 Info: get_instance_assignment clk_0 testbench.partner.map.clk_in_reset
-Info: send_message Info TB_Gen: Creating testbench system : Example3_tb with clock and reset BFMs
-Info: TB_Gen: Creating testbench system : Example3_tb with clock and reset BFMs
+Info: send_message Info TB_Gen: Creating testbench system : Example3_tb with all standard BFMs
+Info: TB_Gen: Creating testbench system : Example3_tb with all standard BFMs
 Info: create_system Example3_tb
 Info: add_instance Example3_inst Example3 
 Info: set_use_testbench_naming_pattern true Example3
@@ -128,6 +129,6 @@ Info: TB_Gen: Saving testbench system: Example3_tb.qsys
 Info: save_system Example3_tb.qsys
 Info: send_message Info TB_Gen: TBGEN SUCCESSFUL
 Info: TB_Gen: TBGEN SUCCESSFUL
-Info: Testbench system: E:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/Example3_tb.qsys
+Info: Testbench system: D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/testbench/Example3_tb.qsys
 Info: Done
 Info: Finished: Create testbench Platform Designer system

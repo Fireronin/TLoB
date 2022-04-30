@@ -11,11 +11,11 @@ def solveNumerical(provisos:List[Proviso],variables):
         if type(proviso) == str:
             if proviso in sym:
                 return sym[proviso]
-            if proviso in variables and variables[proviso].value != None:
-                if type(variables[proviso].value) == int:
-                    return variables[proviso].value
+            if proviso in variables and variables[proviso].value.value != None:
+                if type(variables[proviso].value.value) == int:
+                    return variables[proviso].value.value
                 else:
-                    raise Exception("Variable is not an integer")
+                    raise Exception(f"Variable name: {proviso} value:{variables[proviso].value.value} is not an integer")
 
             sym[proviso] = Symbol(proviso,intiger=True,negative=False)
             return sym[proviso]
@@ -33,11 +33,11 @@ def solveNumerical(provisos:List[Proviso],variables):
             if proviso.full_name == "Mul":
                 return Eq(exprs[0]*exprs[1],exprs[2])
             if proviso.full_name == "Div":
-                return Eq(exprs[0]/exprs[1],exprs[2])
+                return Eq(ceiling(exprs[0]/exprs[1]),exprs[2])
             if proviso.full_name == "Max":
                 return Eq(max(exprs[0],exprs[1]),exprs[2])
             if proviso.full_name == "Log":
-                return Eq(log(exprs[0],2),exprs[1])
+                return Eq(ceiling(log(exprs[0],2)),exprs[1])
             #those sus types
             if proviso.full_name == "TAdd":
                 return exprs[0]+exprs[1]
@@ -69,9 +69,7 @@ def solveNumerical(provisos:List[Proviso],variables):
         return {}
 
     sol = solve(Eqs,list(sym.values()))
-    try:
-        output = sol
-    except Exception as e:
+    if len(sol)==0:
         print("Well sympy can't find solution, you are not satisfing provisos")
         raise Exception("Well sympy can't find solution, you are not satisfing provisos")
     outVars = {}

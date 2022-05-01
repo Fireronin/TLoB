@@ -20,22 +20,22 @@ db.loadDependencies()
 
 topLevel = TopLevelModule("top",db,package_name="FluteSoc")
 
-topLevel.add_typedef("DATASIZE","64")
+topLevel.addTypedef("DATASIZE","64")
 # Axi4 parameters
 SPARAMS = [6, 64, "DATASIZE", 0, 0, 0, 0, 0]
 
 tdtSPARAMS = [evaluateCustomStart(str(x),"type_def_type") for x in SPARAMS]
 
 
-core = topLevel.add_moduleV2("Core::mkCore","core",[],[])
-memory = topLevel.add_moduleV2("MemUtils::mkAXI4SimpleMem","memory",SPARAMS,[4096,'tagged Invalid'])
+core = topLevel.addModule("Core::mkCore","core",[],[])
+memory = topLevel.addModule("MemUtils::mkAXI4SimpleMem","memory",SPARAMS,[4096,'tagged Invalid'])
 
-fakeAXI = topLevel.add_moduleV2("AXI4_Fake_16550::mkAXI4_Fake_16550_Simple","aXI4_Fake_16550",SPARAMS,[])
+fakeAXI = topLevel.addModule("AXI4_Fake_16550::mkAXI4_Fake_16550_Simple","aXI4_Fake_16550",SPARAMS,[])
 
-topLevel.add_busV3("bus1","AXI4_Interconnect::mkAXI4Bus",["core.core_mem_master"],[("memory",[(0,4096)]),("aXI4_Fake_16550",[(4096,8192)])])
+topLevel.addBus("bus1","AXI4_Interconnect::mkAXI4Bus",["core.core_mem_master"],[("memory",[(0,4096)]),("aXI4_Fake_16550",[(4096,8192)])])
 
 
-print(topLevel.to_string())
+print(topLevel.__str__())
 topLevel.to_file()
 topLevel.buildAndRun()
 # %%

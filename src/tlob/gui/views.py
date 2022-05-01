@@ -8,7 +8,7 @@ sys.path.append("..")
 from typeDatabase import TypeDatabase as tdb
 from bsvSynthesizer import *
 from django.views.decorators.cache import never_cache
-
+from jsonInterface import topLevelFromJSON
 print(os.getcwd())
 
 db = tdb(load=True,saveLocation=os.path.join("../../saved"))
@@ -30,14 +30,15 @@ def listFunctions(request):
     if kind == 'bus':
         for key,val in db.functions.items():
             try:
-                if val.arguments[1].full_name == 'Vector::Vector' and \
-                     val.arguments[2].full_name == 'Vector::Vector' and\
-                     val.arguments[0].return_type.full_name == 'Vector::Vector':
+                if val.arguments['arg0'].return_type.full_name == 'Vector::Vector' and \
+                val.arguments['arg1'].full_name == 'Vector::Vector' and \
+                     val.arguments['arg2'].full_name == 'Vector::Vector':
                     names.append(key)
             except Exception as e:
                 continue
     elif kind == 'all':
         names = list(db.functions.keys())
+    print(kind, names)
     namesList = json.dumps({'names':names})
     return HttpResponse(namesList)
 
@@ -81,7 +82,7 @@ def confirmModule(request):
     print("name:",name,"creator:",creator,"creator_args:",creator_args,"module_args:",module_args)
     exception = ""
     try:
-        module:InstanceV2 = topLevel.add_moduleV2(creator,name,module_args,creator_args,input_context=context)
+        module:InstanceV2 = topLevel.addModule(creator,name,module_args,creator_args,input_context=context)
     except Exception as e:
         tb = traceback.format_exc()
         print(tb)
@@ -100,7 +101,7 @@ def confirmModule(request):
 
 @never_cache
 def confirmDesign(request):
-    bsvText = topLevel.to_string()
+    bsvText = topLevel.__str__()
     responseJson = {"bsvText" : bsvText}
     return HttpResponse(json.dumps(responseJson))
 
@@ -112,7 +113,7 @@ def confirmConnection(request):
     name = json_data['name']
     print("Connection Inputs",inputs)
     try:
-        topLevel.add_connectionV2(inputs['0'],inputs['1'],name)
+        topLevel.addConnection(inputs['0'],inputs['1'],name)
     except Exception as e:
         tb = traceback.format_exc()
         print(tb)
@@ -155,7 +156,7 @@ def confirmBus(request):
         slaves = list(slaves.values())
         
     
-        topLevel.add_busV3(busName,creator,masters,slaves)
+        topLevel.addBus(busName,creator,masters,slaves)
         possibleMasters = topLevel.buses[busName].mastersV.listAddable(topLevel.knownNames.items())
         possibleSlaves = topLevel.buses[busName].slavesV.listAddable(topLevel.knownNames.items())
     except Exception as e:
@@ -333,3 +334,18 @@ def setExportedInterface(request):
         'exception':"",
     }
     return HttpResponse(json.dumps(response))
+
+@never_cache
+def loadFromJSON(request):
+    # json file is at 'JSON' usign FromData
+    json_data = json.loads(request.body)
+    global topLevel
+    topLevel = topLevelFromJSON(json_data,reload=False)
+    return HttpResponse(json.dumps({'exception':""}))
+
+@never_cache
+def saveToJSON(request):
+    json_file = json.dumps(topLevel.toJSON(),indent=4, sort_keys=True)
+    #send json file to client
+    return HttpResponse(json_file)
+    

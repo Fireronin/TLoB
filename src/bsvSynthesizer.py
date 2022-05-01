@@ -2,6 +2,7 @@ from copy import deepcopy
 import os
 import subprocess
 import time
+from tokenize import Number
 
 from parsingFormating import Function, Position, Type as ExType, Type_ide, Value as ExValue
 from parsingFormating import Interface as ExInterface
@@ -13,10 +14,10 @@ from parsingFormating import Typeclass as ExTypeclass
 from parsingFormating import Typeclass_instance as ExTypeclassInstance
 
 from typing import Dict, List, Union,Set,Tuple
-
+import warnings
 from typeDatabase import TypeDatabase,Variable
 from tqdm import tqdm
-
+import json
 class AccessTuple():
     access_name: str
     thing = None
@@ -41,13 +42,25 @@ class InstanceV2():
     creator: Union[ExFunction,ExModule]
 
     def __init__(self,topLevel:TopLevelModule,creator: ExType,
-                creator_args : List[Union[InstanceV2,Type_ide]] =[],
-                module_args:List[Type_ide]=[],
+                creator_args : List[str] =[],
+                module_args:List[str]=[],
                 instance_name:str="",
                 input_context:Dict[str,str]={}):
         self.topLevel = topLevel
         self.db = topLevel.db
         self.creator = creator
+        for i,arg in enumerate(creator_args):
+            if type(arg) == int:
+                creator_args[i] = str(arg)
+                continue
+            if type(arg) != str:
+                raise Exception("Creator args must be strings")
+        for i,arg in enumerate(module_args):
+            if type(arg) == int:
+                module_args[i] = str(arg)
+                continue
+            if type(arg) != str:
+                raise Exception("Module args must be strings")
         self.creator_args = creator_args
         self.instance_name = instance_name
         self.module_args = module_args
@@ -117,6 +130,16 @@ class InstanceV2():
     def to_string(self):
         if type(self.creator) == ExFunction:
             return f"{self.creator.name}({','.join(map(str,self.creator_args))});\n"
+
+    def toJSON(self):
+        json_dict = {
+            "name" : self.instance_name,
+            "function": self.creator.full_name,
+            "function_params": self.creator_args,
+            "interface_params": self.module_args
+        }
+        return json_dict
+
 
 class VectorInstance():
     items: List[str]
@@ -268,6 +291,18 @@ class BusInstanceV3(InstanceV2):
     def __str__(self):
         return f"\t{self.creator.full_name}(route_{self.instance_name},{self.mastersV.instance_name},{self.slavesV.instance_name});\n"
 
+    def toJSON(self):
+        json_dict = { 
+            "name" : self.instance_name,
+            "function": self.creator.full_name,
+            "masters" : self.masters,
+            "slaves" : [{
+                "name" : slave[0],
+                "routes" : [[start,end] for start,end in slave[1]]
+            } for slave in self.slaves]
+        }
+        return json_dict
+
 class TopLevelModule():
     db: TypeDatabase
     possibleConnections: Dict[str,List[str]] = {}
@@ -317,7 +352,6 @@ class TopLevelModule():
                 out[end].append(start)
         return out
 
-
     def validArguments(self,function:Union[ExFunction,ExModule])->bool:
         validOptions = {}
         for key,arg in function.arguments.items():
@@ -346,13 +380,10 @@ class TopLevelModule():
             validOptions[key] = validList
         return validOptions
 
-    #region utility functions (should be wrapped into toplevel module class)
     name_counter = 0
     def get_name(self):
         self.name_counter += 1
         return "_temp_" + str(self.name_counter)
-
-
 
     def convertToTypeIde(self,arg,caller=None):
         if isinstance(arg,Type_ide) or type(arg) == ExFunction:
@@ -395,9 +426,8 @@ class TopLevelModule():
             for subscriber in self.subscribers[name]:
                 pass
                 #self.instances[subscriber].update()
-    #endregion
 
-    def add_moduleV2(self,creator_func,instance_name,interface_args=[],func_args=[],input_context={}) -> InstanceV2:
+    def addModule(self,creator_func,instance_name,interface_args=[],func_args=[],input_context={}) -> InstanceV2:
         #check if instance name starts with upercase character
         if instance_name[0].isupper():
             raise Exception("Instance name must start with lowercase character")
@@ -421,25 +451,25 @@ class TopLevelModule():
             #if number of dots in interface name is more than 1 skip
             if current.access_name.count(".") > 1:
                 continue
-            self.possibleConnections[current.access_name] =[x.access_name for x in self.list_connectableV3(current,self.accessableInterfaces)]
+            self.possibleConnections[current.access_name] =[x.access_name for x in self.listConnectable(current,self.accessableInterfaces)]
             for interface in self.accessableInterfaces:
                 if interface.access_name not in self.possibleConnections:
                     self.possibleConnections[interface.access_name] = []
                 if current.access_name not in self.possibleConnections[interface.access_name]: 
-                    self.possibleConnections[interface.access_name] +=[x.access_name for x in self.list_connectableV3(interface,[current])]
+                    self.possibleConnections[interface.access_name] +=[x.access_name for x in self.listConnectable(interface,[current])]
 
         self.accessableInterfaces += newModule.list_all_Interfaces()
 
         self.modules[instance_name] = newModule
         return self.modules[instance_name]
 
-    def add_typedef(self,name,type):
+    def addTypedef(self,name,type):
         self.typedefs[name] = type
         alias = ExAlias(Type_ide(name),evaluateCustomStart(str(type)),None)
         self.db.aliases[alias.full_name] = alias
         return name
 
-    def list_connectableV3(self,start:AccessTuple,ends:List[AccessTuple]=[]):
+    def listConnectable(self,start:AccessTuple,ends:List[AccessTuple]=[]):
         connectableTypeclass : ExTypeclass = self.db.getTypeByName("Connectable::Connectable")
         connectable_ends : List[AccessTuple]  = []
         for end in ends:
@@ -455,19 +485,18 @@ class TopLevelModule():
             connectable_ends.append(end)
         return connectable_ends
 
-
-    def add_connectionV2(self,start:str,end:str,connection_name:str=None):
+    def addConnection(self,start:str,end:str,connection_name:str=None):
         if connection_name is None:
             connection_name = f"connection_{len(self.connections)}"
         creator_func = self.db.getFunctionByName("mkConnection")
         connection = InstanceV2(self,creator_func,[start,end],[],connection_name)
         self.connections[connection_name] = connection
 
-    def add_busV3(self,name,busCreator:str,masters:List[str],slaves:List[Tuple[str,List[Tuple[int,int]]]]):
+    def addBus(self,name,busCreator:str,masters:List[str],slaves:List[Tuple[str,List[Tuple[int,int]]]]):
         bI = BusInstanceV3(self,name,busCreator,masters,slaves)
         self.buses[name] = bI
 
-    def setExportedInterface(self,name,members:List[Tuple[str,str]]):
+    def setExportedInterface(self,name,members:Union[str,List[Tuple[str,str]]]):
         if type(members) == str:
             self.exported_interface = members
             return
@@ -488,7 +517,6 @@ class TopLevelModule():
             #self.db.types[name] = self.exported_interface
             self.interface_members = {name:value for name,value in members}
         
-
     def remove(self,name:str):
         #in accessable interfaces find name* use start with and fiter
         self.accessableInterfaces = list(filter(lambda x: not x.access_name.startswith(name),self.accessableInterfaces))
@@ -510,22 +538,61 @@ class TopLevelModule():
         if name in self.typedefs:
             del self.typedefs[name]
 
-    def to_string(self):
-        s = []
-        s.append("package "+self.package_name + ";\n")
-        self.packages.add("Connectable")
-        self.packages.add("Vector")
+    @property
+    def topologicalySortedInstances(self) -> List[str]:
+        #self.subscribes have edges 
+        edges = {}
+        for name,subscribers in self.subscribers.items():
+            instance_name = name.split(".")[0]
+            if instance_name not in self.modules:
+                warnings.warn(f"Instance {instance_name} not found in topological sort, this might be a function")
+                continue
+            for subscriber in subscribers:
+                if subscriber not in self.modules:
+                    continue
+                if instance_name not in edges:
+                    edges[instance_name] = []
+                if subscriber not in edges[instance_name]:
+                    edges[instance_name].append(subscriber)
+
+        def topologicalSort(edges:Dict[str,List[str]]) -> List[str]:
+            sorted_nodes = []
+            visited = set()
+            def topologicalSortHelper(node:str):
+                if node in visited:
+                    return
+                visited.add(node)
+                for edge in edges[node]:
+                    topologicalSortHelper(edge)
+                sorted_nodes.append(node)
+            for node in edges:
+                topologicalSortHelper(node)
+            #reverse
+            sorted_nodes.reverse()
+            return sorted_nodes
+        
+        result = topologicalSort(edges)
+        return result
+
+    @property
+    def necessaryPackages(self) -> List[str]:
+        packages = set(["Connectable","Vector"])
         for m in self.modules.values():
             if m.creator.package is not None:
-                self.packages.add(m.creator.package)
+                packages.add(m.creator.package)
             if m.creator.return_type.package is not None:
-                self.packages.add(m.creator.return_type.package)
+                packages.add(m.creator.return_type.package)
         for b in self.buses.values():
             if b.creator.package is not None:
-                self.packages.add(b.creator.package)
+                packages.add(b.creator.package)
+        return list(packages)
+
+    def __str__(self):
+        s = []
+        s.append("package "+self.package_name + ";\n")
         # necessary packages
         s.append("// necessary packages\n")
-        for p in self.packages:
+        for p in self.necessaryPackages:
             s.append("import "+p+"::*;\n")
         s.append("\n")
 
@@ -562,7 +629,8 @@ class TopLevelModule():
         s.append(f"module {self.name} ({interfaceString});\n \n")
         
         # add modules
-        for m in self.modules.values():
+        for name in self.topologicalySortedInstances:
+            m = self.instances[name]
             if m.creator_args is None:
                 s.append("Awiaiting for args for ")
                 continue
@@ -604,10 +672,39 @@ class TopLevelModule():
         s.append("endpackage\n")
         s = "".join(s)
         return s
-    
+
+    def toJSON(self):
+        json_dict = {}
+        json_dict["aditional folders"] = list(self.db.additionalLibraryFolders)
+        json_dict["packages"] = self.necessaryPackages
+        json_dict["name"] = self.name
+        json_dict["package_name"] = self.package_name
+        json_dict["typedefs"] = [{
+            "name":name,
+            "value":str(value)
+            } for name,value in self.typedefs.items()]
+        json_dict["modules"] = [module.toJSON() for module in self.modules.values()]
+        json_dict["connections"] = [{
+            "from": connection.module_args[0],
+            "to": connection.module_args[1]
+        } for connection in self.connections.values()]
+        json_dict["buses"] = [bus.toJSON() for bus in self.buses.values()]
+        if self.exported_interface is not None:
+            if type(self.exported_interface) == str:
+                json_dict["interface"] = self.exported_interface
+            else:
+                json_dict["interface"] = { 
+                    "name": self.exported_interface.name,
+                    "members": [{
+                    "name": name,
+                    "value": member
+                } for name,member in self.interface_members.items()]}
+        
+        return json_dict
+
     def to_file(self,folder="."):
         with open(os.path.join(folder,self.package_name+".bsv"),'w') as f:
-            f.write(self.to_string())
+            f.write(self.__str__())
 
     def buildAndRun(self,folder="."):
         cwd = os.path.join(self.db.saveLocation,"..")

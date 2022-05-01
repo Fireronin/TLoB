@@ -26,11 +26,11 @@ topLevel = TopLevelModule("top",db,package_name="FIFOChain")
 # print(a,b,c)    
 # # topLevel.add_connectionV2("fifo3.enq","fifo3.first")
 
-fifo1 = topLevel.add_moduleV2("mkSimpleFIFO","fifo1",["Bit#(32)"],[])
-fifo2 = topLevel.add_moduleV2("mkSimpleFIFO","fifo2",["Bit#(32)"],[])
-topLevel.add_connectionV2("fifo1","fifo2")
+fifo1 = topLevel.addModule("mkSimpleFIFO","fifo1",["Bit#(32)"],[])
+fifo2 = topLevel.addModule("mkSimpleFIFO","fifo2",["Bit#(32)"],[])
+topLevel.addConnection("fifo1","fifo2")
 
-print(topLevel.to_string())
+print(topLevel.__str__())
 topLevel.to_file()
 
 # %%

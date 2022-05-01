@@ -18,4 +18,6 @@ urlpatterns = [
     path('buildAndRun/', views.buildAndRun, name='buildAndRun'),
     path('getPossible/', views.getPossible, name='getPossible'),
     path('setExportedInterface/', views.setExportedInterface, name='setExportedInterface'),
+    path('loadFromJSON/', views.loadFromJSON, name='loadFromJSON'),
+    path('saveToJSON/', views.saveToJSON, name='saveToJSON'),
 ]

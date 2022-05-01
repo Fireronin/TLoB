@@ -21,7 +21,7 @@ def lookForKeyword(keyword,dictionary):
             print(f"While parsing we exprected a keyword: {keyword}.")
         raise Exception(f"Keyword {keyword} not found")
 
-def load_json(json_file,reload=False,output_dir=None):
+def topLevelFromJSON(json_file,reload=False,output_dir=None):
     db = tdb(load=not reload)
     
     if "aditional folders" in json_file:  
@@ -36,13 +36,10 @@ def load_json(json_file,reload=False,output_dir=None):
 
     if "typedefs" in json_file:
         for typedef in json_file["typedefs"]:
-            topLevel.add_typedef(typedef["name"],typedef["value"])
+            topLevel.addTypedef(typedef["name"],typedef["value"])
 
     modules = lookForKeyword("modules",json_file)
     for module in modules:
-        # if "copy_from" in module:
-        #     source = topLevel.modules[module["copy_from"]]
-        #     topLevel.add_module(source.creator_func,lookForKeyword("name",module),source.interface_args,source.func_args)
         function_params = []
         if "function_params" in module:
             function_params = module["function_params"]
@@ -53,11 +50,11 @@ def load_json(json_file,reload=False,output_dir=None):
         interface_params = []
         if "interface_params" in module:
             interface_params = module["interface_params"]
-        topLevel.add_moduleV2(lookForKeyword("function",module),lookForKeyword("name",module),interface_params,function_params)
+        topLevel.addModule(lookForKeyword("function",module),lookForKeyword("name",module),interface_params,function_params)
 
     if "connections" in json_file:
         for connection in json_file["connections"]:
-            topLevel.add_connectionV2(lookForKeyword("from",connection),lookForKeyword("to",connection))
+            topLevel.addConnection(lookForKeyword("from",connection),lookForKeyword("to",connection))
 
     if "busses" in json_file:
         for bus in json_file["busses"]:
@@ -66,12 +63,17 @@ def load_json(json_file,reload=False,output_dir=None):
             masters = lookForKeyword("masters",bus)
             slaves = lookForKeyword("slaves",bus)
             slaves = [(slave["name"],slave["routes"]) for slave in slaves]
-            # route = lookForKeyword("route",bus)
-            # route = [x.split("-") for x in route]
-            # route = [(int(x[0]),int(x[1])) for x in route]
-            topLevel.add_busV3(name,function,masters,slaves)
+            topLevel.addBus(name,function,masters,slaves)
 
-    print(topLevel.to_string())
+    if "interface" in json_file:
+        interface = json_file["interface"]
+        if type(interface) == str:
+            topLevel.setExportedInterface("",interface)
+        else:
+            members = [(lookForKeyword("name",member),lookForKeyword("value",member)) for member in lookForKeyword("members",interface) ]
+            topLevel.setExportedInterface(lookForKeyword("name",interface),members)
+
+    print(topLevel.__str__())
     if output_dir!=None:
         topLevel.to_file(output_dir)
     return topLevel
@@ -100,7 +102,7 @@ def showValidArguments(topLevel):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Convert a json file to a bsv file')
-    parser.add_argument('-json_file', default="example.json", type=str, help='The json file to convert')
+    parser.add_argument('-json_file', default="test.json", type=str, help='The json file to convert')
     parser.add_argument('-of','--output_folder', type=str, help='The folder of output',default="./tutorial")
     # argument reload values True of False
     parser.add_argument("-reload",type=bool,default=False,help="If packages haven't changed since last run, use false to skip reloading")
@@ -118,7 +120,7 @@ if __name__ == "__main__":
         parser.print_help()
         exit()
     with open(args.json_file) as json_file:
-        topLevel = load_json(json.load(json_file),args.reload,args.output_folder)
+        topLevel = topLevelFromJSON(json.load(json_file),args.reload,args.output_folder)
     if args.showPossibleConnections:
         showPossibleConnections(topLevel)
     if args.showTypes:

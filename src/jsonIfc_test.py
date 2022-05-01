@@ -13,7 +13,7 @@ def test_example():
     jsons = ["exampleFIFOs.json","exampleFlute.json"]
     for json_name in jsons:
         with open(json_name) as json_file:
-            topLevel = jsonInterface.load_json(json.load(json_file),True)
+            topLevel = jsonInterface.topLevelFromJSON(json.load(json_file),True)
             jsonInterface.showTypes(topLevel)
             jsonInterface.showPossibleConnections(topLevel)
             jsonInterface.showValidArguments(topLevel)
@@ -37,14 +37,14 @@ def test_buildAndRun():
 
     topLevel = TopLevelModule("top",db,package_name="ConnectedAXI4")
 
-    master1 = topLevel.add_moduleV2("axiMaster","master1",[],[10])
-    master2 = topLevel.add_moduleV2("axiMaster","master2",[],[11])
+    master1 = topLevel.addModule("axiMaster","master1",[],[10])
+    master2 = topLevel.addModule("axiMaster","master2",[],[11])
 
-    slave1 = topLevel.add_moduleV2("axiSlave","slave1",[],[12])
-    slave2 = topLevel.add_moduleV2("axiSlave","slave2",[],[13])
+    slave1 = topLevel.addModule("axiSlave","slave1",[],[12])
+    slave2 = topLevel.addModule("axiSlave","slave2",[],[13])
 
     #topLevel.add_connectionV2("master1","slave1")
-    topLevel.add_busV3("mainBus","AXI4_Interconnect::mkAXI4Bus",["master1","master2"],[("slave1",[(0,1)]),("slave2",[(1,2)])])
+    topLevel.addBus("mainBus","AXI4_Interconnect::mkAXI4Bus",["master1","master2"],[("slave1",[(0,1)]),("slave2",[(1,2)])])
     bO,sBO,sO = topLevel.buildAndRun(".")
     print("bO:",bO)
     print("sBO:",sBO)

@@ -4,7 +4,7 @@ import jsonInterface
 import json
 import mock
 import pytest
-from parsing_formating import *
+from parsingFormating import *
 from crawler import *
 from bsvSynthesizer import *
 from typeDatabase import TypeDatabase as tdb

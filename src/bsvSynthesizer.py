@@ -3,14 +3,14 @@ import os
 import subprocess
 import time
 
-from parsing_formating import Function, Position, Type as ExType, Type_ide, Value as ExValue
-from parsing_formating import Interface as ExInterface
-from parsing_formating import Type_formal as ExType_formal
-from parsing_formating import Function as ExFunction, Module as ExModule
-from parsing_formating import evaluateCustomStart
-from parsing_formating import Alias as ExAlias
-from parsing_formating import Typeclass as ExTypeclass
-from parsing_formating import Typeclass_instance as ExTypeclassInstance
+from parsingFormating import Function, Position, Type as ExType, Type_ide, Value as ExValue
+from parsingFormating import Interface as ExInterface
+from parsingFormating import Type_formal as ExType_formal
+from parsingFormating import Function as ExFunction, Module as ExModule
+from parsingFormating import evaluateCustomStart
+from parsingFormating import Alias as ExAlias
+from parsingFormating import Typeclass as ExTypeclass
+from parsingFormating import Typeclass_instance as ExTypeclassInstance
 
 from typing import Dict, List, Union,Set,Tuple
 

@@ -1,9 +1,9 @@
 # # File gsaved with Nlview version 6.3.8  2013-12-19 bk=1.2992 VDI=34 GEI=35
 # 
-preplace inst unsaved.axi4Slave_0 -pg 1 -lvl 1 -y 30
+preplace inst unsaved.axiMaster_0 -pg 1 -lvl 1 -y 30
 preplace inst unsaved -pg 1 -lvl 1 -y 40 -regy -20
-preplace netloc EXPORT<net_container>unsaved</net_container>(SLAVE)unsaved.altera_axi4_slave,(SLAVE)axi4Slave_0.altera_axi4_slave) 1 0 1 NJ
-preplace netloc EXPORT<net_container>unsaved</net_container>(SLAVE)unsaved.reset_sink,(SLAVE)axi4Slave_0.reset_sink) 1 0 1 NJ
-preplace netloc EXPORT<net_container>unsaved</net_container>(SLAVE)unsaved.clock,(SLAVE)axi4Slave_0.clock) 1 0 1 NJ
-levelinfo -pg 1 0 120 310
-levelinfo -hier unsaved 130 160 300
+preplace netloc EXPORT<net_container>unsaved</net_container>(SLAVE)unsaved.clock,(SLAVE)axiMaster_0.clock) 1 0 1 NJ
+preplace netloc EXPORT<net_container>unsaved</net_container>(MASTER)unsaved.altera_axi4_master,(MASTER)axiMaster_0.altera_axi4_master) 1 1 1 N
+preplace netloc EXPORT<net_container>unsaved</net_container>(SLAVE)unsaved.reset_sink,(SLAVE)axiMaster_0.reset_sink) 1 0 1 NJ
+levelinfo -pg 1 0 80 450
+levelinfo -hier unsaved 90 120 310

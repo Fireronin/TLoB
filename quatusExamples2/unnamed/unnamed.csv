@@ -1,0 +1,17 @@
+# system info unnamed on 2022.05.01.12:47:34
+system_info:
+name,value
+DEVICE,5CGXFC7C7F23C8
+DEVICE_FAMILY,Cyclone V
+GENERATION_ID,1651405653
+#
+#
+# Files generated for unnamed on 2022.05.01.12:47:34
+files:
+filepath,kind,attributes,module,is_top
+simulation/unnamed.v,VERILOG,,unnamed,true
+#
+# Map from instance-path to kind of module
+instances:
+instancePath,module
+unnamed.axiMaster_0,unnamed_axiMaster_0

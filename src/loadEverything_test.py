@@ -6,7 +6,7 @@ import sys
 sys.path.append("src")
 
 
-from parsing_formating import *
+from parsingFormating import *
 from crawler import *
 from bsvSynthesizer import *
 from typeDatabase import TypeDatabase as tdb
@@ -16,7 +16,7 @@ from typeDatabase import TypeDatabase as tdb
 def loadAllAndDoQuickRun():
     #%% initalize bluetcl
     start_time = time.time()
-    db = tdb(load=False)
+    db = tdb(load=True)
 
     db.addLibraryFolder("Flute/src_SSITH_P2/build_dir")
     db.addLibraryFolder("tutorial")

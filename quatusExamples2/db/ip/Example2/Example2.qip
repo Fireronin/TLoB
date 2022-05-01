@@ -1,0 +1,23 @@
+set_global_assignment -entity "Example2" -library "Example2" -name IP_TOOL_NAME "Qsys"
+set_global_assignment -entity "Example2" -library "Example2" -name IP_TOOL_VERSION "21.1"
+set_global_assignment -entity "Example2" -library "Example2" -name IP_TOOL_ENV "Qsys"
+set_global_assignment -library "Example2" -name SOPCINFO_FILE [file join $::quartus(qip_path) "../../../Example2.sopcinfo"]
+set_global_assignment -entity "Example2" -library "Example2" -name SLD_INFO "QSYS_NAME Example2 HAS_SOPCINFO 1 GENERATION_ID 1651406086"
+set_global_assignment -library "Example2" -name SLD_FILE [file join $::quartus(qip_path) "Example2.debuginfo"]
+set_global_assignment -entity "Example2" -library "Example2" -name IP_TARGETED_DEVICE_FAMILY "Cyclone V"
+set_global_assignment -entity "Example2" -library "Example2" -name IP_GENERATED_DEVICE_FAMILY "{Cyclone V}"
+set_global_assignment -entity "Example2" -library "Example2" -name IP_QSYS_MODE "SYSTEM"
+set_global_assignment -name SYNTHESIS_ONLY_QIP ON
+set_global_assignment -library "Example2" -name MISC_FILE [file join $::quartus(qip_path) "../../../Example2.qsys"]
+set_global_assignment -entity "Example2" -library "Example2" -name IP_COMPONENT_NAME "RXhhbXBsZTI="
+set_global_assignment -entity "Example2" -library "Example2" -name IP_COMPONENT_DISPLAY_NAME "RXhhbXBsZTI="
+set_global_assignment -entity "Example2" -library "Example2" -name IP_COMPONENT_REPORT_HIERARCHY "On"
+set_global_assignment -entity "Example2" -library "Example2" -name IP_COMPONENT_INTERNAL "Off"
+set_global_assignment -entity "Example2" -library "Example2" -name IP_COMPONENT_VERSION "MS4w"
+set_global_assignment -entity "Example2" -library "Example2" -name IP_COMPONENT_PARAMETER "QVVUT19HRU5FUkFUSU9OX0lE::MTY1MTQwNjA4Ng==::QXV0byBHRU5FUkFUSU9OX0lE"
+set_global_assignment -entity "Example2" -library "Example2" -name IP_COMPONENT_PARAMETER "QVVUT19ERVZJQ0VfRkFNSUxZ::Q3ljbG9uZSBW::QXV0byBERVZJQ0VfRkFNSUxZ"
+set_global_assignment -entity "Example2" -library "Example2" -name IP_COMPONENT_PARAMETER "QVVUT19ERVZJQ0U=::NUNHWEZDN0M3RjIzQzg=::QXV0byBERVZJQ0U="
+set_global_assignment -entity "Example2" -library "Example2" -name IP_COMPONENT_PARAMETER "QVVUT19ERVZJQ0VfU1BFRURHUkFERQ==::OF9INw==::QXV0byBERVZJQ0VfU1BFRURHUkFERQ=="
+set_global_assignment -entity "Example2" -library "Example2" -name IP_COMPONENT_PARAMETER "QVVUT19DTEtfQ0xPQ0tfUkFURQ==::LTE=::QXV0byBDTE9DS19SQVRF"
+set_global_assignment -entity "Example2" -library "Example2" -name IP_COMPONENT_PARAMETER "QVVUT19DTEtfQ0xPQ0tfRE9NQUlO::LTE=::QXV0byBDTE9DS19ET01BSU4="
+set_global_assignment -entity "Example2" -library "Example2" -name IP_COMPONENT_PARAMETER "QVVUT19DTEtfUkVTRVRfRE9NQUlO::LTE=::QXV0byBSRVNFVF9ET01BSU4="

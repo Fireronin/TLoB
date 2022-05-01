@@ -11,6 +11,8 @@
 \usepackage{fancyvrb}
 \usepackage{listings}
 \usepackage{svg}
+\usepackage{svg-extract}
+\svgsetup{clean=true}
 \usepackage{dirtytalk}
 \usepackage{csvsimple}
 \newcommand\todo[1]{\textcolor{red}{#1}}
@@ -20,14 +22,17 @@
 
 \tcbset{colback=pink!7,colframe=pink!90,coltitle=black}
 \begin{document}
-
 \maketitle
 \tableofcontents
 
 \chapter{Introduction}
 
-Making hardware is hard, and similarly to other problems in computer science, we make it easier by adding layers of abstraction. There are many layers involved in making hardware from that abstract transistors to gates to logical operations to functions to modules to chips to multi-chip modules to whole devices. The layer this project focuses on is going from modules to chips(TODO: this probably need renaming, add graph showing layers). At this layer we already have code for modules like memory, CPU-cores, interconnects and so on. Now what we need is an ability to compose them in such a way that they create a whole device.
-
+Making hardware is hard, and similarly to other problems in computer science, we make it easier by adding layers of abstraction. There are many layers involved in making hardware from that abstract transistors to gates to logical operations to functions to modules to chips to multi-chip modules to whole devices. The layer this project focuses on is going from modules to chips. At this layer we already have code for modules like memory, CPU-cores, interconnects and so on. Now what we need is an ability to compose them in such a way that they create a whole device.
+\begin{figure}[!h]
+    \centering
+    \caption{Layers of abstraction when designing hardware}
+    \includesvg[width=0.7\columnwidth,path=svgExports]{layers.svg}
+\end{figure}
 \section{Motivation}
 \begin{tcolorbox}[title=Vocabulary]
     \begin{itemize}
@@ -83,6 +88,7 @@ Module is unit of organization of logic. Modules don't have types, instead they 
 Typesclasses in Bluespec are used to group types for which specific functions or modules are implemented. Typeclass instance is (TODO describe what is it) and it can have provisos attached to it.
 
 \subsection{Provisos}
+\label{sec:Provisos}
 On big feature of Bluespec typing is support for provisos. They create constraints on types that can be used with given function and give information about expected type of output of the function. For example, we can have a polymorphic function \verb!extend! of a type \verb!Bit#(a)! $\rightarrow$ \verb!Bit#(b)! where \verb!Bit#(x)! is a vector of $x$ bits, such function accepts any length and always return vector of length $b=a+1$. To make sure this relations stays like this we would attach a proviso \verb!Add#(a,1,b)! which means that $a+1$ must be equal to $b$. 
 \par
 Mentioned above \verb!Add! is one of Size Relationship provisos, other such provisos are \verb!Mul Div Max Min Log!.
@@ -181,6 +187,12 @@ tcl_path: ["%/"] /((\.{1,2})|(\w|-|\s)+)/
 
 \chapter{Implementation}
 \section{Crawling the packages}
+\begin{figure}[!h]
+    \centering
+    \caption{Overview of process of crawling packages}
+
+    \includegraphics[width=1.0\columnwidth]{pdfExports/LargeMap-Page-2.drawio.pdf}
+\end{figure}
 To interact with Bluetcl I have written a script using Pexpect library. This script works by creating subprocess of Bluetcl, and exposes functions that allow for performing of quarries. Core of this script is a function called \verb!call! that takes as input a string that is a command and returns output of stripped of warnings or raises an exception if error occurred(for example in case where package was not found). To remove warnings I make some assumptions.
 \begin{itemize}
     \item I only use fixed set of commands(like list packages, describe a type).
@@ -201,6 +213,12 @@ In total this script allows me to:
 \end{itemize}
 
 \section{Loading Bluespec packages' information (TODO check grammar of s')}
+\begin{figure}[!h]
+    \centering
+    \caption{Overview of parsing bluetcl data}
+
+    \includegraphics[width=1.0\columnwidth]{pdfExports/LargeMapProcessing.pdf}
+\end{figure}
 As mentioned earlier output of bluetcl is text, and I need it in some better organized form. In this section I describe process of doing this.
 \subsection{Lexical and syntax analysis}
 I decided to use Lark library for lexical and syntax analysis. This library takes grammar and string of text as input and returns an abstract syntax tree. The only difficult part here is creating grammar, but we have taken care of it during preparation. (TODO improve this last sentence)
@@ -215,121 +233,122 @@ What was quite useful at this stage is Python's type system flexibility, I was a
 \subsection{Organizing data and functionality}
 I created a class called \verb!TypeDatabase! that provides simple functions that manage loading and parsing packages information. It is also capable of loading and storing it's state to pickle file. This saves a lot of time as all this parsing and communication with bluetcl isn't particularly fast. This class is also a home to set of functionality used to resolve types. From my testing it takes about 370s to load roughly 250 packages that I found included with Bluespec compiler and created to compile Flute CPU. Loading those packages from cached files takes only few seconds.
 
-\section{Building the top level module}
-Building the top level module can be broken down into few operations.
-\begin{itemize}
-    \item Instantiating new modules.
-    \item Connecting modules using \verb!mkConnection! function.
-    \item Connecting modules using busses.
-    \item Synthesizing Bluespec.
-    \item Automated compilation and run of simulation.
-\end{itemize} 
-Those operations if implemented naively would be almost as simple as formatting a string. But If this was the only thing that this project provided I wouldn't need to go through all the trouble of parsing Bluespec grammar, and generally users would be better off just writing Bluespec code. My unique value proposition is running something similar to a language server, that will be capable of dynamically resolving types, and aiding user in the design process by providing possible connections, informing whether values passed to initialize module are correct, and informing about subinterfaces that can be found in the instantiated modules. 
-At the basis of all those features will be type resolution, and I will first explain how it works.
-\subsection{Resolving types}
+\newpage
+\section{Resolving types}
+\begin{figure}[!h]
+    \centering
+    \caption{Dependencies between functions}
+
+    \includegraphics[width=0.8\columnwidth]{pdfExports/LargeMapResolve.pdf}
+\end{figure}
 This section assumes that one have read about typeclasses and provisos from \hyperref[sec:Typeclasses]{previous chapter}.
+Before we can talk about the process of building top level module we need to talk about resolving types, as without it we couldn't do much beyond formatting strings.
+\par
 In my code there are 4 main functions that combined allow for type resolution:
 \begin{itemize}
-    \item \verb!merge! function takes two type identifiers and returns map (dictionary) from names of variables to theirs values. It's similar to Prolog's unification operator.
-    \item \verb!applyVariables! function takes a dictionary and a type and returns a type with all variables replaced by their values. This is more of a utility function.
-    \item \verb!resolveTypeclass! function that takes a type identifier that is an instance of a typeclass and returns dictionary of resolved variables. In Prolog this is like looking which rule can be applied and returning result of applying that rule.
-    \item \verb!solveProvisos! function that takes a dictionary and a list of provisos and returns a dictionary with variables. This is like checking predicates in Prolog.
+    \item \verb!merge! function takes two type identifiers and returns dictionary (map) from names of variables to theirs values. It's similar to Prolog's unification operator.
+    \item \verb!applyVariables! function takes a dictionary and a type identifier and returns a type identifier with all variables replaced by their values. This is more of a utility function.
+    \item \verb!resolveTypeclass! function takes a type identifier that is an proposed instance of a typeclass and returns dictionary of learned variable values if proposed instance is a valid one otherwise it raises an exception. In Prolog terms this would be like looking which rule can be applied and returning resolved variables from applying that rule.
+    \item \verb!solveProvisos! function takes a dictionary of variables and a list of provisos and returns a dictionary with variables learned by solving provisos or raises an exception if it's impossible to satisfy all the provisos. This is like checking predicates in Prolog.
+    \item \verb!preprocessTypeclass! function that takes a typeclass and produces a look-up dictionary of typeclass instances for given group of names present in the instance of the typeclass.
+    \item \verb!solveNumerical! function that takes list of size relationship provisos and returns dictionary of learned variables.
 \end{itemize}
-Those functions can also fail with exception if something is impossible / wrong data is provided.
-
-Type identifier is a tree where every non leaf node is another type identifier, and leaf nodes are either variables or values(strings, ints). Example type identifier \verb!Foo#(a,42,"file.hex")! is a type with name \verb!Foo! and three arguments \verb!a! (variable) and \verb!42! (int value) and \verb!"file.hex"! (string value). Type identifiers can also describe functions, and those just need to run unification on both result and arguments of a function.
+For logic purposes Type identifier can be thought as a tree where every non leaf node is another type identifier, and leaf nodes are values (integers) or variables. 
+Example: type identifier \verb!Foo#(a,42)! has a name \verb!Foo! and two arguments \verb!a! variable and \verb!42! value. Type identifiers can also describe functions, but those will behave in very similar manner, with the only difference being inclusion of return type.
 
 \subsubsection{Merge function}
 This function works like a two synchronized dfs's, that go through the trees (type identifiers) and apply logic based on nodes that are beginning currently visited.
-This function needs to account for quite a lot of special cases here are some of them:
+This function needs to account for quite a lot of special cases as each node can be one of variable, value (integer), type identifier (normal), type identifier (function). Fortunately half of cases are symmetrical to the other half. In broad strokes here is logic behind those cases:
 \begin{itemize}
-    \item If one of the nodes is a variable, and other is a value or another type identifier, then we can add such pair to the dictionary of resolved variables.
-    \item If both nodes, are type identifiers, we run merge recursively on pairs of theirs children. We also check if type identifiers share the same name.
-    \item If one of the nodes is a value, then other node must be either a value with same value, or a variable.
+    \item If one of the nodes is a variable, and other is a value or another type identifier, then we set value of variable to others.
+    \item If both nodes are values, we check if they are equal.
+    \item If both nodes are the same kind of type identifier, we recursively compare their children. (If there are not of a function kind we also compare their names)
+    \item If both nodes are variables then we need to check if it's possible to unify values of those variables if so we assign value of those variables to result of unification.
+    \item In other cases, like when we need to unify type identifier with value, we raise an exception.
 \end{itemize}
-The most complicated case is when both nodes are variables. There is a breakdown what happens then. 
-\begin{itemize}
-    \item Case 1 - Both variables have a value, so I need to check if value is the same.
-    \item Case 2 - One of the variables has a value, and other variable doesn't value assigned. In this case I can just copy reference to a value to the other variable.
-    \item Case 3 - Neither of the variables has a value. In this case I create a new dummy object and give reference to it to both of the variables. Using references makes it so resolving value of one of the variables will resolve all of them. 
-\end{itemize}
-If done carefully, this is quite efficient as we don't need to manage propagation of values of variables, everything is done by just writing to shared object.
-
+One small problem that I encounter was that I had to keep track of which variables are equal to each other, but I was able to avoid this problem all together using shared pointers.
 \subsubsection{Apply variables function}
-This function is quite simple, it just traverses a type identifier and replaces all variables with their values.
-\subsubsection{Resolve typeclass function}
+This function is quite simple, it just recursively traverses a type identifier and replaces all variables with their values.
+\subsubsection{Preprocess typeclass function}
 Earlier, I compared typeclass to groups of Prolog rules with the same name, one thing I didn't mention that typeclasses can also contain something called dependencies, they are something like marking inputs and outputs in Prolog. Those dependencies are used in typeclasses like \verb!Bits#(a,b)! which are used to determine something, and they make sure that resolution of a typeclass is always unambiguous. \\
-For example, \verb!Bits#(a,b)! has a dependency \verb!a determines b! which means that you can use it to determine \verb!b! from \verb!a!, but if you know only \verb!b! then you can't use it to determine \verb!a! because there may be multiple types that can be packed to the bit vector of the same length \verb!b!. (TODO check use of 'the' in last sentence)
-\\  
-To check if proposed instance of a typeclass is a valid instance we perform following algorithm:
-\begin{enumerate}
-    \item Check if a proposed instance of a typeclass is an instance of a known typeclass, otherwise fail.
-    \item If dependencies for a typeclass are defined check if information provided within proposed instance is enough to satisfy one of them.
-    \item Iterate over all templates of an instance of a typeclass, then attempt to merge function between a template and the proposed instance. 
-    \item If merging failed, jump back to step 3 and continue iteration.
+For example, typeclass \verb!Bits#(a,b)! has a dependency \verb!a determines b! which means that you can use it to determine \verb!b! from \verb!a!, but if you know only \verb!b! then you can't use it to determine \verb!a! because there may be multiple types that can be packed to the bit vector of the same length \verb!b!. Example of determinable pair of \verb!a! and \verb!b! would be  \verb!a = Bit#(32)! from which we can determine that \verb!b = 32!. It is also worth mentioning that we can have multiple tuples of dependencies. For example, we can have typeclass \verb!Boo#(a,b,c,d)! with dependencies \verb!(a,b,d) determines c! and \verb!(a,d) determines (b,c)!. They mean that we need to know either variables \verb!(a,b,c)! or \verb!(a,d)!. From implementation perspective this is just extra complexity.  
+\par 
+Now, I made an observation that most typeclass instances use non-function type identifiers, so I can create a look-up dictionary for every tuple names of type identifiers in the instance. This way I find a set of typeclass instances that can be used to resolve a typeclass. I also need to account for instances that have functions as one of theirs parameters as this introduces nasty polymorphism and I decided simply put those instances in a special group called universal instances that are always checked in resolve typeclass function. 
+\subsubsection{Resolve typeclass function}
+TODO(this section and one above are super confusing)
+This function in Prolog terms is like taking a predicate of a rule, and then trying to check if it can be satisfied. This can be quite slow if there are many rules, but thanks to preprocessed we have done be fore we can narrow down the set of rules to check.
+Then we can iterate over all typeclass instances (rules) and apply following algorithm:
+\begin{enumerate} 
+    \item Merge candidata instance with one 
     \item If merging succeeded, attempt to solve provisos.
     \item If provisos were successfully solved, return the dictionary of resolved variables, otherwise continue iteration.
     \item If all iterations failed, fail.
 \end{enumerate}
 This procedure is a bit slow, so I speed it up by creating look up dictionaries that take as a key a dictionary and as a value a typeclass instance. This method can cut down search time significantly, but there are still rules that use polymorphic functions and those can't be preprocessed away so easily, therefore I call them universal instances and search through them every time. While I could invent many heuristics to speed up this process in general this is still as difficult as halting problem.
 
-\subsubsection{Solve provisos function}
-As established earlier, provisos can be of two types, one are based on typeclasses and those can be resolved using above described function, and the other ones are size based and require solving sets of equations on integers. To do this I use library called SymPy. SymPy is a symbolic math library that can be used to solve equations on integers. All I need to do is convert set of provisos into set of equations, and then extract data and put it back into dictionary used to store variables. 
+\subsubsection{Solve numerical function}
+This function takes a set of size relationship provisos, and dictionary of variables. Then it converts those provisos into set of equations on natural numbers. Solving of those equations is done using SymPy library.
+From implementation standpoint I just need to traverse the tree of type identifier describing proviso and for each \hyperref[sec:Provisos]{name of proviso} TODO(check this) I convert it into mathematical expression. Exact expressions were taken from Bluespec reference manual.
 
-One big problem is that order in which provisos must be solved is not defined, so I handle this by creating set of provisos to be solved. Then I repeatedly iterate over this set and remove solved provisos. If set didn't change after iteration, and it's not empty this means not further progress can be made and raise an exception.
+\subsubsection{Solve provisos function}
+As established earlier, provisos can be of two types, one are based on typeclasses and those can be resolved using \verb!resolveTypeclass!, and the other ones are size based and require solving sets of equations on integers and this can be done using \verb!solveNumerical! function.
+One big problem is lack of order in which provisos must be solved. Therefore, I handle this by creating set of provisos to be solved. Then I repeatedly iterate over this set and remove solved provisos. If set didn't change after iteration, and it's not empty this means not further progress can be made and function raises an exception.
 
 \subsubsection{How those functions can are used}
-Thanks to those functions, I can tell user what values can be put into each argument in a function. I can check if arguments passed to a function satisfy provisos when combined. I can give user a list of all possible connection that can be made. 
+Using all of those function I can answer many questions like:
+\begin{itemize}
+    \item What known thing can be used as \emph{n'th} argument of a given function ?
+    \item Is it possible to call given function with given tuple of arguments ?
+    \item What is the resulting type of function given certain arguments?
+\end{itemize}
+There are also more subtle uses of functions like merge, for example, when I need to deduce exact types of members of certain interfaces.
+\newpage
+\section{Building the top level module}
+\begin{figure}[!h]
+    \centering
+    \caption{Overview of building top level module}
 
-\section{Synthesizing}
+    \includegraphics[width=1.0\columnwidth]{pdfExports/LargeMapBuilding.pdf}
+\end{figure}
+Above diagram shows flow of data during creation of top level module. User can specify all nodes of this diagram with exception of \emph{Interfaces and methods} produced by \emph{Modules and functions} as this is specified by typing information.
+Building the top level module can be broken down into few operations.
+\begin{itemize}
+    \item Instantiating new modules.
+    \item Connecting modules using \verb!mkConnection! function.
+    \item Connecting modules using busses, using functions of certain characteristics.
+    \item Specifying exported interfaces and methods.
+\end{itemize} 
+
+Operations of Instantiating new modules, Connecting and Creation of Busses are quite similar, so I will start by describing Instantiating new modules, and then how it fits with other operations.
+
+\subsection{Instantiating new modules}
+To instantiate new module, we need to do following things:
+\begin{enumerate}
+    \item Convert inputted by user strings to type identifiers. This includes converting names of interfaces and it's members to theirs type identifiers.
+    \item Checking if arguments provided are of valid types.
+    \item Checking if typing information satisfies provisos.
+    \item Adding newly created interfaces and method to the namespace of known names.
+\end{enumerate}
+From this list items 1 and 4 are resolved using few dictionaries that keep track of known names and their types. I also have a system that keeps track of which instantiated things depend on which other instantiated things. As for points 2,3 they are done using earlier described functions for type resolution.
+
+\subsection{Connections}
+Adding new connection is easy, it's basically addition of a new module. What's more interesting is that I keep track of all possible connections that can be made. This is later used to supply autocompletion in GUI(If user uses JSON based interface I can just print this data). Tracking of these connections is done in a naive way by just checking all possible $O(n^2)$ connections. A question that arises is "Can I do better?". While I don't have a concrete proof of this, because typing resolution maps quite nicely to Prolog, and Prolog is touring complete language, problem of finding all possible connection can be reduced to following problem. \\ 
+Given $n$ input values (number of interfaces and methods in instantiated modules) and $k$ input programs (number of instances of typeclass \verb!Connectable!) find all pairs of two input values for which at least one program halts with resulting value being true.
+This sounds like a lot of work, but thanks to those look-up dictionaries usually I need to check only few programs. I also can spread out the work over subsequent additions of new modules, and not recompute already known results. This way user will perceive lag roughly proportional to number of modules already instantiated. I also noticed that if with larger number of modules, PyPy's JIT compiler will step in, and it will produce better optimized code.
+
+\subsection{Busses}
+When it comes to busses most logic goes to synthesizing code for them, and not actually figuring out whether given data is valid because, for this I can fall back on logic designed to instantiate modules. To synthesize a bus I need to synthesize a rounting function.
+Routing function is a function that takes a route and produces one hot vector, that specifies which slave is used for a given address. 
+To create a routing function two things must be created. First I need to create a new function to be added to the database of known functions. To do this I just reuse my parsing tooling. As for creating code for it, I generate it by simply adding \verb!if! statement for each address region(I don't need to do fancier logic as in hardware it will be optimized anyway). I also generate comments giving information about which slave occupy which address region.
+
+\section{Synthesizing the module}
+This is probably the simplest part of the project. I just interface over different kinds of things defined by the used and run some string formatting code. Even for busses, thanks to polymorphism in Bluespec I can quite easily write a routing function.
+
+
 The main goal of the project is to be able to take a JSON with some data and synthesize a top module in the Bluespec language from it. This goal is more like a justification to create a language server like API. With this approach I have some simple core goal, but in the later sections we will see how thanks to all the work I have done, this API can be used to support GUI that aids the user in creating a top module. Therefore, I will focus in this section on how the API works, and only later how is it used when reading JSON or as a backend to the GUI based app.
 
-\subsubsection{Top level module object}
-Let's start with quick overview of the main functions found in API.
-\begin{itemize}
-    \item \verb!addModule! as the name suggest this function adds an instance of a module, or (TODO how result of a function is called)
-    \item \verb!addConnection! This creates a connection between two interfaces or members of interfaces between previously instantiated things. Essentially a wrapper on a \verb!addModule! function.
-    \item \verb!addBus! given list of slaves(with ranges on which they are accessible) and masters it adds a bus with those interfaces connected.
-    \item \verb!to_string! that returns a string representing \verb!.bsv! file with top module as defined by previous calls.
-\end{itemize}
 
-\subsubsection{Adding modules (introduction)}
-Adding an instance of a module in Bluespec is done by calling function used to instantiatie chosen module, and potentially assigning it to a variable of a type of interface produced by a function. It's worth keeping in mind that not all such functions can create new modules (those who do are called modules and one that don't are called functions in Bluespec), for example \verb!fromAXI4LiteToAXI4_Master! is a function that will take already existing instance with \verb!AXI4_Master! interface and return \verb!AXI4Lite_Master! interface, and all of this will be done by just assigning functions and subinterfaces found in one to the other one. Fortunately, there is no need for me to treat modules different from the functions. The only thing that will be treated differently are busses and connections, as they are functions like described above but theirs result interface is \verb!Empty!(similar to void in C++), so there is no need to assign them to a variable.
-\\
-One more decision I had to make was whether I want to support \verb!let! as a type. \verb!let! keyword is used to omit writing type of variable explicitly. This makes it so compiler has to deduce it from the output of a function defining such variable. While Bluespec is strongly typed language it's not always possible to use \verb!let!. For example, in cases where you create a module with polymorphic interface, there might not be enough information to deduce the full type of the interface. What's even more confusing is that sometimes you only need to provide some subset of variables in the type of interface, and the rest can be deduced using provisos. (TODO check this) Bluespec doesn't support something like this, but I do. On the other hand I don't support \verb!let! keyword and I will always write out full type explicitly, this makes it harder to modify the code, as some changes might require more changes down the line, but this produces more readable code, also making such changes is still quick if done before code generation.
-\subsubsection*{Adding modules (implementation)}
-Here is a procedure of instantiating a module:
-\begin{enumerate}
-    \item Check if name string is a valid name and starts with lowercase.
-    \item Create an instance object.
-    \item Call update function of that object, that will verify correctness of the arguments and it will update global state. In more detail update function does following:
-    \begin{enumerate}
-        \item Parse user given strings that represent arguments. This includes 
-        \item Run a unification (merge function described earlier) to check if types of arguments are correct.
-        \item Run a unification on between user defined resulting type of interface and the type of interface given by the function. This produces set of context variables.
-        \item Attempt to solve provisos attached to the function, with the context variables, and populate the context with newly learned variables.
-        \item Apply variables to the type of interface, filling out unknows.
-        \item Populate type of the instance with member subinterfaces.
-        \item Add interface, and it's member subinterfaces to a global dictionary of accessible names. During this addition we also propagate updates, if for example 
-    \end{enumerate}
-\end{enumerate}
-
-\subsubsection*{Adding connections}
-With creating instances explained above, adding connections become trivial. We just create and instance of \verb!mkConnection! and ad it into list of known connections if we ever need to remove it.
-
-\subsubsection{Adding busses}
-Similarly to adding conenctions a lot of complexity is handled by logic to create instances, as bus is just a function that takes vectors of masters and slaves and routing function that specifies how addresses map to slaves. Two differences from standard instance is automatically instantiating of a vector that hold masters and slaves and generating routing function. \\
-Instantiating of vectors was a bit tricky due to two conflicting requirements:
-\begin{enumerate}
-    \item I wanted to give user an option to create a vector on their own, and if elements of such vector are updated, I wanted to propagate the update to all instances using that vector.
-    \item I wanted to create a vector automatically when creating a bus, so users don't have to create it manually.
-\end{enumerate} 
-This created a feedback loop, where update of a bus caused update of vectors used by this bus, and so on. To fix this I moved the updates of vectors to initialization of a bus, and allow for updates of vectors that are "silent" and don't cause updates. 
-\\
-Routing function is a function that takes a route and produces one hot vector, that specifies which slave is used for a given address. 
-To create a routing function two things must be created. First I need to create a new function to be added to the database of known functions. To do this I just reuse my parsing tooling. As for creating code for it, I generate it by simply adding \verb!if! statement for each address region. I also generate comments giving information about which slave occupy which address region.
-
-\subsection*{JSON interface}
+\subsection{JSON interface}
 I decided that my \say{human-readable format} will be JSON. This is because wide support for JSON is already available in many languages. 
 The only problem of JSON is that it's more verbose than Bluespec, and in theory it would make more sense to use Bluespec. 
 However, this could introduce user confusion, as I wouldn't be able to support arbitrary Bluespec features.

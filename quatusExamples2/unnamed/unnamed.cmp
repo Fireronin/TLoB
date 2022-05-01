@@ -1,45 +1,45 @@
 	component unnamed is
 		port (
+			araddr   : out std_logic_vector(13 downto 0);                     -- araddr
+			arburst  : out std_logic_vector(1 downto 0);                      -- arburst
+			arcache  : out std_logic_vector(3 downto 0);                      -- arcache
+			arid     : out std_logic;                                         -- arid
+			arlen    : out std_logic_vector(7 downto 0);                      -- arlen
+			arlock   : out std_logic;                                         -- arlock
+			arprot   : out std_logic_vector(2 downto 0);                      -- arprot
+			arqos    : out std_logic_vector(3 downto 0);                      -- arqos
+			arready  : in  std_logic                      := 'X';             -- arready
+			arregion : out std_logic_vector(3 downto 0);                      -- arregion
+			arsize   : out std_logic_vector(2 downto 0);                      -- arsize
+			arvalid  : out std_logic;                                         -- arvalid
+			awaddr   : out std_logic_vector(13 downto 0);                     -- awaddr
+			awburst  : out std_logic_vector(1 downto 0);                      -- awburst
+			awcache  : out std_logic_vector(3 downto 0);                      -- awcache
+			awid     : out std_logic;                                         -- awid
+			awlen    : out std_logic_vector(7 downto 0);                      -- awlen
+			awlock   : out std_logic;                                         -- awlock
+			awprot   : out std_logic_vector(2 downto 0);                      -- awprot
+			awqos    : out std_logic_vector(3 downto 0);                      -- awqos
+			awready  : in  std_logic                      := 'X';             -- awready
+			awregion : out std_logic_vector(3 downto 0);                      -- awregion
+			awsize   : out std_logic_vector(2 downto 0);                      -- awsize
+			awvalid  : out std_logic;                                         -- awvalid
+			bid      : in  std_logic                      := 'X';             -- bid
+			bready   : out std_logic;                                         -- bready
+			bresp    : in  std_logic_vector(1 downto 0)   := (others => 'X'); -- bresp
+			bvalid   : in  std_logic                      := 'X';             -- bvalid
+			rdata    : in  std_logic_vector(127 downto 0) := (others => 'X'); -- rdata
+			rid      : in  std_logic                      := 'X';             -- rid
+			rlast    : in  std_logic                      := 'X';             -- rlast
+			rready   : out std_logic;                                         -- rready
+			rresp    : in  std_logic_vector(1 downto 0)   := (others => 'X'); -- rresp
+			rvalid   : in  std_logic                      := 'X';             -- rvalid
+			wdata    : out std_logic_vector(127 downto 0);                    -- wdata
+			wlast    : out std_logic;                                         -- wlast
+			wready   : in  std_logic                      := 'X';             -- wready
+			wstrb    : out std_logic_vector(15 downto 0);                     -- wstrb
+			wvalid   : out std_logic;                                         -- wvalid
 			CLK      : in  std_logic                      := 'X';             -- clk
-			araddr   : in  std_logic_vector(13 downto 0)  := (others => 'X'); -- araddr
-			arburst  : in  std_logic_vector(1 downto 0)   := (others => 'X'); -- arburst
-			arcache  : in  std_logic_vector(3 downto 0)   := (others => 'X'); -- arcache
-			arid     : in  std_logic_vector(1 downto 0)   := (others => 'X'); -- arid
-			arlen    : in  std_logic_vector(7 downto 0)   := (others => 'X'); -- arlen
-			arlock   : in  std_logic                      := 'X';             -- arlock
-			arprot   : in  std_logic_vector(2 downto 0)   := (others => 'X'); -- arprot
-			arqos    : in  std_logic_vector(3 downto 0)   := (others => 'X'); -- arqos
-			arready  : out std_logic;                                         -- arready
-			arregion : in  std_logic_vector(3 downto 0)   := (others => 'X'); -- arregion
-			arsize   : in  std_logic_vector(2 downto 0)   := (others => 'X'); -- arsize
-			arvalid  : in  std_logic                      := 'X';             -- arvalid
-			awaddr   : in  std_logic_vector(13 downto 0)  := (others => 'X'); -- awaddr
-			awburst  : in  std_logic_vector(1 downto 0)   := (others => 'X'); -- awburst
-			awcache  : in  std_logic_vector(3 downto 0)   := (others => 'X'); -- awcache
-			awid     : in  std_logic_vector(1 downto 0)   := (others => 'X'); -- awid
-			awlen    : in  std_logic_vector(7 downto 0)   := (others => 'X'); -- awlen
-			awlock   : in  std_logic                      := 'X';             -- awlock
-			awprot   : in  std_logic_vector(2 downto 0)   := (others => 'X'); -- awprot
-			awqos    : in  std_logic_vector(3 downto 0)   := (others => 'X'); -- awqos
-			awready  : out std_logic;                                         -- awready
-			awregion : in  std_logic_vector(3 downto 0)   := (others => 'X'); -- awregion
-			awsize   : in  std_logic_vector(2 downto 0)   := (others => 'X'); -- awsize
-			awvalid  : in  std_logic                      := 'X';             -- awvalid
-			bid      : out std_logic_vector(1 downto 0);                      -- bid
-			bready   : in  std_logic                      := 'X';             -- bready
-			bresp    : out std_logic_vector(1 downto 0);                      -- bresp
-			bvalid   : out std_logic;                                         -- bvalid
-			rdata    : out std_logic_vector(127 downto 0);                    -- rdata
-			rid      : out std_logic_vector(1 downto 0);                      -- rid
-			rlast    : out std_logic;                                         -- rlast
-			rready   : in  std_logic                      := 'X';             -- rready
-			rresp    : out std_logic_vector(1 downto 0);                      -- rresp
-			rvalid   : out std_logic;                                         -- rvalid
-			wdata    : in  std_logic_vector(127 downto 0) := (others => 'X'); -- wdata
-			wlast    : in  std_logic                      := 'X';             -- wlast
-			wready   : out std_logic;                                         -- wready
-			wstrb    : in  std_logic_vector(15 downto 0)  := (others => 'X'); -- wstrb
-			wvalid   : in  std_logic                      := 'X';             -- wvalid
 			RST_N    : in  std_logic                      := 'X'              -- reset_n
 		);
 	end component unnamed;

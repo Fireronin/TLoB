@@ -2,8 +2,8 @@ from copy import deepcopy, copy
 import profile
 from typing import Dict, Set
 
-from parsing_formating import Type as ExType
-from parsing_formating import *
+from parsingFormating import Type as ExType
+from parsingFormating import *
 from crawler import Handler
 from thefuzz import process
 import pickle
@@ -88,10 +88,13 @@ class TypeDatabase():
             variables[s] = Variable(value)
         else:
             try:
+                if variables[s].value == None and value == None:
+                    return
                 #check if both are strings
                 if type(variables[s].value) == str and type(value) == str:
                     return
-                self.merge(variables[s].value,value,{})
+                newVariables = self.merge(variables[s].value,value,{})
+                variables[s].value = self.applyVariables(deepcopy(value),newVariables)
             except Exception as e:
                 raise Exception("Conflicting values for variable: "+s + " " + str(variables[s].value) + " " + str(value))
     
@@ -321,30 +324,30 @@ class TypeDatabase():
                 raise Exception(f"Cannot merge different types, {a} and {b}")
             for i,pair in enumerate(zip(a.children,b.children)):
                 fa,fb = pair
-                newVariables = self.merge(fa,fb,variables)
-                for key in newVariables:
-                    self.CAdd(variables,key,newVariables[key].value)
+                variables = self.merge(fa,fb,variables)
+                # for key in newVariables:
+                #     self.CAdd(variables,key,newVariables[key].value)
         
         if type(a) == Function and type(b) != Function and type(b) != str:
             raise Exception(f"Cannot merge {a} and {b}")
         if type(a) == Function and type(b) == Function:
-            newVariables = self.merge(a.return_type,b.return_type,variables)
-            for key in newVariables.keys():
-                self.CAdd(variables,key,newVariables[key].value)
+            variables = self.merge(a.return_type,b.return_type,variables)
+            # for key in newVariables.keys():
+            #     self.CAdd(variables,key,newVariables[key].value)
             if len(a.arguments) != len(b.arguments):
                 raise Exception(f"Cannot merge functions with different number of arguments, {a} and {b}")
             for pair in zip(a.arguments.values(),b.arguments.values()):
                 fa,fb = pair
-                newVariables = self.merge(fa,fb,variables)
-                for key in newVariables.keys():
-                    self.CAdd(variables,key,newVariables[key].value)
+                variables = self.merge(fa,fb,variables)
+                # for key in newVariables.keys():
+                #     self.CAdd(variables,key,newVariables[key].value)
 
         return variables
 
     def applyVariables(self,t_type: Type_ide, variables) -> Union[Type_ide,Value,str]:
         if type(t_type) == str:
             if t_type in variables:
-                if variables[t_type].value == None:
+                if variables[t_type].value is None:
                     return t_type
                 return deepcopy(variables[t_type].value)
             return t_type

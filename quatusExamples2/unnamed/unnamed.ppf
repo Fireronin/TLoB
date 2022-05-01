@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pinplan
- variation_name="axi4Slave_0"
- megafunction_name="AXI4SLAVE"
+ variation_name="axiMaster_0"
+ megafunction_name="AXIMASTER"
  specifies="all_ports">
  <global>
   <pin name="CLK" direction="input" scope="external" />
-  <pin name="araddr[13..0]" direction="input" scope="external" />
-  <pin name="arburst[1..0]" direction="input" scope="external" />
-  <pin name="arcache[3..0]" direction="input" scope="external" />
-  <pin name="arid[1..0]" direction="input" scope="external" />
-  <pin name="arlen[7..0]" direction="input" scope="external" />
-  <pin name="arlock" direction="input" scope="external" />
-  <pin name="arprot[2..0]" direction="input" scope="external" />
-  <pin name="arqos[3..0]" direction="input" scope="external" />
-  <pin name="arready" direction="output" scope="external" />
-  <pin name="arregion[3..0]" direction="input" scope="external" />
-  <pin name="arsize[2..0]" direction="input" scope="external" />
-  <pin name="arvalid" direction="input" scope="external" />
-  <pin name="awaddr[13..0]" direction="input" scope="external" />
-  <pin name="awburst[1..0]" direction="input" scope="external" />
-  <pin name="awcache[3..0]" direction="input" scope="external" />
-  <pin name="awid[1..0]" direction="input" scope="external" />
-  <pin name="awlen[7..0]" direction="input" scope="external" />
-  <pin name="awlock" direction="input" scope="external" />
-  <pin name="awprot[2..0]" direction="input" scope="external" />
-  <pin name="awqos[3..0]" direction="input" scope="external" />
-  <pin name="awready" direction="output" scope="external" />
-  <pin name="awregion[3..0]" direction="input" scope="external" />
-  <pin name="awsize[2..0]" direction="input" scope="external" />
-  <pin name="awvalid" direction="input" scope="external" />
-  <pin name="bid[1..0]" direction="output" scope="external" />
-  <pin name="bready" direction="input" scope="external" />
-  <pin name="bresp[1..0]" direction="output" scope="external" />
-  <pin name="bvalid" direction="output" scope="external" />
-  <pin name="rdata[127..0]" direction="output" scope="external" />
-  <pin name="rid[1..0]" direction="output" scope="external" />
-  <pin name="rlast" direction="output" scope="external" />
-  <pin name="rready" direction="input" scope="external" />
-  <pin name="rresp[1..0]" direction="output" scope="external" />
-  <pin name="rvalid" direction="output" scope="external" />
-  <pin name="wdata[127..0]" direction="input" scope="external" />
-  <pin name="wlast" direction="input" scope="external" />
-  <pin name="wready" direction="output" scope="external" />
-  <pin name="wstrb[15..0]" direction="input" scope="external" />
-  <pin name="wvalid" direction="input" scope="external" />
+  <pin name="araddr[13..0]" direction="output" scope="external" />
+  <pin name="arburst[1..0]" direction="output" scope="external" />
+  <pin name="arcache[3..0]" direction="output" scope="external" />
+  <pin name="arid" direction="output" scope="external" />
+  <pin name="arlen[7..0]" direction="output" scope="external" />
+  <pin name="arlock" direction="output" scope="external" />
+  <pin name="arprot[2..0]" direction="output" scope="external" />
+  <pin name="arqos[3..0]" direction="output" scope="external" />
+  <pin name="arready" direction="input" scope="external" />
+  <pin name="arregion[3..0]" direction="output" scope="external" />
+  <pin name="arsize[2..0]" direction="output" scope="external" />
+  <pin name="arvalid" direction="output" scope="external" />
+  <pin name="awaddr[13..0]" direction="output" scope="external" />
+  <pin name="awburst[1..0]" direction="output" scope="external" />
+  <pin name="awcache[3..0]" direction="output" scope="external" />
+  <pin name="awid" direction="output" scope="external" />
+  <pin name="awlen[7..0]" direction="output" scope="external" />
+  <pin name="awlock" direction="output" scope="external" />
+  <pin name="awprot[2..0]" direction="output" scope="external" />
+  <pin name="awqos[3..0]" direction="output" scope="external" />
+  <pin name="awready" direction="input" scope="external" />
+  <pin name="awregion[3..0]" direction="output" scope="external" />
+  <pin name="awsize[2..0]" direction="output" scope="external" />
+  <pin name="awvalid" direction="output" scope="external" />
+  <pin name="bid" direction="input" scope="external" />
+  <pin name="bready" direction="output" scope="external" />
+  <pin name="bresp[1..0]" direction="input" scope="external" />
+  <pin name="bvalid" direction="input" scope="external" />
+  <pin name="rdata[127..0]" direction="input" scope="external" />
+  <pin name="rid" direction="input" scope="external" />
+  <pin name="rlast" direction="input" scope="external" />
+  <pin name="rready" direction="output" scope="external" />
+  <pin name="rresp[1..0]" direction="input" scope="external" />
+  <pin name="rvalid" direction="input" scope="external" />
+  <pin name="wdata[127..0]" direction="output" scope="external" />
+  <pin name="wlast" direction="output" scope="external" />
+  <pin name="wready" direction="input" scope="external" />
+  <pin name="wstrb[15..0]" direction="output" scope="external" />
+  <pin name="wvalid" direction="output" scope="external" />
   <pin name="RST_N" direction="input" scope="external" />
  </global>
 </pinplan>

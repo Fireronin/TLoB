@@ -39,7 +39,7 @@
 
 set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CGXFC7C7F23C8
-set_global_assignment -name TOP_LEVEL_ENTITY Examples
+set_global_assignment -name TOP_LEVEL_ENTITY Example3
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 21.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "16:36:05  APRIL 25, 2022"
 set_global_assignment -name LAST_QUARTUS_VERSION "21.1.0 Standard Edition"
@@ -47,6 +47,20 @@ set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
-set_global_assignment -name QSYS_FILE Example3.qsys
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name EDA_SIMULATION_TOOL "QuestaSim (Verilog)"
+set_global_assignment -name EDA_USER_COMPILED_SIMULATION_LIBRARY_DIRECTORY "D:/Mega/Documents/CS/TLoB/quatusExamples2/Build" -section_id eda_simulation
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name EDA_DESIGN_ENTRY_SYNTHESIS_TOOL "Design Compiler FPGA" -entity Example3.v
+set_global_assignment -name EDA_INPUT_GND_NAME GND -entity Example3.v -section_id eda_design_synthesis
+set_global_assignment -name EDA_INPUT_VCC_NAME VDD -entity Example3.v -section_id eda_design_synthesis
+set_global_assignment -name EDA_LMF_FILE dc_fpga.lmf -entity Example3.v -section_id eda_design_synthesis
+set_global_assignment -name EDA_SHOW_LMF_MAPPING_MESSAGES OFF -entity Example3.v -section_id eda_design_synthesis
+set_global_assignment -name EDA_RUN_TOOL_AUTOMATICALLY OFF -entity Example3.v -section_id eda_design_synthesis
+set_global_assignment -name EDA_INPUT_DATA_FORMAT EDIF -entity Example3.v -section_id eda_design_synthesis
+set_global_assignment -name VERILOG_FILE Example3/simulation/Example3.v
+set_global_assignment -name QSYS_FILE Example3.qsys
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

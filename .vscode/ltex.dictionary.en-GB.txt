@@ -9,3 +9,4 @@ pronaunciated
 Subinterfaces
 subinterfaces
 subinterface
+typeclass

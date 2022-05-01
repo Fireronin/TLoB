@@ -9,7 +9,7 @@
    categories="" />
  <parameter name="bonusData"><![CDATA[bonusData 
 {
-   element axi4Slave_0
+   element axiMaster_0
    {
       datum _sortIndex
       {
@@ -39,10 +39,10 @@
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
  <interface
-   name="altera_axi4_slave"
-   internal="axi4Slave_0.altera_axi4_slave"
+   name="altera_axi4_master"
+   internal="axiMaster_0.altera_axi4_master"
    type="axi4"
-   dir="end">
+   dir="start">
   <port name="araddr" internal="araddr" />
   <port name="arburst" internal="arburst" />
   <port name="arcache" internal="arcache" />
@@ -83,19 +83,19 @@
   <port name="wstrb" internal="wstrb" />
   <port name="wvalid" internal="wvalid" />
  </interface>
- <interface name="clock" internal="axi4Slave_0.clock" type="clock" dir="end">
+ <interface name="clock" internal="axiMaster_0.clock" type="clock" dir="end">
   <port name="CLK" internal="CLK" />
  </interface>
  <interface
    name="reset_sink"
-   internal="axi4Slave_0.reset_sink"
+   internal="axiMaster_0.reset_sink"
    type="reset"
    dir="end">
   <port name="RST_N" internal="RST_N" />
  </interface>
  <module
-   name="axi4Slave_0"
-   kind="axi4Slave"
+   name="axiMaster_0"
+   kind="axiMaster"
    version="1.0"
    enabled="1"
    autoexport="1" />

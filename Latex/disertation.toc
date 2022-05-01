@@ -1,6 +1,6 @@
 \contentsline {chapter}{\numberline {1}Introduction}{3}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Motivation}{3}{section.1.1}%
-\contentsline {section}{\numberline {1.2}Already existing tools}{3}{section.1.2}%
+\contentsline {section}{\numberline {1.2}Already existing tools}{4}{section.1.2}%
 \contentsline {section}{\numberline {1.3}Proposed solution}{4}{section.1.3}%
 \contentsline {chapter}{\numberline {2}Preparation}{5}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Understanding Bluespec}{5}{section.2.1}%
@@ -19,37 +19,40 @@
 \contentsline {subsection}{\numberline {2.3.3}Technical aspects}{8}{subsection.2.3.3}%
 \contentsline {chapter}{\numberline {3}Implementation}{10}{chapter.3}%
 \contentsline {section}{\numberline {3.1}Crawling the packages}{10}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Loading Bluespec packages' information (TODO check grammar of s')}{10}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Lexical and syntax analysis}{10}{subsection.3.2.1}%
+\contentsline {section}{\numberline {3.2}Loading Bluespec packages' information (TODO check grammar of s')}{11}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Lexical and syntax analysis}{11}{subsection.3.2.1}%
 \contentsline {subsection}{\numberline {3.2.2}Understanding abstract syntax tree (AST)}{11}{subsection.3.2.2}%
 \contentsline {subsection}{\numberline {3.2.3}Organizing data and functionality}{11}{subsection.3.2.3}%
-\contentsline {section}{\numberline {3.3}Building the top level module}{11}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Resolving types}{11}{subsection.3.3.1}%
-\contentsline {subsubsection}{Merge function}{12}{section*.2}%
-\contentsline {subsubsection}{Apply variables function}{12}{section*.3}%
-\contentsline {subsubsection}{Resolve typeclass function}{12}{section*.4}%
-\contentsline {subsubsection}{Solve provisos function}{13}{section*.5}%
-\contentsline {subsubsection}{How those functions can are used}{13}{section*.6}%
-\contentsline {section}{\numberline {3.4}Synthesizing}{13}{section.3.4}%
-\contentsline {subsubsection}{Top level module object}{13}{section*.7}%
-\contentsline {subsubsection}{Adding modules (introduction)}{14}{section*.8}%
-\contentsline {subsubsection}{Adding busses}{15}{section*.11}%
-\contentsline {subsubsection}{Using JSON interface}{16}{section*.14}%
-\contentsline {subsection}{\numberline {3.4.1}GUI}{16}{subsection.3.4.1}%
-\contentsline {subsubsection}{Backend}{16}{section*.15}%
-\contentsline {subsubsection}{Frontend (React)}{17}{section*.16}%
-\contentsline {subsubsection}{Frontend (React Flow)}{17}{section*.17}%
-\contentsline {subsubsection}{Frontend (MUI)}{17}{section*.18}%
-\contentsline {subsubsection}{Functionality}{17}{section*.19}%
-\contentsline {chapter}{\numberline {4}Evaluation}{19}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Overview}{19}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Polymorphism disclaimer}{19}{subsection.4.1.1}%
-\contentsline {section}{\numberline {4.2}Example 1 - Connecting FIFOs}{19}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Platform Designer}{20}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}My tool}{22}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Using text format to do same things and Qualitative metrics}{22}{subsection.4.2.3}%
-\contentsline {section}{\numberline {4.3}Example 2 - Simple System-on-Chip}{23}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Platform Designer}{23}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}My tool}{24}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Other differences}{24}{subsection.4.3.3}%
-\contentsline {section}{\numberline {4.4}Example 3 - Working AXI4 masters and slaves}{25}{section.4.4}%
+\contentsline {section}{\numberline {3.3}Resolving types}{12}{section.3.3}%
+\contentsline {subsubsection}{Merge function}{13}{section*.6}%
+\contentsline {subsubsection}{Apply variables function}{13}{section*.7}%
+\contentsline {subsubsection}{Preprocess typeclass function}{13}{section*.8}%
+\contentsline {subsubsection}{Resolve typeclass function}{13}{section*.9}%
+\contentsline {subsubsection}{Solve numerical function}{14}{section*.10}%
+\contentsline {subsubsection}{Solve provisos function}{14}{section*.11}%
+\contentsline {subsubsection}{How those functions can are used}{14}{section*.12}%
+\contentsline {section}{\numberline {3.4}Building the top level module}{15}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Instantiating new modules}{15}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Connections}{16}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Busses}{16}{subsection.3.4.3}%
+\contentsline {section}{\numberline {3.5}Synthesizing the module}{16}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}JSON interface}{16}{subsection.3.5.1}%
+\contentsline {subsubsection}{Using JSON interface}{17}{section*.15}%
+\contentsline {subsection}{\numberline {3.5.2}GUI}{18}{subsection.3.5.2}%
+\contentsline {subsubsection}{Backend}{18}{section*.16}%
+\contentsline {subsubsection}{Frontend (React)}{18}{section*.17}%
+\contentsline {subsubsection}{Frontend (React Flow)}{18}{section*.18}%
+\contentsline {subsubsection}{Frontend (MUI)}{18}{section*.19}%
+\contentsline {subsubsection}{Functionality}{18}{section*.20}%
+\contentsline {chapter}{\numberline {4}Evaluation}{20}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Overview}{20}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Polymorphism disclaimer}{20}{subsection.4.1.1}%
+\contentsline {section}{\numberline {4.2}Example 1 - Connecting FIFOs}{20}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Platform Designer}{21}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}My tool}{23}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Using text format to do same things and Qualitative metrics}{23}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}Example 2 - Simple System-on-Chip}{24}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Platform Designer}{24}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}My tool}{25}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Other differences}{25}{subsection.4.3.3}%
+\contentsline {section}{\numberline {4.4}Example 3 - Working AXI4 masters and slaves}{26}{section.4.4}%

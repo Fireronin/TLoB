@@ -1,0 +1,69 @@
+%% Creator: Inkscape inkscape 0.92.5, www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'layers_svg-tex.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{253.5bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.56508876)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{layers_svg-tex.pdf}}%
+    \put(0.26627219,0.03254438){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Silicon features\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{layers_svg-tex.pdf}}%
+    \put(0.26627219,0.15088757){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Abstract transistors\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{layers_svg-tex.pdf}}%
+    \put(0.26627219,0.26923077){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Compontent design\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{layers_svg-tex.pdf}}%
+    \put(0.26627219,0.38757396){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Component integration\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{layers_svg-tex.pdf}}%
+    \put(0.26627219,0.50591716){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Chiplet/chips integration on PCB\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{layers_svg-tex.pdf}}%
+    \put(0.81952663,0.34467456){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}My tool\end{tabular}}}}%
+  \end{picture}%
+\endgroup%

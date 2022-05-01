@@ -1,0 +1,62 @@
+Info: Starting: Create simulation model
+Info: qsys-generate D:\Mega\Documents\CS\TLoB\quatusExamples2\unnamed.qsys --simulation=VERILOG --allow-mixed-language-simulation --output-directory=D:\Mega\Documents\CS\TLoB\quatusExamples2\unnamed\simulation --family="Cyclone V" --part=5CGXFC7C7F23C8
+Progress: Loading quatusExamples2/unnamed.qsys
+Progress: Reading input file
+Progress: Adding axiMaster_0 [axiMaster 1.0]
+Progress: Parameterizing module axiMaster_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: unnamed: Generating unnamed "unnamed" for SIM_VERILOG
+Error: axiMaster_0: axiMaster does not support generation for Verilog Simulation. Generation is available for: Quartus Synthesis.
+Info: unnamed: Done "unnamed" with 2 modules, 1 files
+Error: qsys-generate failed with exit code 1: 1 Error, 0 Warnings
+Info: Finished: Create simulation model
+Info: Starting: Create Modelsim Project.
+Info: sim-script-gen --spd=D:\Mega\Documents\CS\TLoB\quatusExamples2\unnamed\unnamed.spd --output-directory=D:/Mega/Documents/CS/TLoB/quatusExamples2/unnamed/simulation/ --use-relative-paths=true
+Info: Doing: ip-make-simscript --spd=D:\Mega\Documents\CS\TLoB\quatusExamples2\unnamed\unnamed.spd --output-directory=D:/Mega/Documents/CS/TLoB/quatusExamples2/unnamed/simulation/ --use-relative-paths=true
+Info: Generating the following file(s) for MODELSIM simulator in D:/Mega/Documents/CS/TLoB/quatusExamples2/unnamed/simulation/ directory:
+Info: 	mentor/msim_setup.tcl
+Info: Generating the following file(s) for VCS simulator in D:/Mega/Documents/CS/TLoB/quatusExamples2/unnamed/simulation/ directory:
+Info: 	synopsys/vcs/vcs_setup.sh
+Info: Generating the following file(s) for VCSMX simulator in D:/Mega/Documents/CS/TLoB/quatusExamples2/unnamed/simulation/ directory:
+Info: 	synopsys/vcsmx/synopsys_sim.setup
+Info: 	synopsys/vcsmx/vcsmx_setup.sh
+Info: Generating the following file(s) for NCSIM simulator in D:/Mega/Documents/CS/TLoB/quatusExamples2/unnamed/simulation/ directory:
+Info: 	cadence/cds.lib
+Info: 	cadence/hdl.var
+Info: 	cadence/ncsim_setup.sh
+Info: Generating the following file(s) for RIVIERA simulator in D:/Mega/Documents/CS/TLoB/quatusExamples2/unnamed/simulation/ directory:
+Info: 	aldec/rivierapro_setup.tcl
+Info: For information on how to simulate your IP, see the explanatory comments in the simulator-specific subdirectories under D:/Mega/Documents/CS/TLoB/quatusExamples2/unnamed/simulation/.
+Info: Regenerate these scripts whenever you make any change to any Quartus-generated IP in your project.
+Info: Finished: Create Modelsim Project.
+Info: Starting: Create block symbol file (.bsf)
+Info: qsys-generate D:\Mega\Documents\CS\TLoB\quatusExamples2\unnamed.qsys --block-symbol-file --output-directory=D:\Mega\Documents\CS\TLoB\quatusExamples2\unnamed --family="Cyclone V" --part=5CGXFC7C7F23C8
+Progress: Loading quatusExamples2/unnamed.qsys
+Progress: Reading input file
+Progress: Adding axiMaster_0 [axiMaster 1.0]
+Progress: Parameterizing module axiMaster_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: qsys-generate succeeded.
+Info: Finished: Create block symbol file (.bsf)
+Info: 
+Info: Starting: Create HDL design files for synthesis
+Info: qsys-generate D:\Mega\Documents\CS\TLoB\quatusExamples2\unnamed.qsys --synthesis=VERILOG --output-directory=D:\Mega\Documents\CS\TLoB\quatusExamples2\unnamed\synthesis --family="Cyclone V" --part=5CGXFC7C7F23C8
+Progress: Loading quatusExamples2/unnamed.qsys
+Progress: Reading input file
+Progress: Adding axiMaster_0 [axiMaster 1.0]
+Progress: Parameterizing module axiMaster_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: unnamed: Generating unnamed "unnamed" for QUARTUS_SYNTH
+Info: axiMaster_0: "unnamed" instantiated axiMaster "axiMaster_0"
+Info: unnamed: Done "unnamed" with 2 modules, 2 files
+Info: qsys-generate succeeded.
+Info: Finished: Create HDL design files for synthesis

@@ -19,7 +19,13 @@
 \title{Legend Of Bluespec}
 \author{kr469 }
 \date{October 2021}
-
+ \hypersetup{ 
+     colorlinks=true, 
+     linkcolor=cyan, 
+     filecolor=cyan, 
+     citecolor = black,       
+     urlcolor=cyan, 
+     } 
 \tcbset{colback=pink!7,colframe=pink!90,coltitle=black}
 \begin{document}
 \maketitle
@@ -350,67 +356,74 @@ The main goal of the project is to be able to take a JSON with some data and syn
 
 \subsection{JSON interface}
 I decided that my \say{human-readable format} will be JSON. This is because wide support for JSON is already available in many languages. 
-The only problem of JSON is that it's more verbose than Bluespec, and in theory it would make more sense to use Bluespec. 
-However, this could introduce user confusion, as I wouldn't be able to support arbitrary Bluespec features.
+The only problem of JSON is that it's more verbose than in some aspects Bluespec, and in theory it would make more sense to use Bluespec. 
+However, this could introduce user confusion, as I'm not able to support arbitrary Bluespec features in my backend.
 My understanding is that supporting something only partially could lead users to think that my tool is broken, because it doesn't match theirs assumptions about what it can do. 
-While it can be argued that if I had written this project as extension of Bluespec compiler I could have supported all features of Bluespec (thanks to already written logic). 
-As explained at the beginning of this document, doing this was infeasible for me as a part II project. 
-At the same time using JSON allows me to support simplified semantics for bus creation, and features not found in Bluespec like specification of folders with libraries imported.
-
-With this out of the way let's talk about how I'm using JSON files.
-\subsubsection*{Structure of JSON file}
-At the top level of the file user can define following things:(TODO change those names to something more descriptive)
+While it can be argued that if I had written this project as extension of Bluespec compiler I could have supported all features of Bluespec (thanks to already written logic in the compiler). 
+I explained at the beginning of this document, why doing this was infeasible for me as a part II project. 
+At the same time using JSON allows me to support simplified semantics for things like bus creation, and features not found in Bluespec like specification of folders with additional libraries.
+\newpage
+\subsubsection{Structure of JSON file}
+\begin{figure}[!h]
+    \centering
+    
+    \includegraphics[width=0.75\columnwidth]{pdfExports/LargeMapJSON.pdf}
+    \caption{Disclaimer: In this diagram I'm using uppercase names but JSON file uses lowercase ones also all spaces are replaced with underscores. I'm also using s in name to signify a list of dictionaries with those keywords}
+\end{figure}
+\newpage
+More detailed description of keywords:
 \begin{itemize}
-    \item \say{additional folders} - This should be a list of folders that will be added to Bluespec's search path used to find modules.
-    \item \say{packages} - List of packages that will be loaded. Theirs dependencies will be loaded automatically.
-    \item \say{name} - Name of the top module.
-    \item \say{packageName} - Name of the package, and therefore the file that contains the top module.
-    \item \say{typedefs} - List of typedefs that will be added to the global scope. \\
-    \begin{itemize}
-        \item \say{name} - Name of the typedef.
-        \item \say{value} - Value of the typedef.
-    \end{itemize}
-    \item \say{modules} - List of modules that will be created. \\
-    \begin{itemize}
-        \item \say{name} - Name of the module.
-        \item \say{function} - Name of the function that will be used to instantiate the module.
-        \item \say{function\_params} - List of parameters that will be passed to the function. (optional if function dose not take any parameters)
-        \item \say{interface\_params} - List of the parameters of created interface. (optional if it's possible to deduce them from functions type)
-        \item \say{context} - This adds ability to pass interface parameters in unordered maner. This is useful if actual type is quite complex, but most of the parameters can be deduced.
-    \end{itemize}
-    \item \say{connections} - List of connections that will be added to the global scope. \\
-    \begin{itemize}
-        \item \say{from} - Name used to access interface on the left side of the connection.
-        \item \say{to} - Name used to access interface on the right side of the connection.
-    \end{itemize}
-    \item  \say{busses} - List of busses that will be added to the global scope. \\
-    \begin{itemize}
-        \item \say{name} - Name of the bus. (optional)
-        \item \say{function} - Name of the function that will be used to instantiate the bus.
-        \item \say{masters} - List of names used to access interfaces that will be used as masters.
-        \item \say{slaves} - List of slaves. 
-        \begin{itemize}
-            \item \say{name} - Name used to access the interface.
-            \item \say{routes} - List of lists length two that specify starts and ends of address regions that will be used by this slave. 
-        \end{itemize}
-    \end{itemize}
+    \item \verb!additional_folders! - list of folders that will be added to Bluetcl search path.
+    \item \verb!packages! - list of packages that will be used
+    \item \verb!name! - name of the module (defaults to \say{top})
+    \item \verb!package_name! - name of created package
+    \item \verb!typedefs! - list of typedefs defined by a user
+    \item \verb!typedefs[i].name! -  string starting with uppercase
+    \item \verb!typedefs[i].value! - integer or string (TODO check if string works)
+    \item \verb!modules! - list of modules or function to be instantiated
+    \item \verb!modules[i].name! - string being name of a module (used later to access such module)
+    \item \verb!modules[i].function! - lowercase name of a function used to create a module
+    \item \verb!modules[i].func_params! - list of strings that will be parsed, this can include numbers, names of interfaces of previously declared modules, \verb!tagged <Keyword>! where \verb!<Keyword>! can be replaced with struct creator.(TODO check if it works) This keyword is optional if function does not take any arguments.
+    \item \verb!modules[i].interface_params! - parameters passed to the interface of the result of the function, this keyword is optional if full type of the interface can be inferred from the type of function used to create a module, arguments, and provisos.
+    \item \verb!connections! - list of dictionaries containing definitions of connections
+    \item \verb!connections[i].from! - lowercase string with access path of a left side of the connection
+    \item \verb!connections[i].to! - lowercase string with access path of a right side of the connection 
+    \item \verb!busses! - list of dictionaries describing busses
+    \item \verb!busses[i].name! - TODO remove this
+    \item \verb!busses[i].function! - lowercase name of a function used to create a bus
+    \item \verb!busses[i].masters! - list of access paths of interfaces to use as masters
+    \item \verb!busses[i].slaves! - list of dictionaries describing slaves
+    \item \verb!busses[i].slaves[j].name! - access path of a interface used as slave
+    \item \verb!busses[i].slaves[j].routes! - list of lists length two of integers describing starts and ends of address ranges on which slaves will be accessible. Starts of ranges are inclusive end are exclusive. (This data is used to generate routing function)
+    \item \verb!interface! - either a string describing an access path of interface to be exposed by module or a dictionary describing more complex interface made out of multiple member interfaces and methods
+    \item \verb!interface.name! - name of a type of the interface, if one is not present in loaded packages a new interface will be synthesized
+    \item \verb!interface.members! - list of members methods and subinterfaces of this interface
+    \item \verb!interface.members[i].name! - name at member will be acessable
+    \item \verb!interface.members[i].value! - access path of a method or a interface to be exposed at given name  
 \end{itemize}
 
+
 \subsubsection{Using JSON interface} 
-If all I did was simply synthesizing a Bluespec file from JSON, it would be possible to do that just by doing simple string manipulation.
-I know this because my initial iterations were doing this. However, my tool can do more than that. One important feature is this tools ability to display all possible connections' user can make between interfaces and subinterfaces. It is also able to show what possible valid master and slaves are for a given bus(Assuming at least one master and slave are present as otherwise it doesn't make sense). Finally, it can also display types of all interfaces and subinterfaces. This can be useful when using complex modules, like a CPU core that doesn't have any direct connections, but It has many subinterfaces that can be connected to things like memory, external devices, etc.
+If all I did was simply synthesizing a Bluespec file describing package from JSON, it would be mostly (one would need additional data to synthesize new interface) possible to do that just by doing simple string manipulation.
+I know this because my initial iterations were doing this. However, my tool can do much more than that. I to show those abilities I print additional data and verify correctness of given JSON. Bellow is rundown of this additional data, but to truly appreciate it I would recommend looking at how GUI is using this data.
+\begin{itemize}
+    \item Dictionary of all possible connections better interface and subinterface and methods of instantiated modules.
+    \item Dictionary of possible valid arguments for each function used to instantiate a module or a function.
+    \item Dictionary of possible other masters and slave for each instantiated bus.
+    \item Inferred types of every instantiated module and types of it's subinterfaces and member methods.
+\end{itemize}
+All this data can be useful when using complex modules from foreign packages, like a CPU core that doesn't have any direct connections, but It has many subinterfaces that can be connected to things like memory, external devices, etc.
 
-\subsection{GUI}
-Adding GUI was an optional goal mentioned in the project proposal. I originally intended to use a game engine, but Bluespec compiler is a Linux tool and game engines like Unreal Engine 4 or Unity3d are optimized to be used on Windows, so I decided against that idea. Instead, I found a library called React Flow, that provided simple API for creating graph based user interfaces. Therefore I decided to create a GUI as a website. This was quite an adventure as It was my first contact with web development. (I have done backend in .NET and \verb!C#! for group project in last term, but it was mostly focused on writing queries to database)
+\section{GUI}
+Adding GUI was an optional goal mentioned in the project proposal. I originally intended to use a game engine, but Bluespec compiler is a Linux tool and game engines like Unreal Engine 4 or Unity3d are optimized to be used on Windows, so I decided against that idea. Instead, I found a library called React Flow, that provided simple API for creating graph based user interfaces. Therefore, I decided to create a GUI as a website. This was quite an adventure as It was effectively my first contact with web development. (I have done backend in .NET and \verb!C#! for group project in last term, but it was mostly focused on writing queries to database and I had no contact with frontend development)
 
+\subsection{Backend}
+For backend, I had a choice between Django and Flask (as those are main python libraries for backend development). After reading about them in theory Flask was supposed to be better for small projects, like this one. However, I decided to use Django because I wanted to learn technology that will be more useful in the future. I followed official tutorial on Django and after initial pain with security adding new functionality was easy.
 
-\subsubsection{Backend}
-For backend, I had a choice between Django and Flask (as those are main python libraries). After reading about them in theory Flask was supposed to be better for small projects, like this one. However, I decided to use Django because I wanted to learn technology that will be more useful in the future. I followed official tutorial on Django and after initial pain with security adding functionality was easy.
-
-\subsubsection{Frontend (React)}
+\subsection{Frontend (React)}
 Frontend was written in React.js as you might have guessed from the name of the library I wanted to use. According to \href{https://insights.stackoverflow.com/survey/2021#most-popular-technologies-webframe}{Stack Overflow 2021 survey} React.js is the most popular frontend technology in 2021, so again I considered time spent on learning it to be good investment. One thing that took me quite a bit to get used to is everything being a function(React.js supports classes, but it's an old paradigm and I wanted to learn doing thing the \say{correct} way). This makes working with variables a bit tricky, as changes to state variable cause re-rendering of the whole component, and if variable is not a state variable, then it's value is going to be lost after re-rendering. If not careful is easy to cause feedback loop causing infinite re-rendering and subsequent crash of the application. 
 
-\subsubsection{Frontend (React Flow)}
+\subsection{Frontend (React Flow)}
 \begin{tcolorbox}[title=Vocabulary]
     \begin{itemize}
         \item Handle - Is a component of node that is used to start or end a connection. TODO include a image of a handle.
@@ -426,10 +439,11 @@ What I found is that if you wrap larger subcomponents of a node in \verb!memo! f
 \\
 On the bright side after I figured out workarounds for those issues, I was left with many other things being handled by library. This included automatic graph formatting, and pretty Bézier curves for edges. 
 
-\subsubsection{Frontend (MUI)}
-My default HTML buttons, and text boxes are ugly. So I decided to use React UI component library called MUI (previously Material UI). I don't have much to say about it except that use of it was frictionless, at least in my humble opinion it made my application look modern. I'm mentioning this as one of my complaints about Intel's QSys was that it's UI is decades old.
+\subsection{Frontend (MUI)}
+Default HTML buttons, and text boxes are ugly. So I decided to use React UI component library called MUI (previously Material UI). I don't have much to say about it except that use of it was frictionless, at least in my humble opinion it made my application look modern. I'm mentioning this as one of my complaints about Intel's platform designer was that it's UI is decades old.
 
-\subsubsection{Functionality}
+\subsection{Functionality}
+After teasing who I did things let's talk about features of my GUI. Here is overview of components user can chose from.
 Using this GUI user can do following things. 
 \begin{itemize}
     \item Instantiate new module. 

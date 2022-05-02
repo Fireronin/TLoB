@@ -325,6 +325,9 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmti10.tfm
 INPUT pdfExports/LargeMapBuilding.pdf
 INPUT ./pdfExports/LargeMapBuilding.pdf
 INPUT ./pdfExports/LargeMapBuilding.pdf
+INPUT pdfExports/LargeMapJSON.pdf
+INPUT ./pdfExports/LargeMapJSON.pdf
+INPUT ./pdfExports/LargeMapJSON.pdf
 INPUT images/Example1BeforeOranization.png
 INPUT ./images/Example1BeforeOranization.png
 INPUT ./images/Example1BeforeOranization.png

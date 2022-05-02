@@ -37,22 +37,23 @@
 \contentsline {subsection}{\numberline {3.4.3}Busses}{16}{subsection.3.4.3}%
 \contentsline {section}{\numberline {3.5}Synthesizing the module}{16}{section.3.5}%
 \contentsline {subsection}{\numberline {3.5.1}JSON interface}{16}{subsection.3.5.1}%
-\contentsline {subsubsection}{Using JSON interface}{17}{section*.15}%
-\contentsline {subsection}{\numberline {3.5.2}GUI}{18}{subsection.3.5.2}%
-\contentsline {subsubsection}{Backend}{18}{section*.16}%
-\contentsline {subsubsection}{Frontend (React)}{18}{section*.17}%
-\contentsline {subsubsection}{Frontend (React Flow)}{18}{section*.18}%
-\contentsline {subsubsection}{Frontend (MUI)}{18}{section*.19}%
-\contentsline {subsubsection}{Functionality}{18}{section*.20}%
-\contentsline {chapter}{\numberline {4}Evaluation}{20}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Overview}{20}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Polymorphism disclaimer}{20}{subsection.4.1.1}%
-\contentsline {section}{\numberline {4.2}Example 1 - Connecting FIFOs}{20}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Platform Designer}{21}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}My tool}{23}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Using text format to do same things and Qualitative metrics}{23}{subsection.4.2.3}%
-\contentsline {section}{\numberline {4.3}Example 2 - Simple System-on-Chip}{24}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Platform Designer}{24}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}My tool}{25}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Other differences}{25}{subsection.4.3.3}%
-\contentsline {section}{\numberline {4.4}Example 3 - Working AXI4 masters and slaves}{26}{section.4.4}%
+\contentsline {subsubsection}{Structure of JSON file}{17}{section*.14}%
+\contentsline {subsubsection}{Using JSON interface}{19}{section*.16}%
+\contentsline {section}{\numberline {3.6}GUI}{19}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Backend}{19}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Frontend (React)}{19}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.6.3}Frontend (React Flow)}{20}{subsection.3.6.3}%
+\contentsline {subsection}{\numberline {3.6.4}Frontend (MUI)}{20}{subsection.3.6.4}%
+\contentsline {subsection}{\numberline {3.6.5}Functionality}{20}{subsection.3.6.5}%
+\contentsline {chapter}{\numberline {4}Evaluation}{21}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Overview}{21}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Polymorphism disclaimer}{21}{subsection.4.1.1}%
+\contentsline {section}{\numberline {4.2}Example 1 - Connecting FIFOs}{21}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Platform Designer}{22}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}My tool}{24}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Using text format to do same things and Qualitative metrics}{24}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}Example 2 - Simple System-on-Chip}{25}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Platform Designer}{25}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}My tool}{26}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Other differences}{26}{subsection.4.3.3}%
+\contentsline {section}{\numberline {4.4}Example 3 - Working AXI4 masters and slaves}{27}{section.4.4}%

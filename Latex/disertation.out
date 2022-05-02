@@ -30,16 +30,21 @@
 \BOOKMARK [2][-]{subsection.3.4.3}{Busses}{section.3.4}% 30
 \BOOKMARK [1][-]{section.3.5}{Synthesizing the module}{chapter.3}% 31
 \BOOKMARK [2][-]{subsection.3.5.1}{JSON interface}{section.3.5}% 32
-\BOOKMARK [2][-]{subsection.3.5.2}{GUI}{section.3.5}% 33
-\BOOKMARK [0][-]{chapter.4}{Evaluation}{}% 34
-\BOOKMARK [1][-]{section.4.1}{Overview}{chapter.4}% 35
-\BOOKMARK [2][-]{subsection.4.1.1}{Polymorphism disclaimer}{section.4.1}% 36
-\BOOKMARK [1][-]{section.4.2}{Example 1 - Connecting FIFOs}{chapter.4}% 37
-\BOOKMARK [2][-]{subsection.4.2.1}{Platform Designer}{section.4.2}% 38
-\BOOKMARK [2][-]{subsection.4.2.2}{My tool}{section.4.2}% 39
-\BOOKMARK [2][-]{subsection.4.2.3}{Using text format to do same things and Qualitative metrics}{section.4.2}% 40
-\BOOKMARK [1][-]{section.4.3}{Example 2 - Simple System-on-Chip}{chapter.4}% 41
-\BOOKMARK [2][-]{subsection.4.3.1}{Platform Designer}{section.4.3}% 42
-\BOOKMARK [2][-]{subsection.4.3.2}{My tool}{section.4.3}% 43
-\BOOKMARK [2][-]{subsection.4.3.3}{Other differences}{section.4.3}% 44
-\BOOKMARK [1][-]{section.4.4}{Example 3 - Working AXI4 masters and slaves}{chapter.4}% 45
+\BOOKMARK [1][-]{section.3.6}{GUI}{chapter.3}% 33
+\BOOKMARK [2][-]{subsection.3.6.1}{Backend}{section.3.6}% 34
+\BOOKMARK [2][-]{subsection.3.6.2}{Frontend \(React\)}{section.3.6}% 35
+\BOOKMARK [2][-]{subsection.3.6.3}{Frontend \(React Flow\)}{section.3.6}% 36
+\BOOKMARK [2][-]{subsection.3.6.4}{Frontend \(MUI\)}{section.3.6}% 37
+\BOOKMARK [2][-]{subsection.3.6.5}{Functionality}{section.3.6}% 38
+\BOOKMARK [0][-]{chapter.4}{Evaluation}{}% 39
+\BOOKMARK [1][-]{section.4.1}{Overview}{chapter.4}% 40
+\BOOKMARK [2][-]{subsection.4.1.1}{Polymorphism disclaimer}{section.4.1}% 41
+\BOOKMARK [1][-]{section.4.2}{Example 1 - Connecting FIFOs}{chapter.4}% 42
+\BOOKMARK [2][-]{subsection.4.2.1}{Platform Designer}{section.4.2}% 43
+\BOOKMARK [2][-]{subsection.4.2.2}{My tool}{section.4.2}% 44
+\BOOKMARK [2][-]{subsection.4.2.3}{Using text format to do same things and Qualitative metrics}{section.4.2}% 45
+\BOOKMARK [1][-]{section.4.3}{Example 2 - Simple System-on-Chip}{chapter.4}% 46
+\BOOKMARK [2][-]{subsection.4.3.1}{Platform Designer}{section.4.3}% 47
+\BOOKMARK [2][-]{subsection.4.3.2}{My tool}{section.4.3}% 48
+\BOOKMARK [2][-]{subsection.4.3.3}{Other differences}{section.4.3}% 49
+\BOOKMARK [1][-]{section.4.4}{Example 3 - Working AXI4 masters and slaves}{chapter.4}% 50

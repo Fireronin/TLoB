@@ -49,7 +49,7 @@ def loadAllAndDoQuickRun():
     topLevel = TopLevelModule("top",db,package_name="LoadAllTestWithFLute")
     SPARAMS = [6, 64, "DATASIZE", 0, 0, 0, 0, 0]
     topLevel.addTypedef("DATASIZE", evaluateCustomStart("64"))
-
+    memoryS = topLevel.addModule("MemUtils::mkMem","memoryS",["Bit#(64)","Bit#(64)"],[4096,'tagged Invalid'])
     core = topLevel.addModule("Core::mkCore","core",[],[])
     memory = topLevel.addModule("MemUtils::mkAXI4SimpleMem","memory",SPARAMS,[4096,'tagged Invalid'])
 

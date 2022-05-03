@@ -328,6 +328,9 @@ INPUT ./pdfExports/LargeMapBuilding.pdf
 INPUT pdfExports/LargeMapJSON.pdf
 INPUT ./pdfExports/LargeMapJSON.pdf
 INPUT ./pdfExports/LargeMapJSON.pdf
+INPUT pdfExports/LargeMapInstanceNode.pdf
+INPUT ./pdfExports/LargeMapInstanceNode.pdf
+INPUT ./pdfExports/LargeMapInstanceNode.pdf
 INPUT images/Example1BeforeOranization.png
 INPUT ./images/Example1BeforeOranization.png
 INPUT ./images/Example1BeforeOranization.png

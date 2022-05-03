@@ -214,7 +214,9 @@ class TypeDatabase():
         if type(typedef) == Value:
             return typedef
         if typedef.full_name in self.aliases:
-            return self.aliases[typedef.full_name].result_type_ide
+            variables = self.merge(self.aliases[typedef.full_name].name,typedef,{},skipTypedefEval=True)
+            return_type = self.applyVariables(deepcopy(self.aliases[typedef.full_name].result_type_ide),variables)
+            return return_type
         else:
             return typedef
 
@@ -270,8 +272,10 @@ class TypeDatabase():
             return
         self.addPackages(known_packages)
 
-    def merge(self,a: Union[Value,Type_ide,str,Function],b: Union[Value,Type_ide,str,Function],variables: Dict[str,Variable]):
-        a,b = self.evaluateTypedef(a),self.evaluateTypedef(b)
+    def merge(self,a: Union[Value,Type_ide,str,Function],b: Union[Value,Type_ide,str,Function],variables: Dict[str,Variable],skipTypedefEval=False):
+        if not skipTypedefEval:
+            a = self.evaluateTypedef(a)
+            b = self.evaluateTypedef(b)
         if type(a) == Type_ide and a.is_polymorphic:
             a = a.name
         if type(b) == Type_ide and b.is_polymorphic:
@@ -409,7 +413,7 @@ class TypeDatabase():
         typeclass.lookUpDictionaries = lookUpDictionaries
         typeclass.universalInstances = universalInstances
 
-    def resolveTypeclass(self,typeclass: Typeclass,t_type: Type_ide,instance_hint:Typeclass_instance=None) -> Type_ide:
+    def resolveTypeclass(self,typeclass: Typeclass,t_type: Type_ide) -> Type_ide:
         typeclass = self.getTypeByName(typeclass.type_ide)
         variables = self.merge(typeclass.type_ideAlpha,t_type,{})
         #append vars
@@ -448,7 +452,7 @@ class TypeDatabase():
                 newVars = self.merge(t_type,instance.type_ide,variables={})
                 newVars = self.solveProvisos(instance.provisos,newVars)
                 solvedInstance = self.applyVariables(deepcopy(instance.type_ide),newVars)
-                solvedVariables = self.merge(typeclass.type_ide,solvedInstance,{})
+                solvedVariables = self.merge(t_type,solvedInstance,{})
             except Exception as e:
                 continue
             return solvedVariables

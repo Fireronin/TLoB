@@ -2,9 +2,10 @@ package LoadAllTestWithFLute;
 // necessary packages
 import Connectable::*;
 import Vector::*;
+import MemUtils::*;
+import MemTypes::*;
 import Core::*;
 import Core_IFC::*;
-import MemUtils::*;
 import AXI4_Types::*;
 import AXI4_Fake_16550::*;
 import Simplefifo::*;

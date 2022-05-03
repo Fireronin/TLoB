@@ -211,9 +211,9 @@ def getPossible(request):
 @never_cache
 def removeNode(request):
     json_data = json.loads(request.body)
-    name = json_data['name']
-    print("name:",name)
     try:
+        name = json_data['name']
+        print("name:",name)
         topLevel.remove(name)
     except Exception as e:
         tb = traceback.format_exc()
@@ -330,7 +330,6 @@ def setExportedInterface(request):
             print(e)
             return HttpResponse(json.dumps({'exception':str(e)}))
     response = {
-        'name':name,
         'exception':"",
     }
     return HttpResponse(json.dumps(response))

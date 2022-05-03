@@ -15,8 +15,8 @@
 \BOOKMARK [2][-]{subsection.2.2.4}{Postmortem}{section.2.2}% 15
 \BOOKMARK [1][-]{section.2.3}{Creating a grammar}{chapter.2}% 16
 \BOOKMARK [2][-]{subsection.2.3.1}{What grammar is needed ?}{section.2.3}% 17
-\BOOKMARK [2][-]{subsection.2.3.2}{Where to find this grammar ?}{section.2.3}% 18
-\BOOKMARK [2][-]{subsection.2.3.3}{Technical aspects}{section.2.3}% 19
+\BOOKMARK [2][-]{subsection.2.3.2}{Where to find this grammar?}{section.2.3}% 18
+\BOOKMARK [2][-]{subsection.2.3.3}{Technical aspects of the grammar}{section.2.3}% 19
 \BOOKMARK [0][-]{chapter.3}{Implementation}{}% 20
 \BOOKMARK [1][-]{section.3.1}{Crawling the packages}{chapter.3}% 21
 \BOOKMARK [1][-]{section.3.2}{Loading Bluespec packages' information \(TODO check grammar of s'\)}{chapter.3}% 22

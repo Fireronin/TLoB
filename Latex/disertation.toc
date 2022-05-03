@@ -15,37 +15,37 @@
 \contentsline {subsection}{\numberline {2.2.4}Postmortem}{9}{subsection.2.2.4}%
 \contentsline {section}{\numberline {2.3}Creating a grammar}{9}{section.2.3}%
 \contentsline {subsection}{\numberline {2.3.1}What grammar is needed ?}{9}{subsection.2.3.1}%
-\contentsline {subsection}{\numberline {2.3.2}Where to find this grammar ?}{10}{subsection.2.3.2}%
-\contentsline {subsection}{\numberline {2.3.3}Technical aspects}{10}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.2}Where to find this grammar?}{10}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Technical aspects of the grammar}{10}{subsection.2.3.3}%
 \contentsline {chapter}{\numberline {3}Implementation}{12}{chapter.3}%
 \contentsline {section}{\numberline {3.1}Crawling the packages}{12}{section.3.1}%
 \contentsline {section}{\numberline {3.2}Loading Bluespec packages' information (TODO check grammar of s')}{13}{section.3.2}%
 \contentsline {subsection}{\numberline {3.2.1}Lexical and syntax analysis}{13}{subsection.3.2.1}%
 \contentsline {subsection}{\numberline {3.2.2}Understanding abstract syntax tree (AST)}{13}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}Organizing data and functionality}{14}{subsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.2.3}Organizing data and functionality}{13}{subsection.3.2.3}%
 \contentsline {section}{\numberline {3.3}Resolving types}{15}{section.3.3}%
-\contentsline {subsubsection}{Merge function}{16}{section*.6}%
-\contentsline {subsubsection}{Apply variables function}{16}{section*.7}%
-\contentsline {subsubsection}{Preprocess typeclass function}{16}{section*.8}%
-\contentsline {subsubsection}{Resolve typeclass function}{17}{section*.9}%
-\contentsline {subsubsection}{Solve numerical function}{17}{section*.10}%
-\contentsline {subsubsection}{Solve provisos function}{17}{section*.11}%
-\contentsline {subsubsection}{How those functions can are used}{18}{section*.12}%
+\contentsline {subsubsection}{Merge function}{16}{section*.7}%
+\contentsline {subsubsection}{Apply variables function}{16}{section*.8}%
+\contentsline {subsubsection}{Preprocess typeclass function}{17}{section*.9}%
+\contentsline {subsubsection}{Resolve typeclass function}{17}{section*.10}%
+\contentsline {subsubsection}{Solve numerical function}{17}{section*.11}%
+\contentsline {subsubsection}{Solve provisos function}{18}{section*.12}%
+\contentsline {subsubsection}{How those functions can are used}{18}{section*.13}%
 \contentsline {section}{\numberline {3.4}Building the top level module}{19}{section.3.4}%
 \contentsline {subsection}{\numberline {3.4.1}Instantiating new modules}{19}{subsection.3.4.1}%
 \contentsline {subsection}{\numberline {3.4.2}Connections}{20}{subsection.3.4.2}%
 \contentsline {subsection}{\numberline {3.4.3}Busses}{20}{subsection.3.4.3}%
 \contentsline {section}{\numberline {3.5}Synthesizing the module}{20}{section.3.5}%
 \contentsline {subsection}{\numberline {3.5.1}JSON interface}{21}{subsection.3.5.1}%
-\contentsline {subsubsection}{Structure of JSON file}{22}{section*.14}%
-\contentsline {subsubsection}{Using JSON interface}{24}{section*.16}%
+\contentsline {subsubsection}{Structure of JSON file}{22}{section*.15}%
+\contentsline {subsubsection}{Using JSON interface}{24}{section*.17}%
 \contentsline {section}{\numberline {3.6}GUI}{24}{section.3.6}%
 \contentsline {subsection}{\numberline {3.6.1}Backend}{25}{subsection.3.6.1}%
 \contentsline {subsection}{\numberline {3.6.2}Frontend (React)}{25}{subsection.3.6.2}%
 \contentsline {subsection}{\numberline {3.6.3}Frontend (React Flow)}{25}{subsection.3.6.3}%
 \contentsline {subsection}{\numberline {3.6.4}Frontend (MUI)}{25}{subsection.3.6.4}%
 \contentsline {subsection}{\numberline {3.6.5}Functionality}{26}{subsection.3.6.5}%
-\contentsline {subsubsection}{Instance node}{26}{section*.17}%
+\contentsline {subsubsection}{Instance node}{26}{section*.18}%
 \contentsline {chapter}{\numberline {4}Evaluation}{28}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Overview}{28}{section.4.1}%
 \contentsline {subsection}{\numberline {4.1.1}Polymorphism disclaimer}{28}{subsection.4.1.1}%

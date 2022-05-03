@@ -10,3 +10,5 @@ Subinterfaces
 subinterfaces
 subinterface
 typeclass
+Prolog
+typeclasses

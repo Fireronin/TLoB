@@ -1,8 +1,9 @@
-\documentclass[14pt]{report}
+\documentclass[12pt]{report}
+
 \usepackage[utf8]{inputenc}
 \usepackage{blindtext}
 \usepackage{amsmath}
-\usepackage[margin=1in]{geometry} 
+\usepackage[margin=2cm]{geometry} 
 \usepackage{graphicx,changepage}
 \usepackage{xcolor}
 \usepackage{hyperref}
@@ -10,9 +11,6 @@
 \usepackage{subfig}
 \usepackage{fancyvrb}
 \usepackage{listings}
-\usepackage{svg}
-\usepackage{svg-extract}
-\svgsetup{clean=true}
 \usepackage{dirtytalk}
 \usepackage{csvsimple}
 \newcommand\todo[1]{\textcolor{red}{#1}}
@@ -32,47 +30,62 @@
 \tableofcontents
 
 \chapter{Introduction}
-
-Making hardware is hard, and similarly to other problems in computer science, we make it easier by adding layers of abstraction. There are many layers involved in making hardware from that abstract transistors to gates to logical operations to functions to modules to chips to multi-chip modules to whole devices. The layer this project focuses on is going from modules to chips. At this layer we already have code for modules like memory, CPU-cores, interconnects and so on. Now what we need is an ability to compose them in such a way that they create a whole device.
-\begin{figure}[!h]
+Making hardware is hard, and similarly to other problems in computer science, we make it easier by adding layers of abstraction. There are many layers involved in making hardware, from those abstract transistors to gates to logical operations to functions to modules to chips to multi-chip modules to whole devices. The layer this project focuses on is going from modules to chips. At this layer, we already have code for modules like memory, CPU cores, interconnects etc. Now what we need is an ability to compose them in such a way that they create a whole device. 
+\begin{figure}[h!]
     \centering
-    \caption{Layers of abstraction when designing hardware}
-    \includesvg[width=0.7\columnwidth,path=svgExports]{layers.svg}
+    
+    \includegraphics[width=0.5\columnwidth]{pdfExports/LargeMapLayersOfAbstraction.pdf}
+    \caption{Stage one of node used to instantiate new modules}
 \end{figure}
+% \begin{figure}[!h]
+%     \centering
+%     \caption{Layers of abstraction when designing hardware}
+%     \includesvg[width=0.7\columnwidth,path=svgExports]{layers.svg}
+% \end{figure}
 \section{Motivation}
 \begin{tcolorbox}[title=Vocabulary]
     \begin{itemize}
         \item Verilog - Hardware description language
         \item Bluespec - Hardware description language
-        \item Intel Quartus Prime (IQP) - programmable logic device design software produced by Intel. (source Wikipedia)
+        \item Intel Quartus Prime (IQP) - programmable logic device design software produced by Intel. (source \href{https://en.wikipedia.org/wiki/Intel_Quartus_Prime}{Wikipedia})
         \item Platform Designer - Tool inside IQP used to connect high level components.
     \end{itemize}
 \end{tcolorbox}
-Verilog is an old language with minimal type system. This forces people to encode more complex interfaces using finicky naming conventions. To simplify process of connecting components with many wires, people tend to use high level tools like Platform Designer, that have built in logic allowing for easy connection of components. This approach is not perfect and as we will see during evaluation, a better option might be to move away from Verilog and to use more modern language like Bluespec. The problem with that is that tools like Intel Quartus Prime(IQP) don't have native support for Bluespec, and it forces Bluespec users to work with transpiled Verilog (from Bluespec) code. Unfortunately, because typing richness of Bluespec(comparable to Haskell), arbitrary code cannot be transpiled, and before code can be transpiled it needs to be stripped of any arguments or other kinds of polymorphism. Process of transpiration also destroys high level interfaces, and they must be recreated manually after importing Verilog code into IQP. 
+Verilog is an old language with a minimal type system. It forces people to encode more complex interfaces using finicky naming conventions. To simplify the process of connecting components with many wires, people tend to use high-level tools like Platform Designer, which has built-in logic allowing for easy connection of components. This approach is not perfect and as we will see during the evaluation, a better option might be to move away from Verilog and use a more modern language like Bluespec. The problem is that tools like Intel Quartus Prime (IQP) do not have native support for Bluespec, and it forces Bluespec users to work with transpiled Verilog (from Bluespec) code. Unfortunately, because of typing richness of Bluespec (comparable to Haskell), arbitrary code cannot be transpiled, and before code can be transpiled it needs to be stripped of any arguments or other kinds of polymorphism. The process of transpiration also destroys high-level interfaces, and they must be recreated manually after importing Verilog code into IQP.
 
 \section{Already existing tools}
-Creating custom hardware has got expensive in last few decades both in therms of money but also in terms of man-hours needed to create it. 
-This creates barriers to entry for new players, and also reinforces strong positions of already adopted standards. 
-This also means that there isn't as large open source community as around hardware and therefore one cannot simply use plugin for Bluespec of Bluespec native high level integration tool because there are none.
+Creating custom hardware became immensely expensive in the last few decades both in terms of money but also in terms of man-hours needed to create it.  
 
-My project will try to tackle a subset of functionality provided by a tool called Platform Designer that is a part of Intel Quartus Prime package. Platform Designer is a GUI tool for high-level integration, designs generated by it are kept in verbose text file format. Unfortunately, those files have a tendency to be megabytes long, making them hard to read and edit, by humans. There are other problems with using Platform Designer, like cumbersomeness of importing new components.
+This creates barriers to entry for new players, and also reinforces the strong positions of already adopted standards.  
+
+This also means that there is not as large an open-source community as around hardware and therefore one cannot simply use a plugin for Bluespec native high level integration tool because there are none. 
+
+My project will try to tackle a subset of functionality provided by a tool called Platform Designer that is a part of the Intel Quartus Prime package. 
+Platform Designer is a GUI tool for high-level integration, designs generated by it are kept in verbose text file format. Unfortunately, those files tend to be megabytes long, making them hard to read and edit, for humans. 
+There are other problems with using Platform Designer, like the cumbersomeness of importing new components.
 
 \begin{tcolorbox}[title=Market share and justification for focusing entirely on comparisons with Intel Quartus Prime]
-    It's a bit difficult to accurately judge market share of IQP, but It is produced by one of the biggest designer and manufacturer in the world, and it's also used by Qualcomm according to \href{https://discovery.hgdata.com/product/intel-quartus-prime}{HG Insights}. Using Google trends we can see that while in recent years(since 2016) competitor Xilinx Vivado has overtaken, IQP in interest at the global scale, in most developed countries like US, Europe, and parts of Asia. There is roughly 50/50 split between IQP and Vivado. My personal observations suggest that Xilinx Vivado became highly popular in India which is a large country with history of chip design, and this might be strongly skewing data in favor of Xilinx's product. Another argument to compare against IQP is that it was used last year as a part of the course, and it can't be irrelevant if it was taught at Cambridge. Therefore, it's fair to not investigate Xilinx's software during evaluation(TODO: check if this has changed).
+    It is a bit difficult to accurately judge the market share of IQP, but It is produced by one of the biggest designers and manufacturers in the world, and it is also used by Qualcomm according to \href{https://discovery.hgdata.com/product/intel-quartus-prime}{HG Insights}. Using Google trends we can see that in recent years (since 2016) competitor Xilinx Vivado has overtaken IQP in interest at the global scale, in most developed countries like the US, Europe, and parts of Asia. There is roughly 50/50 split between IQP and Vivado. My personal observations suggest that Xilinx Vivado became highly popular in India which is a large country with a history of chip design, and this might be strongly skewing data in favour of Xilinx's product. Another argument to compare against IQP is that it was used last year as a part of the course, and it cannot be irrelevant if it was taught at Cambridge. Therefore, it is fair to not investigate Xilinx's software during evaluation (TODO: check if this has changed). 
 \end{tcolorbox}
 
 \section{Proposed solution}
-During my project I created an alternative JSON based file format that is much simpler and human-readable, that can be interpreted using my tool to produce Bluespec code of a top level module.
-This file format is rather unimpressive on its own, and one might argue that it would be better to use Bluespec code instead of it. Interesting part of this project lie in the backend that is able to verify correctness of this file and produce set of typing information about produced Bluespec code.
-But to truly appreciate work I have done during this project I also implemented GUI, which uses same backend as one used to interpret JSON files, and it is able to supply user with typing information and possible choices when connecting components. 
-One can think of it as a Bluespec native high level integration tool that uses simple language server in the backend. This way Bluespec user can do high level integration in the realm of not transpiled Bluespec. Then after satisfactory top level module is created, it can be transpiled to Verilog and then imported into IQP.
+During my project, I created an alternative JSON based file format, that is much simpler and human-readable, that can be interpreted using my tool to produce Bluespec code of a top-level module.  
+
+This file format is rather unimpressive on its own, and one might argue that it would be better to use Bluespec code instead of it. The interesting part of this project lies in the backend that can verify correctness of this file and produce set of typing information about produced Bluespec code.  
+
+But to truly appreciate the work I have done during this project, I also implemented GUI, which uses the same backend as the one used to interpret JSON files and is able to supply the user with typing information and possible choices when connecting components.  
+
+One can think of it as a Bluespec native high-level integration tool that uses a simple language server in the backend. This way Bluespec users can do high-level integration in the domain of not transpiled Bluespec code. Then after a satisfactory top-level module is created, it can be transpiled to Verilog and then imported into IQP. 
 
 \chapter{Preparation}
 
 \section{Understanding Bluespec}
-Before I started this project my only knowledge about Bluespec was from \href{https://www-bluespec.cl.cam.ac.uk/}{Cambridge Bluespec Tutor} which covers basics, and It was completed by me few weeks prior to the start of this project. For the purposes of understanding this project I've learned about most of the typing system of Bluespec, but for You the reader most of it is not relevant. Therefore, I prepared a short tour of things that will be important to understand in this project. 
+Before I started this project, my only knowledge about Bluespec came from \href{https://www-bluespec.cl.cam.ac.uk/}{Cambridge Bluespec Tutor} which covers basics, and it was completed by me a few weeks before the start of this project. To understand this project, I have learned about most of the type system of Bluespec, but for you, the reader, most of it is not relevant. Therefore, I prepared a short tour of things that will be important to understand in this project. 
 \subsection{Rules}
- In Bluespec all computation is done in form of rules. Each cycle we will take a subset of all rules that we are going to execute in this cycle, rule is fired (executed) in cycle only if it's ready (or will be ready) and it's not conflicting with other rules (If this happens compiler must issue a warning, and picks arbitrary rule to fire from subset of conflicting rules). Each rule can fire at most one time per cycle. For rule to be ready to fire it needs it's implicit and explicit conditions to be true. Rule can be fired in a cycle even if it's not ready at the start of cycle, for example if you add item on an empty queue and then pop can happen in same cycle. \\
+In Bluespec all computation is done in form of rules. 
+Each cycle we will take a subset of all rules that we are going to execute in this cycle, rule is fired (executed) in cycle only if it's ready (or will be ready) and it's not conflicting with other rules (If this happens compiler must issue a warning, and picks arbitrary rule to fire from subset of conflicting rules). Each rule can fire at most one time per cycle. 
+For rule to be ready to fire it needs it's implicit and explicit conditions to be true. 
+Rule can be fired in a cycle even if it's not ready at the start of cycle, for example if you add item on an empty queue and then pop can happen in same cycle. \\
 \includegraphics[width=\textwidth]{Rulemapping.png}
 (TODO: add reference to the bsv reference document from which this image was taken)
 \begin{verbatim}
@@ -95,65 +108,70 @@ Typesclasses in Bluespec are used to group types for which specific functions or
 
 \subsection{Provisos}
 \label{sec:Provisos}
-On big feature of Bluespec typing is support for provisos. They create constraints on types that can be used with given function and give information about expected type of output of the function. For example, we can have a polymorphic function \verb!extend! of a type \verb!Bit#(a)! $\rightarrow$ \verb!Bit#(b)! where \verb!Bit#(x)! is a vector of $x$ bits, such function accepts any length and always return vector of length $b=a+1$. To make sure this relations stays like this we would attach a proviso \verb!Add#(a,1,b)! which means that $a+1$ must be equal to $b$. 
-\par
-Mentioned above \verb!Add! is one of Size Relationship provisos, other such provisos are \verb!Mul Div Max Min Log!.
-Those provisos can't be nested, but we still can express complex arithmetic constraints, thanks to size relationship type functions.
-They essentially represent result of the operation on values on that were supplied. There are only 8 of them, and they are \verb!TAdd TSub TDiv TMul TMax TMin TLog TExp!.
-To better explain this let's look at some simple example: \\
-\verb!Add#(TExp#(a),TDiv#(a,8),c)! is a proviso that says that following equation on parameters must be satisfied $2^a+\lceil\frac{a}{8}\rceil = c$ otherwise it will mean that supplied parameters are not valid. Those equations can be also solved to deduce unknown parameters.
-\par
-There is also other type of provisos that are typeclass based.
-Typeclass based provisos, allow us to either to ensure certain functions are defined for given type or to deuce something. For example \verb!Bits#(a,b)! means that type \verb!a! must be convertible to vector of $b$ bits. This can be used to get the length in bits of given objects, on which we can later put constraints using Size Relationship provisos.
-\\
-In my project I will often check if there exists instance of the \verb!Connectable#(a,b)! typeclass to check if function \verb!mkConnection!(used to connect two interfaces together) is defined for given types \verb!a! and \verb!b!.
+One big feature of Bluespec typing is support for provisos. They create constraints on types that can be used with a given function and give information about the expected type of the output of the function during compilation. For example, we can have a polymorphic function \verb!extend! of a type \verb!Bit#(a)! $\rightarrow$ \verb!Bit#(b)! where \verb!Bit#(x)! is a vector of $x$ bits, such function accepts vector any length $a$ and always return vector of length $b=a+1$. To make sure these relations stay like this, we would attach a proviso \verb!Add#(a,1,b)! which means that $a+1$ must be equal to $b$.  
+\par  
+Mentioned above \verb!Add! is one of the Size Relationship provisos, other such provisos are \verb!Mul! \verb!Div! \verb!Max! \verb!Min! \verb!Log!.  
+Those provisos cannot be nested, but we still can express complex arithmetic constraints, thanks to size relationship type functions.  
+They essentially represent the result of the operation on values that were supplied. There are only 8 of them, and they are \verb!TAdd! \verb!TSub! \verb!TDiv! \verb!TMul! \verb!TMax! \verb!TMin! \verb!TLog! \verb!TExp!.  
+To better explain this, let us look at this simple example: \\  
+\verb!Add#(TExp#(a),TDiv#(a,8),c)! is a proviso that says that the following equation $2^a+\lceil\frac{a}{8}\rceil = c$ on parameters \verb!a!,\verb!b!,\verb!c! must be satisfied. Otherwise, it will mean that supplied parameters are not valid and compilation won't succeed. Those equations can be also solved to deduce unknown parameters.  
+\par  
+There is also another type of provisos that I will call \emph{typeclass based} ones.  
+Typeclass based provisos allow us to either ensure certain functions are defined for a given type or to deduce something. For example, \verb!Bits#(a,b)! means that for type \verb!a!, there must be functions \verb!pack! and \verb!unpack! allowing for convention to and from a vector of $b$ bits. Moreover, this can be used to get the length in bits of given objects, on which we can later put constraints using Size Relationship provisos.  
+In my project, I will often check if there exists an instance of the \verb!Connectable#(a,b)! typeclass for a given pair of types \verb!a! and \verb!b! to check if function \verb!mkConnection! (used to connect two interfaces together) is defined.  
+All of this can be a bit confusing, but if one looks closely, system of provisos and typeclasses is remarkably similar to Prolog the programming language. We have variables that are effectively the same as in Prolog, we have values that are integers, and we have parametric types and functions that are like Prolog's compound terms. Typeclass are like groups of rules with the same name, and provisos attached to Typeclass instances are like predicates attached to rules.  
 
-This can be a bit confusing, but if one look closely this is very similar to Prolog. We have variables that are effectively the same as in Prolog, we have values that are integers, and we have parametric types /functions that are like Prolog's compound terms. Typeclass are like groups of rules with same name and provisos attached to Typeclass instances are like predicates.
-One big difference is that provisos can be solved in arbitrary order, which means that unlike in Prolog we need ability to solve sets of equations on integers.
-
+One significant difference is that provisos can be solved in arbitrary order, which means that unlike in the Prolog, we need the ability to solve sets of equations on integers to resolve them.
 
 \section{Choosing tools}
-I had effectively 3 choices for a language to this project in. Here is some justification why I have chosen Python. 
-\subsection{Haskell}
-Compiler of Bluespec is written in Haskell. Therefore there are seweral reason why Haskell would be right choice. Here are some of them:
-\begin{itemize}
-    \item I can reuse already written logic.
-    \item I won't diverge in terms of logic from Bluespec compiler.
-    \item I won't need to write grammar to load packages.
-\end{itemize}
-But there are also few very good reasons why I didn't used Haskell.
-\begin{itemize}
-    \item I never used Haskell before, and my experience with functional languages equal to what was shown in the foundations of the computer science course.
-    \item I never used Bluespec before, and my experience is limited to completing Bluespec tutor provided by computer science department.
-    \item Even if I knew Haskell and Bluespec, industrial compilers are rather large and complicated. I also received advice to avoid modifying / extending them as a part of the project.
-\end{itemize}
-While each of those reasons on its own is something that can be managed. All of them combined would create unacceptable amount of risk of not delivering the project. There was also a risk that use of Haskell wouldn't create a good story for the project. (This is quite subtle).
+I had effectively 3 choices for a language to write this project in. Here is some justification for why I have chosen Python.   
+
+\subsection{Haskell}  
+
+The compiler of Bluespec is written in Haskell. Therefore, there are several reasons why Haskell would be the right choice. Here are some of them:  
+\begin{itemize}  
+   \item I can reuse already written logic.  
+   \item I will not diverge in terms of logic from Bluespec compiler.  
+   \item I will not need to write grammar to load packages.  
+\end{itemize}  
+But there are also a few particularly good reasons why I did not use Haskell.  
+\begin{itemize}  
+
+   \item I never used Haskell before, and my experience with functional languages is equal to what was shown in the foundations of the computer science course.  
+
+   \item I never used Bluespec before, and my experience is limited to completing the Bluespec tutor provided by the computer science department.  
+
+   \item Even if I knew Haskell and Bluespec, industrial compilers are rather large and complicated. I also received advice to avoid modifying/extending them as a part of the project.  
+
+\end{itemize}  
+
+While each of those reasons on its own is something that can be managed. All of them combined would create an unacceptable amount of risk of not delivering the project. There was also a chance that the use of Haskell would not create a good story for the project. (This is quite subtle). 
 
 \subsection{Tcl (pronounced "tickle")}
-This language is used as a scripting language in both Intel and Xilinx tools, While I will be reading packages using Tcl scripts provided by the creators of the Bluespec compiler (BSC), my understanding is that those scripts are just handy wrappers for some Haskell functions. This is also foreign language to me with minimal presence online, and negligible learning resources, making it difficult to learn. It's also quite obsolete and there is not much tooling for it making it undesirable as a time investment(As an example of desirable to learn technology. I learned for this project JavaScript, just to create a GUI).
+This language is used as a scripting language in both Intel and Xilinx tools, While I will be reading packages using Tcl scripts provided by the creators of the Bluespec compiler (BSC), my understanding is that those scripts are just handy wrappers for some Haskell functions. This is also a foreign language to me, with a minimal presence online and negligible learning resources, making it difficult to learn. It is also quite obsolete, and there is not much tooling for it making it undesirable as a time investment (As an example of the desirable to learn technology. I learned for this project JavaScript just to create a GUI). 
 \subsection{Python}
-Firstly this is a language I have experience working with, secondly it's widely supported, and there is extensive tooling for it. It's flexible typing system allows for rapid experimenting, which was especially handy when I wasn't sure how structure of the data would look like. It's also worth mentioning that it has support for typing and at some point I decided to started adding typing hints around. My rule of thumb that I used was that if Pylance (python language server) can't deduce type of something I need more hints.
-Other reasons for using python are:
-\begin{itemize}
-    \item I will have many interesting problems to solve. Like creating and interpreting grammar.
-    \item Code written in it can be used by large community of python developers.
-    \item I can use many tools like, Lark (for grammar), Django (as a backend server), SymPy (to solve size relationship provisos) that will speed up the process.
-\end{itemize}
-The two arguments against using python are:
-\begin{itemize}
-    \item Haskell would be better suited for this task. I explained above why it doesn't make sense for me to use Haskell. 
-    \item Python is usually slow. Fortunately this isn't a big issue thanks to cashing and use of PyPy (implementation of Python using JIT compiler).
-\end{itemize}
+Firstly, this is a language I have experience working with. Secondly, it is widely supported, and there is extensive tooling for it. Its flexible typing system allows for rapid experimenting, which was especially handy when I was not sure what the structure of the data would look like. It is also worth mentioning that Python has support for typing, and at some point, I decided to start adding typing hints around. My rule of thumb that I used was that if Pylance (Python language server) cannot deduce the type of something, I need more hints.  
+Other reasons for using Python are:  
+\begin{itemize}  
+  \item I will have many interesting problems to solve. Like creating and interpreting grammar.  
+  \item Code written in it can be used by a large community of python developers.  
+  \item I can use many tools like Lark (for grammar), Django (as a backend server), and SymPy (to solve size relationship provisos) that will speed up the process.  
+\end{itemize}  
+The two arguments against using Python are:  
+\begin{itemize}  
+  \item Haskell would be better suited for this task. I explained above why it does not make sense for me to use Haskell.  
+  \item Python is usually slow. Fortunately, this is not a big issue thanks to cashing and the use of PyPy (implementation of Python using JIT compiler).  
+\end{itemize} 
 \subsection{Postmortem}
-Looking at those choices now(after finishing project and knowing all encountered difficulties) I think a could also consider \verb!C#!, due to its speed and similar typing flexibility to Python. I also think Haskell would be a better choice if this was more like my pet project on which I would work for few years with the intention of making it commercially viable product.
-
-\section{Creating a grammar}
-This section could be moved into implementation.
-
-\begin{tcolorbox}[title=Bluetcl]
-    Bluetcl is a tool written in Tcl language that allows for inspection of Bluespec packages. It's a first party tool that included with Bluespec compiler. There isn't much documentation about it, but from my understanding it's a wrapper around Haskell code.
-    From the user perspective it's just a bash script that starts Tcl terminal compiled with some libraries. From my perspective I use it as an arbitrary command line program, as this method of using is intended by the authors and contains some documentation.
-\end{tcolorbox}
+Looking at those choices now (after finishing the project and knowing all encountered difficulties), I could have also considered \verb!C#!, due to its speed and similar typing flexibility to Python. I also think Haskell would be a better choice if this were more like my pet project on which I would work for a few years to make it a commercially viable product.  
+  
+\section{Creating a grammar}  
+This section could be moved into implementation.  
+  
+\begin{tcolorbox}[title=Bluetcl]  
+  Bluetcl is a tool written in Tcl language that allows for inspection of Bluespec packages. It is a first-party tool that is included with the Bluespec compiler. There is not much documentation about it, but from my understanding, it is a wrapper around Haskell's code.  
+  From the user perspective, it is just a bash script that starts the Tcl terminal compiled with some libraries. From my perspective, I use it as an arbitrary command-line program, as this method of use is intended by the authors and contains some documentation.  
+\end{tcolorbox} 
 \subsection{What grammar is needed ?}
 Because I'm using Bluetcl as a command line tool, communication with it is done via text. 
 While synthesizing commands is easy, parsing outputs is a bit more difficult, and I decided to do it in systematic way. 

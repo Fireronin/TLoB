@@ -473,21 +473,68 @@ On the bright side after I figured out workarounds for those issues, I was left 
 Default HTML buttons, and text boxes are ugly. So I decided to use React UI component library called MUI (previously Material UI). I don't have much to say about it except that use of it was frictionless, at least in my humble opinion it made my application look modern. I'm mentioning this as one of my complaints about Intel's platform designer was that it's UI is decades old.
 
 \subsection{Functionality}
-After teasing who I did things let's talk about features of my GUI. Here is overview of components user can chose from.
-\subsubsection{Instance node}
-\begin{figure}[h!]
-    \centering
-    
-    \includegraphics[width=0.75\columnwidth]{pdfExports/LargeMapInstanceNode.pdf}
-    \caption{Stage one of node used to instantiate new modules}
-\end{figure}
+After teasing who I did things let's talk about features of my GUI. 
 Using this GUI user can do following things. 
 \begin{itemize}
     \item Instantiate new module. 
     \item Connect two interfaces.
     \item Create a bus.
+    \item Select methods and interfaces to be exported as a part of created module.
     \item Look at created Bluespec file.
+    \item Run compilation followed simulation and look at output of both. 
 \end{itemize}
+To do all of those things, user will need to interact with graph building tool. Bellow is overview of components user can choose from that will describe the top level module.
+\subsubsection{Instance node}
+This node is most important as using it user can instantiate new modules, convert between interfaces, and use functions in general. It can be in 3 main stages. During fist one it's an empty vessel using which one can specify it's name and function/module that will be used. In a second stage user specifies inputs and typing information. Finally after clicking \emph{confirm update} node transitions into stage three and interfaces and methods of created object become usable.
+\newpage
+\begin{figure}[!h]
+    \centering
+    
+    \includegraphics[width=0.63\columnwidth]{pdfExports/LargeMapInstanceNode.pdf}
+    \caption{Stage one of node used to instantiate new modules}
+\end{figure}
+At stage one we will see the first field with autocompletion, it's the simplest one and simply lists all functions/modules user can use. It contains stand-alone functions as well as functions found as part of typeclasses. Node will transition to stage two when one of those its picked.
+\begin{figure}[!h]
+    \centering
+    
+    \includegraphics[width=1\columnwidth]{pdfExports/LargeMap-InstanceNodePart2.drawio.pdf}
+    \caption{Fully instantiated node with descriptions of features, divided into stages two and three}
+\end{figure}
+At stage two user can, specify typing information. To do this they are presented with a tree like input structure. Values inputted there can be of either uppercase string describing type identifier, integers or lowercase strings that will be used as a variable that are meant to be resolved by backend. There is also a list of inputs that go directly to the function. Those inputs contain fields with autocomplete that will filter all typedefs found in loaded packages, interfaces and functions found in previously initialized nodes. There are also handles for that allow for drag and drop style of creating connections. If user choses value via text field, that is a member of previously initialized node then connection will be generated automatically.
+After user is satisfied with theirs choices they press \emph{confirm update} button.
+At stage three user is presented \emph{information about error of lack of them} this can take bar can be in one of three states, its functionality is shared between nodes.
+\begin{itemize}
+    \item Waiting for confirmation - When backend is processing data.
+    \item Instantiation successful - If everything went smoothly.
+    \item Error with text that tries to describe and error that occurred. This usually occures if after user supplied data that is not able to satisfy provisos of function used.
+\end{itemize} 
+In case of lack of errors user is given an overview of the interface of the object created with it's subinterfaces and methods and their types. Attached to them are handles for starting connecting using DnD.
+\newpage
+\subsubsection{Connection node}
+\begin{figure}[!h]
+    \centering
+    
+    \includegraphics[width=1\columnwidth]{pdfExports/LargeMap-ConnectionNode.drawio.pdf}
+    \caption{Connection node, connecting two fifo modules}
+\end{figure}
+This is the simplest node it contains two inputs similar to ones found in the instance node. The key change hides in autocompletion, \emph{start} field will show all modules that can be used to start connection, whereas \emph{end} will only autocomplete to things that can be connected to the thing specified in the start field. Power of this node lies in the fact that it uses typing information in the backend, and it will work with new any types as long as there is applicable instance of typeclass \verb!Connectable! which should be common as it's part of the standard libraries.
+\subsubsection{Bus node}
+\begin{figure}[!h]
+    \centering
+    
+    \includegraphics[width=1\columnwidth]{pdfExports/LargeMap-BusNode.drawio.pdf}
+    \caption{Bus node connecting one master and two slaves using AXI4 interface}
+\end{figure}
+Similarly to connection node most of the components were reused, and interesting are details. This node works only with a subset of functions, that have specific something (TODO find a word to use). Fortunately used don't need to look for those functions autocomplete field will only show you valid ones.(It might be possible that some non bus function will slip through as I don't want to be overly aggressive and require things like having \say{bus} in the name of the function, but from my testing my simple check narrows down options to less than ten from few hundred found in all packages, I worked with.).  
+
+Autocompletion for masters and slaves is a bit more nuanced as it has two levels of precision. At first level it will show all masters and slaves that can be used with chosen function, but not necessarily together. However, after first successful initialization of a node (using \emph{confirm update}), options for masters and slaves will be narrowed down to only ones that can work with masters and slaves selected during first initialization.
+This node also contains fields to select ranges of addresses on which slaves will be visible. 
+
+\subsubsection{Exported interface node}
+
+
+\newpage
+During stage two of this 
 Almost all the fields that user needs to fill have context based autocompletion. 
 \begin{itemize}
     \item There are autocompletion for functions that can be used to instantiate a module, and for possible valid arguments of that function that include previously created interfaces and typedefs found in loaded packages.

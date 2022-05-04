@@ -504,6 +504,8 @@ class TopLevelModule():
             self.exported_interface = deepcopy(self.db.types[name])
             variables = {}
             for name,value in members:
+                if name == '':
+                    name = value.replace(".","_")
                 try:
                     variables = self.db.merge(self.exported_interface.members[name],self.knownNames[value],variables)
                 except Exception as e:
@@ -515,7 +517,10 @@ class TopLevelModule():
             for name,value in members:
                 self.exported_interface.members[name] = self.knownNames[value]
             #self.db.types[name] = self.exported_interface
-            self.interface_members = {name:value for name,value in members}
+            for name,value in members:
+                if name == '':
+                    name = value.replace(".","_")
+                self.interface_members[name] =value
         
     def remove(self,name:str):
         #in accessable interfaces find name* use start with and fiter
@@ -539,7 +544,7 @@ class TopLevelModule():
             del self.typedefs[name]
 
     @property
-    def topologicalySortedInstances(self) -> List[str]:
+    def topologicalySortedModules(self) -> List[str]:
         #self.subscribes have edges 
         edges = {}
         for name,subscribers in self.subscribers.items():
@@ -555,24 +560,25 @@ class TopLevelModule():
                 if subscriber not in edges[instance_name]:
                     edges[instance_name].append(subscriber)
 
-        def topologicalSort(edges:Dict[str,List[str]]) -> List[str]:
-            sorted_nodes = []
-            visited = set()
-            def topologicalSortHelper(node:str):
-                if node in visited:
-                    return
-                visited.add(node)
-                for edge in edges[node]:
-                    topologicalSortHelper(edge)
-                sorted_nodes.append(node)
-            for node in edges:
-                topologicalSortHelper(node)
-            #reverse
-            sorted_nodes.reverse()
-            return sorted_nodes
+        sorted_nodes = []
+        visited = set()
+        def topologicalSortHelper(node:str):
+            if node in visited:
+                return
+            visited.add(node)
+            for edge in edges[node]:
+                topologicalSortHelper(edge)
+            sorted_nodes.append(node)
+        for node in edges:
+            topologicalSortHelper(node)
+        #reverse
         
-        result = topologicalSort(edges)
-        return result
+        
+        sorted_nodes.reverse()
+        for module in self.modules.keys():
+            if module not in sorted_nodes:
+                sorted_nodes.append(module)
+        return sorted_nodes
 
     @property
     def necessaryPackages(self) -> List[str]:
@@ -629,8 +635,8 @@ class TopLevelModule():
         s.append(f"module {self.name} ({interfaceString});\n \n")
         
         # add modules
-        for name in self.topologicalySortedInstances:
-            m = self.instances[name]
+        for name in self.topologicalySortedModules:
+            m = self.modules[name]
             if m.creator_args is None:
                 s.append("Awiaiting for args for ")
                 continue
@@ -649,11 +655,14 @@ class TopLevelModule():
         # add connections
         for c in self.connections.values():
             s.append("\t"+c.to_string())
+        s.append("\n")
+
 
         for bus in self.buses.values():
             s.append(str(bus.mastersV))
             s.append(str(bus.slavesV))
             s.append(str(bus))
+            s.append("\n")
 
         if self.exported_interface is not None:
             if type(self.exported_interface) == str:
@@ -707,9 +716,10 @@ class TopLevelModule():
             f.write(self.__str__())
 
     def buildAndRun(self,folder="."):
-        cwd = os.path.join(self.db.saveLocation,"..")
+        cwd = os.path.join(".",self.db.saveLocation,"..")
+        print("CWD",cwd)
         self.to_file(cwd)
-        additionalFoldersStr =".:"+ ":.".join(self.db.additionalLibraryFolders) + ":+"
+        additionalFoldersStr =".:"+ ":".join(self.db.additionalLibraryFolders) + ":+"
         buildFolder = "./bscBuild/"
         bscLocation = "bsc"
         cFiles ="Flute/libs/BlueStuff/BlueUtils/MemSim.c Flute/libs/BlueStuff/BlueUtils/SimUtils.c"

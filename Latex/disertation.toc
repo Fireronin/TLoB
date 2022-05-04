@@ -46,15 +46,18 @@
 \contentsline {subsection}{\numberline {3.6.4}Frontend (MUI)}{25}{subsection.3.6.4}%
 \contentsline {subsection}{\numberline {3.6.5}Functionality}{26}{subsection.3.6.5}%
 \contentsline {subsubsection}{Instance node}{26}{section*.18}%
-\contentsline {chapter}{\numberline {4}Evaluation}{28}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Overview}{28}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Polymorphism disclaimer}{28}{subsection.4.1.1}%
-\contentsline {section}{\numberline {4.2}Example 1 - Connecting FIFOs}{29}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Platform Designer}{29}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}My tool}{30}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Using text format to do same things and Qualitative metrics}{32}{subsection.4.2.3}%
-\contentsline {section}{\numberline {4.3}Example 2 - Simple System-on-Chip}{32}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Platform Designer}{32}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}My tool}{32}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Other differences}{35}{subsection.4.3.3}%
-\contentsline {section}{\numberline {4.4}Example 3 - Working AXI4 masters and slaves}{35}{section.4.4}%
+\contentsline {subsubsection}{Connection node}{28}{section*.21}%
+\contentsline {subsubsection}{Bus node}{29}{section*.23}%
+\contentsline {subsubsection}{Exported interface node}{30}{section*.25}%
+\contentsline {chapter}{\numberline {4}Evaluation}{32}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Overview}{32}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Polymorphism disclaimer}{32}{subsection.4.1.1}%
+\contentsline {section}{\numberline {4.2}Example 1 - Connecting FIFOs}{33}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Platform Designer}{33}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}My tool}{34}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Using text format to do same things and Qualitative metrics}{36}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}Example 2 - Simple System-on-Chip}{36}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Platform Designer}{36}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}My tool}{36}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Other differences}{39}{subsection.4.3.3}%
+\contentsline {section}{\numberline {4.4}Example 3 - Working AXI4 masters and slaves}{39}{section.4.4}%

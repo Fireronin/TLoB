@@ -529,23 +529,26 @@ Similarly to connection node most of the components were reused, and interesting
 
 Autocompletion for masters and slaves is a bit more nuanced as it has two levels of precision. At first level it will show all masters and slaves that can be used with chosen function, but not necessarily together. However, after first successful initialization of a node (using \emph{confirm update}), options for masters and slaves will be narrowed down to only ones that can work with masters and slaves selected during first initialization.
 This node also contains fields to select ranges of addresses on which slaves will be visible. 
-
-\subsubsection{Exported interface node}
-
-
 \newpage
-During stage two of this 
-Almost all the fields that user needs to fill have context based autocompletion. 
-\begin{itemize}
-    \item There are autocompletion for functions that can be used to instantiate a module, and for possible valid arguments of that function that include previously created interfaces and typedefs found in loaded packages.
-    \item After user selects one side of the connection the other side will have completions only for interfaces that are compatible with the selected interface. 
-    \item When creating a bus it will only show functions that have a characteristic of a bus creating function.
-    \item After initialization of a bus, autocompletion will show valid masters and slaves. 
-\end{itemize}
-Also, user can just drag and drop connections between interfaces and fields, and if user types in name of interface connection will be automatically created.
+\subsubsection{Exported interface node}
+\begin{figure}[h!]
+    \centering
+    
+    \includegraphics[width=0.8\columnwidth]{pdfExports/LargeMap-ExportNode.drawio.pdf}
+    \caption{Overview of features of a node allowing to export things from a created module}
+\end{figure}
+This node is allows user to specify name of a function creating a module they designed. Name of the interface of which will be used by this module if it will need to export more than one thing, and most importantly all the exported interfaces. If a name of an interface is already known, system will try to populate members of that interface with members provided, if the name is not known it will simply create a new interface using all the typing data from the members. It also contains a simple feature which will generate name based on access path if user won't provide one. 
+\par
+The intention behind this node is that one might want to create theirs system partially in Bluespec and partially in Verilog as there are vast libraries of IP written in Verilog. Using this node one can create a new interface on a fly that does not have much use in Bluespec world, but if transpiled to Verilog it will only contain things user specified, making process of importing it into tools like Platform Designer much easier. 
 
-\begin{tcolorbox}[title=Futher work]
-    It's worth keeping in mind that for GUI like this there is multitude of things that can be added. Like an option to filter functions based on input that we want to use. Running and showing output of the simulation or an ability to collapse and expand nodes to make the graph more readable(currently some parts of nodes allow for this already). Adding comments that partition the graph (like in UE4).
+
+\begin{tcolorbox}[title=Futher work (TODO this can be removed)]
+    It's worth keeping in mind that for GUI like this there is multitude of things that can be added. Here is list of things that could be added: 
+    \begin{itemize}
+        \item Ability to add comments that partition the graph (like in UE4).
+        \item Inputs node to be able to select inputs to a module. Therefore allowing for paramatrization.
+        \item 
+    \end{itemize}
 \end{tcolorbox}
 
 \chapter{Evaluation}

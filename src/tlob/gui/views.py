@@ -311,6 +311,8 @@ def setExportedInterface(request):
     nameIfc = json_data['name']
     memberNames = json_data['memberNames']
     memberValues = json_data['memberValues']
+    print(memberNames)
+    print(memberValues)
     topLevel.name = topLevelName
     if len(memberValues) != 0:
         try:

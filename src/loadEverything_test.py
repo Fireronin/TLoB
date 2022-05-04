@@ -19,8 +19,8 @@ def loadAllAndDoQuickRun():
     load = True
     db = tdb(load=load)
     if not load:
-        db.addLibraryFolder("Flute/src_SSITH_P2/build_dir")
-        db.addLibraryFolder("tutorial")
+        db.addLibraryFolder("./Flute/src_SSITH_P2/build_dir")
+        db.addLibraryFolder("./tutorial")
 
         # find all folder in "/opt/tools/bsc/bsc-2021/lib/Libraries" and add them to the database
         packages_to_load = ["Simplefifo","ExampleAXI4","AddressFlit"]
@@ -66,6 +66,7 @@ def loadAllAndDoQuickRun():
     with open("test.json","w") as f:
         json.dump(j,f)
 
+    sO = ""
     bO,sBO,sO = topLevel.buildAndRun()
     return sO
 

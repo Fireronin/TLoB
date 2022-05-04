@@ -49,15 +49,15 @@
 \contentsline {subsubsection}{Connection node}{28}{section*.21}%
 \contentsline {subsubsection}{Bus node}{29}{section*.23}%
 \contentsline {subsubsection}{Exported interface node}{30}{section*.25}%
-\contentsline {chapter}{\numberline {4}Evaluation}{32}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Overview}{32}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Polymorphism disclaimer}{32}{subsection.4.1.1}%
-\contentsline {section}{\numberline {4.2}Example 1 - Connecting FIFOs}{33}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Platform Designer}{33}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}My tool}{34}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Using text format to do same things and Qualitative metrics}{36}{subsection.4.2.3}%
-\contentsline {section}{\numberline {4.3}Example 2 - Simple System-on-Chip}{36}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Platform Designer}{36}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}My tool}{36}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Other differences}{39}{subsection.4.3.3}%
-\contentsline {section}{\numberline {4.4}Example 3 - Working AXI4 masters and slaves}{39}{section.4.4}%
+\contentsline {chapter}{\numberline {4}Evaluation}{31}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Overview}{31}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Polymorphism disclaimer}{31}{subsection.4.1.1}%
+\contentsline {section}{\numberline {4.2}Example 1 - Connecting FIFOs}{32}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Platform Designer}{32}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}My tool}{33}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Using text format to do same things and Qualitative metrics}{35}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}Example 2 - Simple System-on-Chip}{35}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Platform Designer}{35}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}My tool}{35}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Other differences}{38}{subsection.4.3.3}%
+\contentsline {section}{\numberline {4.4}Example 3 - Working AXI4 masters and slaves}{38}{section.4.4}%

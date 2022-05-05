@@ -189,14 +189,14 @@ def getPossible(request):
         cretorFunc = topLevel.db.getFunctionByName(creator)
         for name,value in topLevel.knownNames.items():
             try:
-                topLevel.db.merge(cretorFunc.arguments[1].children[1],value,{})
+                topLevel.db.merge(cretorFunc.arguments['arg1'].children[1],value,{})
             except Exception as e:
                 continue
             possibleMasters.append(name)
         possibleSlaves = []
         for name,value in topLevel.knownNames.items():
             try:
-                topLevel.db.merge(cretorFunc.arguments[2].children[1],value,{})
+                topLevel.db.merge(cretorFunc.arguments['arg2'].children[1],value,{})
             except Exception as e:
                 continue
             possibleSlaves.append(name)

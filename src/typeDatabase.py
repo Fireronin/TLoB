@@ -119,18 +119,18 @@ class TypeDatabase():
         else:
             if name in self.functionNameCache:
                 return deepcopy(self.functions[self.functionNameCache[name]])
-        package,name = name.split("::")
-        if package in self.packages:
-            if name in self.functions:
-                return deepcopy(self.functions[name])
-            else:
-                funcs = self.handler.list_funcs(package_name=package)
-                self.addUnparsedFunctions(funcs)
-                self.populateFunctionNames()
-                if name in self.functions:
-                    return deepcopy(self.functions[name])
-                if name in self.functionNameCache:
-                    return deepcopy(self.functions[self.functionNameCache[name]])
+        # package,name = name.split("::")
+        # if package in self.packages:
+        #     if name in self.functions:
+        #         return deepcopy(self.functions[name])
+        #     else:
+        #         funcs = self.handler.list_funcs(package_name=package)
+        #         self.addUnparsedFunctions(funcs)
+        #         self.populateFunctionNames()
+        #         if name in self.functions:
+        #             return deepcopy(self.functions[name])
+        #         if name in self.functionNameCache:
+        #             return deepcopy(self.functions[self.functionNameCache[name]])
         
         fuzzyException(name,list(self.functions), "Function {} not found. \n Do you mean: \n{}")
     
@@ -363,7 +363,7 @@ class TypeDatabase():
             for i,field in enumerate(t_type.formals):
                 t_type.formals[i].type_ide = self.applyVariables(t_type.formals[i].type_ide,variables)
             return t_type
-        if type(t_type) == Function:
+        if type(t_type) == Function or type(t_type) == Module:
             t_type.return_type = self.applyVariables(t_type.return_type,variables)
             for i,arg in t_type.arguments.items():
                 t_type.arguments[i] = self.applyVariables(t_type.arguments[i],variables)

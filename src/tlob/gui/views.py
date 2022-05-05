@@ -13,7 +13,6 @@ print(os.getcwd())
 
 db = tdb(load=True,saveLocation=os.path.join("../../saved"))
 topLevel = TopLevelModule("top",db,package_name="GUITEST")
-print(len(db.functions))
 
 # Create your views here.
 
@@ -38,7 +37,6 @@ def listFunctions(request):
                 continue
     elif kind == 'all':
         names = list(db.functions.keys())
-    print(kind, names)
     namesList = json.dumps({'names':names})
     return HttpResponse(namesList)
 
@@ -179,7 +177,7 @@ def confirmBus(request):
 def getPossible(request):
     json_data = json.loads(request.body)
     name = json_data['name']
-    initalized = json_data['initalized']
+    initalized = name in topLevel.buses
     creator = json_data['creator']
     if initalized:
         possibleMasters = topLevel.buses[name].mastersV.listAddable(topLevel.knownNames.items())
@@ -339,7 +337,7 @@ def loadFromJSON(request):
     # json file is at 'JSON' usign FromData
     json_data = json.loads(request.body)
     global topLevel
-    topLevel = topLevelFromJSON(json_data,reload=False)
+    topLevel = topLevelFromJSON(json_data,reload=False,saveLocation=os.path.join("../../saved"))
     return HttpResponse(json.dumps({'exception':""}))
 
 @never_cache
@@ -348,3 +346,19 @@ def saveToJSON(request):
     #send json file to client
     return HttpResponse(json_file)
     
+def getVariables(request):
+    json_data = json.loads(request.body)
+    name = json_data['name']
+    try:
+        variables = {str(key):str(var.value) for key,var in topLevel.modules[name].variables.items()}
+    except Exception as e:
+        tb = traceback.format_exc()
+        print(tb)
+        print(e)
+        return HttpResponse(json.dumps({'exception':str(e)}))
+    response = {
+        'name':name,
+        'variables':variables,
+        'exception':"",
+    }
+    return HttpResponse(json.dumps(response))

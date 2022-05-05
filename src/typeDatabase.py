@@ -99,6 +99,7 @@ class TypeDatabase():
                 raise Exception("Conflicting values for variable: "+s + " " + str(variables[s].value) + " " + str(value))
     
     def populateFunctionNames(self):
+        self.functionNameCache ={}
         proposedAdditions = {}
         duplicateNames = set()
         for function in self.functions.values():
@@ -106,19 +107,18 @@ class TypeDatabase():
                 duplicateNames.add(function.name)
                 continue
             if function.name not in self.functions:
-                proposedAdditions[function.name] = function            
+                proposedAdditions[function.name] = function.full_name           
 
         for key,value in proposedAdditions.items():
             if key in duplicateNames:
                 continue
-            self.functionNameCache[key] = value.full_name
+            self.functionNameCache[key] = value
 
     def getFunctionByName(self,name):
         if name in self.functions:
             return deepcopy(self.functions[name])
-        else:
-            if name in self.functionNameCache:
-                return deepcopy(self.functions[self.functionNameCache[name]])
+        if name in self.functionNameCache:
+            return deepcopy(self.functions[self.functionNameCache[name]])
         # package,name = name.split("::")
         # if package in self.packages:
         #     if name in self.functions:
@@ -131,7 +131,7 @@ class TypeDatabase():
         #             return deepcopy(self.functions[name])
         #         if name in self.functionNameCache:
         #             return deepcopy(self.functions[self.functionNameCache[name]])
-        
+        print("Failed to find function: " + name,name in self.functionNameCache)
         fuzzyException(name,list(self.functions), "Function {} not found. \n Do you mean: \n{}")
     
     def getTypeByName(self,t_type:Union[Type,str]):

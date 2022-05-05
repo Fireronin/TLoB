@@ -5,7 +5,7 @@ from bsvSynthesizer import *
 from typeDatabase import TypeDatabase as tdb
 #%% initalize bluetcl
 # initalize tdb
-db = tdb(load=True)
+db = tdb(load=False)
 
 db.addLibraryFolder("tutorial")
 # Read contents of package

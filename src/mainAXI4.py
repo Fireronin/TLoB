@@ -7,7 +7,7 @@ from bsvSynthesizer import *
 from typeDatabase import TypeDatabase as tdb
 #%% initalize bluetcl
 # initalize tdb
-db = tdb(load=True)
+db = tdb(load=False)
 
 db.addLibraryFolder("Flute/src_SSITH_P2/build_dir")
 db.addLibraryFolder("tutorial")

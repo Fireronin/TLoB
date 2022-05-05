@@ -65,6 +65,7 @@ class InstanceV2():
         self.instance_name = instance_name
         self.module_args = module_args
         self.input_context = {key:Variable(evaluateCustomStart(val)) for key,val in input_context.items()}
+        self.variables = {}
         self.topLevel.addInstance(self,instance_name)
         if creator_args is not None:
             self.update()
@@ -98,11 +99,11 @@ class InstanceV2():
             if type(value) == InstanceV2:
                 value = value.type_ide
             if isinstance(value, Type_ide):
-                newVariables = self.db.merge(arg[1],value,{}) 
-                for key,val in newVariables.items():
-                    self.db.CAdd(context,key,val)
+                self.db.merge(arg[1],value,self.variables) 
+                # for key,val in newVariables.items():
+                #     self.db.CAdd(context,key,val)
             #this is just to check if everything is ok
-            self.db.applyVariables(deepcopy(self.creator.arguments[arg[0]]),context)
+            self.db.applyVariables(deepcopy(self.creator.arguments[arg[0]]),self.variables)
 
         ideCopy  = deepcopy(self.creator.return_type)
         if len(module_args) == 0:
@@ -110,11 +111,11 @@ class InstanceV2():
         for i,field in enumerate(ideCopy.formals):
             ideCopy.formals[i].type_ide = module_args[i]
 
-        context = self.db.merge(self.creator.return_type,ideCopy,context)
+        self.db.merge(self.creator.return_type,ideCopy,self.variables)
 
         #account for provisos
-        context = self.db.solveProvisos(self.creator.provisos,context)
-        self.creator.return_type = self.db.applyVariables(self.creator.return_type,context)
+        self.variables = self.db.solveProvisos(self.creator.provisos,self.variables)
+        self.creator.return_type = self.db.applyVariables(self.creator.return_type,self.variables)
         if self.creator.name == "mkConnection":
             return
         self.creator.return_type.accessName = self.instance_name
@@ -223,6 +224,7 @@ class BusInstanceV3(InstanceV2):
         for slave in self.slaves:
             self.slavesV.add(slave[0])
         self.slavesV.update(silent=False)
+        self.variables = {}
         #addName(self.instance_name,self.type_ide)
         self.creator_args = [f"route_{self.instance_name}",self.mastersV.type_ide,self.slavesV.type_ide]
         self.module_args = []
@@ -279,6 +281,8 @@ class BusInstanceV3(InstanceV2):
         output_str.append(f"\tVector#({r_s}, Bool) oneHotaddress = replicate (False);\n")
         
         for name, route in self.slaves:
+            if not route:
+                raise Exception(f"Slave {name} has no route")
             slave_id = slave_to_id[name]
             output_str.append(f"\t// {name} -> {slave_id}\n")
             for start, end in route:

@@ -21,14 +21,15 @@ def lookForKeyword(keyword,dictionary):
             print(f"While parsing we exprected a keyword: {keyword}.")
         raise Exception(f"Keyword {keyword} not found")
 
-def topLevelFromJSON(json_file,reload=False,output_dir=None):
-    db = tdb(load=not reload)
+def topLevelFromJSON(json_file,reload=False,output_dir=None,saveLocation=os.path.join(".","saved")):
+    db = tdb(load=not reload,saveLocation=saveLocation,librariesRoot=os.path.join(saveLocation,".."))
     
     if "aditional folders" in json_file:  
         for folder in json_file["aditional folders"]:
             db.addLibraryFolder(folder)
     
     packages = lookForKeyword("packages",json_file)
+    packages = [package for package in packages if package not in db.packages]
     db.addPackages(packages)
     db.loadDependencies()
 

@@ -14,7 +14,7 @@
 \usepackage{dirtytalk}
 \usepackage{csvsimple}
 \newcommand\todo[1]{\textcolor{red}{#1}}
-\title{Legend Of Bluespec}
+\title{The Legend of Bluespec: A Link to the components}
 \author{kr469 }
 \date{October 2021}
  \hypersetup{ 
@@ -389,7 +389,7 @@ The main goal of the project is to be able to take a JSON with some data and syn
   
   
 \subsection{JSON interface}
-I decided that my \say{human-readable format} will be JSON. This is because wide support for JSON is already available in many languages.
+I decided that my \say{human-readable format} will be JSON. This format is simple, and support built-in in many languages.
 The only problem with JSON is that it is more verbose than in some aspects Bluespec, and in theory, it would make more sense to use Bluespec.
 However, this could introduce user confusion, as I am not able to support arbitrary Bluespec features in my backend.
 My understanding is that supporting something only partially could lead users to think that my tool is broken because it does not match their assumptions about what it can do.
@@ -401,9 +401,9 @@ At the same time, using JSON allows me to support simplified semantics for thing
 
 \subsubsection{Structure of JSON file}
 
-\begin{figure}[!h]
+\begin{figure}[h!]
     \centering
-\includegraphics[width=0.75\columnwidth]{pdfExports/LargeMapJSON.pdf}
+\includegraphics[width=0.70\columnwidth]{pdfExports/LargeMapJSON.pdf}
 
 \caption{Disclaimer: In this diagram, I am using uppercase names but the JSON file uses lowercase ones also all spaces are replaced with underscores. I am also using s in the name to signify a list of dictionaries with those keywords}
 
@@ -427,7 +427,6 @@ More detailed description of keywords:
    \item \verb!connections[i].from! - lowercase string with access path of a left side of the connection 
    \item \verb!connections[i].to! - lowercase string with access path of a right side of the connection  
    \item \verb!busses! - list of dictionaries describing busses 
-   \item \verb!busses[i].name! - TODO remove this 
    \item \verb!busses[i].function! - lowercase name of a function used to create a bus 
    \item \verb!busses[i].masters! - list of access paths of interfaces to use as masters 
    \item \verb!busses[i].slaves! - list of dictionaries describing slaves 
@@ -542,7 +541,7 @@ This is the simplest node, it contains two inputs, like the ones found in the in
 \caption{Bus node connecting one master and two slaves using AXI4 interface}
 \end{figure}
 
-Similarly to the connection node, most of the components were reused, and interesting are the details. This node works only with a subset of functions, that have specific something (TODO find a word to use). Fortunately, used do not need to look for those functions, autocomplete field will only show you valid ones. (It might be possible that some non-bus function will slip through as I do not want to be overly aggressive and require things like having \say{bus} in the name of the function, but from my testing, my simple check narrows down options to less than ten from few hundred found in all packages, I worked with.).
+Similarly to the connection node, most of the components were reused, and interesting are the details. This node works only with a subset of functions, that have specific something (TODO find a word to use). Fortunately, used do not need to look for those functions, autocomplete field will only show you valid ones. (It might be possible that some non-bus function will slip through as I do not want to be overly aggressive and require things like having \say{bus} in the name of the function, but from my testing, my simple check narrows down options to less than ten from few thousand found in all packages, I worked with.).
 
 Autocompletion for masters and slaves is a bit more nuanced, as it has two levels of precision. At the first level, it will show all masters and slaves that can be used with chosen function, but not necessarily together. However, after the first successful initialization of a node (using \emph{confirm update}), options for masters and slaves will be narrowed down to only ones that can work with masters and slaves selected during the first initialization.
 This node also contains fields to select ranges of addresses on which slaves will be visible. 
@@ -568,17 +567,16 @@ The intention behind this node is that one might want to create their system par
 Throughout working on this project I have learned a lot about QSys and Bluespec, and how they interact. This means that I will need to adjust slightly it from the project proposal to better represent problems that are solved. Firstly my understanding is that Platform Designer tool is shared between QSys and QSys Pro.
 
 \section{Overview}
-My evaluation will be divided into two sections each with three subsections. First section will compare text file formats of QSys and mine and second section will compare GUI of QSys and mine.
-Each of the subsection will go through three examples:
+My evaluation will be divided into three examples:
 \begin{itemize}
-    \item First one will show simple example of two connected fifos, and difficulty of connecting a thrid one.
-    \item Second will show an example of simple system-on-chip (SOC). With one Flute core, memory module and fake interface with outside world, all connected by a bus.
+    \item First one will be about connecting FIFOs.
+    \item Second will show a simple system-on-chip (SOC). With one Flute core, memory module and fake interface with outside world, all connected by a bus.
     \item Third example will two AXI4 masters and two AXI4 slaves connected by a bus. 
 \end{itemize}
-First two examples will produce valid devices, but they won't do anything interesting. Last example will produce a working top level module that will demonstrate practical use of the tool.
+First two examples will produce valid devices, but they won't do anything interesting. Last example will produce a working top level module that will demonstrate that generated code indeed produces same results as connection modules using Platform designer.
 
 \subsection{Polymorphism disclaimer}
-Before we even create text files that we are going to compare we talk about an issue when working with QSys and Bluespec. That is the fact that Bluespec can't generate Verilog code of functions that are polymorphic. Nor there is support for Bluespec in QSys nor Xilinx Vivado. My understanding is Verilog type system is not rich enough to express things that would be needed to support complex polymorphism found in Bluespec. Therefore, any module used with QSys will need to be converted into it's synthesizable version stripped of any arguments and transpiled into Verilog. One might argue that this is an issue with Bluespec and not QSys, but I would argue that it is still a problem that needs fixing I have solution for It, that is working with Bluespec natively rather than Verilog files. 
+Before we start talking about examples we need to address the elephant in the room. issue when working with QSys and Bluespec. That is the fact that Bluespec can't generate Verilog code of functions that are polymorphic. Nor there is support for Bluespec in QSys nor Xilinx Vivado. My understanding is Verilog type system is not rich enough to express things that would be needed to support complex polymorphism found in Bluespec. Therefore, any module used with QSys will need to be converted into it's synthesizable version stripped of any arguments and transpiled into Verilog. One might argue that this is an issue with Bluespec and not QSys, but I would argue that it is still a problem that needs fixing I have solution for It, that is working with Bluespec natively rather than Verilog files. 
 
 
 \section{Example 1 - Connecting FIFOs}

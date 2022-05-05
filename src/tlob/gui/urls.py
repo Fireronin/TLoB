@@ -20,4 +20,5 @@ urlpatterns = [
     path('setExportedInterface/', views.setExportedInterface, name='setExportedInterface'),
     path('loadFromJSON/', views.loadFromJSON, name='loadFromJSON'),
     path('saveToJSON/', views.saveToJSON, name='saveToJSON'),
+    path('getVariables/', views.getVariables, name='getVariables'),
 ]

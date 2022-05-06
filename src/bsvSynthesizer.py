@@ -501,6 +501,7 @@ class TopLevelModule():
         self.buses[name] = bI
 
     def setExportedInterface(self,name,members:Union[str,List[Tuple[str,str]]]):
+        print("members",members )
         if type(members) == str:
             self.exported_interface = members
             return
@@ -521,6 +522,7 @@ class TopLevelModule():
             for name,value in members:
                 self.exported_interface.members[name] = self.knownNames[value]
             #self.db.types[name] = self.exported_interface
+            self.interface_members = {}
             for name,value in members:
                 if name == '':
                     name = value.replace(".","_")

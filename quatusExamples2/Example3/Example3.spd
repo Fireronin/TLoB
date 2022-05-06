@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <simPackage>
- <file path="simulation/Example3.vhd" type="VHDL" />
+ <file path="simulation/Example3.v" type="VERILOG" />
  <topLevel name="Example3" />
  <deviceFamily name="cyclonev" />
 </simPackage>

@@ -13,5 +13,5 @@
    testbench_system="STANDARD"
    testbench_simulation="NONE"
    path="_PROJECT_NAME_"
-   simulation="VERILOG" />
+   simulation="NONE" />
 </preferences>

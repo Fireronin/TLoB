@@ -309,14 +309,17 @@ def setExportedInterface(request):
     nameIfc = json_data['name']
     memberNames = json_data['memberNames']
     memberValues = json_data['memberValues']
+    print(memberNames,memberValues)
     topLevel.name = topLevelName
     if len(memberValues) != 0:
         try:
             # if len(memberNames) != len(memberValues):
             #     raise Exception("memberNames and memberValues must be the same length \n probably didn't assigned names to all the values")
             assignments = []
-            for slot,name in memberNames.items():
-                value = memberValues[slot]
+            for slot,value in memberValues.items():
+                name = ""
+                if slot in memberNames:
+                    name = memberNames[slot]
                 assignments.append((name,value))
             if len(assignments) == 1:
                 topLevel.setExportedInterface(nameIfc,assignments[0][1])

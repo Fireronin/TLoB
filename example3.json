@@ -1,0 +1,75 @@
+{
+    "aditional folders": [
+        "./Flute/src_SSITH_P2/build_dir",
+        "./tutorial"
+    ],
+    "buses": [
+        {
+            "function": "AXI4_Interconnect::mkAXI4Bus",
+            "masters": [
+                "master1",
+                "master2"
+            ],
+            "slaves": [
+                {
+                    "name": "slave1",
+                    "routes": [
+                        [
+                            0,
+                            1
+                        ]
+                    ]
+                },
+                {
+                    "name": "slave2",
+                    "routes": [
+                        [
+                            1,
+                            2
+                        ]
+                    ]
+                }
+            ]
+        }
+    ],
+    "modules": [
+        {
+            "function": "ExampleAXI4::axiMaster",
+            "function_params": [
+                "1"
+            ],
+            "name": "master1"
+        },
+        {
+            "function": "ExampleAXI4::axiMaster",
+            "function_params": [
+                "2"
+            ],
+            "name": "master2"
+        },
+        {
+            "function": "ExampleAXI4::axiSlave",
+            "function_params": [
+                "3"
+            ],
+            "name": "slave1"
+        },
+        {
+            "function": "ExampleAXI4::axiSlave",
+            "function_params": [
+                "4"
+            ],
+            "name": "slave2"
+        }
+    ],
+    "name": "top",
+    "package_name": "GUITEST",
+    "packages": [
+        "Connectable",
+        "Vector",
+        "ExampleAXI4",
+        "AXI4_Types",
+        "AXI4_Interconnect"
+    ],
+    "typedefs": []
+}

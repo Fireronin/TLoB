@@ -200,6 +200,8 @@ INPUT /usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex
 INPUT /usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex
 INPUT /usr/share/texlive/texmf-dist/tex/latex/tools/shellesc.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/tools/shellesc.sty
+INPUT /usr/share/texlive/texmf-dist/tex/latex/float/float.sty
+INPUT /usr/share/texlive/texmf-dist/tex/latex/float/float.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdfmode.def
 INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdfmode.def
 INPUT disertation.aux
@@ -312,6 +314,18 @@ INPUT ./images/Example2QSys.png
 INPUT images/Example2MySolution.png
 INPUT ./images/Example2MySolution.png
 INPUT ./images/Example2MySolution.png
+INPUT charts/example1_tokens.pdf
+INPUT ./charts/example1_tokens.pdf
+INPUT ./charts/example1_tokens.pdf
+INPUT charts/example1_lines.pdf
+INPUT ./charts/example1_lines.pdf
+INPUT ./charts/example1_lines.pdf
+INPUT charts/all_tokens.pdf
+INPUT ./charts/all_tokens.pdf
+INPUT ./charts/all_tokens.pdf
+INPUT charts/all_lines.pdf
+INPUT ./charts/all_lines.pdf
+INPUT ./charts/all_lines.pdf
 INPUT disertation.aux
 INPUT ./disertation.out
 INPUT ./disertation.out

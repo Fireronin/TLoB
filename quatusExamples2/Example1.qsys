@@ -76,28 +76,17 @@
    kind="clock"
    version="21.1"
    start="clk_0.clk"
-   end="simpleFifo_0.clock" />
+   end="simpleFifo_1.clock" />
  <connection
    kind="clock"
    version="21.1"
    start="clk_0.clk"
-   end="simpleFifo_1.clock" />
+   end="simpleFifo_0.clock" />
  <connection
    kind="conduit"
    version="21.1"
    start="simpleFifo_0.first"
    end="simpleFifo_1.enq_value">
-  <parameter name="endPort" value="" />
-  <parameter name="endPortLSB" value="0" />
-  <parameter name="startPort" value="" />
-  <parameter name="startPortLSB" value="0" />
-  <parameter name="width" value="0" />
- </connection>
- <connection
-   kind="conduit"
-   version="21.1"
-   start="simpleFifo_0.rDY_first"
-   end="simpleFifo_0.eN_deq">
   <parameter name="endPort" value="" />
   <parameter name="endPortLSB" value="0" />
   <parameter name="startPort" value="" />

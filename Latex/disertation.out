@@ -20,7 +20,7 @@
 \BOOKMARK [0][-]{chapter.3}{Implementation}{}% 20
 \BOOKMARK [1][-]{section.3.1}{Crawling the packages}{chapter.3}% 21
 \BOOKMARK [1][-]{section.3.2}{Loading Bluespec packages' information \(TODO check grammar of s'\)}{chapter.3}% 22
-\BOOKMARK [2][-]{subsection.3.2.1}{Lexical and syntax analysis}{section.3.2}% 23
+\BOOKMARK [2][-]{subsection.3.2.1}{Lexical and syntactic analysis}{section.3.2}% 23
 \BOOKMARK [2][-]{subsection.3.2.2}{Understanding abstract syntax tree \(AST\)}{section.3.2}% 24
 \BOOKMARK [2][-]{subsection.3.2.3}{Organizing data and functionality}{section.3.2}% 25
 \BOOKMARK [1][-]{section.3.3}{Building the top level module}{chapter.3}% 26
@@ -49,5 +49,6 @@
 \BOOKMARK [2][-]{subsection.4.3.2}{My tool}{section.4.3}% 49
 \BOOKMARK [2][-]{subsection.4.3.3}{Other differences}{section.4.3}% 50
 \BOOKMARK [1][-]{section.4.4}{Example 3 - Working AXI4 masters and slaves}{chapter.4}% 51
-\BOOKMARK [0][-]{chapter.5}{Conclusion}{}% 52
-\BOOKMARK [1][-]{section.5.1}{Results}{chapter.5}% 53
+\BOOKMARK [1][-]{section.4.5}{Numbers}{chapter.4}% 52
+\BOOKMARK [0][-]{chapter.5}{Conclusion}{}% 53
+\BOOKMARK [1][-]{section.5.1}{Results}{chapter.5}% 54

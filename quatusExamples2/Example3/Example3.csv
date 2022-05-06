@@ -1,15 +1,15 @@
-# system info Example3 on 2022.04.30.13:27:32
+# system info Example3 on 2022.05.06.15:22:33
 system_info:
 name,value
 DEVICE,5CGXFC7C7F23C8
 DEVICE_FAMILY,Cyclone V
-GENERATION_ID,1651321648
+GENERATION_ID,1651846948
 #
 #
-# Files generated for Example3 on 2022.04.30.13:27:32
+# Files generated for Example3 on 2022.05.06.15:22:33
 files:
 filepath,kind,attributes,module,is_top
-simulation/Example3.vhd,VHDL,,Example3,true
+simulation/Example3.v,VERILOG,,Example3,true
 #
 # Map from instance-path to kind of module
 instances:

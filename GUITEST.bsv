@@ -2,26 +2,39 @@ package GUITEST;
 // necessary packages
 import Connectable::*;
 import Vector::*;
-import Core::*;
-import Core_IFC::*;
+import ExampleAXI4::*;
+import AXI4_Types::*;
+import AXI4_Interconnect::*;
 
 
-interface Subset;
-	interface AXI4_Types::AXI4_Master_Sig#(5,64,64,0,0,0,0,0) aaa;
-	method Vector::Vector#(0,PLIC::PLIC_Source_IFC) bbb();
-	interface AXI4_Types::AXI4_Master_Sig#(6,64,64,0,0,0,0,0) ccc;
-	interface AXI4_Types::AXI4_Slave_Sig#(6,64,512,0,0,0,0,0) dd;
-endinterface
+function Vector #(2, Bool) route_bus5 (r_t x) provisos ( Bits#(r_t,r_l) );
+	Bit#(r_l) address = pack(x);
+	Vector#(2, Bool) oneHotaddress = replicate (False);
+	// slave1 -> 0
+	if (address >= 0 && address < 1)
+		oneHotaddress[0] = True;
+	// slave2 -> 1
+	if (address >= 1 && address < 2)
+		oneHotaddress[1] = True;
+	return oneHotaddress;
+endfunction
 
-module top (Subset);
+module top ();
  
-	Core_IFC::Core_IFC_Synth#(SoC_Map::N_External_Interrupt_Sources) core <- mkCore_Synth();
+	AXI4_Types::AXI4_Master#(ExampleAXI4::MID_sz,ExampleAXI4::ADDR_sz,ExampleAXI4::DATA_sz,ExampleAXI4::AWUSER_sz,ExampleAXI4::WUSER_sz,ExampleAXI4::BUSER_sz,ExampleAXI4::ARUSER_sz,ExampleAXI4::RUSER_sz) master1 <- axiMaster(1);
+	AXI4_Types::AXI4_Master#(ExampleAXI4::MID_sz,ExampleAXI4::ADDR_sz,ExampleAXI4::DATA_sz,ExampleAXI4::AWUSER_sz,ExampleAXI4::WUSER_sz,ExampleAXI4::BUSER_sz,ExampleAXI4::ARUSER_sz,ExampleAXI4::RUSER_sz) master2 <- axiMaster(2);
+	AXI4_Types::AXI4_Slave#(ExampleAXI4::SID_sz,ExampleAXI4::ADDR_sz,ExampleAXI4::DATA_sz,ExampleAXI4::AWUSER_sz,ExampleAXI4::WUSER_sz,ExampleAXI4::BUSER_sz,ExampleAXI4::ARUSER_sz,ExampleAXI4::RUSER_sz) slave1 <- axiSlave(3);
+	AXI4_Types::AXI4_Slave#(ExampleAXI4::SID_sz,ExampleAXI4::ADDR_sz,ExampleAXI4::DATA_sz,ExampleAXI4::AWUSER_sz,ExampleAXI4::WUSER_sz,ExampleAXI4::BUSER_sz,ExampleAXI4::ARUSER_sz,ExampleAXI4::RUSER_sz) slave2 <- axiSlave(4);
 
 
-	interface aaa = core.cpu_imem_master;
-	method bbb = core.core_external_interrupt_sources;
-	interface ccc = core.core_mem_master;
-	interface dd = core.dma_server;
+	Vector::Vector#(2,AXI4_Types::AXI4_Master#(ExampleAXI4::MID_sz,ExampleAXI4::ADDR_sz,ExampleAXI4::DATA_sz,ExampleAXI4::AWUSER_sz,ExampleAXI4::WUSER_sz,ExampleAXI4::BUSER_sz,ExampleAXI4::ARUSER_sz,ExampleAXI4::RUSER_sz)) bus5_masters;
+	bus5_masters[0] = master1;
+	bus5_masters[1] = master2;
+	Vector::Vector#(2,AXI4_Types::AXI4_Slave#(ExampleAXI4::SID_sz,ExampleAXI4::ADDR_sz,ExampleAXI4::DATA_sz,ExampleAXI4::AWUSER_sz,ExampleAXI4::WUSER_sz,ExampleAXI4::BUSER_sz,ExampleAXI4::ARUSER_sz,ExampleAXI4::RUSER_sz)) bus5_slaves;
+	bus5_slaves[0] = slave1;
+	bus5_slaves[1] = slave2;
+	AXI4_Interconnect::mkAXI4Bus(route_bus5,bus5_masters,bus5_slaves);
+
 
 endmodule
 endpackage

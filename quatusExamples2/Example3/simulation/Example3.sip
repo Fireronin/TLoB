@@ -4,4 +4,4 @@ set_global_assignment -entity "Example3" -library "lib_Example3" -name IP_TOOL_E
 set_global_assignment -library "lib_Example3" -name SPD_FILE [file join $::quartus(sip_path) "../Example3.spd"]
 set_global_assignment -library "lib_Example3" -name MISC_FILE [file join $::quartus(sip_path) "../../Example3.qsys"]
 
-set_global_assignment -library "lib_Example3" -name MISC_FILE [file join $::quartus(sip_path) "Example3.vhd"]
+set_global_assignment -library "lib_Example3" -name MISC_FILE [file join $::quartus(sip_path) "Example3.v"]

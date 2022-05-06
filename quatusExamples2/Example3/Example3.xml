@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deploy
- date="2022.04.30.13:27:41"
+ date="2022.05.06.15:23:33"
  outputDirectory="D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/">
  <perimeter>
   <parameter
@@ -65,13 +65,13 @@
  </perimeter>
  <entity
    path=""
-   parameterizationKey="Example3:1.0:AUTO_CLK_CLOCK_DOMAIN=-1,AUTO_CLK_CLOCK_RATE=-1,AUTO_CLK_RESET_DOMAIN=-1,AUTO_DEVICE=5CGXFC7C7F23C8,AUTO_DEVICE_FAMILY=Cyclone V,AUTO_DEVICE_SPEEDGRADE=8_H7,AUTO_GENERATION_ID=1651321656,AUTO_UNIQUE_ID=(axi4Slave:1.0:)(axiMaster:1.0:)(clock_source:21.1:clockFrequency=50000000,clockFrequencyKnown=true,inputClockFrequency=0,resetSynchronousEdges=NONE)(avalon:21.1:arbitrationPriority=1,baseAddress=0x0000,defaultConnection=false)(clock:21.1:)(clock:21.1:)(reset:21.1:)(reset:21.1:)"
+   parameterizationKey="Example3:1.0:AUTO_CLK_CLOCK_DOMAIN=-1,AUTO_CLK_CLOCK_RATE=-1,AUTO_CLK_RESET_DOMAIN=-1,AUTO_DEVICE=5CGXFC7C7F23C8,AUTO_DEVICE_FAMILY=Cyclone V,AUTO_DEVICE_SPEEDGRADE=8_H7,AUTO_GENERATION_ID=1651847007,AUTO_UNIQUE_ID=(axi4Slave:1.0:)(axiMaster:1.0:)(clock_source:21.1:clockFrequency=50000000,clockFrequencyKnown=true,inputClockFrequency=0,resetSynchronousEdges=NONE)(avalon:21.1:arbitrationPriority=1,baseAddress=0x0000,defaultConnection=false)(clock:21.1:)(clock:21.1:)(reset:21.1:)(reset:21.1:)"
    instancePathKey="Example3"
    kind="Example3"
    version="1.0"
    name="Example3">
   <parameter name="AUTO_CLK_CLOCK_RATE" value="-1" />
-  <parameter name="AUTO_GENERATION_ID" value="1651321656" />
+  <parameter name="AUTO_GENERATION_ID" value="1651847007" />
   <parameter name="AUTO_DEVICE" value="5CGXFC7C7F23C8" />
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
   <parameter name="AUTO_CLK_RESET_DOMAIN" value="-1" />

@@ -10,17 +10,17 @@
 \contentsline {subsection}{\numberline {2.1.4}Provisos}{7}{subsection.2.1.4}%
 \contentsline {section}{\numberline {2.2}Choosing tools}{8}{section.2.2}%
 \contentsline {subsection}{\numberline {2.2.1}Haskell}{8}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Tcl (pronounced "tickle")}{8}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.2}Tcl (pronounced "tickle")}{9}{subsection.2.2.2}%
 \contentsline {subsection}{\numberline {2.2.3}Python}{9}{subsection.2.2.3}%
 \contentsline {subsection}{\numberline {2.2.4}Postmortem}{9}{subsection.2.2.4}%
-\contentsline {section}{\numberline {2.3}Creating a grammar}{9}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}What grammar is needed ?}{9}{subsection.2.3.1}%
+\contentsline {section}{\numberline {2.3}Creating a grammar}{10}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}What grammar is needed ?}{10}{subsection.2.3.1}%
 \contentsline {subsection}{\numberline {2.3.2}Where to find this grammar?}{10}{subsection.2.3.2}%
 \contentsline {subsection}{\numberline {2.3.3}Technical aspects of the grammar}{10}{subsection.2.3.3}%
 \contentsline {chapter}{\numberline {3}Implementation}{12}{chapter.3}%
 \contentsline {section}{\numberline {3.1}Crawling the packages}{12}{section.3.1}%
 \contentsline {section}{\numberline {3.2}Loading Bluespec packages' information (TODO check grammar of s')}{13}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Lexical and syntax analysis}{13}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.1}Lexical and syntactic analysis}{13}{subsection.3.2.1}%
 \contentsline {subsection}{\numberline {3.2.2}Understanding abstract syntax tree (AST)}{13}{subsection.3.2.2}%
 \contentsline {subsection}{\numberline {3.2.3}Organizing data and functionality}{14}{subsection.3.2.3}%
 \contentsline {section}{\numberline {3.3}Building the top level module}{15}{section.3.3}%
@@ -55,12 +55,13 @@
 \contentsline {subsection}{\numberline {4.1.1}Polymorphism disclaimer}{31}{subsection.4.1.1}%
 \contentsline {section}{\numberline {4.2}Example 1 - Connecting FIFOs}{32}{section.4.2}%
 \contentsline {subsection}{\numberline {4.2.1}Platform Designer}{32}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}My tool}{33}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Using text format to do same things and Qualitative metrics}{35}{subsection.4.2.3}%
-\contentsline {section}{\numberline {4.3}Example 2 - Simple System-on-Chip}{35}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Platform Designer}{35}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}My tool}{35}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Other differences}{38}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.2.2}My tool}{34}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Using text format to do same things and Qualitative metrics}{34}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}Example 2 - Simple System-on-Chip}{36}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Platform Designer}{36}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}My tool}{37}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Other differences}{37}{subsection.4.3.3}%
 \contentsline {section}{\numberline {4.4}Example 3 - Working AXI4 masters and slaves}{38}{section.4.4}%
-\contentsline {chapter}{\numberline {5}Conclusion}{39}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Results}{39}{section.5.1}%
+\contentsline {section}{\numberline {4.5}Numbers}{38}{section.4.5}%
+\contentsline {chapter}{\numberline {5}Conclusion}{41}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Results}{41}{section.5.1}%

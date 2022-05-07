@@ -14,10 +14,12 @@
 \usepackage{dirtytalk}
 \usepackage{csvsimple}
 \usepackage{float}
+\captionsetup{compatibility=false}
 \newcommand\todo[1]{\textcolor{red}{#1}}
-\title{The Legend of Bluespec: A Link to the components}
-\author{kr469 }
-\date{October 2021}
+\title{The Legend of Bluespec: A Link to the components \\
+\large Computer Science Tripos - Part II \\
+Churchill Collage}
+\date{\today}
  \hypersetup{ 
      colorlinks=true, 
      linkcolor=cyan, 
@@ -26,8 +28,77 @@
      urlcolor=cyan, 
      } 
 \tcbset{colback=pink!7,colframe=pink!90,coltitle=black}
+
+\author{Krzysztof Rymski}
 \begin{document}
-\maketitle
+% Title
+
+
+\pagestyle{empty}
+
+\rightline{\LARGE \textbf{Krzysztof Rymski}}
+
+\vspace*{60mm}
+\begin{center}
+\Huge
+\textbf{The Legend of Bluespec: A Link to the components} \\[5mm]
+Computer Science Tripos -- Part II \\[5mm]
+Churchill Collage \\[5mm]
+\today  % today's date
+\end{center}
+
+\newpage
+\section*{Declaration of originality}
+
+I, Krzysztof Rymski of Churchill College, being a candidate for Part II of the Computer Science Tripos, hereby declare that this dissertation and the work described in it are my own work, unaided except as may be specified below, and that the dissertation does not contain material that has already been used to any substantial extent for a comparable purpose. I am content for my dissertation to be made available to the students and staff of the University.
+
+\bigskip
+\leftline{Signed Krzysztof Rymski}
+
+\medskip
+\leftline{Date \today}
+
+
+\newpage
+% Proforma, table of contents and list of figures
+
+\pagestyle{plain}
+
+\chapter*{Proforma}
+
+{\large
+\begin{tabular}{ll}
+Name:               & \bf Krzysztof Rymski                      \\
+College:            & \bf Churchill College                     \\
+Project Title:      & \bf The Legend of Bluespec: A Link to the components \\
+Examination:        & \bf Computer Science Tripos -- Part II, July 2022  \\
+Word Count:         & \bf 10000 (TODO)\footnotemark[1]  \\
+Project Originator: & Jonathan Woodruff                   \\
+Supervisor:         & Jonathan Woodruff                    \\ 
+\end{tabular}
+}
+\footnotetext[1]{This word count was computed
+by \texttt{detex diss.tex | tr -cd '0-9A-Za-z $\tt\backslash$n' | wc -w}
+}
+\stepcounter{footnote}
+
+
+\section*{Original Aims of the Project}
+
+TODO
+
+
+\section*{Work Completed}
+
+All that has been completed appears in this dissertation.
+
+\section*{Special Difficulties}
+
+None.
+
+
+
+
 \tableofcontents
 
 \chapter{Introduction}
@@ -450,6 +521,8 @@ I know this because my initial iterations were doing this. However, my tool can 
 All this data can be useful when using complex modules from foreign packages, like a CPU core that does not have any direct connections, but has many subinterfaces that can be connected to things like memory, external devices, etc.
 
 \section{GUI}
+\hyperref[fig:Overview]{Click here to jump to the overview of the GUI (TODO write page number)}
+\\
 Adding GUI was an optional goal mentioned in the project proposal. I originally intended to use a game engine, but the Bluespec compiler is a Linux tool and game engines like Unreal Engine 4 or Unity3d are optimized to be used on Windows, so I decided against that idea. Instead, I found a library called React Flow, that provided a simple API for creating graph-based user interfaces. Therefore, I decided to create a GUI as a website. This was quite an adventure as It was effectively my first contact with web development. (I have done backend in .NET and \verb!C#! for a group project in the last term, but it was mostly focused on writing queries to database and I had no contact with frontend development)
 
 \subsection{Backend}
@@ -559,41 +632,38 @@ The intention behind this node is that one might want to create their system par
 \end{tcolorbox}
 
 \chapter{Evaluation}
-Throughout working on this project I have learned a lot about QSys and Bluespec, and how they interact. This means that I will need to adjust slightly it from the project proposal to better represent problems that are solved. Firstly my understanding is that Platform Designer tool is shared between QSys and QSys Pro.
+During evaluation, I'm going to compare The Legend of Bluespec: A Link to the components and Intel Quartus Prime, with its Platform designer. IQP has obviously more bells and whistles, but the testing scenarios are concerned with the process of connecting components, written in Bluespec. The goal is to show problems with integration using transpiled Bluespec. It will also highlight usefulness of integrating type system into high level component integration. 
 
 \section{Overview}
 My evaluation will be divided into three examples:
-\begin{itemize}
-    \item First one will be about connecting FIFOs.
-    \item Second will show a simple system-on-chip (SOC). With one Flute core, memory module and fake interface with outside world, all connected by a bus.
-    \item Third example will two AXI4 masters and two AXI4 slaves connected by a bus. 
-\end{itemize}
-First two examples will produce valid devices, but they won't do anything interesting. Last example will produce a working top level module that will demonstrate that generated code indeed produces same results as connection modules using Platform designer.
+\subsection{Example 1: Deadly simple FIFOs}
+FIFOs are one of the building blocks of components. It's they are usually the first thing implemented when learning hardware design. In this example is meant to show, flexibility, and the problems that arise due to lost information, when working with transpiled Bluespec.
+\subsection{Example 2: Weight of the AXI4}
+In this example we will design a very simple System-on-chip (SOC). The SOC will be composed of Flute core (5 Stage RISC-V CPU), memory module, and fake 16550 that is meant to represent an I/O. This example is will show, the best scenario for Platform designer as connections will use AXI4 interface that is one of fully supported interfaces. 
+
+\subsection{Example 3: Simulation}
+Here I want to show that my buses are as good as Platform designer ones.
+
+
 
 \subsection{Polymorphism disclaimer}
 Before we start talking about examples we need to address the elephant in the room. There is no support for Bluespec in IQP (nor Xilinx Vivado). This means that when working with Bluespec and those tools, one must first transpile Bluespec to Verilog. Unfortunately, Bluespec compiler can't generate Verilog code of functions that are polymorphic (TODO or take arguments TODO check this). This happens because typing system of Bluespec is much richer than one of Verilog. Therefore, any module used with IQP will need to be converted into it's synthesizable version stripped of any arguments before being transpiled into Verilog. One might argue that this is an issue with Bluespec and not with those tools, but I would argue that it is still a problem that needs fixing, and I have solution for It. 
 
 
-\section{Example 1 - Connecting FIFOs}
-In this example our goal is to create two connected FIFOs and then modify the system to connect a third one. FIFOs that I will be using have an interface analogue to the FIFO interface found in default Bluespec libraries. This way source code for them is self-contained within a simple file. This interface consists of following things: (Action and Value are types of methods, TODO maybe add types)
-\begin{itemize}
-    \item Action Enq - Available if queue is not full, it enqueues the data.
-    \item Action Deq - Available if queue is not empty, then removes the first element.
-    \item Value first - Available if queue is not empty,returns the value of the first element.
-\end{itemize}
-In Bluespec there are provisos attached to those functions, and if in given cycle user will want to perform illegal operation (like dequeue when queue is empty) then rule in which this operation would be performed simply won't fire in that cycle. In Verilog there is no notion of such provisos nor method, so everything needs to be synthesized with the aid of wires creating Ready-Enable micro protocol. Every method has Ready and Enable wires. When Ready is high, then method is allowed to be executed. When Enable is high, it signals to the device to execute given method.(TODO fix wording)
+\section{Example 1: Deadly simple FIFOs}
+
 \subsection{Platform Designer}
-To create a system with two connected FIFOs, we first need to import them into platform designer. Here we encounter first problems. As mentioned before, Bluespec can't generate Verilog code of functions that are polymorphic. So we must decide on the width of the data stored in such FIFO before transpiling to Verilog. After export of the Verilog file it needs to be imported into the Platform designer. This tool perfroms analysis of a file, which results in decision tha tall wires found are parts of Avalon slave interface. This is an obvious error, and we need to correct it by hand.
+To create a system with two connected FIFOs, we first need to import FIFO module into platform designer. Here we encounter first problems. As mentioned before, Bluespec can't generate Verilog code of functions that are polymorphic. So we must decide on the width of the data stored in such FIFO before transpiling to Verilog. After export of the Verilog file it needs to be imported into the Platform designer. This tool performs analysis of a file, which results in decision that all wires found are parts of Avalon slave interface. This is an obvious error, and we need to correct it by hand.
 \begin{figure}[H]
     \centering
     
     \includegraphics[width=0.5\columnwidth]{images/Example1BeforeOranization.png}
     \caption{Zoom in on the arrangement of wires after import}
-    \end{figure}
+\end{figure}
 This is unfortunately easier said than done. There are few options of assigning those wires, but neither of them perfect. Firstly we will need to choose a type of interface those will represent. In Platform designer we have over 30 options to chose from, but most of them are variants of complex protocols like AXI4. The only option that will make sense for us is \emph{Conduit}, which basically meaningless blank canvas. We could create a conduit for each method but after consultation with my supervisor he recommended creating a conduit for each wire. So I did as he recommended, and this produces following set of interfaces. This requires quite a bit of manual work, listed bellow.
 \begin{itemize}
     \item Create 8 new interfaces (QSys figured out what to do with clock wire on its own, so we have one for free) this includes giving them a name and assigning a reset signal.
-    \item More each wire to its respective interface and change signal type of each wire to something generic like wire from type given to it as part of Avalon slave interface. 
+    \item Move each wire to its respective interface and change signal type of each wire to something generic like \say{wire} from some rubbish given to it as a part of assignment as Avalon slave interface. 
 \end{itemize}
 
 \begin{figure}[H]
@@ -603,81 +673,98 @@ This is unfortunately easier said than done. There are few options of assigning 
 \end{figure}
 
 With all of those wires we can connect obvious things together like \verb!first! to \verb!enq_value! and clock signals, but then we run into a problem that with all wires that represent Ready-Enable micro protocol because we would like to enable enqueue in second queue only if both wires \verb!ready_deq! and \verb!ready_first! are high in the first queue, otherwise because we don't know how our FIFO is implemented we might run into a problem where we might get bugs(for example we lose data because we \verb!ready_deq! became high cycle faster than \verb!ready_first!, or in opposite scenario we would read stale/corrupted data). Unfortunately we can't create such logic using platform designer and one way of solving this would be to create special connector module that would do this logic(I'm going to come back later to this to explain why this approach might be infeasible in general case). 
+\subsection{The Legend of Bluespec: A Link to the components}
+Using my tool, the whole phase of importing and setting up wires can be skipped, as all data information needed is grabbed directly from packages. Connecting FIFOs is as simple as creating a new node connection node and selecting chosen FIFO's interface. Extending two connected FIFOs to three is as simple as adding one more FIFO and one more connection node. It's also worth mentioning that user can select the type of things stored on the queue
 
-\subsection{My tool}
-Using my tool whole phase of importing and setting up wires can be skipped, as all data information needed is grabbed directly from packages. Connecting FIFOs is as simple as creating a new node connection node and selecting chosen FIFO's interface. Extending two connected FIFOs to three is as simple as adding one more FIFO and one more connection node.
-
-\begin{figure}
+\begin{figure}[H]
     \caption{Three connected FIFOs using my tool (TODO update this graphic)}
     \includegraphics[width=0.7\textwidth]{images/Example1MySolution.png} \\
     \centering
 \end{figure}
-
-\subsection{Using text format to do same things and Qualitative metrics}
-To count number of tokens I'm using following regexp \verb!(\w|\.)+!. This regexp will match sequences of alphanumerical characters with dots and underscores. (TODO draw graphs)
-Raw numbers: 431 tokens to import FIFO, 347 for two connected FIFOs, and 415 for three connected FIFOs.
-My solution: 31 for two connected FIFOs and 43 for three connected FIFOs.
-\newpage
-\section{Example 2 - Simple System-on-Chip}
-In this example we will create a simple system-on-chip (SOC) with one Flute core, memory module and fake interface with outside world, all connected by a bus. This example is designed to even out playing field as all connections are done using AXI4 interface which is understood by platform designer.
-
+\subsection{Conclusion}
+In this example we learned that FIFOs are so simple that IQP is not able to connect them. This is generally explained by its lack of understanding of FIFO interface. Whereas my tool is able to understand that FIFOs are connectable and connect then. It also can work with polymorphic FIFOs. 
+\section{Example 2: Weight of the AXI4}
+As explained before, this example is about creating simple SOC.
 \subsection{Platform Designer}
 Again, we start with importing our modules. 
-This time we need to import two of them, one for fake 16550 interface and one for flute core. 
+This time we need to import two of them, one for fake 16550 interfaces and one for flute core. 
 As for memory module we will use one from IQP library to save time and effort.
-
-Unfortunately platform designer can't figure out how to organize wires into interfaces like AXI4 master or AXI4 slave. 
-So we need to do it manually. This wouldn't be so painful if not for the fact that we need to set type of each wire according to it's use. Fortunetly Bluespec compiler named them nicely, for example \verb!cpu_imem_master_awready! has type \verb!awready!. Each of those AXI4 interfaces has 37 wires, and if we account for all other interfaces of Flute core we get 150 wires that individually need to be assigned to interfaces. Similarly, our fake 16550 interfaces also uses 40 wires in total. When assigning this through GUI it took me around 16 minutes to roughly 80 wires that make up one AXI4 master and one AXI4 slave interfaces on the Flute-core and the Fake-16550. (For context tools like Xilinx Vivado have heuristics that are able to do a lot of this automatically, but my understanding is that it still only works for selected known interfaces)
+\par
+Eventhough AXI4 is interface supported by IQP, Platform designer is not able to recognize groups of wires that make up AXI4 masters and slaves on the imported modules.
+So we need to do it manually. This wouldn't be so painful if not for the fact that we need to set type of each wire according to its use. Fortunately Bluespec compiler named them nicely, for example \verb!cpu_imem_master_awready! has type \verb!awready!. Each of those AXI4 master interfaces has 37 wires, and if we account for all other interfaces of Flute core we get 150 wires that individually need to be assigned to interfaces. Similarly, our fake 16550 interfaces also uses 40 wires in total. When assigning this through GUI it took me around \emph{16 minutes} to roughly 80 wires that make up one AXI4 master and one AXI4 slave interfaces on the Flute-core and the Fake-16550 (Other 100 wires were unnecessary, so I ignored them). (For context tools like Xilinx Vivado have heuristics that are able to do a lot of this automatically, but my understanding is that it still only works for selected known interfaces)
 \\
 \begin{figure}[H]
-    \caption{Connected Sys-on-Chip using Platform designer}
+    \caption{Connected System-on-chip using Platform designer}
     \includegraphics[width=0.7\textwidth]{images/Example2QSys.png} \\
     \centering
 \end{figure}
-After initial pain of importing modules we arrive at the point where Platform designer shines. It is able to show possible connections between AXI4 masters and slaves, on a 2D-grid-like layout. Connecting two together is as simple as clicking cross-section of two wires on the screen.  
-
-\subsection{My tool}
-Again using my tool we don't need to do anything to import modules, as all the typing information is provided by the package. To connect those together we create a special bus node, select function for creating a bus, select number of masters and slaves, then assign each accordingly. While I'm unable to show nice 2D-grid of possible connections, I have \hyperref[sec:AutocompletionBusNode]{two-stage autocompletion}.
+After initial pain of importing modules we arrive at the point where Platform designer shines. It is able to show possible connections between AXI4 masters and slaves, on a 2D-grid-like layout. Connecting two interfaces together is as simple as clicking cross-section of two wires on the screen.  
+\subsection{The Legend of Bluespec: A Link to the components}
+Again using my tool we don't need to do anything to import modules, as all the typing information is provided by the package. To connect those together we create a special bus node, select function for creating a bus(\verb!mkAXI4Bus!), select number of masters and slaves, then assign each accordingly. This in total takes around a \emph{1 minute}. While I'm unable to show nice 2D-grid of possible connections, I have \hyperref[sec:AutocompletionBusNode]{two-stage autocompletion}. That can simplify process of choosing things to be connected to the bus.
 
 \begin{figure}[H]
-    \caption{Connected Sys-on-Chip using my tool(TODO update this image)}
-    \includegraphics[width=0.8\textwidth]{images/Example2MySolution.png}
+    \label{fig:Overview}
+    \caption{Connected System-on-chip using my tool. This image is also meant to be overview of the whole application}
+    \includegraphics[width=\textwidth]{images/Example2MySolution.png}
     \centering
 \end{figure}
-
+\subsection{Conclusion}
+When it comes to connecting things both systems are easy to use. Main difference between those systems is in the difficulty of importing modules. Thanks to the use of typing information my system doesn't need additional data from the user, therefore saving them time and effort. My system is also extract parameters and expose them to the user, importance of this will be explained later.
 \subsection{Other differences}
 There is a number of subtle differences that are worth talking about, but were not pronounced by this example.
-\\
 Platform designer has ability to automatically convert between AXI4 interfaces and Avalon ones, and also within those families it allows for some degree of flexibility when parameters don't match exactly.
-When I create busses I'm limited by typing system, and way functions for creating buses were defined. Therefore, if user wants to do similar conversions they would need to use functions and perform those conversions by themselves(this would be node by inserting an instance node that uses function that does this convesion). 
-\\
-Another slight difference is the fact that in Platform designer, each master has its own bus, and while slaves can be connected to any number of masters they need to be connected individually. 
+When I create busses I'm limited by typing system, and way functions for creating buses were defined. Therefore, I in my system all master and all slaves must be of exacly same types. If the user wants to do similar conversions they would need to use functions(like \verb!fromAXI4toAXI4Lite! that convert between interfaces) and perform those conversions by themselves. This has obvious drawbacks, but at the sample time it allows user to define new conversions, that implement arbitrary logic.
+\par
+Another slight difference is the fact that in Platform designer, each master has its own bus, and while slaves can be connected to any number of masters they need to be connected individually. Forcing user to specify $O(n^2)$ connections.
 \section{Example 3 - Working AXI4 masters and slaves}
 This example 
 
 \section{Numbers}
+This section presents quantitive comparison of text formats used by both systems. Sometimes one might not want to bother with using GUI and wants to quickly edit some variable or connection. To facilitate this, text file format should be short and simple, otherwise user will be forces to sift through a lot of fluff. Therefore, I will compare those file formats using line and token counts.
+To count number of tokens I'm using following regexp \verb!(\w|\.)+!. This regexp will match sequences of alphanumerical characters with dots and underscores. I decided to ignore things like braces as they can account for a lot of tokens, at the same time people might have different preferences for them.
 \begin{figure}[H]
+\begin{minipage}{.45\textwidth}
+    \caption{Tokens used to instanciate and connect 2/3 FIFOs}
+    \includegraphics[width=\textwidth]{charts/example1_tokens.pdf}
+    \label{fig:sub1}
+    \centering
+\end{minipage}%
+\hspace{0.5cm}
+\begin{minipage}{.45\textwidth}
+    \caption{Lines used to instanciate and connect 2/3 FIFOs}
+    \includegraphics[width=\textwidth]{charts/example1_lines.pdf}
+    \label{fig:sub2}
+    \centering
+\end{minipage}
+\end{figure}
+As we can see Platform designer uses roughly order of magnitude more verbose text format. What's important from this chart is that all that verbosity is not a one time cost, but more like a constant multiplier. 
+\par
+I also included charts with line and token counts for other examples to show that this verbosity is general trend.
+\begin{figure}[H]
+\begin{minipage}{.45\textwidth}
     \caption{Tokens used by each system for each example}
-    \includegraphics[width=0.8\textwidth]{charts/example1_tokens.pdf}
+    \includegraphics[width=\textwidth]{charts/all_tokens.pdf}
     \centering
-\end{figure}
-\begin{figure}[H]
+\end{minipage}%
+\hspace{0.5cm}
+\begin{minipage}{.45\textwidth}
     \caption{Lines used by each system for each example}
-    \includegraphics[width=0.8\textwidth]{charts/example1_lines.pdf}
+    \includegraphics[width=\textwidth]{charts/all_lines.pdf}
     \centering
+\end{minipage}
 \end{figure}
-\begin{figure}[H]
-    \caption{Tokens used by each system for each example}
-    \includegraphics[width=0.8\textwidth]{charts/all_tokens.pdf}
-    \centering
-\end{figure}
-\begin{figure}[H]
-    \caption{Lines used by each system for each example}
-    \includegraphics[width=0.8\textwidth]{charts/all_lines.pdf}
-    \centering
-\end{figure}
-
+\section{Other things to consider}
+One important thing to consider is the workflow. Bluespec compiler can't generate parametric designs. This means that we wanted to have some parametric module with 3 variables each taking one of 5 values, we already would need to import 125 modules, and I showed how importing even few of them can be a hassle. In contrast with my tool, where user can not only use polymorphic function and modules, but can also use the system to resolve unknown parameters.
+\par
+IQP is a gigantic tool, and it would be dishonest to say that my tool is strictly better. However, thanks to ability of my tool to quickly export interfaces, one can use both in tandem. User can start by defining blob of connected Bluespec modules using all the good stuff in my tool, then they can export only interfaces they will use. This way user always has to import only one module to the IQP. Such blob can be then connected to IP defined in Verilog or to pins on the FPGA. 
 \chapter{Conclusion}
 \section{Results}
-I hope that I demonstrated how it can be used to speed up prototyping of high level modules in Bluespec. It's able to provide same basic functionally of allowing for connection and easy creation of busses as comparable tool made by intel. At the same time thanks to being Bluespec native it can drastically cut down time needed to import modules, especially if in cases where one wants to use polymorphic modules. While my tool isn't commercial grade, thanks to easy ability to synthesize exported interface, it allows for a workflow where everything Bluespec native can be connected using it, and then this part of a system can be imported to tool like Platform designer for connection to modules not available as a Bluespec library and connection of wires I/O on the FPGA.
+I hope that I demonstrated how \emph{The Legend of Bluespec: A Link to the components} can be used to speed up prototyping of high level modules in Bluespec. It's able to provide same basic functionally of allowing for connection and easy creation of busses as comparable tool made by intel. At the same time thanks to being Bluespec native it can drastically cut down time needed to import modules, especially if in cases where one wants to use polymorphic modules. While my tool isn't commercial grade, thanks to easy ability to synthesize exported interface, allowing it for a workflow where everything Bluespec native can be connected using it, and then this part of a system can be imported to tool like Platform designer for connection to modules not available as a Bluespec library and connection of wires I/O on the FPGA.
+\section{Future work}
+This tool could be extended in many ways, but most interesting would include:
+\begin{itemize}
+    \item Upgrade of the backend to be fully functional language server.
+    \item Ability to map arbitrary Bluespec code into graphs like this.
+    \item Integration with debugger to visualize flow of data, and values of data.
+\end{itemize}
 \end{document}

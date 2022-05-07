@@ -1,1 +1,2 @@
 {"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QDictionary of possible other masters and slave for each instantiated bus.\\E$"}
+{"rule":"BE_VBP_IN","sentence":"^\\QThis image is also meant to be overview of whole application Conclusion.\\E$"}

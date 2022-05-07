@@ -66,6 +66,9 @@ for tool in ["IQP","My"]:
 fig1 = px.bar(dfC1, x="Tool", y="Tokens", color="Example", barmode="stack")
 #chart2 same but with lines
 fig2 = px.bar(dfC1, x="Tool", y="Lines", color="Example", barmode="stack")
+#increase font size
+fig1.update_layout(font_size=18)
+fig2.update_layout(font_size=18)
 #save charts as pdf in ../Latex/charts
 fig1.write_image("Latex/charts/example1_tokens.pdf")
 fig2.write_image("Latex/charts/example1_lines.pdf")
@@ -75,6 +78,8 @@ dfC2 =df
 fig3 = px.bar(dfC2, x="Tool", y="Tokens", color="Example", barmode="group")
 # same for lines
 fig4 = px.bar(dfC2, x="Tool", y="Lines", color="Example", barmode="group")
+fig3.update_layout(font_size=18)
+fig4.update_layout(font_size=18)
 #save charts as pdf in ../Latex/charts
 fig3.write_image("Latex/charts/all_tokens.pdf")
 fig4.write_image("Latex/charts/all_lines.pdf")

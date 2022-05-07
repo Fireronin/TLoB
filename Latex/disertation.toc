@@ -1,67 +1,73 @@
-\contentsline {chapter}{\numberline {1}Introduction}{3}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Motivation}{4}{section.1.1}%
-\contentsline {section}{\numberline {1.2}Already existing tools}{4}{section.1.2}%
-\contentsline {section}{\numberline {1.3}Proposed solution}{5}{section.1.3}%
-\contentsline {chapter}{\numberline {2}Preparation}{6}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Understanding Bluespec}{6}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}Rules}{6}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2}Modules and interfaces}{7}{subsection.2.1.2}%
-\contentsline {subsection}{\numberline {2.1.3}Typeclasses}{7}{subsection.2.1.3}%
-\contentsline {subsection}{\numberline {2.1.4}Provisos}{7}{subsection.2.1.4}%
-\contentsline {section}{\numberline {2.2}Choosing tools}{8}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Haskell}{8}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Tcl (pronounced "tickle")}{9}{subsection.2.2.2}%
-\contentsline {subsection}{\numberline {2.2.3}Python}{9}{subsection.2.2.3}%
-\contentsline {subsection}{\numberline {2.2.4}Postmortem}{9}{subsection.2.2.4}%
-\contentsline {section}{\numberline {2.3}Creating a grammar}{10}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}What grammar is needed ?}{10}{subsection.2.3.1}%
-\contentsline {subsection}{\numberline {2.3.2}Where to find this grammar?}{10}{subsection.2.3.2}%
-\contentsline {subsection}{\numberline {2.3.3}Technical aspects of the grammar}{10}{subsection.2.3.3}%
-\contentsline {chapter}{\numberline {3}Implementation}{12}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Crawling the packages}{12}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Loading Bluespec packages' information (TODO check grammar of s')}{13}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Lexical and syntactic analysis}{13}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}Understanding abstract syntax tree (AST)}{13}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}Organizing data and functionality}{14}{subsection.3.2.3}%
-\contentsline {section}{\numberline {3.3}Building the top level module}{15}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Instantiating new modules}{15}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Connections}{16}{subsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.3.3}Busses}{16}{subsection.3.3.3}%
-\contentsline {subsection}{\numberline {3.3.4}Specifying exported interfaces and methods}{16}{subsection.3.3.4}%
-\contentsline {section}{\numberline {3.4}Resolving types}{17}{section.3.4}%
-\contentsline {subsubsection}{How those functions can are used}{18}{section*.8}%
-\contentsline {subsubsection}{Merge function}{18}{section*.9}%
-\contentsline {subsubsection}{Apply variables function}{19}{section*.10}%
-\contentsline {subsubsection}{Preprocess typeclass function}{19}{section*.11}%
-\contentsline {subsubsection}{Resolve typeclass function}{19}{section*.12}%
-\contentsline {subsubsection}{Solve numerical function}{20}{section*.13}%
-\contentsline {subsubsection}{Solve provisos function}{20}{section*.14}%
-\contentsline {section}{\numberline {3.5}Synthesizing the module}{21}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}JSON interface}{21}{subsection.3.5.1}%
-\contentsline {subsubsection}{Structure of JSON file}{22}{section*.15}%
-\contentsline {subsubsection}{Using JSON interface}{24}{section*.17}%
-\contentsline {section}{\numberline {3.6}GUI}{24}{section.3.6}%
-\contentsline {subsection}{\numberline {3.6.1}Backend}{25}{subsection.3.6.1}%
-\contentsline {subsection}{\numberline {3.6.2}Frontend (React)}{25}{subsection.3.6.2}%
-\contentsline {subsection}{\numberline {3.6.3}Frontend (React Flow)}{25}{subsection.3.6.3}%
-\contentsline {subsection}{\numberline {3.6.4}Frontend (MUI)}{25}{subsection.3.6.4}%
-\contentsline {subsection}{\numberline {3.6.5}Functionality}{26}{subsection.3.6.5}%
-\contentsline {subsubsection}{Instance node}{26}{section*.18}%
-\contentsline {subsubsection}{Connection node}{28}{section*.21}%
-\contentsline {subsubsection}{Bus node}{29}{section*.23}%
-\contentsline {subsubsection}{Exported interface node}{30}{section*.25}%
-\contentsline {chapter}{\numberline {4}Evaluation}{31}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Overview}{31}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Polymorphism disclaimer}{31}{subsection.4.1.1}%
-\contentsline {section}{\numberline {4.2}Example 1 - Connecting FIFOs}{32}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Platform Designer}{32}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}My tool}{34}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Using text format to do same things and Qualitative metrics}{34}{subsection.4.2.3}%
-\contentsline {section}{\numberline {4.3}Example 2 - Simple System-on-Chip}{36}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Platform Designer}{36}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}My tool}{37}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Other differences}{37}{subsection.4.3.3}%
-\contentsline {section}{\numberline {4.4}Example 3 - Working AXI4 masters and slaves}{38}{section.4.4}%
-\contentsline {section}{\numberline {4.5}Numbers}{38}{section.4.5}%
-\contentsline {chapter}{\numberline {5}Conclusion}{41}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Results}{41}{section.5.1}%
+\contentsline {chapter}{\numberline {1}Introduction}{6}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Motivation}{7}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Already existing tools}{7}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Proposed solution}{8}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Preparation}{9}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Understanding Bluespec}{9}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Rules}{9}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Modules and interfaces}{10}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}Typeclasses}{10}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}Provisos}{10}{subsection.2.1.4}%
+\contentsline {section}{\numberline {2.2}Choosing tools}{11}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Haskell}{11}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Tcl (pronounced "tickle")}{12}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Python}{12}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Postmortem}{12}{subsection.2.2.4}%
+\contentsline {section}{\numberline {2.3}Creating a grammar}{13}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}What grammar is needed ?}{13}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Where to find this grammar?}{13}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Technical aspects of the grammar}{13}{subsection.2.3.3}%
+\contentsline {chapter}{\numberline {3}Implementation}{15}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Crawling the packages}{15}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Loading Bluespec packages' information (TODO check grammar of s')}{16}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Lexical and syntactic analysis}{16}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Understanding abstract syntax tree (AST)}{16}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Organizing data and functionality}{17}{subsection.3.2.3}%
+\contentsline {section}{\numberline {3.3}Building the top level module}{18}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Instantiating new modules}{18}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Connections}{19}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Busses}{19}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Specifying exported interfaces and methods}{19}{subsection.3.3.4}%
+\contentsline {section}{\numberline {3.4}Resolving types}{20}{section.3.4}%
+\contentsline {subsubsection}{How those functions can are used}{21}{section*.13}%
+\contentsline {subsubsection}{Merge function}{21}{section*.14}%
+\contentsline {subsubsection}{Apply variables function}{22}{section*.15}%
+\contentsline {subsubsection}{Preprocess typeclass function}{22}{section*.16}%
+\contentsline {subsubsection}{Resolve typeclass function}{22}{section*.17}%
+\contentsline {subsubsection}{Solve numerical function}{23}{section*.18}%
+\contentsline {subsubsection}{Solve provisos function}{23}{section*.19}%
+\contentsline {section}{\numberline {3.5}Synthesizing the module}{24}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}JSON interface}{24}{subsection.3.5.1}%
+\contentsline {subsubsection}{Structure of JSON file}{25}{section*.20}%
+\contentsline {subsubsection}{Using JSON interface}{27}{section*.22}%
+\contentsline {section}{\numberline {3.6}GUI}{27}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Backend}{28}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Frontend (React)}{28}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.6.3}Frontend (React Flow)}{28}{subsection.3.6.3}%
+\contentsline {subsection}{\numberline {3.6.4}Frontend (MUI)}{28}{subsection.3.6.4}%
+\contentsline {subsection}{\numberline {3.6.5}Functionality}{29}{subsection.3.6.5}%
+\contentsline {subsubsection}{Instance node}{29}{section*.23}%
+\contentsline {subsubsection}{Connection node}{31}{section*.26}%
+\contentsline {subsubsection}{Bus node}{32}{section*.28}%
+\contentsline {subsubsection}{Exported interface node}{33}{section*.30}%
+\contentsline {chapter}{\numberline {4}Evaluation}{34}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Overview}{34}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Example 1: Deadly simple FIFOs}{34}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Example 2: Weight of the AXI4}{34}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Example 3: Simulation}{34}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}Polymorphism disclaimer}{34}{subsection.4.1.4}%
+\contentsline {section}{\numberline {4.2}Example 1: Deadly simple FIFOs}{35}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Platform Designer}{35}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}The Legend of Bluespec: A Link to the components}{36}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Conclusion}{37}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}Example 2: Weight of the AXI4}{37}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Platform Designer}{38}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}The Legend of Bluespec: A Link to the components}{39}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Conclusion}{39}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.3.4}Other differences}{39}{subsection.4.3.4}%
+\contentsline {section}{\numberline {4.4}Example 3 - Working AXI4 masters and slaves}{40}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Numbers}{40}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Other things to consider}{41}{section.4.6}%
+\contentsline {chapter}{\numberline {5}Conclusion}{42}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Results}{42}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Future work}{42}{section.5.2}%

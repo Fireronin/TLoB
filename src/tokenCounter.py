@@ -59,8 +59,8 @@ dfC1 = df[df["Example"].isin(["example1","example1B"])]
 for tool in ["IQP","My"]:
     torLines = dfC1[(dfC1["Example"] == "example1") & (dfC1["Tool"] == tool)]["Lines"]
     torTokens = dfC1[(dfC1["Example"] == "example1") & (dfC1["Tool"] == tool)]["Tokens"]
-    dfC1.loc[(dfC1["Example"] == "example1B") & (dfC1["Tool"] == tool),"Lines"] = dfC1[(dfC1["Example"] == "example1B") & (dfC1["Tool"] == tool)]["Lines"] - torLines
-
+    dfC1.loc[(dfC1["Example"] == "example1B") & (dfC1["Tool"] == tool),"Lines"] -= list(torLines)[0]
+    dfC1.loc[(dfC1["Example"] == "example1B") & (dfC1["Tool"] == tool),"Tokens"] -= list(torTokens)[0]
 
 
 fig1 = px.bar(dfC1, x="Tool", y="Tokens", color="Example", barmode="stack")

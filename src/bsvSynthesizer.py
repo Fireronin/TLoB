@@ -65,7 +65,7 @@ class InstanceV2():
         self.instance_name = instance_name
         self.module_args = module_args
         self.input_context = {key:Variable(evaluateCustomStart(val)) for key,val in input_context.items()}
-        self.variables = {}
+        self.variables = self.input_context
         self.topLevel.addInstance(self,instance_name)
         if creator_args is not None:
             self.update()

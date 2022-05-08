@@ -7,132 +7,574 @@
 
 `timescale 1 ps / 1 ps
 module Example3_mm_interconnect_0 (
-		output wire [1:0]   axi4Slave_0_altera_axi4_slave_awid,                 //                axi4Slave_0_altera_axi4_slave.awid
-		output wire [13:0]  axi4Slave_0_altera_axi4_slave_awaddr,               //                                             .awaddr
-		output wire [7:0]   axi4Slave_0_altera_axi4_slave_awlen,                //                                             .awlen
-		output wire [2:0]   axi4Slave_0_altera_axi4_slave_awsize,               //                                             .awsize
-		output wire [1:0]   axi4Slave_0_altera_axi4_slave_awburst,              //                                             .awburst
-		output wire [0:0]   axi4Slave_0_altera_axi4_slave_awlock,               //                                             .awlock
-		output wire [3:0]   axi4Slave_0_altera_axi4_slave_awcache,              //                                             .awcache
-		output wire [2:0]   axi4Slave_0_altera_axi4_slave_awprot,               //                                             .awprot
-		output wire [3:0]   axi4Slave_0_altera_axi4_slave_awqos,                //                                             .awqos
-		output wire [3:0]   axi4Slave_0_altera_axi4_slave_awregion,             //                                             .awregion
-		output wire         axi4Slave_0_altera_axi4_slave_awvalid,              //                                             .awvalid
-		input  wire         axi4Slave_0_altera_axi4_slave_awready,              //                                             .awready
-		output wire [127:0] axi4Slave_0_altera_axi4_slave_wdata,                //                                             .wdata
-		output wire [15:0]  axi4Slave_0_altera_axi4_slave_wstrb,                //                                             .wstrb
-		output wire         axi4Slave_0_altera_axi4_slave_wlast,                //                                             .wlast
-		output wire         axi4Slave_0_altera_axi4_slave_wvalid,               //                                             .wvalid
-		input  wire         axi4Slave_0_altera_axi4_slave_wready,               //                                             .wready
-		input  wire [1:0]   axi4Slave_0_altera_axi4_slave_bid,                  //                                             .bid
-		input  wire [1:0]   axi4Slave_0_altera_axi4_slave_bresp,                //                                             .bresp
-		input  wire         axi4Slave_0_altera_axi4_slave_bvalid,               //                                             .bvalid
-		output wire         axi4Slave_0_altera_axi4_slave_bready,               //                                             .bready
-		output wire [1:0]   axi4Slave_0_altera_axi4_slave_arid,                 //                                             .arid
-		output wire [13:0]  axi4Slave_0_altera_axi4_slave_araddr,               //                                             .araddr
-		output wire [7:0]   axi4Slave_0_altera_axi4_slave_arlen,                //                                             .arlen
-		output wire [2:0]   axi4Slave_0_altera_axi4_slave_arsize,               //                                             .arsize
-		output wire [1:0]   axi4Slave_0_altera_axi4_slave_arburst,              //                                             .arburst
-		output wire [0:0]   axi4Slave_0_altera_axi4_slave_arlock,               //                                             .arlock
-		output wire [3:0]   axi4Slave_0_altera_axi4_slave_arcache,              //                                             .arcache
-		output wire [2:0]   axi4Slave_0_altera_axi4_slave_arprot,               //                                             .arprot
-		output wire [3:0]   axi4Slave_0_altera_axi4_slave_arqos,                //                                             .arqos
-		output wire [3:0]   axi4Slave_0_altera_axi4_slave_arregion,             //                                             .arregion
-		output wire         axi4Slave_0_altera_axi4_slave_arvalid,              //                                             .arvalid
-		input  wire         axi4Slave_0_altera_axi4_slave_arready,              //                                             .arready
-		input  wire [1:0]   axi4Slave_0_altera_axi4_slave_rid,                  //                                             .rid
-		input  wire [127:0] axi4Slave_0_altera_axi4_slave_rdata,                //                                             .rdata
-		input  wire [1:0]   axi4Slave_0_altera_axi4_slave_rresp,                //                                             .rresp
-		input  wire         axi4Slave_0_altera_axi4_slave_rlast,                //                                             .rlast
-		input  wire         axi4Slave_0_altera_axi4_slave_rvalid,               //                                             .rvalid
-		output wire         axi4Slave_0_altera_axi4_slave_rready,               //                                             .rready
-		input  wire [0:0]   axiMaster_0_altera_axi4_master_awid,                //               axiMaster_0_altera_axi4_master.awid
-		input  wire [13:0]  axiMaster_0_altera_axi4_master_awaddr,              //                                             .awaddr
-		input  wire [7:0]   axiMaster_0_altera_axi4_master_awlen,               //                                             .awlen
-		input  wire [2:0]   axiMaster_0_altera_axi4_master_awsize,              //                                             .awsize
-		input  wire [1:0]   axiMaster_0_altera_axi4_master_awburst,             //                                             .awburst
-		input  wire [0:0]   axiMaster_0_altera_axi4_master_awlock,              //                                             .awlock
-		input  wire [3:0]   axiMaster_0_altera_axi4_master_awcache,             //                                             .awcache
-		input  wire [2:0]   axiMaster_0_altera_axi4_master_awprot,              //                                             .awprot
-		input  wire [3:0]   axiMaster_0_altera_axi4_master_awqos,               //                                             .awqos
-		input  wire [3:0]   axiMaster_0_altera_axi4_master_awregion,            //                                             .awregion
-		input  wire         axiMaster_0_altera_axi4_master_awvalid,             //                                             .awvalid
-		output wire         axiMaster_0_altera_axi4_master_awready,             //                                             .awready
-		input  wire [127:0] axiMaster_0_altera_axi4_master_wdata,               //                                             .wdata
-		input  wire [15:0]  axiMaster_0_altera_axi4_master_wstrb,               //                                             .wstrb
-		input  wire         axiMaster_0_altera_axi4_master_wlast,               //                                             .wlast
-		input  wire         axiMaster_0_altera_axi4_master_wvalid,              //                                             .wvalid
-		output wire         axiMaster_0_altera_axi4_master_wready,              //                                             .wready
-		output wire [0:0]   axiMaster_0_altera_axi4_master_bid,                 //                                             .bid
-		output wire [1:0]   axiMaster_0_altera_axi4_master_bresp,               //                                             .bresp
-		output wire         axiMaster_0_altera_axi4_master_bvalid,              //                                             .bvalid
-		input  wire         axiMaster_0_altera_axi4_master_bready,              //                                             .bready
-		input  wire [0:0]   axiMaster_0_altera_axi4_master_arid,                //                                             .arid
-		input  wire [13:0]  axiMaster_0_altera_axi4_master_araddr,              //                                             .araddr
-		input  wire [7:0]   axiMaster_0_altera_axi4_master_arlen,               //                                             .arlen
-		input  wire [2:0]   axiMaster_0_altera_axi4_master_arsize,              //                                             .arsize
-		input  wire [1:0]   axiMaster_0_altera_axi4_master_arburst,             //                                             .arburst
-		input  wire [0:0]   axiMaster_0_altera_axi4_master_arlock,              //                                             .arlock
-		input  wire [3:0]   axiMaster_0_altera_axi4_master_arcache,             //                                             .arcache
-		input  wire [2:0]   axiMaster_0_altera_axi4_master_arprot,              //                                             .arprot
-		input  wire [3:0]   axiMaster_0_altera_axi4_master_arqos,               //                                             .arqos
-		input  wire [3:0]   axiMaster_0_altera_axi4_master_arregion,            //                                             .arregion
-		input  wire         axiMaster_0_altera_axi4_master_arvalid,             //                                             .arvalid
-		output wire         axiMaster_0_altera_axi4_master_arready,             //                                             .arready
-		output wire [0:0]   axiMaster_0_altera_axi4_master_rid,                 //                                             .rid
-		output wire [127:0] axiMaster_0_altera_axi4_master_rdata,               //                                             .rdata
-		output wire [1:0]   axiMaster_0_altera_axi4_master_rresp,               //                                             .rresp
-		output wire         axiMaster_0_altera_axi4_master_rlast,               //                                             .rlast
-		output wire         axiMaster_0_altera_axi4_master_rvalid,              //                                             .rvalid
-		input  wire         axiMaster_0_altera_axi4_master_rready,              //                                             .rready
-		input  wire         clk_0_clk_clk,                                      //                                    clk_0_clk.clk
-		input  wire         axiMaster_0_reset_sink_reset_bridge_in_reset_reset  // axiMaster_0_reset_sink_reset_bridge_in_reset.reset
+		input  wire [0:0]   axi4Master1_0_altera_axi4_master_awid,                //               axi4Master1_0_altera_axi4_master.awid
+		input  wire [13:0]  axi4Master1_0_altera_axi4_master_awaddr,              //                                               .awaddr
+		input  wire [7:0]   axi4Master1_0_altera_axi4_master_awlen,               //                                               .awlen
+		input  wire [2:0]   axi4Master1_0_altera_axi4_master_awsize,              //                                               .awsize
+		input  wire [1:0]   axi4Master1_0_altera_axi4_master_awburst,             //                                               .awburst
+		input  wire [0:0]   axi4Master1_0_altera_axi4_master_awlock,              //                                               .awlock
+		input  wire [3:0]   axi4Master1_0_altera_axi4_master_awcache,             //                                               .awcache
+		input  wire [2:0]   axi4Master1_0_altera_axi4_master_awprot,              //                                               .awprot
+		input  wire [3:0]   axi4Master1_0_altera_axi4_master_awqos,               //                                               .awqos
+		input  wire [3:0]   axi4Master1_0_altera_axi4_master_awregion,            //                                               .awregion
+		input  wire         axi4Master1_0_altera_axi4_master_awvalid,             //                                               .awvalid
+		output wire         axi4Master1_0_altera_axi4_master_awready,             //                                               .awready
+		input  wire [127:0] axi4Master1_0_altera_axi4_master_wdata,               //                                               .wdata
+		input  wire [15:0]  axi4Master1_0_altera_axi4_master_wstrb,               //                                               .wstrb
+		input  wire         axi4Master1_0_altera_axi4_master_wlast,               //                                               .wlast
+		input  wire         axi4Master1_0_altera_axi4_master_wvalid,              //                                               .wvalid
+		output wire         axi4Master1_0_altera_axi4_master_wready,              //                                               .wready
+		output wire [0:0]   axi4Master1_0_altera_axi4_master_bid,                 //                                               .bid
+		output wire [1:0]   axi4Master1_0_altera_axi4_master_bresp,               //                                               .bresp
+		output wire         axi4Master1_0_altera_axi4_master_bvalid,              //                                               .bvalid
+		input  wire         axi4Master1_0_altera_axi4_master_bready,              //                                               .bready
+		input  wire [0:0]   axi4Master1_0_altera_axi4_master_arid,                //                                               .arid
+		input  wire [13:0]  axi4Master1_0_altera_axi4_master_araddr,              //                                               .araddr
+		input  wire [7:0]   axi4Master1_0_altera_axi4_master_arlen,               //                                               .arlen
+		input  wire [2:0]   axi4Master1_0_altera_axi4_master_arsize,              //                                               .arsize
+		input  wire [1:0]   axi4Master1_0_altera_axi4_master_arburst,             //                                               .arburst
+		input  wire [0:0]   axi4Master1_0_altera_axi4_master_arlock,              //                                               .arlock
+		input  wire [3:0]   axi4Master1_0_altera_axi4_master_arcache,             //                                               .arcache
+		input  wire [2:0]   axi4Master1_0_altera_axi4_master_arprot,              //                                               .arprot
+		input  wire [3:0]   axi4Master1_0_altera_axi4_master_arqos,               //                                               .arqos
+		input  wire [3:0]   axi4Master1_0_altera_axi4_master_arregion,            //                                               .arregion
+		input  wire         axi4Master1_0_altera_axi4_master_arvalid,             //                                               .arvalid
+		output wire         axi4Master1_0_altera_axi4_master_arready,             //                                               .arready
+		output wire [0:0]   axi4Master1_0_altera_axi4_master_rid,                 //                                               .rid
+		output wire [127:0] axi4Master1_0_altera_axi4_master_rdata,               //                                               .rdata
+		output wire [1:0]   axi4Master1_0_altera_axi4_master_rresp,               //                                               .rresp
+		output wire         axi4Master1_0_altera_axi4_master_rlast,               //                                               .rlast
+		output wire         axi4Master1_0_altera_axi4_master_rvalid,              //                                               .rvalid
+		input  wire         axi4Master1_0_altera_axi4_master_rready,              //                                               .rready
+		input  wire [0:0]   axi4Master2_0_altera_axi4_master_awid,                //               axi4Master2_0_altera_axi4_master.awid
+		input  wire [13:0]  axi4Master2_0_altera_axi4_master_awaddr,              //                                               .awaddr
+		input  wire [7:0]   axi4Master2_0_altera_axi4_master_awlen,               //                                               .awlen
+		input  wire [2:0]   axi4Master2_0_altera_axi4_master_awsize,              //                                               .awsize
+		input  wire [1:0]   axi4Master2_0_altera_axi4_master_awburst,             //                                               .awburst
+		input  wire [0:0]   axi4Master2_0_altera_axi4_master_awlock,              //                                               .awlock
+		input  wire [3:0]   axi4Master2_0_altera_axi4_master_awcache,             //                                               .awcache
+		input  wire [2:0]   axi4Master2_0_altera_axi4_master_awprot,              //                                               .awprot
+		input  wire [3:0]   axi4Master2_0_altera_axi4_master_awqos,               //                                               .awqos
+		input  wire [3:0]   axi4Master2_0_altera_axi4_master_awregion,            //                                               .awregion
+		input  wire         axi4Master2_0_altera_axi4_master_awvalid,             //                                               .awvalid
+		output wire         axi4Master2_0_altera_axi4_master_awready,             //                                               .awready
+		input  wire [127:0] axi4Master2_0_altera_axi4_master_wdata,               //                                               .wdata
+		input  wire [15:0]  axi4Master2_0_altera_axi4_master_wstrb,               //                                               .wstrb
+		input  wire         axi4Master2_0_altera_axi4_master_wlast,               //                                               .wlast
+		input  wire         axi4Master2_0_altera_axi4_master_wvalid,              //                                               .wvalid
+		output wire         axi4Master2_0_altera_axi4_master_wready,              //                                               .wready
+		output wire [0:0]   axi4Master2_0_altera_axi4_master_bid,                 //                                               .bid
+		output wire [1:0]   axi4Master2_0_altera_axi4_master_bresp,               //                                               .bresp
+		output wire         axi4Master2_0_altera_axi4_master_bvalid,              //                                               .bvalid
+		input  wire         axi4Master2_0_altera_axi4_master_bready,              //                                               .bready
+		input  wire [0:0]   axi4Master2_0_altera_axi4_master_arid,                //                                               .arid
+		input  wire [13:0]  axi4Master2_0_altera_axi4_master_araddr,              //                                               .araddr
+		input  wire [7:0]   axi4Master2_0_altera_axi4_master_arlen,               //                                               .arlen
+		input  wire [2:0]   axi4Master2_0_altera_axi4_master_arsize,              //                                               .arsize
+		input  wire [1:0]   axi4Master2_0_altera_axi4_master_arburst,             //                                               .arburst
+		input  wire [0:0]   axi4Master2_0_altera_axi4_master_arlock,              //                                               .arlock
+		input  wire [3:0]   axi4Master2_0_altera_axi4_master_arcache,             //                                               .arcache
+		input  wire [2:0]   axi4Master2_0_altera_axi4_master_arprot,              //                                               .arprot
+		input  wire [3:0]   axi4Master2_0_altera_axi4_master_arqos,               //                                               .arqos
+		input  wire [3:0]   axi4Master2_0_altera_axi4_master_arregion,            //                                               .arregion
+		input  wire         axi4Master2_0_altera_axi4_master_arvalid,             //                                               .arvalid
+		output wire         axi4Master2_0_altera_axi4_master_arready,             //                                               .arready
+		output wire [0:0]   axi4Master2_0_altera_axi4_master_rid,                 //                                               .rid
+		output wire [127:0] axi4Master2_0_altera_axi4_master_rdata,               //                                               .rdata
+		output wire [1:0]   axi4Master2_0_altera_axi4_master_rresp,               //                                               .rresp
+		output wire         axi4Master2_0_altera_axi4_master_rlast,               //                                               .rlast
+		output wire         axi4Master2_0_altera_axi4_master_rvalid,              //                                               .rvalid
+		input  wire         axi4Master2_0_altera_axi4_master_rready,              //                                               .rready
+		output wire [1:0]   axi4Slave5_0_altera_axi4_slave_awid,                  //                 axi4Slave5_0_altera_axi4_slave.awid
+		output wire [12:0]  axi4Slave5_0_altera_axi4_slave_awaddr,                //                                               .awaddr
+		output wire [7:0]   axi4Slave5_0_altera_axi4_slave_awlen,                 //                                               .awlen
+		output wire [2:0]   axi4Slave5_0_altera_axi4_slave_awsize,                //                                               .awsize
+		output wire [1:0]   axi4Slave5_0_altera_axi4_slave_awburst,               //                                               .awburst
+		output wire [0:0]   axi4Slave5_0_altera_axi4_slave_awlock,                //                                               .awlock
+		output wire [3:0]   axi4Slave5_0_altera_axi4_slave_awcache,               //                                               .awcache
+		output wire [2:0]   axi4Slave5_0_altera_axi4_slave_awprot,                //                                               .awprot
+		output wire [3:0]   axi4Slave5_0_altera_axi4_slave_awqos,                 //                                               .awqos
+		output wire [3:0]   axi4Slave5_0_altera_axi4_slave_awregion,              //                                               .awregion
+		output wire         axi4Slave5_0_altera_axi4_slave_awvalid,               //                                               .awvalid
+		input  wire         axi4Slave5_0_altera_axi4_slave_awready,               //                                               .awready
+		output wire [127:0] axi4Slave5_0_altera_axi4_slave_wdata,                 //                                               .wdata
+		output wire [15:0]  axi4Slave5_0_altera_axi4_slave_wstrb,                 //                                               .wstrb
+		output wire         axi4Slave5_0_altera_axi4_slave_wlast,                 //                                               .wlast
+		output wire         axi4Slave5_0_altera_axi4_slave_wvalid,                //                                               .wvalid
+		input  wire         axi4Slave5_0_altera_axi4_slave_wready,                //                                               .wready
+		input  wire [1:0]   axi4Slave5_0_altera_axi4_slave_bid,                   //                                               .bid
+		input  wire [1:0]   axi4Slave5_0_altera_axi4_slave_bresp,                 //                                               .bresp
+		input  wire         axi4Slave5_0_altera_axi4_slave_bvalid,                //                                               .bvalid
+		output wire         axi4Slave5_0_altera_axi4_slave_bready,                //                                               .bready
+		output wire [1:0]   axi4Slave5_0_altera_axi4_slave_arid,                  //                                               .arid
+		output wire [12:0]  axi4Slave5_0_altera_axi4_slave_araddr,                //                                               .araddr
+		output wire [7:0]   axi4Slave5_0_altera_axi4_slave_arlen,                 //                                               .arlen
+		output wire [2:0]   axi4Slave5_0_altera_axi4_slave_arsize,                //                                               .arsize
+		output wire [1:0]   axi4Slave5_0_altera_axi4_slave_arburst,               //                                               .arburst
+		output wire [0:0]   axi4Slave5_0_altera_axi4_slave_arlock,                //                                               .arlock
+		output wire [3:0]   axi4Slave5_0_altera_axi4_slave_arcache,               //                                               .arcache
+		output wire [2:0]   axi4Slave5_0_altera_axi4_slave_arprot,                //                                               .arprot
+		output wire [3:0]   axi4Slave5_0_altera_axi4_slave_arqos,                 //                                               .arqos
+		output wire [3:0]   axi4Slave5_0_altera_axi4_slave_arregion,              //                                               .arregion
+		output wire         axi4Slave5_0_altera_axi4_slave_arvalid,               //                                               .arvalid
+		input  wire         axi4Slave5_0_altera_axi4_slave_arready,               //                                               .arready
+		input  wire [1:0]   axi4Slave5_0_altera_axi4_slave_rid,                   //                                               .rid
+		input  wire [127:0] axi4Slave5_0_altera_axi4_slave_rdata,                 //                                               .rdata
+		input  wire [1:0]   axi4Slave5_0_altera_axi4_slave_rresp,                 //                                               .rresp
+		input  wire         axi4Slave5_0_altera_axi4_slave_rlast,                 //                                               .rlast
+		input  wire         axi4Slave5_0_altera_axi4_slave_rvalid,                //                                               .rvalid
+		output wire         axi4Slave5_0_altera_axi4_slave_rready,                //                                               .rready
+		output wire [1:0]   axi4Slave7_0_altera_axi4_slave_awid,                  //                 axi4Slave7_0_altera_axi4_slave.awid
+		output wire [12:0]  axi4Slave7_0_altera_axi4_slave_awaddr,                //                                               .awaddr
+		output wire [7:0]   axi4Slave7_0_altera_axi4_slave_awlen,                 //                                               .awlen
+		output wire [2:0]   axi4Slave7_0_altera_axi4_slave_awsize,                //                                               .awsize
+		output wire [1:0]   axi4Slave7_0_altera_axi4_slave_awburst,               //                                               .awburst
+		output wire [0:0]   axi4Slave7_0_altera_axi4_slave_awlock,                //                                               .awlock
+		output wire [3:0]   axi4Slave7_0_altera_axi4_slave_awcache,               //                                               .awcache
+		output wire [2:0]   axi4Slave7_0_altera_axi4_slave_awprot,                //                                               .awprot
+		output wire [3:0]   axi4Slave7_0_altera_axi4_slave_awqos,                 //                                               .awqos
+		output wire [3:0]   axi4Slave7_0_altera_axi4_slave_awregion,              //                                               .awregion
+		output wire         axi4Slave7_0_altera_axi4_slave_awvalid,               //                                               .awvalid
+		input  wire         axi4Slave7_0_altera_axi4_slave_awready,               //                                               .awready
+		output wire [127:0] axi4Slave7_0_altera_axi4_slave_wdata,                 //                                               .wdata
+		output wire [15:0]  axi4Slave7_0_altera_axi4_slave_wstrb,                 //                                               .wstrb
+		output wire         axi4Slave7_0_altera_axi4_slave_wlast,                 //                                               .wlast
+		output wire         axi4Slave7_0_altera_axi4_slave_wvalid,                //                                               .wvalid
+		input  wire         axi4Slave7_0_altera_axi4_slave_wready,                //                                               .wready
+		input  wire [1:0]   axi4Slave7_0_altera_axi4_slave_bid,                   //                                               .bid
+		input  wire [1:0]   axi4Slave7_0_altera_axi4_slave_bresp,                 //                                               .bresp
+		input  wire         axi4Slave7_0_altera_axi4_slave_bvalid,                //                                               .bvalid
+		output wire         axi4Slave7_0_altera_axi4_slave_bready,                //                                               .bready
+		output wire [1:0]   axi4Slave7_0_altera_axi4_slave_arid,                  //                                               .arid
+		output wire [12:0]  axi4Slave7_0_altera_axi4_slave_araddr,                //                                               .araddr
+		output wire [7:0]   axi4Slave7_0_altera_axi4_slave_arlen,                 //                                               .arlen
+		output wire [2:0]   axi4Slave7_0_altera_axi4_slave_arsize,                //                                               .arsize
+		output wire [1:0]   axi4Slave7_0_altera_axi4_slave_arburst,               //                                               .arburst
+		output wire [0:0]   axi4Slave7_0_altera_axi4_slave_arlock,                //                                               .arlock
+		output wire [3:0]   axi4Slave7_0_altera_axi4_slave_arcache,               //                                               .arcache
+		output wire [2:0]   axi4Slave7_0_altera_axi4_slave_arprot,                //                                               .arprot
+		output wire [3:0]   axi4Slave7_0_altera_axi4_slave_arqos,                 //                                               .arqos
+		output wire [3:0]   axi4Slave7_0_altera_axi4_slave_arregion,              //                                               .arregion
+		output wire         axi4Slave7_0_altera_axi4_slave_arvalid,               //                                               .arvalid
+		input  wire         axi4Slave7_0_altera_axi4_slave_arready,               //                                               .arready
+		input  wire [1:0]   axi4Slave7_0_altera_axi4_slave_rid,                   //                                               .rid
+		input  wire [127:0] axi4Slave7_0_altera_axi4_slave_rdata,                 //                                               .rdata
+		input  wire [1:0]   axi4Slave7_0_altera_axi4_slave_rresp,                 //                                               .rresp
+		input  wire         axi4Slave7_0_altera_axi4_slave_rlast,                 //                                               .rlast
+		input  wire         axi4Slave7_0_altera_axi4_slave_rvalid,                //                                               .rvalid
+		output wire         axi4Slave7_0_altera_axi4_slave_rready,                //                                               .rready
+		input  wire         clk_0_clk_clk,                                        //                                      clk_0_clk.clk
+		input  wire         axi4Master2_0_reset_sink_reset_bridge_in_reset_reset  // axi4Master2_0_reset_sink_reset_bridge_in_reset.reset
 	);
 
-	wire    [0:0] aximaster_0_altera_axi4_master_translator_m0_ruser;    // axi4Slave_0_altera_axi4_slave_translator:s0_ruser -> axiMaster_0_altera_axi4_master_translator:m0_ruser
-	wire    [0:0] aximaster_0_altera_axi4_master_translator_m0_wuser;    // axiMaster_0_altera_axi4_master_translator:m0_wuser -> axi4Slave_0_altera_axi4_slave_translator:s0_wuser
-	wire    [1:0] aximaster_0_altera_axi4_master_translator_m0_awburst;  // axiMaster_0_altera_axi4_master_translator:m0_awburst -> axi4Slave_0_altera_axi4_slave_translator:s0_awburst
-	wire    [3:0] aximaster_0_altera_axi4_master_translator_m0_arregion; // axiMaster_0_altera_axi4_master_translator:m0_arregion -> axi4Slave_0_altera_axi4_slave_translator:s0_arregion
-	wire    [0:0] aximaster_0_altera_axi4_master_translator_m0_awuser;   // axiMaster_0_altera_axi4_master_translator:m0_awuser -> axi4Slave_0_altera_axi4_slave_translator:s0_awuser
-	wire    [7:0] aximaster_0_altera_axi4_master_translator_m0_arlen;    // axiMaster_0_altera_axi4_master_translator:m0_arlen -> axi4Slave_0_altera_axi4_slave_translator:s0_arlen
-	wire    [3:0] aximaster_0_altera_axi4_master_translator_m0_arqos;    // axiMaster_0_altera_axi4_master_translator:m0_arqos -> axi4Slave_0_altera_axi4_slave_translator:s0_arqos
-	wire   [15:0] aximaster_0_altera_axi4_master_translator_m0_wstrb;    // axiMaster_0_altera_axi4_master_translator:m0_wstrb -> axi4Slave_0_altera_axi4_slave_translator:s0_wstrb
-	wire          aximaster_0_altera_axi4_master_translator_m0_wready;   // axi4Slave_0_altera_axi4_slave_translator:s0_wready -> axiMaster_0_altera_axi4_master_translator:m0_wready
-	wire    [0:0] aximaster_0_altera_axi4_master_translator_m0_rid;      // axi4Slave_0_altera_axi4_slave_translator:s0_rid -> axiMaster_0_altera_axi4_master_translator:m0_rid
-	wire          aximaster_0_altera_axi4_master_translator_m0_rready;   // axiMaster_0_altera_axi4_master_translator:m0_rready -> axi4Slave_0_altera_axi4_slave_translator:s0_rready
-	wire    [7:0] aximaster_0_altera_axi4_master_translator_m0_awlen;    // axiMaster_0_altera_axi4_master_translator:m0_awlen -> axi4Slave_0_altera_axi4_slave_translator:s0_awlen
-	wire    [3:0] aximaster_0_altera_axi4_master_translator_m0_awqos;    // axiMaster_0_altera_axi4_master_translator:m0_awqos -> axi4Slave_0_altera_axi4_slave_translator:s0_awqos
-	wire    [3:0] aximaster_0_altera_axi4_master_translator_m0_arcache;  // axiMaster_0_altera_axi4_master_translator:m0_arcache -> axi4Slave_0_altera_axi4_slave_translator:s0_arcache
-	wire          aximaster_0_altera_axi4_master_translator_m0_wvalid;   // axiMaster_0_altera_axi4_master_translator:m0_wvalid -> axi4Slave_0_altera_axi4_slave_translator:s0_wvalid
-	wire   [13:0] aximaster_0_altera_axi4_master_translator_m0_araddr;   // axiMaster_0_altera_axi4_master_translator:m0_araddr -> axi4Slave_0_altera_axi4_slave_translator:s0_araddr
-	wire    [2:0] aximaster_0_altera_axi4_master_translator_m0_arprot;   // axiMaster_0_altera_axi4_master_translator:m0_arprot -> axi4Slave_0_altera_axi4_slave_translator:s0_arprot
-	wire    [2:0] aximaster_0_altera_axi4_master_translator_m0_awprot;   // axiMaster_0_altera_axi4_master_translator:m0_awprot -> axi4Slave_0_altera_axi4_slave_translator:s0_awprot
-	wire  [127:0] aximaster_0_altera_axi4_master_translator_m0_wdata;    // axiMaster_0_altera_axi4_master_translator:m0_wdata -> axi4Slave_0_altera_axi4_slave_translator:s0_wdata
-	wire          aximaster_0_altera_axi4_master_translator_m0_arvalid;  // axiMaster_0_altera_axi4_master_translator:m0_arvalid -> axi4Slave_0_altera_axi4_slave_translator:s0_arvalid
-	wire    [3:0] aximaster_0_altera_axi4_master_translator_m0_awcache;  // axiMaster_0_altera_axi4_master_translator:m0_awcache -> axi4Slave_0_altera_axi4_slave_translator:s0_awcache
-	wire    [0:0] aximaster_0_altera_axi4_master_translator_m0_arid;     // axiMaster_0_altera_axi4_master_translator:m0_arid -> axi4Slave_0_altera_axi4_slave_translator:s0_arid
-	wire    [0:0] aximaster_0_altera_axi4_master_translator_m0_arlock;   // axiMaster_0_altera_axi4_master_translator:m0_arlock -> axi4Slave_0_altera_axi4_slave_translator:s0_arlock
-	wire    [0:0] aximaster_0_altera_axi4_master_translator_m0_awlock;   // axiMaster_0_altera_axi4_master_translator:m0_awlock -> axi4Slave_0_altera_axi4_slave_translator:s0_awlock
-	wire   [13:0] aximaster_0_altera_axi4_master_translator_m0_awaddr;   // axiMaster_0_altera_axi4_master_translator:m0_awaddr -> axi4Slave_0_altera_axi4_slave_translator:s0_awaddr
-	wire    [1:0] aximaster_0_altera_axi4_master_translator_m0_bresp;    // axi4Slave_0_altera_axi4_slave_translator:s0_bresp -> axiMaster_0_altera_axi4_master_translator:m0_bresp
-	wire          aximaster_0_altera_axi4_master_translator_m0_arready;  // axi4Slave_0_altera_axi4_slave_translator:s0_arready -> axiMaster_0_altera_axi4_master_translator:m0_arready
-	wire  [127:0] aximaster_0_altera_axi4_master_translator_m0_rdata;    // axi4Slave_0_altera_axi4_slave_translator:s0_rdata -> axiMaster_0_altera_axi4_master_translator:m0_rdata
-	wire          aximaster_0_altera_axi4_master_translator_m0_awready;  // axi4Slave_0_altera_axi4_slave_translator:s0_awready -> axiMaster_0_altera_axi4_master_translator:m0_awready
-	wire    [1:0] aximaster_0_altera_axi4_master_translator_m0_arburst;  // axiMaster_0_altera_axi4_master_translator:m0_arburst -> axi4Slave_0_altera_axi4_slave_translator:s0_arburst
-	wire    [2:0] aximaster_0_altera_axi4_master_translator_m0_arsize;   // axiMaster_0_altera_axi4_master_translator:m0_arsize -> axi4Slave_0_altera_axi4_slave_translator:s0_arsize
-	wire          aximaster_0_altera_axi4_master_translator_m0_bready;   // axiMaster_0_altera_axi4_master_translator:m0_bready -> axi4Slave_0_altera_axi4_slave_translator:s0_bready
-	wire          aximaster_0_altera_axi4_master_translator_m0_rlast;    // axi4Slave_0_altera_axi4_slave_translator:s0_rlast -> axiMaster_0_altera_axi4_master_translator:m0_rlast
-	wire          aximaster_0_altera_axi4_master_translator_m0_wlast;    // axiMaster_0_altera_axi4_master_translator:m0_wlast -> axi4Slave_0_altera_axi4_slave_translator:s0_wlast
-	wire    [3:0] aximaster_0_altera_axi4_master_translator_m0_awregion; // axiMaster_0_altera_axi4_master_translator:m0_awregion -> axi4Slave_0_altera_axi4_slave_translator:s0_awregion
-	wire    [0:0] aximaster_0_altera_axi4_master_translator_m0_buser;    // axi4Slave_0_altera_axi4_slave_translator:s0_buser -> axiMaster_0_altera_axi4_master_translator:m0_buser
-	wire    [1:0] aximaster_0_altera_axi4_master_translator_m0_rresp;    // axi4Slave_0_altera_axi4_slave_translator:s0_rresp -> axiMaster_0_altera_axi4_master_translator:m0_rresp
-	wire    [0:0] aximaster_0_altera_axi4_master_translator_m0_awid;     // axiMaster_0_altera_axi4_master_translator:m0_awid -> axi4Slave_0_altera_axi4_slave_translator:s0_awid
-	wire    [0:0] aximaster_0_altera_axi4_master_translator_m0_bid;      // axi4Slave_0_altera_axi4_slave_translator:s0_bid -> axiMaster_0_altera_axi4_master_translator:m0_bid
-	wire          aximaster_0_altera_axi4_master_translator_m0_bvalid;   // axi4Slave_0_altera_axi4_slave_translator:s0_bvalid -> axiMaster_0_altera_axi4_master_translator:m0_bvalid
-	wire    [2:0] aximaster_0_altera_axi4_master_translator_m0_awsize;   // axiMaster_0_altera_axi4_master_translator:m0_awsize -> axi4Slave_0_altera_axi4_slave_translator:s0_awsize
-	wire          aximaster_0_altera_axi4_master_translator_m0_awvalid;  // axiMaster_0_altera_axi4_master_translator:m0_awvalid -> axi4Slave_0_altera_axi4_slave_translator:s0_awvalid
-	wire    [0:0] aximaster_0_altera_axi4_master_translator_m0_aruser;   // axiMaster_0_altera_axi4_master_translator:m0_aruser -> axi4Slave_0_altera_axi4_slave_translator:s0_aruser
-	wire          aximaster_0_altera_axi4_master_translator_m0_rvalid;   // axi4Slave_0_altera_axi4_slave_translator:s0_rvalid -> axiMaster_0_altera_axi4_master_translator:m0_rvalid
+	wire    [0:0] axi4master2_0_altera_axi4_master_translator_m0_ruser;            // axi4Master2_0_altera_axi4_master_agent:ruser -> axi4Master2_0_altera_axi4_master_translator:m0_ruser
+	wire    [0:0] axi4master2_0_altera_axi4_master_translator_m0_wuser;            // axi4Master2_0_altera_axi4_master_translator:m0_wuser -> axi4Master2_0_altera_axi4_master_agent:wuser
+	wire    [1:0] axi4master2_0_altera_axi4_master_translator_m0_awburst;          // axi4Master2_0_altera_axi4_master_translator:m0_awburst -> axi4Master2_0_altera_axi4_master_agent:awburst
+	wire    [3:0] axi4master2_0_altera_axi4_master_translator_m0_arregion;         // axi4Master2_0_altera_axi4_master_translator:m0_arregion -> axi4Master2_0_altera_axi4_master_agent:arregion
+	wire    [0:0] axi4master2_0_altera_axi4_master_translator_m0_awuser;           // axi4Master2_0_altera_axi4_master_translator:m0_awuser -> axi4Master2_0_altera_axi4_master_agent:awuser
+	wire    [7:0] axi4master2_0_altera_axi4_master_translator_m0_arlen;            // axi4Master2_0_altera_axi4_master_translator:m0_arlen -> axi4Master2_0_altera_axi4_master_agent:arlen
+	wire    [3:0] axi4master2_0_altera_axi4_master_translator_m0_arqos;            // axi4Master2_0_altera_axi4_master_translator:m0_arqos -> axi4Master2_0_altera_axi4_master_agent:arqos
+	wire   [15:0] axi4master2_0_altera_axi4_master_translator_m0_wstrb;            // axi4Master2_0_altera_axi4_master_translator:m0_wstrb -> axi4Master2_0_altera_axi4_master_agent:wstrb
+	wire          axi4master2_0_altera_axi4_master_translator_m0_wready;           // axi4Master2_0_altera_axi4_master_agent:wready -> axi4Master2_0_altera_axi4_master_translator:m0_wready
+	wire    [0:0] axi4master2_0_altera_axi4_master_translator_m0_rid;              // axi4Master2_0_altera_axi4_master_agent:rid -> axi4Master2_0_altera_axi4_master_translator:m0_rid
+	wire          axi4master2_0_altera_axi4_master_translator_m0_rready;           // axi4Master2_0_altera_axi4_master_translator:m0_rready -> axi4Master2_0_altera_axi4_master_agent:rready
+	wire    [7:0] axi4master2_0_altera_axi4_master_translator_m0_awlen;            // axi4Master2_0_altera_axi4_master_translator:m0_awlen -> axi4Master2_0_altera_axi4_master_agent:awlen
+	wire    [3:0] axi4master2_0_altera_axi4_master_translator_m0_awqos;            // axi4Master2_0_altera_axi4_master_translator:m0_awqos -> axi4Master2_0_altera_axi4_master_agent:awqos
+	wire    [3:0] axi4master2_0_altera_axi4_master_translator_m0_arcache;          // axi4Master2_0_altera_axi4_master_translator:m0_arcache -> axi4Master2_0_altera_axi4_master_agent:arcache
+	wire          axi4master2_0_altera_axi4_master_translator_m0_wvalid;           // axi4Master2_0_altera_axi4_master_translator:m0_wvalid -> axi4Master2_0_altera_axi4_master_agent:wvalid
+	wire   [13:0] axi4master2_0_altera_axi4_master_translator_m0_araddr;           // axi4Master2_0_altera_axi4_master_translator:m0_araddr -> axi4Master2_0_altera_axi4_master_agent:araddr
+	wire    [2:0] axi4master2_0_altera_axi4_master_translator_m0_arprot;           // axi4Master2_0_altera_axi4_master_translator:m0_arprot -> axi4Master2_0_altera_axi4_master_agent:arprot
+	wire    [2:0] axi4master2_0_altera_axi4_master_translator_m0_awprot;           // axi4Master2_0_altera_axi4_master_translator:m0_awprot -> axi4Master2_0_altera_axi4_master_agent:awprot
+	wire  [127:0] axi4master2_0_altera_axi4_master_translator_m0_wdata;            // axi4Master2_0_altera_axi4_master_translator:m0_wdata -> axi4Master2_0_altera_axi4_master_agent:wdata
+	wire          axi4master2_0_altera_axi4_master_translator_m0_arvalid;          // axi4Master2_0_altera_axi4_master_translator:m0_arvalid -> axi4Master2_0_altera_axi4_master_agent:arvalid
+	wire    [3:0] axi4master2_0_altera_axi4_master_translator_m0_awcache;          // axi4Master2_0_altera_axi4_master_translator:m0_awcache -> axi4Master2_0_altera_axi4_master_agent:awcache
+	wire    [0:0] axi4master2_0_altera_axi4_master_translator_m0_arid;             // axi4Master2_0_altera_axi4_master_translator:m0_arid -> axi4Master2_0_altera_axi4_master_agent:arid
+	wire    [0:0] axi4master2_0_altera_axi4_master_translator_m0_arlock;           // axi4Master2_0_altera_axi4_master_translator:m0_arlock -> axi4Master2_0_altera_axi4_master_agent:arlock
+	wire    [0:0] axi4master2_0_altera_axi4_master_translator_m0_awlock;           // axi4Master2_0_altera_axi4_master_translator:m0_awlock -> axi4Master2_0_altera_axi4_master_agent:awlock
+	wire   [13:0] axi4master2_0_altera_axi4_master_translator_m0_awaddr;           // axi4Master2_0_altera_axi4_master_translator:m0_awaddr -> axi4Master2_0_altera_axi4_master_agent:awaddr
+	wire    [1:0] axi4master2_0_altera_axi4_master_translator_m0_bresp;            // axi4Master2_0_altera_axi4_master_agent:bresp -> axi4Master2_0_altera_axi4_master_translator:m0_bresp
+	wire          axi4master2_0_altera_axi4_master_translator_m0_arready;          // axi4Master2_0_altera_axi4_master_agent:arready -> axi4Master2_0_altera_axi4_master_translator:m0_arready
+	wire  [127:0] axi4master2_0_altera_axi4_master_translator_m0_rdata;            // axi4Master2_0_altera_axi4_master_agent:rdata -> axi4Master2_0_altera_axi4_master_translator:m0_rdata
+	wire          axi4master2_0_altera_axi4_master_translator_m0_awready;          // axi4Master2_0_altera_axi4_master_agent:awready -> axi4Master2_0_altera_axi4_master_translator:m0_awready
+	wire    [1:0] axi4master2_0_altera_axi4_master_translator_m0_arburst;          // axi4Master2_0_altera_axi4_master_translator:m0_arburst -> axi4Master2_0_altera_axi4_master_agent:arburst
+	wire    [2:0] axi4master2_0_altera_axi4_master_translator_m0_arsize;           // axi4Master2_0_altera_axi4_master_translator:m0_arsize -> axi4Master2_0_altera_axi4_master_agent:arsize
+	wire          axi4master2_0_altera_axi4_master_translator_m0_bready;           // axi4Master2_0_altera_axi4_master_translator:m0_bready -> axi4Master2_0_altera_axi4_master_agent:bready
+	wire          axi4master2_0_altera_axi4_master_translator_m0_rlast;            // axi4Master2_0_altera_axi4_master_agent:rlast -> axi4Master2_0_altera_axi4_master_translator:m0_rlast
+	wire          axi4master2_0_altera_axi4_master_translator_m0_wlast;            // axi4Master2_0_altera_axi4_master_translator:m0_wlast -> axi4Master2_0_altera_axi4_master_agent:wlast
+	wire    [3:0] axi4master2_0_altera_axi4_master_translator_m0_awregion;         // axi4Master2_0_altera_axi4_master_translator:m0_awregion -> axi4Master2_0_altera_axi4_master_agent:awregion
+	wire    [0:0] axi4master2_0_altera_axi4_master_translator_m0_buser;            // axi4Master2_0_altera_axi4_master_agent:buser -> axi4Master2_0_altera_axi4_master_translator:m0_buser
+	wire    [1:0] axi4master2_0_altera_axi4_master_translator_m0_rresp;            // axi4Master2_0_altera_axi4_master_agent:rresp -> axi4Master2_0_altera_axi4_master_translator:m0_rresp
+	wire    [0:0] axi4master2_0_altera_axi4_master_translator_m0_awid;             // axi4Master2_0_altera_axi4_master_translator:m0_awid -> axi4Master2_0_altera_axi4_master_agent:awid
+	wire    [0:0] axi4master2_0_altera_axi4_master_translator_m0_bid;              // axi4Master2_0_altera_axi4_master_agent:bid -> axi4Master2_0_altera_axi4_master_translator:m0_bid
+	wire          axi4master2_0_altera_axi4_master_translator_m0_bvalid;           // axi4Master2_0_altera_axi4_master_agent:bvalid -> axi4Master2_0_altera_axi4_master_translator:m0_bvalid
+	wire    [2:0] axi4master2_0_altera_axi4_master_translator_m0_awsize;           // axi4Master2_0_altera_axi4_master_translator:m0_awsize -> axi4Master2_0_altera_axi4_master_agent:awsize
+	wire          axi4master2_0_altera_axi4_master_translator_m0_awvalid;          // axi4Master2_0_altera_axi4_master_translator:m0_awvalid -> axi4Master2_0_altera_axi4_master_agent:awvalid
+	wire    [0:0] axi4master2_0_altera_axi4_master_translator_m0_aruser;           // axi4Master2_0_altera_axi4_master_translator:m0_aruser -> axi4Master2_0_altera_axi4_master_agent:aruser
+	wire          axi4master2_0_altera_axi4_master_translator_m0_rvalid;           // axi4Master2_0_altera_axi4_master_agent:rvalid -> axi4Master2_0_altera_axi4_master_translator:m0_rvalid
+	wire          rsp_mux_src_valid;                                               // rsp_mux:src_valid -> axi4Master2_0_altera_axi4_master_agent:write_rp_valid
+	wire  [212:0] rsp_mux_src_data;                                                // rsp_mux:src_data -> axi4Master2_0_altera_axi4_master_agent:write_rp_data
+	wire          rsp_mux_src_ready;                                               // axi4Master2_0_altera_axi4_master_agent:write_rp_ready -> rsp_mux:src_ready
+	wire    [3:0] rsp_mux_src_channel;                                             // rsp_mux:src_channel -> axi4Master2_0_altera_axi4_master_agent:write_rp_channel
+	wire          rsp_mux_src_startofpacket;                                       // rsp_mux:src_startofpacket -> axi4Master2_0_altera_axi4_master_agent:write_rp_startofpacket
+	wire          rsp_mux_src_endofpacket;                                         // rsp_mux:src_endofpacket -> axi4Master2_0_altera_axi4_master_agent:write_rp_endofpacket
+	wire          rsp_mux_001_src_valid;                                           // rsp_mux_001:src_valid -> axi4Master2_0_altera_axi4_master_agent:read_rp_valid
+	wire  [212:0] rsp_mux_001_src_data;                                            // rsp_mux_001:src_data -> axi4Master2_0_altera_axi4_master_agent:read_rp_data
+	wire          rsp_mux_001_src_ready;                                           // axi4Master2_0_altera_axi4_master_agent:read_rp_ready -> rsp_mux_001:src_ready
+	wire    [3:0] rsp_mux_001_src_channel;                                         // rsp_mux_001:src_channel -> axi4Master2_0_altera_axi4_master_agent:read_rp_channel
+	wire          rsp_mux_001_src_startofpacket;                                   // rsp_mux_001:src_startofpacket -> axi4Master2_0_altera_axi4_master_agent:read_rp_startofpacket
+	wire          rsp_mux_001_src_endofpacket;                                     // rsp_mux_001:src_endofpacket -> axi4Master2_0_altera_axi4_master_agent:read_rp_endofpacket
+	wire    [0:0] axi4master1_0_altera_axi4_master_translator_m0_ruser;            // axi4Master1_0_altera_axi4_master_agent:ruser -> axi4Master1_0_altera_axi4_master_translator:m0_ruser
+	wire    [0:0] axi4master1_0_altera_axi4_master_translator_m0_wuser;            // axi4Master1_0_altera_axi4_master_translator:m0_wuser -> axi4Master1_0_altera_axi4_master_agent:wuser
+	wire    [1:0] axi4master1_0_altera_axi4_master_translator_m0_awburst;          // axi4Master1_0_altera_axi4_master_translator:m0_awburst -> axi4Master1_0_altera_axi4_master_agent:awburst
+	wire    [3:0] axi4master1_0_altera_axi4_master_translator_m0_arregion;         // axi4Master1_0_altera_axi4_master_translator:m0_arregion -> axi4Master1_0_altera_axi4_master_agent:arregion
+	wire    [0:0] axi4master1_0_altera_axi4_master_translator_m0_awuser;           // axi4Master1_0_altera_axi4_master_translator:m0_awuser -> axi4Master1_0_altera_axi4_master_agent:awuser
+	wire    [7:0] axi4master1_0_altera_axi4_master_translator_m0_arlen;            // axi4Master1_0_altera_axi4_master_translator:m0_arlen -> axi4Master1_0_altera_axi4_master_agent:arlen
+	wire    [3:0] axi4master1_0_altera_axi4_master_translator_m0_arqos;            // axi4Master1_0_altera_axi4_master_translator:m0_arqos -> axi4Master1_0_altera_axi4_master_agent:arqos
+	wire   [15:0] axi4master1_0_altera_axi4_master_translator_m0_wstrb;            // axi4Master1_0_altera_axi4_master_translator:m0_wstrb -> axi4Master1_0_altera_axi4_master_agent:wstrb
+	wire          axi4master1_0_altera_axi4_master_translator_m0_wready;           // axi4Master1_0_altera_axi4_master_agent:wready -> axi4Master1_0_altera_axi4_master_translator:m0_wready
+	wire    [0:0] axi4master1_0_altera_axi4_master_translator_m0_rid;              // axi4Master1_0_altera_axi4_master_agent:rid -> axi4Master1_0_altera_axi4_master_translator:m0_rid
+	wire          axi4master1_0_altera_axi4_master_translator_m0_rready;           // axi4Master1_0_altera_axi4_master_translator:m0_rready -> axi4Master1_0_altera_axi4_master_agent:rready
+	wire    [7:0] axi4master1_0_altera_axi4_master_translator_m0_awlen;            // axi4Master1_0_altera_axi4_master_translator:m0_awlen -> axi4Master1_0_altera_axi4_master_agent:awlen
+	wire    [3:0] axi4master1_0_altera_axi4_master_translator_m0_awqos;            // axi4Master1_0_altera_axi4_master_translator:m0_awqos -> axi4Master1_0_altera_axi4_master_agent:awqos
+	wire    [3:0] axi4master1_0_altera_axi4_master_translator_m0_arcache;          // axi4Master1_0_altera_axi4_master_translator:m0_arcache -> axi4Master1_0_altera_axi4_master_agent:arcache
+	wire          axi4master1_0_altera_axi4_master_translator_m0_wvalid;           // axi4Master1_0_altera_axi4_master_translator:m0_wvalid -> axi4Master1_0_altera_axi4_master_agent:wvalid
+	wire   [13:0] axi4master1_0_altera_axi4_master_translator_m0_araddr;           // axi4Master1_0_altera_axi4_master_translator:m0_araddr -> axi4Master1_0_altera_axi4_master_agent:araddr
+	wire    [2:0] axi4master1_0_altera_axi4_master_translator_m0_arprot;           // axi4Master1_0_altera_axi4_master_translator:m0_arprot -> axi4Master1_0_altera_axi4_master_agent:arprot
+	wire    [2:0] axi4master1_0_altera_axi4_master_translator_m0_awprot;           // axi4Master1_0_altera_axi4_master_translator:m0_awprot -> axi4Master1_0_altera_axi4_master_agent:awprot
+	wire  [127:0] axi4master1_0_altera_axi4_master_translator_m0_wdata;            // axi4Master1_0_altera_axi4_master_translator:m0_wdata -> axi4Master1_0_altera_axi4_master_agent:wdata
+	wire          axi4master1_0_altera_axi4_master_translator_m0_arvalid;          // axi4Master1_0_altera_axi4_master_translator:m0_arvalid -> axi4Master1_0_altera_axi4_master_agent:arvalid
+	wire    [3:0] axi4master1_0_altera_axi4_master_translator_m0_awcache;          // axi4Master1_0_altera_axi4_master_translator:m0_awcache -> axi4Master1_0_altera_axi4_master_agent:awcache
+	wire    [0:0] axi4master1_0_altera_axi4_master_translator_m0_arid;             // axi4Master1_0_altera_axi4_master_translator:m0_arid -> axi4Master1_0_altera_axi4_master_agent:arid
+	wire    [0:0] axi4master1_0_altera_axi4_master_translator_m0_arlock;           // axi4Master1_0_altera_axi4_master_translator:m0_arlock -> axi4Master1_0_altera_axi4_master_agent:arlock
+	wire    [0:0] axi4master1_0_altera_axi4_master_translator_m0_awlock;           // axi4Master1_0_altera_axi4_master_translator:m0_awlock -> axi4Master1_0_altera_axi4_master_agent:awlock
+	wire   [13:0] axi4master1_0_altera_axi4_master_translator_m0_awaddr;           // axi4Master1_0_altera_axi4_master_translator:m0_awaddr -> axi4Master1_0_altera_axi4_master_agent:awaddr
+	wire    [1:0] axi4master1_0_altera_axi4_master_translator_m0_bresp;            // axi4Master1_0_altera_axi4_master_agent:bresp -> axi4Master1_0_altera_axi4_master_translator:m0_bresp
+	wire          axi4master1_0_altera_axi4_master_translator_m0_arready;          // axi4Master1_0_altera_axi4_master_agent:arready -> axi4Master1_0_altera_axi4_master_translator:m0_arready
+	wire  [127:0] axi4master1_0_altera_axi4_master_translator_m0_rdata;            // axi4Master1_0_altera_axi4_master_agent:rdata -> axi4Master1_0_altera_axi4_master_translator:m0_rdata
+	wire          axi4master1_0_altera_axi4_master_translator_m0_awready;          // axi4Master1_0_altera_axi4_master_agent:awready -> axi4Master1_0_altera_axi4_master_translator:m0_awready
+	wire    [1:0] axi4master1_0_altera_axi4_master_translator_m0_arburst;          // axi4Master1_0_altera_axi4_master_translator:m0_arburst -> axi4Master1_0_altera_axi4_master_agent:arburst
+	wire    [2:0] axi4master1_0_altera_axi4_master_translator_m0_arsize;           // axi4Master1_0_altera_axi4_master_translator:m0_arsize -> axi4Master1_0_altera_axi4_master_agent:arsize
+	wire          axi4master1_0_altera_axi4_master_translator_m0_bready;           // axi4Master1_0_altera_axi4_master_translator:m0_bready -> axi4Master1_0_altera_axi4_master_agent:bready
+	wire          axi4master1_0_altera_axi4_master_translator_m0_rlast;            // axi4Master1_0_altera_axi4_master_agent:rlast -> axi4Master1_0_altera_axi4_master_translator:m0_rlast
+	wire          axi4master1_0_altera_axi4_master_translator_m0_wlast;            // axi4Master1_0_altera_axi4_master_translator:m0_wlast -> axi4Master1_0_altera_axi4_master_agent:wlast
+	wire    [3:0] axi4master1_0_altera_axi4_master_translator_m0_awregion;         // axi4Master1_0_altera_axi4_master_translator:m0_awregion -> axi4Master1_0_altera_axi4_master_agent:awregion
+	wire    [0:0] axi4master1_0_altera_axi4_master_translator_m0_buser;            // axi4Master1_0_altera_axi4_master_agent:buser -> axi4Master1_0_altera_axi4_master_translator:m0_buser
+	wire    [1:0] axi4master1_0_altera_axi4_master_translator_m0_rresp;            // axi4Master1_0_altera_axi4_master_agent:rresp -> axi4Master1_0_altera_axi4_master_translator:m0_rresp
+	wire    [0:0] axi4master1_0_altera_axi4_master_translator_m0_awid;             // axi4Master1_0_altera_axi4_master_translator:m0_awid -> axi4Master1_0_altera_axi4_master_agent:awid
+	wire    [0:0] axi4master1_0_altera_axi4_master_translator_m0_bid;              // axi4Master1_0_altera_axi4_master_agent:bid -> axi4Master1_0_altera_axi4_master_translator:m0_bid
+	wire          axi4master1_0_altera_axi4_master_translator_m0_bvalid;           // axi4Master1_0_altera_axi4_master_agent:bvalid -> axi4Master1_0_altera_axi4_master_translator:m0_bvalid
+	wire    [2:0] axi4master1_0_altera_axi4_master_translator_m0_awsize;           // axi4Master1_0_altera_axi4_master_translator:m0_awsize -> axi4Master1_0_altera_axi4_master_agent:awsize
+	wire          axi4master1_0_altera_axi4_master_translator_m0_awvalid;          // axi4Master1_0_altera_axi4_master_translator:m0_awvalid -> axi4Master1_0_altera_axi4_master_agent:awvalid
+	wire    [0:0] axi4master1_0_altera_axi4_master_translator_m0_aruser;           // axi4Master1_0_altera_axi4_master_translator:m0_aruser -> axi4Master1_0_altera_axi4_master_agent:aruser
+	wire          axi4master1_0_altera_axi4_master_translator_m0_rvalid;           // axi4Master1_0_altera_axi4_master_agent:rvalid -> axi4Master1_0_altera_axi4_master_translator:m0_rvalid
+	wire          rsp_mux_002_src_valid;                                           // rsp_mux_002:src_valid -> axi4Master1_0_altera_axi4_master_agent:write_rp_valid
+	wire  [212:0] rsp_mux_002_src_data;                                            // rsp_mux_002:src_data -> axi4Master1_0_altera_axi4_master_agent:write_rp_data
+	wire          rsp_mux_002_src_ready;                                           // axi4Master1_0_altera_axi4_master_agent:write_rp_ready -> rsp_mux_002:src_ready
+	wire    [3:0] rsp_mux_002_src_channel;                                         // rsp_mux_002:src_channel -> axi4Master1_0_altera_axi4_master_agent:write_rp_channel
+	wire          rsp_mux_002_src_startofpacket;                                   // rsp_mux_002:src_startofpacket -> axi4Master1_0_altera_axi4_master_agent:write_rp_startofpacket
+	wire          rsp_mux_002_src_endofpacket;                                     // rsp_mux_002:src_endofpacket -> axi4Master1_0_altera_axi4_master_agent:write_rp_endofpacket
+	wire          rsp_mux_003_src_valid;                                           // rsp_mux_003:src_valid -> axi4Master1_0_altera_axi4_master_agent:read_rp_valid
+	wire  [212:0] rsp_mux_003_src_data;                                            // rsp_mux_003:src_data -> axi4Master1_0_altera_axi4_master_agent:read_rp_data
+	wire          rsp_mux_003_src_ready;                                           // axi4Master1_0_altera_axi4_master_agent:read_rp_ready -> rsp_mux_003:src_ready
+	wire    [3:0] rsp_mux_003_src_channel;                                         // rsp_mux_003:src_channel -> axi4Master1_0_altera_axi4_master_agent:read_rp_channel
+	wire          rsp_mux_003_src_startofpacket;                                   // rsp_mux_003:src_startofpacket -> axi4Master1_0_altera_axi4_master_agent:read_rp_startofpacket
+	wire          rsp_mux_003_src_endofpacket;                                     // rsp_mux_003:src_endofpacket -> axi4Master1_0_altera_axi4_master_agent:read_rp_endofpacket
+	wire    [0:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_ruser;    // axi4Slave5_0_altera_axi4_slave_translator:s0_ruser -> axi4Slave5_0_altera_axi4_slave_agent:ruser
+	wire    [0:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wuser;    // axi4Slave5_0_altera_axi4_slave_agent:wuser -> axi4Slave5_0_altera_axi4_slave_translator:s0_wuser
+	wire    [1:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awburst;  // axi4Slave5_0_altera_axi4_slave_agent:awburst -> axi4Slave5_0_altera_axi4_slave_translator:s0_awburst
+	wire    [3:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arregion; // axi4Slave5_0_altera_axi4_slave_agent:arregion -> axi4Slave5_0_altera_axi4_slave_translator:s0_arregion
+	wire    [0:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awuser;   // axi4Slave5_0_altera_axi4_slave_agent:awuser -> axi4Slave5_0_altera_axi4_slave_translator:s0_awuser
+	wire    [7:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arlen;    // axi4Slave5_0_altera_axi4_slave_agent:arlen -> axi4Slave5_0_altera_axi4_slave_translator:s0_arlen
+	wire    [3:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arqos;    // axi4Slave5_0_altera_axi4_slave_agent:arqos -> axi4Slave5_0_altera_axi4_slave_translator:s0_arqos
+	wire   [15:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wstrb;    // axi4Slave5_0_altera_axi4_slave_agent:wstrb -> axi4Slave5_0_altera_axi4_slave_translator:s0_wstrb
+	wire          axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wready;   // axi4Slave5_0_altera_axi4_slave_translator:s0_wready -> axi4Slave5_0_altera_axi4_slave_agent:wready
+	wire    [1:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rid;      // axi4Slave5_0_altera_axi4_slave_translator:s0_rid -> axi4Slave5_0_altera_axi4_slave_agent:rid
+	wire          axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rready;   // axi4Slave5_0_altera_axi4_slave_agent:rready -> axi4Slave5_0_altera_axi4_slave_translator:s0_rready
+	wire    [7:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awlen;    // axi4Slave5_0_altera_axi4_slave_agent:awlen -> axi4Slave5_0_altera_axi4_slave_translator:s0_awlen
+	wire    [3:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awqos;    // axi4Slave5_0_altera_axi4_slave_agent:awqos -> axi4Slave5_0_altera_axi4_slave_translator:s0_awqos
+	wire    [3:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arcache;  // axi4Slave5_0_altera_axi4_slave_agent:arcache -> axi4Slave5_0_altera_axi4_slave_translator:s0_arcache
+	wire          axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wvalid;   // axi4Slave5_0_altera_axi4_slave_agent:wvalid -> axi4Slave5_0_altera_axi4_slave_translator:s0_wvalid
+	wire   [12:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_araddr;   // axi4Slave5_0_altera_axi4_slave_agent:araddr -> axi4Slave5_0_altera_axi4_slave_translator:s0_araddr
+	wire    [2:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arprot;   // axi4Slave5_0_altera_axi4_slave_agent:arprot -> axi4Slave5_0_altera_axi4_slave_translator:s0_arprot
+	wire    [2:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awprot;   // axi4Slave5_0_altera_axi4_slave_agent:awprot -> axi4Slave5_0_altera_axi4_slave_translator:s0_awprot
+	wire  [127:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wdata;    // axi4Slave5_0_altera_axi4_slave_agent:wdata -> axi4Slave5_0_altera_axi4_slave_translator:s0_wdata
+	wire          axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arvalid;  // axi4Slave5_0_altera_axi4_slave_agent:arvalid -> axi4Slave5_0_altera_axi4_slave_translator:s0_arvalid
+	wire    [3:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awcache;  // axi4Slave5_0_altera_axi4_slave_agent:awcache -> axi4Slave5_0_altera_axi4_slave_translator:s0_awcache
+	wire    [1:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arid;     // axi4Slave5_0_altera_axi4_slave_agent:arid -> axi4Slave5_0_altera_axi4_slave_translator:s0_arid
+	wire    [0:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arlock;   // axi4Slave5_0_altera_axi4_slave_agent:arlock -> axi4Slave5_0_altera_axi4_slave_translator:s0_arlock
+	wire    [0:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awlock;   // axi4Slave5_0_altera_axi4_slave_agent:awlock -> axi4Slave5_0_altera_axi4_slave_translator:s0_awlock
+	wire   [12:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awaddr;   // axi4Slave5_0_altera_axi4_slave_agent:awaddr -> axi4Slave5_0_altera_axi4_slave_translator:s0_awaddr
+	wire    [1:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_bresp;    // axi4Slave5_0_altera_axi4_slave_translator:s0_bresp -> axi4Slave5_0_altera_axi4_slave_agent:bresp
+	wire          axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arready;  // axi4Slave5_0_altera_axi4_slave_translator:s0_arready -> axi4Slave5_0_altera_axi4_slave_agent:arready
+	wire  [127:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rdata;    // axi4Slave5_0_altera_axi4_slave_translator:s0_rdata -> axi4Slave5_0_altera_axi4_slave_agent:rdata
+	wire          axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awready;  // axi4Slave5_0_altera_axi4_slave_translator:s0_awready -> axi4Slave5_0_altera_axi4_slave_agent:awready
+	wire    [1:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arburst;  // axi4Slave5_0_altera_axi4_slave_agent:arburst -> axi4Slave5_0_altera_axi4_slave_translator:s0_arburst
+	wire    [2:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arsize;   // axi4Slave5_0_altera_axi4_slave_agent:arsize -> axi4Slave5_0_altera_axi4_slave_translator:s0_arsize
+	wire          axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_bready;   // axi4Slave5_0_altera_axi4_slave_agent:bready -> axi4Slave5_0_altera_axi4_slave_translator:s0_bready
+	wire          axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rlast;    // axi4Slave5_0_altera_axi4_slave_translator:s0_rlast -> axi4Slave5_0_altera_axi4_slave_agent:rlast
+	wire          axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wlast;    // axi4Slave5_0_altera_axi4_slave_agent:wlast -> axi4Slave5_0_altera_axi4_slave_translator:s0_wlast
+	wire    [3:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awregion; // axi4Slave5_0_altera_axi4_slave_agent:awregion -> axi4Slave5_0_altera_axi4_slave_translator:s0_awregion
+	wire    [0:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_buser;    // axi4Slave5_0_altera_axi4_slave_translator:s0_buser -> axi4Slave5_0_altera_axi4_slave_agent:buser
+	wire    [1:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rresp;    // axi4Slave5_0_altera_axi4_slave_translator:s0_rresp -> axi4Slave5_0_altera_axi4_slave_agent:rresp
+	wire    [1:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awid;     // axi4Slave5_0_altera_axi4_slave_agent:awid -> axi4Slave5_0_altera_axi4_slave_translator:s0_awid
+	wire    [1:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_bid;      // axi4Slave5_0_altera_axi4_slave_translator:s0_bid -> axi4Slave5_0_altera_axi4_slave_agent:bid
+	wire          axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_bvalid;   // axi4Slave5_0_altera_axi4_slave_translator:s0_bvalid -> axi4Slave5_0_altera_axi4_slave_agent:bvalid
+	wire    [2:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awsize;   // axi4Slave5_0_altera_axi4_slave_agent:awsize -> axi4Slave5_0_altera_axi4_slave_translator:s0_awsize
+	wire          axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awvalid;  // axi4Slave5_0_altera_axi4_slave_agent:awvalid -> axi4Slave5_0_altera_axi4_slave_translator:s0_awvalid
+	wire    [0:0] axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_aruser;   // axi4Slave5_0_altera_axi4_slave_agent:aruser -> axi4Slave5_0_altera_axi4_slave_translator:s0_aruser
+	wire          axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rvalid;   // axi4Slave5_0_altera_axi4_slave_translator:s0_rvalid -> axi4Slave5_0_altera_axi4_slave_agent:rvalid
+	wire          cmd_mux_src_valid;                                               // cmd_mux:src_valid -> axi4Slave5_0_altera_axi4_slave_agent:write_cp_valid
+	wire  [212:0] cmd_mux_src_data;                                                // cmd_mux:src_data -> axi4Slave5_0_altera_axi4_slave_agent:write_cp_data
+	wire          cmd_mux_src_ready;                                               // axi4Slave5_0_altera_axi4_slave_agent:write_cp_ready -> cmd_mux:src_ready
+	wire    [3:0] cmd_mux_src_channel;                                             // cmd_mux:src_channel -> axi4Slave5_0_altera_axi4_slave_agent:write_cp_channel
+	wire          cmd_mux_src_startofpacket;                                       // cmd_mux:src_startofpacket -> axi4Slave5_0_altera_axi4_slave_agent:write_cp_startofpacket
+	wire          cmd_mux_src_endofpacket;                                         // cmd_mux:src_endofpacket -> axi4Slave5_0_altera_axi4_slave_agent:write_cp_endofpacket
+	wire          cmd_mux_001_src_valid;                                           // cmd_mux_001:src_valid -> axi4Slave5_0_altera_axi4_slave_agent:read_cp_valid
+	wire  [212:0] cmd_mux_001_src_data;                                            // cmd_mux_001:src_data -> axi4Slave5_0_altera_axi4_slave_agent:read_cp_data
+	wire          cmd_mux_001_src_ready;                                           // axi4Slave5_0_altera_axi4_slave_agent:read_cp_ready -> cmd_mux_001:src_ready
+	wire    [3:0] cmd_mux_001_src_channel;                                         // cmd_mux_001:src_channel -> axi4Slave5_0_altera_axi4_slave_agent:read_cp_channel
+	wire          cmd_mux_001_src_startofpacket;                                   // cmd_mux_001:src_startofpacket -> axi4Slave5_0_altera_axi4_slave_agent:read_cp_startofpacket
+	wire          cmd_mux_001_src_endofpacket;                                     // cmd_mux_001:src_endofpacket -> axi4Slave5_0_altera_axi4_slave_agent:read_cp_endofpacket
+	wire    [0:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_ruser;    // axi4Slave7_0_altera_axi4_slave_translator:s0_ruser -> axi4Slave7_0_altera_axi4_slave_agent:ruser
+	wire    [0:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wuser;    // axi4Slave7_0_altera_axi4_slave_agent:wuser -> axi4Slave7_0_altera_axi4_slave_translator:s0_wuser
+	wire    [1:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awburst;  // axi4Slave7_0_altera_axi4_slave_agent:awburst -> axi4Slave7_0_altera_axi4_slave_translator:s0_awburst
+	wire    [3:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arregion; // axi4Slave7_0_altera_axi4_slave_agent:arregion -> axi4Slave7_0_altera_axi4_slave_translator:s0_arregion
+	wire    [0:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awuser;   // axi4Slave7_0_altera_axi4_slave_agent:awuser -> axi4Slave7_0_altera_axi4_slave_translator:s0_awuser
+	wire    [7:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arlen;    // axi4Slave7_0_altera_axi4_slave_agent:arlen -> axi4Slave7_0_altera_axi4_slave_translator:s0_arlen
+	wire    [3:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arqos;    // axi4Slave7_0_altera_axi4_slave_agent:arqos -> axi4Slave7_0_altera_axi4_slave_translator:s0_arqos
+	wire   [15:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wstrb;    // axi4Slave7_0_altera_axi4_slave_agent:wstrb -> axi4Slave7_0_altera_axi4_slave_translator:s0_wstrb
+	wire          axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wready;   // axi4Slave7_0_altera_axi4_slave_translator:s0_wready -> axi4Slave7_0_altera_axi4_slave_agent:wready
+	wire    [1:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rid;      // axi4Slave7_0_altera_axi4_slave_translator:s0_rid -> axi4Slave7_0_altera_axi4_slave_agent:rid
+	wire          axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rready;   // axi4Slave7_0_altera_axi4_slave_agent:rready -> axi4Slave7_0_altera_axi4_slave_translator:s0_rready
+	wire    [7:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awlen;    // axi4Slave7_0_altera_axi4_slave_agent:awlen -> axi4Slave7_0_altera_axi4_slave_translator:s0_awlen
+	wire    [3:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awqos;    // axi4Slave7_0_altera_axi4_slave_agent:awqos -> axi4Slave7_0_altera_axi4_slave_translator:s0_awqos
+	wire    [3:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arcache;  // axi4Slave7_0_altera_axi4_slave_agent:arcache -> axi4Slave7_0_altera_axi4_slave_translator:s0_arcache
+	wire          axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wvalid;   // axi4Slave7_0_altera_axi4_slave_agent:wvalid -> axi4Slave7_0_altera_axi4_slave_translator:s0_wvalid
+	wire   [12:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_araddr;   // axi4Slave7_0_altera_axi4_slave_agent:araddr -> axi4Slave7_0_altera_axi4_slave_translator:s0_araddr
+	wire    [2:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arprot;   // axi4Slave7_0_altera_axi4_slave_agent:arprot -> axi4Slave7_0_altera_axi4_slave_translator:s0_arprot
+	wire    [2:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awprot;   // axi4Slave7_0_altera_axi4_slave_agent:awprot -> axi4Slave7_0_altera_axi4_slave_translator:s0_awprot
+	wire  [127:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wdata;    // axi4Slave7_0_altera_axi4_slave_agent:wdata -> axi4Slave7_0_altera_axi4_slave_translator:s0_wdata
+	wire          axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arvalid;  // axi4Slave7_0_altera_axi4_slave_agent:arvalid -> axi4Slave7_0_altera_axi4_slave_translator:s0_arvalid
+	wire    [3:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awcache;  // axi4Slave7_0_altera_axi4_slave_agent:awcache -> axi4Slave7_0_altera_axi4_slave_translator:s0_awcache
+	wire    [1:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arid;     // axi4Slave7_0_altera_axi4_slave_agent:arid -> axi4Slave7_0_altera_axi4_slave_translator:s0_arid
+	wire    [0:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arlock;   // axi4Slave7_0_altera_axi4_slave_agent:arlock -> axi4Slave7_0_altera_axi4_slave_translator:s0_arlock
+	wire    [0:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awlock;   // axi4Slave7_0_altera_axi4_slave_agent:awlock -> axi4Slave7_0_altera_axi4_slave_translator:s0_awlock
+	wire   [12:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awaddr;   // axi4Slave7_0_altera_axi4_slave_agent:awaddr -> axi4Slave7_0_altera_axi4_slave_translator:s0_awaddr
+	wire    [1:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_bresp;    // axi4Slave7_0_altera_axi4_slave_translator:s0_bresp -> axi4Slave7_0_altera_axi4_slave_agent:bresp
+	wire          axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arready;  // axi4Slave7_0_altera_axi4_slave_translator:s0_arready -> axi4Slave7_0_altera_axi4_slave_agent:arready
+	wire  [127:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rdata;    // axi4Slave7_0_altera_axi4_slave_translator:s0_rdata -> axi4Slave7_0_altera_axi4_slave_agent:rdata
+	wire          axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awready;  // axi4Slave7_0_altera_axi4_slave_translator:s0_awready -> axi4Slave7_0_altera_axi4_slave_agent:awready
+	wire    [1:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arburst;  // axi4Slave7_0_altera_axi4_slave_agent:arburst -> axi4Slave7_0_altera_axi4_slave_translator:s0_arburst
+	wire    [2:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arsize;   // axi4Slave7_0_altera_axi4_slave_agent:arsize -> axi4Slave7_0_altera_axi4_slave_translator:s0_arsize
+	wire          axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_bready;   // axi4Slave7_0_altera_axi4_slave_agent:bready -> axi4Slave7_0_altera_axi4_slave_translator:s0_bready
+	wire          axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rlast;    // axi4Slave7_0_altera_axi4_slave_translator:s0_rlast -> axi4Slave7_0_altera_axi4_slave_agent:rlast
+	wire          axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wlast;    // axi4Slave7_0_altera_axi4_slave_agent:wlast -> axi4Slave7_0_altera_axi4_slave_translator:s0_wlast
+	wire    [3:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awregion; // axi4Slave7_0_altera_axi4_slave_agent:awregion -> axi4Slave7_0_altera_axi4_slave_translator:s0_awregion
+	wire    [0:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_buser;    // axi4Slave7_0_altera_axi4_slave_translator:s0_buser -> axi4Slave7_0_altera_axi4_slave_agent:buser
+	wire    [1:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rresp;    // axi4Slave7_0_altera_axi4_slave_translator:s0_rresp -> axi4Slave7_0_altera_axi4_slave_agent:rresp
+	wire    [1:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awid;     // axi4Slave7_0_altera_axi4_slave_agent:awid -> axi4Slave7_0_altera_axi4_slave_translator:s0_awid
+	wire    [1:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_bid;      // axi4Slave7_0_altera_axi4_slave_translator:s0_bid -> axi4Slave7_0_altera_axi4_slave_agent:bid
+	wire          axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_bvalid;   // axi4Slave7_0_altera_axi4_slave_translator:s0_bvalid -> axi4Slave7_0_altera_axi4_slave_agent:bvalid
+	wire    [2:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awsize;   // axi4Slave7_0_altera_axi4_slave_agent:awsize -> axi4Slave7_0_altera_axi4_slave_translator:s0_awsize
+	wire          axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awvalid;  // axi4Slave7_0_altera_axi4_slave_agent:awvalid -> axi4Slave7_0_altera_axi4_slave_translator:s0_awvalid
+	wire    [0:0] axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_aruser;   // axi4Slave7_0_altera_axi4_slave_agent:aruser -> axi4Slave7_0_altera_axi4_slave_translator:s0_aruser
+	wire          axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rvalid;   // axi4Slave7_0_altera_axi4_slave_translator:s0_rvalid -> axi4Slave7_0_altera_axi4_slave_agent:rvalid
+	wire          cmd_mux_002_src_valid;                                           // cmd_mux_002:src_valid -> axi4Slave7_0_altera_axi4_slave_agent:write_cp_valid
+	wire  [212:0] cmd_mux_002_src_data;                                            // cmd_mux_002:src_data -> axi4Slave7_0_altera_axi4_slave_agent:write_cp_data
+	wire          cmd_mux_002_src_ready;                                           // axi4Slave7_0_altera_axi4_slave_agent:write_cp_ready -> cmd_mux_002:src_ready
+	wire    [3:0] cmd_mux_002_src_channel;                                         // cmd_mux_002:src_channel -> axi4Slave7_0_altera_axi4_slave_agent:write_cp_channel
+	wire          cmd_mux_002_src_startofpacket;                                   // cmd_mux_002:src_startofpacket -> axi4Slave7_0_altera_axi4_slave_agent:write_cp_startofpacket
+	wire          cmd_mux_002_src_endofpacket;                                     // cmd_mux_002:src_endofpacket -> axi4Slave7_0_altera_axi4_slave_agent:write_cp_endofpacket
+	wire          cmd_mux_003_src_valid;                                           // cmd_mux_003:src_valid -> axi4Slave7_0_altera_axi4_slave_agent:read_cp_valid
+	wire  [212:0] cmd_mux_003_src_data;                                            // cmd_mux_003:src_data -> axi4Slave7_0_altera_axi4_slave_agent:read_cp_data
+	wire          cmd_mux_003_src_ready;                                           // axi4Slave7_0_altera_axi4_slave_agent:read_cp_ready -> cmd_mux_003:src_ready
+	wire    [3:0] cmd_mux_003_src_channel;                                         // cmd_mux_003:src_channel -> axi4Slave7_0_altera_axi4_slave_agent:read_cp_channel
+	wire          cmd_mux_003_src_startofpacket;                                   // cmd_mux_003:src_startofpacket -> axi4Slave7_0_altera_axi4_slave_agent:read_cp_startofpacket
+	wire          cmd_mux_003_src_endofpacket;                                     // cmd_mux_003:src_endofpacket -> axi4Slave7_0_altera_axi4_slave_agent:read_cp_endofpacket
+	wire          axi4master2_0_altera_axi4_master_agent_write_cp_valid;           // axi4Master2_0_altera_axi4_master_agent:write_cp_valid -> router:sink_valid
+	wire  [212:0] axi4master2_0_altera_axi4_master_agent_write_cp_data;            // axi4Master2_0_altera_axi4_master_agent:write_cp_data -> router:sink_data
+	wire          axi4master2_0_altera_axi4_master_agent_write_cp_ready;           // router:sink_ready -> axi4Master2_0_altera_axi4_master_agent:write_cp_ready
+	wire          axi4master2_0_altera_axi4_master_agent_write_cp_startofpacket;   // axi4Master2_0_altera_axi4_master_agent:write_cp_startofpacket -> router:sink_startofpacket
+	wire          axi4master2_0_altera_axi4_master_agent_write_cp_endofpacket;     // axi4Master2_0_altera_axi4_master_agent:write_cp_endofpacket -> router:sink_endofpacket
+	wire          router_src_valid;                                                // router:src_valid -> cmd_demux:sink_valid
+	wire  [212:0] router_src_data;                                                 // router:src_data -> cmd_demux:sink_data
+	wire          router_src_ready;                                                // cmd_demux:sink_ready -> router:src_ready
+	wire    [3:0] router_src_channel;                                              // router:src_channel -> cmd_demux:sink_channel
+	wire          router_src_startofpacket;                                        // router:src_startofpacket -> cmd_demux:sink_startofpacket
+	wire          router_src_endofpacket;                                          // router:src_endofpacket -> cmd_demux:sink_endofpacket
+	wire          axi4master2_0_altera_axi4_master_agent_read_cp_valid;            // axi4Master2_0_altera_axi4_master_agent:read_cp_valid -> router_001:sink_valid
+	wire  [212:0] axi4master2_0_altera_axi4_master_agent_read_cp_data;             // axi4Master2_0_altera_axi4_master_agent:read_cp_data -> router_001:sink_data
+	wire          axi4master2_0_altera_axi4_master_agent_read_cp_ready;            // router_001:sink_ready -> axi4Master2_0_altera_axi4_master_agent:read_cp_ready
+	wire          axi4master2_0_altera_axi4_master_agent_read_cp_startofpacket;    // axi4Master2_0_altera_axi4_master_agent:read_cp_startofpacket -> router_001:sink_startofpacket
+	wire          axi4master2_0_altera_axi4_master_agent_read_cp_endofpacket;      // axi4Master2_0_altera_axi4_master_agent:read_cp_endofpacket -> router_001:sink_endofpacket
+	wire          router_001_src_valid;                                            // router_001:src_valid -> cmd_demux_001:sink_valid
+	wire  [212:0] router_001_src_data;                                             // router_001:src_data -> cmd_demux_001:sink_data
+	wire          router_001_src_ready;                                            // cmd_demux_001:sink_ready -> router_001:src_ready
+	wire    [3:0] router_001_src_channel;                                          // router_001:src_channel -> cmd_demux_001:sink_channel
+	wire          router_001_src_startofpacket;                                    // router_001:src_startofpacket -> cmd_demux_001:sink_startofpacket
+	wire          router_001_src_endofpacket;                                      // router_001:src_endofpacket -> cmd_demux_001:sink_endofpacket
+	wire          axi4master1_0_altera_axi4_master_agent_write_cp_valid;           // axi4Master1_0_altera_axi4_master_agent:write_cp_valid -> router_002:sink_valid
+	wire  [212:0] axi4master1_0_altera_axi4_master_agent_write_cp_data;            // axi4Master1_0_altera_axi4_master_agent:write_cp_data -> router_002:sink_data
+	wire          axi4master1_0_altera_axi4_master_agent_write_cp_ready;           // router_002:sink_ready -> axi4Master1_0_altera_axi4_master_agent:write_cp_ready
+	wire          axi4master1_0_altera_axi4_master_agent_write_cp_startofpacket;   // axi4Master1_0_altera_axi4_master_agent:write_cp_startofpacket -> router_002:sink_startofpacket
+	wire          axi4master1_0_altera_axi4_master_agent_write_cp_endofpacket;     // axi4Master1_0_altera_axi4_master_agent:write_cp_endofpacket -> router_002:sink_endofpacket
+	wire          router_002_src_valid;                                            // router_002:src_valid -> cmd_demux_002:sink_valid
+	wire  [212:0] router_002_src_data;                                             // router_002:src_data -> cmd_demux_002:sink_data
+	wire          router_002_src_ready;                                            // cmd_demux_002:sink_ready -> router_002:src_ready
+	wire    [3:0] router_002_src_channel;                                          // router_002:src_channel -> cmd_demux_002:sink_channel
+	wire          router_002_src_startofpacket;                                    // router_002:src_startofpacket -> cmd_demux_002:sink_startofpacket
+	wire          router_002_src_endofpacket;                                      // router_002:src_endofpacket -> cmd_demux_002:sink_endofpacket
+	wire          axi4master1_0_altera_axi4_master_agent_read_cp_valid;            // axi4Master1_0_altera_axi4_master_agent:read_cp_valid -> router_003:sink_valid
+	wire  [212:0] axi4master1_0_altera_axi4_master_agent_read_cp_data;             // axi4Master1_0_altera_axi4_master_agent:read_cp_data -> router_003:sink_data
+	wire          axi4master1_0_altera_axi4_master_agent_read_cp_ready;            // router_003:sink_ready -> axi4Master1_0_altera_axi4_master_agent:read_cp_ready
+	wire          axi4master1_0_altera_axi4_master_agent_read_cp_startofpacket;    // axi4Master1_0_altera_axi4_master_agent:read_cp_startofpacket -> router_003:sink_startofpacket
+	wire          axi4master1_0_altera_axi4_master_agent_read_cp_endofpacket;      // axi4Master1_0_altera_axi4_master_agent:read_cp_endofpacket -> router_003:sink_endofpacket
+	wire          router_003_src_valid;                                            // router_003:src_valid -> cmd_demux_003:sink_valid
+	wire  [212:0] router_003_src_data;                                             // router_003:src_data -> cmd_demux_003:sink_data
+	wire          router_003_src_ready;                                            // cmd_demux_003:sink_ready -> router_003:src_ready
+	wire    [3:0] router_003_src_channel;                                          // router_003:src_channel -> cmd_demux_003:sink_channel
+	wire          router_003_src_startofpacket;                                    // router_003:src_startofpacket -> cmd_demux_003:sink_startofpacket
+	wire          router_003_src_endofpacket;                                      // router_003:src_endofpacket -> cmd_demux_003:sink_endofpacket
+	wire          axi4slave5_0_altera_axi4_slave_agent_write_rp_valid;             // axi4Slave5_0_altera_axi4_slave_agent:write_rp_valid -> router_004:sink_valid
+	wire  [212:0] axi4slave5_0_altera_axi4_slave_agent_write_rp_data;              // axi4Slave5_0_altera_axi4_slave_agent:write_rp_data -> router_004:sink_data
+	wire          axi4slave5_0_altera_axi4_slave_agent_write_rp_ready;             // router_004:sink_ready -> axi4Slave5_0_altera_axi4_slave_agent:write_rp_ready
+	wire          axi4slave5_0_altera_axi4_slave_agent_write_rp_startofpacket;     // axi4Slave5_0_altera_axi4_slave_agent:write_rp_startofpacket -> router_004:sink_startofpacket
+	wire          axi4slave5_0_altera_axi4_slave_agent_write_rp_endofpacket;       // axi4Slave5_0_altera_axi4_slave_agent:write_rp_endofpacket -> router_004:sink_endofpacket
+	wire          router_004_src_valid;                                            // router_004:src_valid -> rsp_demux:sink_valid
+	wire  [212:0] router_004_src_data;                                             // router_004:src_data -> rsp_demux:sink_data
+	wire          router_004_src_ready;                                            // rsp_demux:sink_ready -> router_004:src_ready
+	wire    [3:0] router_004_src_channel;                                          // router_004:src_channel -> rsp_demux:sink_channel
+	wire          router_004_src_startofpacket;                                    // router_004:src_startofpacket -> rsp_demux:sink_startofpacket
+	wire          router_004_src_endofpacket;                                      // router_004:src_endofpacket -> rsp_demux:sink_endofpacket
+	wire          axi4slave5_0_altera_axi4_slave_agent_read_rp_valid;              // axi4Slave5_0_altera_axi4_slave_agent:read_rp_valid -> router_005:sink_valid
+	wire  [212:0] axi4slave5_0_altera_axi4_slave_agent_read_rp_data;               // axi4Slave5_0_altera_axi4_slave_agent:read_rp_data -> router_005:sink_data
+	wire          axi4slave5_0_altera_axi4_slave_agent_read_rp_ready;              // router_005:sink_ready -> axi4Slave5_0_altera_axi4_slave_agent:read_rp_ready
+	wire          axi4slave5_0_altera_axi4_slave_agent_read_rp_startofpacket;      // axi4Slave5_0_altera_axi4_slave_agent:read_rp_startofpacket -> router_005:sink_startofpacket
+	wire          axi4slave5_0_altera_axi4_slave_agent_read_rp_endofpacket;        // axi4Slave5_0_altera_axi4_slave_agent:read_rp_endofpacket -> router_005:sink_endofpacket
+	wire          router_005_src_valid;                                            // router_005:src_valid -> rsp_demux_001:sink_valid
+	wire  [212:0] router_005_src_data;                                             // router_005:src_data -> rsp_demux_001:sink_data
+	wire          router_005_src_ready;                                            // rsp_demux_001:sink_ready -> router_005:src_ready
+	wire    [3:0] router_005_src_channel;                                          // router_005:src_channel -> rsp_demux_001:sink_channel
+	wire          router_005_src_startofpacket;                                    // router_005:src_startofpacket -> rsp_demux_001:sink_startofpacket
+	wire          router_005_src_endofpacket;                                      // router_005:src_endofpacket -> rsp_demux_001:sink_endofpacket
+	wire          axi4slave7_0_altera_axi4_slave_agent_write_rp_valid;             // axi4Slave7_0_altera_axi4_slave_agent:write_rp_valid -> router_006:sink_valid
+	wire  [212:0] axi4slave7_0_altera_axi4_slave_agent_write_rp_data;              // axi4Slave7_0_altera_axi4_slave_agent:write_rp_data -> router_006:sink_data
+	wire          axi4slave7_0_altera_axi4_slave_agent_write_rp_ready;             // router_006:sink_ready -> axi4Slave7_0_altera_axi4_slave_agent:write_rp_ready
+	wire          axi4slave7_0_altera_axi4_slave_agent_write_rp_startofpacket;     // axi4Slave7_0_altera_axi4_slave_agent:write_rp_startofpacket -> router_006:sink_startofpacket
+	wire          axi4slave7_0_altera_axi4_slave_agent_write_rp_endofpacket;       // axi4Slave7_0_altera_axi4_slave_agent:write_rp_endofpacket -> router_006:sink_endofpacket
+	wire          router_006_src_valid;                                            // router_006:src_valid -> rsp_demux_002:sink_valid
+	wire  [212:0] router_006_src_data;                                             // router_006:src_data -> rsp_demux_002:sink_data
+	wire          router_006_src_ready;                                            // rsp_demux_002:sink_ready -> router_006:src_ready
+	wire    [3:0] router_006_src_channel;                                          // router_006:src_channel -> rsp_demux_002:sink_channel
+	wire          router_006_src_startofpacket;                                    // router_006:src_startofpacket -> rsp_demux_002:sink_startofpacket
+	wire          router_006_src_endofpacket;                                      // router_006:src_endofpacket -> rsp_demux_002:sink_endofpacket
+	wire          axi4slave7_0_altera_axi4_slave_agent_read_rp_valid;              // axi4Slave7_0_altera_axi4_slave_agent:read_rp_valid -> router_007:sink_valid
+	wire  [212:0] axi4slave7_0_altera_axi4_slave_agent_read_rp_data;               // axi4Slave7_0_altera_axi4_slave_agent:read_rp_data -> router_007:sink_data
+	wire          axi4slave7_0_altera_axi4_slave_agent_read_rp_ready;              // router_007:sink_ready -> axi4Slave7_0_altera_axi4_slave_agent:read_rp_ready
+	wire          axi4slave7_0_altera_axi4_slave_agent_read_rp_startofpacket;      // axi4Slave7_0_altera_axi4_slave_agent:read_rp_startofpacket -> router_007:sink_startofpacket
+	wire          axi4slave7_0_altera_axi4_slave_agent_read_rp_endofpacket;        // axi4Slave7_0_altera_axi4_slave_agent:read_rp_endofpacket -> router_007:sink_endofpacket
+	wire          router_007_src_valid;                                            // router_007:src_valid -> rsp_demux_003:sink_valid
+	wire  [212:0] router_007_src_data;                                             // router_007:src_data -> rsp_demux_003:sink_data
+	wire          router_007_src_ready;                                            // rsp_demux_003:sink_ready -> router_007:src_ready
+	wire    [3:0] router_007_src_channel;                                          // router_007:src_channel -> rsp_demux_003:sink_channel
+	wire          router_007_src_startofpacket;                                    // router_007:src_startofpacket -> rsp_demux_003:sink_startofpacket
+	wire          router_007_src_endofpacket;                                      // router_007:src_endofpacket -> rsp_demux_003:sink_endofpacket
+	wire          cmd_demux_src0_valid;                                            // cmd_demux:src0_valid -> cmd_mux:sink0_valid
+	wire  [212:0] cmd_demux_src0_data;                                             // cmd_demux:src0_data -> cmd_mux:sink0_data
+	wire          cmd_demux_src0_ready;                                            // cmd_mux:sink0_ready -> cmd_demux:src0_ready
+	wire    [3:0] cmd_demux_src0_channel;                                          // cmd_demux:src0_channel -> cmd_mux:sink0_channel
+	wire          cmd_demux_src0_startofpacket;                                    // cmd_demux:src0_startofpacket -> cmd_mux:sink0_startofpacket
+	wire          cmd_demux_src0_endofpacket;                                      // cmd_demux:src0_endofpacket -> cmd_mux:sink0_endofpacket
+	wire          cmd_demux_src1_valid;                                            // cmd_demux:src1_valid -> cmd_mux_002:sink0_valid
+	wire  [212:0] cmd_demux_src1_data;                                             // cmd_demux:src1_data -> cmd_mux_002:sink0_data
+	wire          cmd_demux_src1_ready;                                            // cmd_mux_002:sink0_ready -> cmd_demux:src1_ready
+	wire    [3:0] cmd_demux_src1_channel;                                          // cmd_demux:src1_channel -> cmd_mux_002:sink0_channel
+	wire          cmd_demux_src1_startofpacket;                                    // cmd_demux:src1_startofpacket -> cmd_mux_002:sink0_startofpacket
+	wire          cmd_demux_src1_endofpacket;                                      // cmd_demux:src1_endofpacket -> cmd_mux_002:sink0_endofpacket
+	wire          cmd_demux_001_src0_valid;                                        // cmd_demux_001:src0_valid -> cmd_mux_001:sink0_valid
+	wire  [212:0] cmd_demux_001_src0_data;                                         // cmd_demux_001:src0_data -> cmd_mux_001:sink0_data
+	wire          cmd_demux_001_src0_ready;                                        // cmd_mux_001:sink0_ready -> cmd_demux_001:src0_ready
+	wire    [3:0] cmd_demux_001_src0_channel;                                      // cmd_demux_001:src0_channel -> cmd_mux_001:sink0_channel
+	wire          cmd_demux_001_src0_startofpacket;                                // cmd_demux_001:src0_startofpacket -> cmd_mux_001:sink0_startofpacket
+	wire          cmd_demux_001_src0_endofpacket;                                  // cmd_demux_001:src0_endofpacket -> cmd_mux_001:sink0_endofpacket
+	wire          cmd_demux_001_src1_valid;                                        // cmd_demux_001:src1_valid -> cmd_mux_003:sink0_valid
+	wire  [212:0] cmd_demux_001_src1_data;                                         // cmd_demux_001:src1_data -> cmd_mux_003:sink0_data
+	wire          cmd_demux_001_src1_ready;                                        // cmd_mux_003:sink0_ready -> cmd_demux_001:src1_ready
+	wire    [3:0] cmd_demux_001_src1_channel;                                      // cmd_demux_001:src1_channel -> cmd_mux_003:sink0_channel
+	wire          cmd_demux_001_src1_startofpacket;                                // cmd_demux_001:src1_startofpacket -> cmd_mux_003:sink0_startofpacket
+	wire          cmd_demux_001_src1_endofpacket;                                  // cmd_demux_001:src1_endofpacket -> cmd_mux_003:sink0_endofpacket
+	wire          cmd_demux_002_src0_valid;                                        // cmd_demux_002:src0_valid -> cmd_mux:sink1_valid
+	wire  [212:0] cmd_demux_002_src0_data;                                         // cmd_demux_002:src0_data -> cmd_mux:sink1_data
+	wire          cmd_demux_002_src0_ready;                                        // cmd_mux:sink1_ready -> cmd_demux_002:src0_ready
+	wire    [3:0] cmd_demux_002_src0_channel;                                      // cmd_demux_002:src0_channel -> cmd_mux:sink1_channel
+	wire          cmd_demux_002_src0_startofpacket;                                // cmd_demux_002:src0_startofpacket -> cmd_mux:sink1_startofpacket
+	wire          cmd_demux_002_src0_endofpacket;                                  // cmd_demux_002:src0_endofpacket -> cmd_mux:sink1_endofpacket
+	wire          cmd_demux_002_src1_valid;                                        // cmd_demux_002:src1_valid -> cmd_mux_002:sink1_valid
+	wire  [212:0] cmd_demux_002_src1_data;                                         // cmd_demux_002:src1_data -> cmd_mux_002:sink1_data
+	wire          cmd_demux_002_src1_ready;                                        // cmd_mux_002:sink1_ready -> cmd_demux_002:src1_ready
+	wire    [3:0] cmd_demux_002_src1_channel;                                      // cmd_demux_002:src1_channel -> cmd_mux_002:sink1_channel
+	wire          cmd_demux_002_src1_startofpacket;                                // cmd_demux_002:src1_startofpacket -> cmd_mux_002:sink1_startofpacket
+	wire          cmd_demux_002_src1_endofpacket;                                  // cmd_demux_002:src1_endofpacket -> cmd_mux_002:sink1_endofpacket
+	wire          cmd_demux_003_src0_valid;                                        // cmd_demux_003:src0_valid -> cmd_mux_001:sink1_valid
+	wire  [212:0] cmd_demux_003_src0_data;                                         // cmd_demux_003:src0_data -> cmd_mux_001:sink1_data
+	wire          cmd_demux_003_src0_ready;                                        // cmd_mux_001:sink1_ready -> cmd_demux_003:src0_ready
+	wire    [3:0] cmd_demux_003_src0_channel;                                      // cmd_demux_003:src0_channel -> cmd_mux_001:sink1_channel
+	wire          cmd_demux_003_src0_startofpacket;                                // cmd_demux_003:src0_startofpacket -> cmd_mux_001:sink1_startofpacket
+	wire          cmd_demux_003_src0_endofpacket;                                  // cmd_demux_003:src0_endofpacket -> cmd_mux_001:sink1_endofpacket
+	wire          cmd_demux_003_src1_valid;                                        // cmd_demux_003:src1_valid -> cmd_mux_003:sink1_valid
+	wire  [212:0] cmd_demux_003_src1_data;                                         // cmd_demux_003:src1_data -> cmd_mux_003:sink1_data
+	wire          cmd_demux_003_src1_ready;                                        // cmd_mux_003:sink1_ready -> cmd_demux_003:src1_ready
+	wire    [3:0] cmd_demux_003_src1_channel;                                      // cmd_demux_003:src1_channel -> cmd_mux_003:sink1_channel
+	wire          cmd_demux_003_src1_startofpacket;                                // cmd_demux_003:src1_startofpacket -> cmd_mux_003:sink1_startofpacket
+	wire          cmd_demux_003_src1_endofpacket;                                  // cmd_demux_003:src1_endofpacket -> cmd_mux_003:sink1_endofpacket
+	wire          rsp_demux_src0_valid;                                            // rsp_demux:src0_valid -> rsp_mux:sink0_valid
+	wire  [212:0] rsp_demux_src0_data;                                             // rsp_demux:src0_data -> rsp_mux:sink0_data
+	wire          rsp_demux_src0_ready;                                            // rsp_mux:sink0_ready -> rsp_demux:src0_ready
+	wire    [3:0] rsp_demux_src0_channel;                                          // rsp_demux:src0_channel -> rsp_mux:sink0_channel
+	wire          rsp_demux_src0_startofpacket;                                    // rsp_demux:src0_startofpacket -> rsp_mux:sink0_startofpacket
+	wire          rsp_demux_src0_endofpacket;                                      // rsp_demux:src0_endofpacket -> rsp_mux:sink0_endofpacket
+	wire          rsp_demux_src1_valid;                                            // rsp_demux:src1_valid -> rsp_mux_002:sink0_valid
+	wire  [212:0] rsp_demux_src1_data;                                             // rsp_demux:src1_data -> rsp_mux_002:sink0_data
+	wire          rsp_demux_src1_ready;                                            // rsp_mux_002:sink0_ready -> rsp_demux:src1_ready
+	wire    [3:0] rsp_demux_src1_channel;                                          // rsp_demux:src1_channel -> rsp_mux_002:sink0_channel
+	wire          rsp_demux_src1_startofpacket;                                    // rsp_demux:src1_startofpacket -> rsp_mux_002:sink0_startofpacket
+	wire          rsp_demux_src1_endofpacket;                                      // rsp_demux:src1_endofpacket -> rsp_mux_002:sink0_endofpacket
+	wire          rsp_demux_001_src0_valid;                                        // rsp_demux_001:src0_valid -> rsp_mux_001:sink0_valid
+	wire  [212:0] rsp_demux_001_src0_data;                                         // rsp_demux_001:src0_data -> rsp_mux_001:sink0_data
+	wire          rsp_demux_001_src0_ready;                                        // rsp_mux_001:sink0_ready -> rsp_demux_001:src0_ready
+	wire    [3:0] rsp_demux_001_src0_channel;                                      // rsp_demux_001:src0_channel -> rsp_mux_001:sink0_channel
+	wire          rsp_demux_001_src0_startofpacket;                                // rsp_demux_001:src0_startofpacket -> rsp_mux_001:sink0_startofpacket
+	wire          rsp_demux_001_src0_endofpacket;                                  // rsp_demux_001:src0_endofpacket -> rsp_mux_001:sink0_endofpacket
+	wire          rsp_demux_001_src1_valid;                                        // rsp_demux_001:src1_valid -> rsp_mux_003:sink0_valid
+	wire  [212:0] rsp_demux_001_src1_data;                                         // rsp_demux_001:src1_data -> rsp_mux_003:sink0_data
+	wire          rsp_demux_001_src1_ready;                                        // rsp_mux_003:sink0_ready -> rsp_demux_001:src1_ready
+	wire    [3:0] rsp_demux_001_src1_channel;                                      // rsp_demux_001:src1_channel -> rsp_mux_003:sink0_channel
+	wire          rsp_demux_001_src1_startofpacket;                                // rsp_demux_001:src1_startofpacket -> rsp_mux_003:sink0_startofpacket
+	wire          rsp_demux_001_src1_endofpacket;                                  // rsp_demux_001:src1_endofpacket -> rsp_mux_003:sink0_endofpacket
+	wire          rsp_demux_002_src0_valid;                                        // rsp_demux_002:src0_valid -> rsp_mux:sink1_valid
+	wire  [212:0] rsp_demux_002_src0_data;                                         // rsp_demux_002:src0_data -> rsp_mux:sink1_data
+	wire          rsp_demux_002_src0_ready;                                        // rsp_mux:sink1_ready -> rsp_demux_002:src0_ready
+	wire    [3:0] rsp_demux_002_src0_channel;                                      // rsp_demux_002:src0_channel -> rsp_mux:sink1_channel
+	wire          rsp_demux_002_src0_startofpacket;                                // rsp_demux_002:src0_startofpacket -> rsp_mux:sink1_startofpacket
+	wire          rsp_demux_002_src0_endofpacket;                                  // rsp_demux_002:src0_endofpacket -> rsp_mux:sink1_endofpacket
+	wire          rsp_demux_002_src1_valid;                                        // rsp_demux_002:src1_valid -> rsp_mux_002:sink1_valid
+	wire  [212:0] rsp_demux_002_src1_data;                                         // rsp_demux_002:src1_data -> rsp_mux_002:sink1_data
+	wire          rsp_demux_002_src1_ready;                                        // rsp_mux_002:sink1_ready -> rsp_demux_002:src1_ready
+	wire    [3:0] rsp_demux_002_src1_channel;                                      // rsp_demux_002:src1_channel -> rsp_mux_002:sink1_channel
+	wire          rsp_demux_002_src1_startofpacket;                                // rsp_demux_002:src1_startofpacket -> rsp_mux_002:sink1_startofpacket
+	wire          rsp_demux_002_src1_endofpacket;                                  // rsp_demux_002:src1_endofpacket -> rsp_mux_002:sink1_endofpacket
+	wire          rsp_demux_003_src0_valid;                                        // rsp_demux_003:src0_valid -> rsp_mux_001:sink1_valid
+	wire  [212:0] rsp_demux_003_src0_data;                                         // rsp_demux_003:src0_data -> rsp_mux_001:sink1_data
+	wire          rsp_demux_003_src0_ready;                                        // rsp_mux_001:sink1_ready -> rsp_demux_003:src0_ready
+	wire    [3:0] rsp_demux_003_src0_channel;                                      // rsp_demux_003:src0_channel -> rsp_mux_001:sink1_channel
+	wire          rsp_demux_003_src0_startofpacket;                                // rsp_demux_003:src0_startofpacket -> rsp_mux_001:sink1_startofpacket
+	wire          rsp_demux_003_src0_endofpacket;                                  // rsp_demux_003:src0_endofpacket -> rsp_mux_001:sink1_endofpacket
+	wire          rsp_demux_003_src1_valid;                                        // rsp_demux_003:src1_valid -> rsp_mux_003:sink1_valid
+	wire  [212:0] rsp_demux_003_src1_data;                                         // rsp_demux_003:src1_data -> rsp_mux_003:sink1_data
+	wire          rsp_demux_003_src1_ready;                                        // rsp_mux_003:sink1_ready -> rsp_demux_003:src1_ready
+	wire    [3:0] rsp_demux_003_src1_channel;                                      // rsp_demux_003:src1_channel -> rsp_mux_003:sink1_channel
+	wire          rsp_demux_003_src1_startofpacket;                                // rsp_demux_003:src1_startofpacket -> rsp_mux_003:sink1_startofpacket
+	wire          rsp_demux_003_src1_endofpacket;                                  // rsp_demux_003:src1_endofpacket -> rsp_mux_003:sink1_endofpacket
 
 	altera_merlin_axi_translator #(
 		.USE_S0_AWID                       (1),
@@ -201,99 +643,261 @@ module Example3_mm_interconnect_0 (
 		.M0_LOCK_WIDTH                     (1),
 		.S0_LOCK_WIDTH                     (1),
 		.S0_AXI_VERSION                    ("AXI4")
-	) aximaster_0_altera_axi4_master_translator (
-		.aclk        (clk_0_clk_clk),                                         //       clk.clk
-		.aresetn     (~axiMaster_0_reset_sink_reset_bridge_in_reset_reset),   // clk_reset.reset_n
-		.m0_awid     (aximaster_0_altera_axi4_master_translator_m0_awid),     //        m0.awid
-		.m0_awaddr   (aximaster_0_altera_axi4_master_translator_m0_awaddr),   //          .awaddr
-		.m0_awlen    (aximaster_0_altera_axi4_master_translator_m0_awlen),    //          .awlen
-		.m0_awsize   (aximaster_0_altera_axi4_master_translator_m0_awsize),   //          .awsize
-		.m0_awburst  (aximaster_0_altera_axi4_master_translator_m0_awburst),  //          .awburst
-		.m0_awlock   (aximaster_0_altera_axi4_master_translator_m0_awlock),   //          .awlock
-		.m0_awcache  (aximaster_0_altera_axi4_master_translator_m0_awcache),  //          .awcache
-		.m0_awprot   (aximaster_0_altera_axi4_master_translator_m0_awprot),   //          .awprot
-		.m0_awuser   (aximaster_0_altera_axi4_master_translator_m0_awuser),   //          .awuser
-		.m0_awqos    (aximaster_0_altera_axi4_master_translator_m0_awqos),    //          .awqos
-		.m0_awregion (aximaster_0_altera_axi4_master_translator_m0_awregion), //          .awregion
-		.m0_awvalid  (aximaster_0_altera_axi4_master_translator_m0_awvalid),  //          .awvalid
-		.m0_awready  (aximaster_0_altera_axi4_master_translator_m0_awready),  //          .awready
-		.m0_wdata    (aximaster_0_altera_axi4_master_translator_m0_wdata),    //          .wdata
-		.m0_wstrb    (aximaster_0_altera_axi4_master_translator_m0_wstrb),    //          .wstrb
-		.m0_wlast    (aximaster_0_altera_axi4_master_translator_m0_wlast),    //          .wlast
-		.m0_wvalid   (aximaster_0_altera_axi4_master_translator_m0_wvalid),   //          .wvalid
-		.m0_wuser    (aximaster_0_altera_axi4_master_translator_m0_wuser),    //          .wuser
-		.m0_wready   (aximaster_0_altera_axi4_master_translator_m0_wready),   //          .wready
-		.m0_bid      (aximaster_0_altera_axi4_master_translator_m0_bid),      //          .bid
-		.m0_bresp    (aximaster_0_altera_axi4_master_translator_m0_bresp),    //          .bresp
-		.m0_buser    (aximaster_0_altera_axi4_master_translator_m0_buser),    //          .buser
-		.m0_bvalid   (aximaster_0_altera_axi4_master_translator_m0_bvalid),   //          .bvalid
-		.m0_bready   (aximaster_0_altera_axi4_master_translator_m0_bready),   //          .bready
-		.m0_arid     (aximaster_0_altera_axi4_master_translator_m0_arid),     //          .arid
-		.m0_araddr   (aximaster_0_altera_axi4_master_translator_m0_araddr),   //          .araddr
-		.m0_arlen    (aximaster_0_altera_axi4_master_translator_m0_arlen),    //          .arlen
-		.m0_arsize   (aximaster_0_altera_axi4_master_translator_m0_arsize),   //          .arsize
-		.m0_arburst  (aximaster_0_altera_axi4_master_translator_m0_arburst),  //          .arburst
-		.m0_arlock   (aximaster_0_altera_axi4_master_translator_m0_arlock),   //          .arlock
-		.m0_arcache  (aximaster_0_altera_axi4_master_translator_m0_arcache),  //          .arcache
-		.m0_arprot   (aximaster_0_altera_axi4_master_translator_m0_arprot),   //          .arprot
-		.m0_aruser   (aximaster_0_altera_axi4_master_translator_m0_aruser),   //          .aruser
-		.m0_arqos    (aximaster_0_altera_axi4_master_translator_m0_arqos),    //          .arqos
-		.m0_arregion (aximaster_0_altera_axi4_master_translator_m0_arregion), //          .arregion
-		.m0_arvalid  (aximaster_0_altera_axi4_master_translator_m0_arvalid),  //          .arvalid
-		.m0_arready  (aximaster_0_altera_axi4_master_translator_m0_arready),  //          .arready
-		.m0_rid      (aximaster_0_altera_axi4_master_translator_m0_rid),      //          .rid
-		.m0_rdata    (aximaster_0_altera_axi4_master_translator_m0_rdata),    //          .rdata
-		.m0_rresp    (aximaster_0_altera_axi4_master_translator_m0_rresp),    //          .rresp
-		.m0_rlast    (aximaster_0_altera_axi4_master_translator_m0_rlast),    //          .rlast
-		.m0_rvalid   (aximaster_0_altera_axi4_master_translator_m0_rvalid),   //          .rvalid
-		.m0_rready   (aximaster_0_altera_axi4_master_translator_m0_rready),   //          .rready
-		.m0_ruser    (aximaster_0_altera_axi4_master_translator_m0_ruser),    //          .ruser
-		.s0_awid     (axiMaster_0_altera_axi4_master_awid),                   //        s0.awid
-		.s0_awaddr   (axiMaster_0_altera_axi4_master_awaddr),                 //          .awaddr
-		.s0_awlen    (axiMaster_0_altera_axi4_master_awlen),                  //          .awlen
-		.s0_awsize   (axiMaster_0_altera_axi4_master_awsize),                 //          .awsize
-		.s0_awburst  (axiMaster_0_altera_axi4_master_awburst),                //          .awburst
-		.s0_awlock   (axiMaster_0_altera_axi4_master_awlock),                 //          .awlock
-		.s0_awcache  (axiMaster_0_altera_axi4_master_awcache),                //          .awcache
-		.s0_awprot   (axiMaster_0_altera_axi4_master_awprot),                 //          .awprot
-		.s0_awqos    (axiMaster_0_altera_axi4_master_awqos),                  //          .awqos
-		.s0_awregion (axiMaster_0_altera_axi4_master_awregion),               //          .awregion
-		.s0_awvalid  (axiMaster_0_altera_axi4_master_awvalid),                //          .awvalid
-		.s0_awready  (axiMaster_0_altera_axi4_master_awready),                //          .awready
-		.s0_wdata    (axiMaster_0_altera_axi4_master_wdata),                  //          .wdata
-		.s0_wstrb    (axiMaster_0_altera_axi4_master_wstrb),                  //          .wstrb
-		.s0_wlast    (axiMaster_0_altera_axi4_master_wlast),                  //          .wlast
-		.s0_wvalid   (axiMaster_0_altera_axi4_master_wvalid),                 //          .wvalid
-		.s0_wready   (axiMaster_0_altera_axi4_master_wready),                 //          .wready
-		.s0_bid      (axiMaster_0_altera_axi4_master_bid),                    //          .bid
-		.s0_bresp    (axiMaster_0_altera_axi4_master_bresp),                  //          .bresp
-		.s0_bvalid   (axiMaster_0_altera_axi4_master_bvalid),                 //          .bvalid
-		.s0_bready   (axiMaster_0_altera_axi4_master_bready),                 //          .bready
-		.s0_arid     (axiMaster_0_altera_axi4_master_arid),                   //          .arid
-		.s0_araddr   (axiMaster_0_altera_axi4_master_araddr),                 //          .araddr
-		.s0_arlen    (axiMaster_0_altera_axi4_master_arlen),                  //          .arlen
-		.s0_arsize   (axiMaster_0_altera_axi4_master_arsize),                 //          .arsize
-		.s0_arburst  (axiMaster_0_altera_axi4_master_arburst),                //          .arburst
-		.s0_arlock   (axiMaster_0_altera_axi4_master_arlock),                 //          .arlock
-		.s0_arcache  (axiMaster_0_altera_axi4_master_arcache),                //          .arcache
-		.s0_arprot   (axiMaster_0_altera_axi4_master_arprot),                 //          .arprot
-		.s0_arqos    (axiMaster_0_altera_axi4_master_arqos),                  //          .arqos
-		.s0_arregion (axiMaster_0_altera_axi4_master_arregion),               //          .arregion
-		.s0_arvalid  (axiMaster_0_altera_axi4_master_arvalid),                //          .arvalid
-		.s0_arready  (axiMaster_0_altera_axi4_master_arready),                //          .arready
-		.s0_rid      (axiMaster_0_altera_axi4_master_rid),                    //          .rid
-		.s0_rdata    (axiMaster_0_altera_axi4_master_rdata),                  //          .rdata
-		.s0_rresp    (axiMaster_0_altera_axi4_master_rresp),                  //          .rresp
-		.s0_rlast    (axiMaster_0_altera_axi4_master_rlast),                  //          .rlast
-		.s0_rvalid   (axiMaster_0_altera_axi4_master_rvalid),                 //          .rvalid
-		.s0_rready   (axiMaster_0_altera_axi4_master_rready),                 //          .rready
-		.s0_awuser   (1'b0),                                                  // (terminated)
-		.s0_wuser    (1'b0),                                                  // (terminated)
-		.s0_buser    (),                                                      // (terminated)
-		.s0_aruser   (1'b0),                                                  // (terminated)
-		.s0_ruser    (),                                                      // (terminated)
-		.s0_wid      (1'b0),                                                  // (terminated)
-		.m0_wid      ()                                                       // (terminated)
+	) axi4master2_0_altera_axi4_master_translator (
+		.aclk        (clk_0_clk_clk),                                           //       clk.clk
+		.aresetn     (~axi4Master2_0_reset_sink_reset_bridge_in_reset_reset),   // clk_reset.reset_n
+		.m0_awid     (axi4master2_0_altera_axi4_master_translator_m0_awid),     //        m0.awid
+		.m0_awaddr   (axi4master2_0_altera_axi4_master_translator_m0_awaddr),   //          .awaddr
+		.m0_awlen    (axi4master2_0_altera_axi4_master_translator_m0_awlen),    //          .awlen
+		.m0_awsize   (axi4master2_0_altera_axi4_master_translator_m0_awsize),   //          .awsize
+		.m0_awburst  (axi4master2_0_altera_axi4_master_translator_m0_awburst),  //          .awburst
+		.m0_awlock   (axi4master2_0_altera_axi4_master_translator_m0_awlock),   //          .awlock
+		.m0_awcache  (axi4master2_0_altera_axi4_master_translator_m0_awcache),  //          .awcache
+		.m0_awprot   (axi4master2_0_altera_axi4_master_translator_m0_awprot),   //          .awprot
+		.m0_awuser   (axi4master2_0_altera_axi4_master_translator_m0_awuser),   //          .awuser
+		.m0_awqos    (axi4master2_0_altera_axi4_master_translator_m0_awqos),    //          .awqos
+		.m0_awregion (axi4master2_0_altera_axi4_master_translator_m0_awregion), //          .awregion
+		.m0_awvalid  (axi4master2_0_altera_axi4_master_translator_m0_awvalid),  //          .awvalid
+		.m0_awready  (axi4master2_0_altera_axi4_master_translator_m0_awready),  //          .awready
+		.m0_wdata    (axi4master2_0_altera_axi4_master_translator_m0_wdata),    //          .wdata
+		.m0_wstrb    (axi4master2_0_altera_axi4_master_translator_m0_wstrb),    //          .wstrb
+		.m0_wlast    (axi4master2_0_altera_axi4_master_translator_m0_wlast),    //          .wlast
+		.m0_wvalid   (axi4master2_0_altera_axi4_master_translator_m0_wvalid),   //          .wvalid
+		.m0_wuser    (axi4master2_0_altera_axi4_master_translator_m0_wuser),    //          .wuser
+		.m0_wready   (axi4master2_0_altera_axi4_master_translator_m0_wready),   //          .wready
+		.m0_bid      (axi4master2_0_altera_axi4_master_translator_m0_bid),      //          .bid
+		.m0_bresp    (axi4master2_0_altera_axi4_master_translator_m0_bresp),    //          .bresp
+		.m0_buser    (axi4master2_0_altera_axi4_master_translator_m0_buser),    //          .buser
+		.m0_bvalid   (axi4master2_0_altera_axi4_master_translator_m0_bvalid),   //          .bvalid
+		.m0_bready   (axi4master2_0_altera_axi4_master_translator_m0_bready),   //          .bready
+		.m0_arid     (axi4master2_0_altera_axi4_master_translator_m0_arid),     //          .arid
+		.m0_araddr   (axi4master2_0_altera_axi4_master_translator_m0_araddr),   //          .araddr
+		.m0_arlen    (axi4master2_0_altera_axi4_master_translator_m0_arlen),    //          .arlen
+		.m0_arsize   (axi4master2_0_altera_axi4_master_translator_m0_arsize),   //          .arsize
+		.m0_arburst  (axi4master2_0_altera_axi4_master_translator_m0_arburst),  //          .arburst
+		.m0_arlock   (axi4master2_0_altera_axi4_master_translator_m0_arlock),   //          .arlock
+		.m0_arcache  (axi4master2_0_altera_axi4_master_translator_m0_arcache),  //          .arcache
+		.m0_arprot   (axi4master2_0_altera_axi4_master_translator_m0_arprot),   //          .arprot
+		.m0_aruser   (axi4master2_0_altera_axi4_master_translator_m0_aruser),   //          .aruser
+		.m0_arqos    (axi4master2_0_altera_axi4_master_translator_m0_arqos),    //          .arqos
+		.m0_arregion (axi4master2_0_altera_axi4_master_translator_m0_arregion), //          .arregion
+		.m0_arvalid  (axi4master2_0_altera_axi4_master_translator_m0_arvalid),  //          .arvalid
+		.m0_arready  (axi4master2_0_altera_axi4_master_translator_m0_arready),  //          .arready
+		.m0_rid      (axi4master2_0_altera_axi4_master_translator_m0_rid),      //          .rid
+		.m0_rdata    (axi4master2_0_altera_axi4_master_translator_m0_rdata),    //          .rdata
+		.m0_rresp    (axi4master2_0_altera_axi4_master_translator_m0_rresp),    //          .rresp
+		.m0_rlast    (axi4master2_0_altera_axi4_master_translator_m0_rlast),    //          .rlast
+		.m0_rvalid   (axi4master2_0_altera_axi4_master_translator_m0_rvalid),   //          .rvalid
+		.m0_rready   (axi4master2_0_altera_axi4_master_translator_m0_rready),   //          .rready
+		.m0_ruser    (axi4master2_0_altera_axi4_master_translator_m0_ruser),    //          .ruser
+		.s0_awid     (axi4Master2_0_altera_axi4_master_awid),                   //        s0.awid
+		.s0_awaddr   (axi4Master2_0_altera_axi4_master_awaddr),                 //          .awaddr
+		.s0_awlen    (axi4Master2_0_altera_axi4_master_awlen),                  //          .awlen
+		.s0_awsize   (axi4Master2_0_altera_axi4_master_awsize),                 //          .awsize
+		.s0_awburst  (axi4Master2_0_altera_axi4_master_awburst),                //          .awburst
+		.s0_awlock   (axi4Master2_0_altera_axi4_master_awlock),                 //          .awlock
+		.s0_awcache  (axi4Master2_0_altera_axi4_master_awcache),                //          .awcache
+		.s0_awprot   (axi4Master2_0_altera_axi4_master_awprot),                 //          .awprot
+		.s0_awqos    (axi4Master2_0_altera_axi4_master_awqos),                  //          .awqos
+		.s0_awregion (axi4Master2_0_altera_axi4_master_awregion),               //          .awregion
+		.s0_awvalid  (axi4Master2_0_altera_axi4_master_awvalid),                //          .awvalid
+		.s0_awready  (axi4Master2_0_altera_axi4_master_awready),                //          .awready
+		.s0_wdata    (axi4Master2_0_altera_axi4_master_wdata),                  //          .wdata
+		.s0_wstrb    (axi4Master2_0_altera_axi4_master_wstrb),                  //          .wstrb
+		.s0_wlast    (axi4Master2_0_altera_axi4_master_wlast),                  //          .wlast
+		.s0_wvalid   (axi4Master2_0_altera_axi4_master_wvalid),                 //          .wvalid
+		.s0_wready   (axi4Master2_0_altera_axi4_master_wready),                 //          .wready
+		.s0_bid      (axi4Master2_0_altera_axi4_master_bid),                    //          .bid
+		.s0_bresp    (axi4Master2_0_altera_axi4_master_bresp),                  //          .bresp
+		.s0_bvalid   (axi4Master2_0_altera_axi4_master_bvalid),                 //          .bvalid
+		.s0_bready   (axi4Master2_0_altera_axi4_master_bready),                 //          .bready
+		.s0_arid     (axi4Master2_0_altera_axi4_master_arid),                   //          .arid
+		.s0_araddr   (axi4Master2_0_altera_axi4_master_araddr),                 //          .araddr
+		.s0_arlen    (axi4Master2_0_altera_axi4_master_arlen),                  //          .arlen
+		.s0_arsize   (axi4Master2_0_altera_axi4_master_arsize),                 //          .arsize
+		.s0_arburst  (axi4Master2_0_altera_axi4_master_arburst),                //          .arburst
+		.s0_arlock   (axi4Master2_0_altera_axi4_master_arlock),                 //          .arlock
+		.s0_arcache  (axi4Master2_0_altera_axi4_master_arcache),                //          .arcache
+		.s0_arprot   (axi4Master2_0_altera_axi4_master_arprot),                 //          .arprot
+		.s0_arqos    (axi4Master2_0_altera_axi4_master_arqos),                  //          .arqos
+		.s0_arregion (axi4Master2_0_altera_axi4_master_arregion),               //          .arregion
+		.s0_arvalid  (axi4Master2_0_altera_axi4_master_arvalid),                //          .arvalid
+		.s0_arready  (axi4Master2_0_altera_axi4_master_arready),                //          .arready
+		.s0_rid      (axi4Master2_0_altera_axi4_master_rid),                    //          .rid
+		.s0_rdata    (axi4Master2_0_altera_axi4_master_rdata),                  //          .rdata
+		.s0_rresp    (axi4Master2_0_altera_axi4_master_rresp),                  //          .rresp
+		.s0_rlast    (axi4Master2_0_altera_axi4_master_rlast),                  //          .rlast
+		.s0_rvalid   (axi4Master2_0_altera_axi4_master_rvalid),                 //          .rvalid
+		.s0_rready   (axi4Master2_0_altera_axi4_master_rready),                 //          .rready
+		.s0_awuser   (1'b0),                                                    // (terminated)
+		.s0_wuser    (1'b0),                                                    // (terminated)
+		.s0_buser    (),                                                        // (terminated)
+		.s0_aruser   (1'b0),                                                    // (terminated)
+		.s0_ruser    (),                                                        // (terminated)
+		.s0_wid      (1'b0),                                                    // (terminated)
+		.m0_wid      ()                                                         // (terminated)
+	);
+
+	altera_merlin_axi_translator #(
+		.USE_S0_AWID                       (1),
+		.USE_S0_AWREGION                   (1),
+		.USE_M0_AWREGION                   (1),
+		.USE_S0_AWLEN                      (1),
+		.USE_S0_AWSIZE                     (1),
+		.USE_S0_AWBURST                    (1),
+		.USE_S0_AWLOCK                     (1),
+		.USE_M0_AWLOCK                     (1),
+		.USE_S0_AWCACHE                    (1),
+		.USE_M0_AWCACHE                    (1),
+		.USE_M0_AWPROT                     (1),
+		.USE_S0_AWQOS                      (1),
+		.USE_M0_AWQOS                      (1),
+		.USE_S0_WSTRB                      (1),
+		.USE_M0_WLAST                      (1),
+		.USE_S0_BID                        (1),
+		.USE_S0_BRESP                      (1),
+		.USE_M0_BRESP                      (1),
+		.USE_S0_ARID                       (1),
+		.USE_S0_ARREGION                   (1),
+		.USE_M0_ARREGION                   (1),
+		.USE_S0_ARLEN                      (1),
+		.USE_S0_ARSIZE                     (1),
+		.USE_S0_ARBURST                    (1),
+		.USE_S0_ARLOCK                     (1),
+		.USE_M0_ARLOCK                     (1),
+		.USE_M0_ARCACHE                    (1),
+		.USE_M0_ARQOS                      (1),
+		.USE_M0_ARPROT                     (1),
+		.USE_S0_ARCACHE                    (1),
+		.USE_S0_ARQOS                      (1),
+		.USE_S0_RID                        (1),
+		.USE_S0_RRESP                      (1),
+		.USE_M0_RRESP                      (1),
+		.USE_S0_RLAST                      (1),
+		.M0_ID_WIDTH                       (1),
+		.DATA_WIDTH                        (128),
+		.S0_ID_WIDTH                       (1),
+		.M0_ADDR_WIDTH                     (14),
+		.S0_WRITE_ADDR_USER_WIDTH          (1),
+		.S0_READ_ADDR_USER_WIDTH           (1),
+		.M0_WRITE_ADDR_USER_WIDTH          (1),
+		.M0_READ_ADDR_USER_WIDTH           (1),
+		.S0_WRITE_DATA_USER_WIDTH          (1),
+		.S0_WRITE_RESPONSE_DATA_USER_WIDTH (1),
+		.S0_READ_DATA_USER_WIDTH           (1),
+		.M0_WRITE_DATA_USER_WIDTH          (1),
+		.M0_WRITE_RESPONSE_DATA_USER_WIDTH (1),
+		.M0_READ_DATA_USER_WIDTH           (1),
+		.S0_ADDR_WIDTH                     (14),
+		.USE_S0_AWUSER                     (0),
+		.USE_S0_ARUSER                     (0),
+		.USE_S0_WUSER                      (0),
+		.USE_S0_RUSER                      (0),
+		.USE_S0_BUSER                      (0),
+		.USE_M0_AWUSER                     (1),
+		.USE_M0_ARUSER                     (1),
+		.USE_M0_WUSER                      (1),
+		.USE_M0_RUSER                      (1),
+		.USE_M0_BUSER                      (1),
+		.M0_AXI_VERSION                    ("AXI4"),
+		.M0_BURST_LENGTH_WIDTH             (8),
+		.S0_BURST_LENGTH_WIDTH             (8),
+		.M0_LOCK_WIDTH                     (1),
+		.S0_LOCK_WIDTH                     (1),
+		.S0_AXI_VERSION                    ("AXI4")
+	) axi4master1_0_altera_axi4_master_translator (
+		.aclk        (clk_0_clk_clk),                                           //       clk.clk
+		.aresetn     (~axi4Master2_0_reset_sink_reset_bridge_in_reset_reset),   // clk_reset.reset_n
+		.m0_awid     (axi4master1_0_altera_axi4_master_translator_m0_awid),     //        m0.awid
+		.m0_awaddr   (axi4master1_0_altera_axi4_master_translator_m0_awaddr),   //          .awaddr
+		.m0_awlen    (axi4master1_0_altera_axi4_master_translator_m0_awlen),    //          .awlen
+		.m0_awsize   (axi4master1_0_altera_axi4_master_translator_m0_awsize),   //          .awsize
+		.m0_awburst  (axi4master1_0_altera_axi4_master_translator_m0_awburst),  //          .awburst
+		.m0_awlock   (axi4master1_0_altera_axi4_master_translator_m0_awlock),   //          .awlock
+		.m0_awcache  (axi4master1_0_altera_axi4_master_translator_m0_awcache),  //          .awcache
+		.m0_awprot   (axi4master1_0_altera_axi4_master_translator_m0_awprot),   //          .awprot
+		.m0_awuser   (axi4master1_0_altera_axi4_master_translator_m0_awuser),   //          .awuser
+		.m0_awqos    (axi4master1_0_altera_axi4_master_translator_m0_awqos),    //          .awqos
+		.m0_awregion (axi4master1_0_altera_axi4_master_translator_m0_awregion), //          .awregion
+		.m0_awvalid  (axi4master1_0_altera_axi4_master_translator_m0_awvalid),  //          .awvalid
+		.m0_awready  (axi4master1_0_altera_axi4_master_translator_m0_awready),  //          .awready
+		.m0_wdata    (axi4master1_0_altera_axi4_master_translator_m0_wdata),    //          .wdata
+		.m0_wstrb    (axi4master1_0_altera_axi4_master_translator_m0_wstrb),    //          .wstrb
+		.m0_wlast    (axi4master1_0_altera_axi4_master_translator_m0_wlast),    //          .wlast
+		.m0_wvalid   (axi4master1_0_altera_axi4_master_translator_m0_wvalid),   //          .wvalid
+		.m0_wuser    (axi4master1_0_altera_axi4_master_translator_m0_wuser),    //          .wuser
+		.m0_wready   (axi4master1_0_altera_axi4_master_translator_m0_wready),   //          .wready
+		.m0_bid      (axi4master1_0_altera_axi4_master_translator_m0_bid),      //          .bid
+		.m0_bresp    (axi4master1_0_altera_axi4_master_translator_m0_bresp),    //          .bresp
+		.m0_buser    (axi4master1_0_altera_axi4_master_translator_m0_buser),    //          .buser
+		.m0_bvalid   (axi4master1_0_altera_axi4_master_translator_m0_bvalid),   //          .bvalid
+		.m0_bready   (axi4master1_0_altera_axi4_master_translator_m0_bready),   //          .bready
+		.m0_arid     (axi4master1_0_altera_axi4_master_translator_m0_arid),     //          .arid
+		.m0_araddr   (axi4master1_0_altera_axi4_master_translator_m0_araddr),   //          .araddr
+		.m0_arlen    (axi4master1_0_altera_axi4_master_translator_m0_arlen),    //          .arlen
+		.m0_arsize   (axi4master1_0_altera_axi4_master_translator_m0_arsize),   //          .arsize
+		.m0_arburst  (axi4master1_0_altera_axi4_master_translator_m0_arburst),  //          .arburst
+		.m0_arlock   (axi4master1_0_altera_axi4_master_translator_m0_arlock),   //          .arlock
+		.m0_arcache  (axi4master1_0_altera_axi4_master_translator_m0_arcache),  //          .arcache
+		.m0_arprot   (axi4master1_0_altera_axi4_master_translator_m0_arprot),   //          .arprot
+		.m0_aruser   (axi4master1_0_altera_axi4_master_translator_m0_aruser),   //          .aruser
+		.m0_arqos    (axi4master1_0_altera_axi4_master_translator_m0_arqos),    //          .arqos
+		.m0_arregion (axi4master1_0_altera_axi4_master_translator_m0_arregion), //          .arregion
+		.m0_arvalid  (axi4master1_0_altera_axi4_master_translator_m0_arvalid),  //          .arvalid
+		.m0_arready  (axi4master1_0_altera_axi4_master_translator_m0_arready),  //          .arready
+		.m0_rid      (axi4master1_0_altera_axi4_master_translator_m0_rid),      //          .rid
+		.m0_rdata    (axi4master1_0_altera_axi4_master_translator_m0_rdata),    //          .rdata
+		.m0_rresp    (axi4master1_0_altera_axi4_master_translator_m0_rresp),    //          .rresp
+		.m0_rlast    (axi4master1_0_altera_axi4_master_translator_m0_rlast),    //          .rlast
+		.m0_rvalid   (axi4master1_0_altera_axi4_master_translator_m0_rvalid),   //          .rvalid
+		.m0_rready   (axi4master1_0_altera_axi4_master_translator_m0_rready),   //          .rready
+		.m0_ruser    (axi4master1_0_altera_axi4_master_translator_m0_ruser),    //          .ruser
+		.s0_awid     (axi4Master1_0_altera_axi4_master_awid),                   //        s0.awid
+		.s0_awaddr   (axi4Master1_0_altera_axi4_master_awaddr),                 //          .awaddr
+		.s0_awlen    (axi4Master1_0_altera_axi4_master_awlen),                  //          .awlen
+		.s0_awsize   (axi4Master1_0_altera_axi4_master_awsize),                 //          .awsize
+		.s0_awburst  (axi4Master1_0_altera_axi4_master_awburst),                //          .awburst
+		.s0_awlock   (axi4Master1_0_altera_axi4_master_awlock),                 //          .awlock
+		.s0_awcache  (axi4Master1_0_altera_axi4_master_awcache),                //          .awcache
+		.s0_awprot   (axi4Master1_0_altera_axi4_master_awprot),                 //          .awprot
+		.s0_awqos    (axi4Master1_0_altera_axi4_master_awqos),                  //          .awqos
+		.s0_awregion (axi4Master1_0_altera_axi4_master_awregion),               //          .awregion
+		.s0_awvalid  (axi4Master1_0_altera_axi4_master_awvalid),                //          .awvalid
+		.s0_awready  (axi4Master1_0_altera_axi4_master_awready),                //          .awready
+		.s0_wdata    (axi4Master1_0_altera_axi4_master_wdata),                  //          .wdata
+		.s0_wstrb    (axi4Master1_0_altera_axi4_master_wstrb),                  //          .wstrb
+		.s0_wlast    (axi4Master1_0_altera_axi4_master_wlast),                  //          .wlast
+		.s0_wvalid   (axi4Master1_0_altera_axi4_master_wvalid),                 //          .wvalid
+		.s0_wready   (axi4Master1_0_altera_axi4_master_wready),                 //          .wready
+		.s0_bid      (axi4Master1_0_altera_axi4_master_bid),                    //          .bid
+		.s0_bresp    (axi4Master1_0_altera_axi4_master_bresp),                  //          .bresp
+		.s0_bvalid   (axi4Master1_0_altera_axi4_master_bvalid),                 //          .bvalid
+		.s0_bready   (axi4Master1_0_altera_axi4_master_bready),                 //          .bready
+		.s0_arid     (axi4Master1_0_altera_axi4_master_arid),                   //          .arid
+		.s0_araddr   (axi4Master1_0_altera_axi4_master_araddr),                 //          .araddr
+		.s0_arlen    (axi4Master1_0_altera_axi4_master_arlen),                  //          .arlen
+		.s0_arsize   (axi4Master1_0_altera_axi4_master_arsize),                 //          .arsize
+		.s0_arburst  (axi4Master1_0_altera_axi4_master_arburst),                //          .arburst
+		.s0_arlock   (axi4Master1_0_altera_axi4_master_arlock),                 //          .arlock
+		.s0_arcache  (axi4Master1_0_altera_axi4_master_arcache),                //          .arcache
+		.s0_arprot   (axi4Master1_0_altera_axi4_master_arprot),                 //          .arprot
+		.s0_arqos    (axi4Master1_0_altera_axi4_master_arqos),                  //          .arqos
+		.s0_arregion (axi4Master1_0_altera_axi4_master_arregion),               //          .arregion
+		.s0_arvalid  (axi4Master1_0_altera_axi4_master_arvalid),                //          .arvalid
+		.s0_arready  (axi4Master1_0_altera_axi4_master_arready),                //          .arready
+		.s0_rid      (axi4Master1_0_altera_axi4_master_rid),                    //          .rid
+		.s0_rdata    (axi4Master1_0_altera_axi4_master_rdata),                  //          .rdata
+		.s0_rresp    (axi4Master1_0_altera_axi4_master_rresp),                  //          .rresp
+		.s0_rlast    (axi4Master1_0_altera_axi4_master_rlast),                  //          .rlast
+		.s0_rvalid   (axi4Master1_0_altera_axi4_master_rvalid),                 //          .rvalid
+		.s0_rready   (axi4Master1_0_altera_axi4_master_rready),                 //          .rready
+		.s0_awuser   (1'b0),                                                    // (terminated)
+		.s0_wuser    (1'b0),                                                    // (terminated)
+		.s0_buser    (),                                                        // (terminated)
+		.s0_aruser   (1'b0),                                                    // (terminated)
+		.s0_ruser    (),                                                        // (terminated)
+		.s0_wid      (1'b0),                                                    // (terminated)
+		.m0_wid      ()                                                         // (terminated)
 	);
 
 	altera_merlin_axi_translator #(
@@ -334,8 +938,8 @@ module Example3_mm_interconnect_0 (
 		.USE_S0_RLAST                      (1),
 		.M0_ID_WIDTH                       (2),
 		.DATA_WIDTH                        (128),
-		.S0_ID_WIDTH                       (1),
-		.M0_ADDR_WIDTH                     (14),
+		.S0_ID_WIDTH                       (2),
+		.M0_ADDR_WIDTH                     (13),
 		.S0_WRITE_ADDR_USER_WIDTH          (1),
 		.S0_READ_ADDR_USER_WIDTH           (1),
 		.M0_WRITE_ADDR_USER_WIDTH          (1),
@@ -346,7 +950,7 @@ module Example3_mm_interconnect_0 (
 		.M0_WRITE_DATA_USER_WIDTH          (1),
 		.M0_WRITE_RESPONSE_DATA_USER_WIDTH (1),
 		.M0_READ_DATA_USER_WIDTH           (1),
-		.S0_ADDR_WIDTH                     (14),
+		.S0_ADDR_WIDTH                     (13),
 		.USE_S0_AWUSER                     (1),
 		.USE_S0_ARUSER                     (1),
 		.USE_S0_WUSER                      (1),
@@ -363,99 +967,1263 @@ module Example3_mm_interconnect_0 (
 		.M0_LOCK_WIDTH                     (1),
 		.S0_LOCK_WIDTH                     (1),
 		.S0_AXI_VERSION                    ("AXI4")
-	) axi4slave_0_altera_axi4_slave_translator (
-		.aclk        (clk_0_clk_clk),                                         //       clk.clk
-		.aresetn     (~axiMaster_0_reset_sink_reset_bridge_in_reset_reset),   // clk_reset.reset_n
-		.m0_awid     (axi4Slave_0_altera_axi4_slave_awid),                    //        m0.awid
-		.m0_awaddr   (axi4Slave_0_altera_axi4_slave_awaddr),                  //          .awaddr
-		.m0_awlen    (axi4Slave_0_altera_axi4_slave_awlen),                   //          .awlen
-		.m0_awsize   (axi4Slave_0_altera_axi4_slave_awsize),                  //          .awsize
-		.m0_awburst  (axi4Slave_0_altera_axi4_slave_awburst),                 //          .awburst
-		.m0_awlock   (axi4Slave_0_altera_axi4_slave_awlock),                  //          .awlock
-		.m0_awcache  (axi4Slave_0_altera_axi4_slave_awcache),                 //          .awcache
-		.m0_awprot   (axi4Slave_0_altera_axi4_slave_awprot),                  //          .awprot
-		.m0_awqos    (axi4Slave_0_altera_axi4_slave_awqos),                   //          .awqos
-		.m0_awregion (axi4Slave_0_altera_axi4_slave_awregion),                //          .awregion
-		.m0_awvalid  (axi4Slave_0_altera_axi4_slave_awvalid),                 //          .awvalid
-		.m0_awready  (axi4Slave_0_altera_axi4_slave_awready),                 //          .awready
-		.m0_wdata    (axi4Slave_0_altera_axi4_slave_wdata),                   //          .wdata
-		.m0_wstrb    (axi4Slave_0_altera_axi4_slave_wstrb),                   //          .wstrb
-		.m0_wlast    (axi4Slave_0_altera_axi4_slave_wlast),                   //          .wlast
-		.m0_wvalid   (axi4Slave_0_altera_axi4_slave_wvalid),                  //          .wvalid
-		.m0_wready   (axi4Slave_0_altera_axi4_slave_wready),                  //          .wready
-		.m0_bid      (axi4Slave_0_altera_axi4_slave_bid),                     //          .bid
-		.m0_bresp    (axi4Slave_0_altera_axi4_slave_bresp),                   //          .bresp
-		.m0_bvalid   (axi4Slave_0_altera_axi4_slave_bvalid),                  //          .bvalid
-		.m0_bready   (axi4Slave_0_altera_axi4_slave_bready),                  //          .bready
-		.m0_arid     (axi4Slave_0_altera_axi4_slave_arid),                    //          .arid
-		.m0_araddr   (axi4Slave_0_altera_axi4_slave_araddr),                  //          .araddr
-		.m0_arlen    (axi4Slave_0_altera_axi4_slave_arlen),                   //          .arlen
-		.m0_arsize   (axi4Slave_0_altera_axi4_slave_arsize),                  //          .arsize
-		.m0_arburst  (axi4Slave_0_altera_axi4_slave_arburst),                 //          .arburst
-		.m0_arlock   (axi4Slave_0_altera_axi4_slave_arlock),                  //          .arlock
-		.m0_arcache  (axi4Slave_0_altera_axi4_slave_arcache),                 //          .arcache
-		.m0_arprot   (axi4Slave_0_altera_axi4_slave_arprot),                  //          .arprot
-		.m0_arqos    (axi4Slave_0_altera_axi4_slave_arqos),                   //          .arqos
-		.m0_arregion (axi4Slave_0_altera_axi4_slave_arregion),                //          .arregion
-		.m0_arvalid  (axi4Slave_0_altera_axi4_slave_arvalid),                 //          .arvalid
-		.m0_arready  (axi4Slave_0_altera_axi4_slave_arready),                 //          .arready
-		.m0_rid      (axi4Slave_0_altera_axi4_slave_rid),                     //          .rid
-		.m0_rdata    (axi4Slave_0_altera_axi4_slave_rdata),                   //          .rdata
-		.m0_rresp    (axi4Slave_0_altera_axi4_slave_rresp),                   //          .rresp
-		.m0_rlast    (axi4Slave_0_altera_axi4_slave_rlast),                   //          .rlast
-		.m0_rvalid   (axi4Slave_0_altera_axi4_slave_rvalid),                  //          .rvalid
-		.m0_rready   (axi4Slave_0_altera_axi4_slave_rready),                  //          .rready
-		.s0_awid     (aximaster_0_altera_axi4_master_translator_m0_awid),     //        s0.awid
-		.s0_awaddr   (aximaster_0_altera_axi4_master_translator_m0_awaddr),   //          .awaddr
-		.s0_awlen    (aximaster_0_altera_axi4_master_translator_m0_awlen),    //          .awlen
-		.s0_awsize   (aximaster_0_altera_axi4_master_translator_m0_awsize),   //          .awsize
-		.s0_awburst  (aximaster_0_altera_axi4_master_translator_m0_awburst),  //          .awburst
-		.s0_awlock   (aximaster_0_altera_axi4_master_translator_m0_awlock),   //          .awlock
-		.s0_awcache  (aximaster_0_altera_axi4_master_translator_m0_awcache),  //          .awcache
-		.s0_awprot   (aximaster_0_altera_axi4_master_translator_m0_awprot),   //          .awprot
-		.s0_awuser   (aximaster_0_altera_axi4_master_translator_m0_awuser),   //          .awuser
-		.s0_awqos    (aximaster_0_altera_axi4_master_translator_m0_awqos),    //          .awqos
-		.s0_awregion (aximaster_0_altera_axi4_master_translator_m0_awregion), //          .awregion
-		.s0_awvalid  (aximaster_0_altera_axi4_master_translator_m0_awvalid),  //          .awvalid
-		.s0_awready  (aximaster_0_altera_axi4_master_translator_m0_awready),  //          .awready
-		.s0_wdata    (aximaster_0_altera_axi4_master_translator_m0_wdata),    //          .wdata
-		.s0_wstrb    (aximaster_0_altera_axi4_master_translator_m0_wstrb),    //          .wstrb
-		.s0_wlast    (aximaster_0_altera_axi4_master_translator_m0_wlast),    //          .wlast
-		.s0_wvalid   (aximaster_0_altera_axi4_master_translator_m0_wvalid),   //          .wvalid
-		.s0_wuser    (aximaster_0_altera_axi4_master_translator_m0_wuser),    //          .wuser
-		.s0_wready   (aximaster_0_altera_axi4_master_translator_m0_wready),   //          .wready
-		.s0_bid      (aximaster_0_altera_axi4_master_translator_m0_bid),      //          .bid
-		.s0_bresp    (aximaster_0_altera_axi4_master_translator_m0_bresp),    //          .bresp
-		.s0_buser    (aximaster_0_altera_axi4_master_translator_m0_buser),    //          .buser
-		.s0_bvalid   (aximaster_0_altera_axi4_master_translator_m0_bvalid),   //          .bvalid
-		.s0_bready   (aximaster_0_altera_axi4_master_translator_m0_bready),   //          .bready
-		.s0_arid     (aximaster_0_altera_axi4_master_translator_m0_arid),     //          .arid
-		.s0_araddr   (aximaster_0_altera_axi4_master_translator_m0_araddr),   //          .araddr
-		.s0_arlen    (aximaster_0_altera_axi4_master_translator_m0_arlen),    //          .arlen
-		.s0_arsize   (aximaster_0_altera_axi4_master_translator_m0_arsize),   //          .arsize
-		.s0_arburst  (aximaster_0_altera_axi4_master_translator_m0_arburst),  //          .arburst
-		.s0_arlock   (aximaster_0_altera_axi4_master_translator_m0_arlock),   //          .arlock
-		.s0_arcache  (aximaster_0_altera_axi4_master_translator_m0_arcache),  //          .arcache
-		.s0_arprot   (aximaster_0_altera_axi4_master_translator_m0_arprot),   //          .arprot
-		.s0_aruser   (aximaster_0_altera_axi4_master_translator_m0_aruser),   //          .aruser
-		.s0_arqos    (aximaster_0_altera_axi4_master_translator_m0_arqos),    //          .arqos
-		.s0_arregion (aximaster_0_altera_axi4_master_translator_m0_arregion), //          .arregion
-		.s0_arvalid  (aximaster_0_altera_axi4_master_translator_m0_arvalid),  //          .arvalid
-		.s0_arready  (aximaster_0_altera_axi4_master_translator_m0_arready),  //          .arready
-		.s0_rid      (aximaster_0_altera_axi4_master_translator_m0_rid),      //          .rid
-		.s0_rdata    (aximaster_0_altera_axi4_master_translator_m0_rdata),    //          .rdata
-		.s0_rresp    (aximaster_0_altera_axi4_master_translator_m0_rresp),    //          .rresp
-		.s0_rlast    (aximaster_0_altera_axi4_master_translator_m0_rlast),    //          .rlast
-		.s0_rvalid   (aximaster_0_altera_axi4_master_translator_m0_rvalid),   //          .rvalid
-		.s0_rready   (aximaster_0_altera_axi4_master_translator_m0_rready),   //          .rready
-		.s0_ruser    (aximaster_0_altera_axi4_master_translator_m0_ruser),    //          .ruser
-		.m0_awuser   (),                                                      // (terminated)
-		.m0_wuser    (),                                                      // (terminated)
-		.m0_buser    (1'b0),                                                  // (terminated)
-		.m0_aruser   (),                                                      // (terminated)
-		.m0_ruser    (1'b0),                                                  // (terminated)
-		.s0_wid      (1'b0),                                                  // (terminated)
-		.m0_wid      ()                                                       // (terminated)
+	) axi4slave5_0_altera_axi4_slave_translator (
+		.aclk        (clk_0_clk_clk),                                                   //       clk.clk
+		.aresetn     (~axi4Master2_0_reset_sink_reset_bridge_in_reset_reset),           // clk_reset.reset_n
+		.m0_awid     (axi4Slave5_0_altera_axi4_slave_awid),                             //        m0.awid
+		.m0_awaddr   (axi4Slave5_0_altera_axi4_slave_awaddr),                           //          .awaddr
+		.m0_awlen    (axi4Slave5_0_altera_axi4_slave_awlen),                            //          .awlen
+		.m0_awsize   (axi4Slave5_0_altera_axi4_slave_awsize),                           //          .awsize
+		.m0_awburst  (axi4Slave5_0_altera_axi4_slave_awburst),                          //          .awburst
+		.m0_awlock   (axi4Slave5_0_altera_axi4_slave_awlock),                           //          .awlock
+		.m0_awcache  (axi4Slave5_0_altera_axi4_slave_awcache),                          //          .awcache
+		.m0_awprot   (axi4Slave5_0_altera_axi4_slave_awprot),                           //          .awprot
+		.m0_awqos    (axi4Slave5_0_altera_axi4_slave_awqos),                            //          .awqos
+		.m0_awregion (axi4Slave5_0_altera_axi4_slave_awregion),                         //          .awregion
+		.m0_awvalid  (axi4Slave5_0_altera_axi4_slave_awvalid),                          //          .awvalid
+		.m0_awready  (axi4Slave5_0_altera_axi4_slave_awready),                          //          .awready
+		.m0_wdata    (axi4Slave5_0_altera_axi4_slave_wdata),                            //          .wdata
+		.m0_wstrb    (axi4Slave5_0_altera_axi4_slave_wstrb),                            //          .wstrb
+		.m0_wlast    (axi4Slave5_0_altera_axi4_slave_wlast),                            //          .wlast
+		.m0_wvalid   (axi4Slave5_0_altera_axi4_slave_wvalid),                           //          .wvalid
+		.m0_wready   (axi4Slave5_0_altera_axi4_slave_wready),                           //          .wready
+		.m0_bid      (axi4Slave5_0_altera_axi4_slave_bid),                              //          .bid
+		.m0_bresp    (axi4Slave5_0_altera_axi4_slave_bresp),                            //          .bresp
+		.m0_bvalid   (axi4Slave5_0_altera_axi4_slave_bvalid),                           //          .bvalid
+		.m0_bready   (axi4Slave5_0_altera_axi4_slave_bready),                           //          .bready
+		.m0_arid     (axi4Slave5_0_altera_axi4_slave_arid),                             //          .arid
+		.m0_araddr   (axi4Slave5_0_altera_axi4_slave_araddr),                           //          .araddr
+		.m0_arlen    (axi4Slave5_0_altera_axi4_slave_arlen),                            //          .arlen
+		.m0_arsize   (axi4Slave5_0_altera_axi4_slave_arsize),                           //          .arsize
+		.m0_arburst  (axi4Slave5_0_altera_axi4_slave_arburst),                          //          .arburst
+		.m0_arlock   (axi4Slave5_0_altera_axi4_slave_arlock),                           //          .arlock
+		.m0_arcache  (axi4Slave5_0_altera_axi4_slave_arcache),                          //          .arcache
+		.m0_arprot   (axi4Slave5_0_altera_axi4_slave_arprot),                           //          .arprot
+		.m0_arqos    (axi4Slave5_0_altera_axi4_slave_arqos),                            //          .arqos
+		.m0_arregion (axi4Slave5_0_altera_axi4_slave_arregion),                         //          .arregion
+		.m0_arvalid  (axi4Slave5_0_altera_axi4_slave_arvalid),                          //          .arvalid
+		.m0_arready  (axi4Slave5_0_altera_axi4_slave_arready),                          //          .arready
+		.m0_rid      (axi4Slave5_0_altera_axi4_slave_rid),                              //          .rid
+		.m0_rdata    (axi4Slave5_0_altera_axi4_slave_rdata),                            //          .rdata
+		.m0_rresp    (axi4Slave5_0_altera_axi4_slave_rresp),                            //          .rresp
+		.m0_rlast    (axi4Slave5_0_altera_axi4_slave_rlast),                            //          .rlast
+		.m0_rvalid   (axi4Slave5_0_altera_axi4_slave_rvalid),                           //          .rvalid
+		.m0_rready   (axi4Slave5_0_altera_axi4_slave_rready),                           //          .rready
+		.s0_awid     (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awid),     //        s0.awid
+		.s0_awaddr   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awaddr),   //          .awaddr
+		.s0_awlen    (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awlen),    //          .awlen
+		.s0_awsize   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awsize),   //          .awsize
+		.s0_awburst  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awburst),  //          .awburst
+		.s0_awlock   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awlock),   //          .awlock
+		.s0_awcache  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awcache),  //          .awcache
+		.s0_awprot   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awprot),   //          .awprot
+		.s0_awuser   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awuser),   //          .awuser
+		.s0_awqos    (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awqos),    //          .awqos
+		.s0_awregion (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awregion), //          .awregion
+		.s0_awvalid  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awvalid),  //          .awvalid
+		.s0_awready  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awready),  //          .awready
+		.s0_wdata    (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wdata),    //          .wdata
+		.s0_wstrb    (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wstrb),    //          .wstrb
+		.s0_wlast    (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wlast),    //          .wlast
+		.s0_wvalid   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wvalid),   //          .wvalid
+		.s0_wuser    (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wuser),    //          .wuser
+		.s0_wready   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wready),   //          .wready
+		.s0_bid      (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_bid),      //          .bid
+		.s0_bresp    (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_bresp),    //          .bresp
+		.s0_buser    (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_buser),    //          .buser
+		.s0_bvalid   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_bvalid),   //          .bvalid
+		.s0_bready   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_bready),   //          .bready
+		.s0_arid     (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arid),     //          .arid
+		.s0_araddr   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_araddr),   //          .araddr
+		.s0_arlen    (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arlen),    //          .arlen
+		.s0_arsize   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arsize),   //          .arsize
+		.s0_arburst  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arburst),  //          .arburst
+		.s0_arlock   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arlock),   //          .arlock
+		.s0_arcache  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arcache),  //          .arcache
+		.s0_arprot   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arprot),   //          .arprot
+		.s0_aruser   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_aruser),   //          .aruser
+		.s0_arqos    (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arqos),    //          .arqos
+		.s0_arregion (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arregion), //          .arregion
+		.s0_arvalid  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arvalid),  //          .arvalid
+		.s0_arready  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arready),  //          .arready
+		.s0_rid      (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rid),      //          .rid
+		.s0_rdata    (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rdata),    //          .rdata
+		.s0_rresp    (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rresp),    //          .rresp
+		.s0_rlast    (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rlast),    //          .rlast
+		.s0_rvalid   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rvalid),   //          .rvalid
+		.s0_rready   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rready),   //          .rready
+		.s0_ruser    (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_ruser),    //          .ruser
+		.m0_awuser   (),                                                                // (terminated)
+		.m0_wuser    (),                                                                // (terminated)
+		.m0_buser    (1'b0),                                                            // (terminated)
+		.m0_aruser   (),                                                                // (terminated)
+		.m0_ruser    (1'b0),                                                            // (terminated)
+		.s0_wid      (2'b00),                                                           // (terminated)
+		.m0_wid      ()                                                                 // (terminated)
+	);
+
+	altera_merlin_axi_translator #(
+		.USE_S0_AWID                       (1),
+		.USE_S0_AWREGION                   (1),
+		.USE_M0_AWREGION                   (1),
+		.USE_S0_AWLEN                      (1),
+		.USE_S0_AWSIZE                     (1),
+		.USE_S0_AWBURST                    (1),
+		.USE_S0_AWLOCK                     (1),
+		.USE_M0_AWLOCK                     (1),
+		.USE_S0_AWCACHE                    (1),
+		.USE_M0_AWCACHE                    (1),
+		.USE_M0_AWPROT                     (1),
+		.USE_S0_AWQOS                      (1),
+		.USE_M0_AWQOS                      (1),
+		.USE_S0_WSTRB                      (1),
+		.USE_M0_WLAST                      (1),
+		.USE_S0_BID                        (1),
+		.USE_S0_BRESP                      (1),
+		.USE_M0_BRESP                      (1),
+		.USE_S0_ARID                       (1),
+		.USE_S0_ARREGION                   (1),
+		.USE_M0_ARREGION                   (1),
+		.USE_S0_ARLEN                      (1),
+		.USE_S0_ARSIZE                     (1),
+		.USE_S0_ARBURST                    (1),
+		.USE_S0_ARLOCK                     (1),
+		.USE_M0_ARLOCK                     (1),
+		.USE_M0_ARCACHE                    (1),
+		.USE_M0_ARQOS                      (1),
+		.USE_M0_ARPROT                     (1),
+		.USE_S0_ARCACHE                    (1),
+		.USE_S0_ARQOS                      (1),
+		.USE_S0_RID                        (1),
+		.USE_S0_RRESP                      (1),
+		.USE_M0_RRESP                      (1),
+		.USE_S0_RLAST                      (1),
+		.M0_ID_WIDTH                       (2),
+		.DATA_WIDTH                        (128),
+		.S0_ID_WIDTH                       (2),
+		.M0_ADDR_WIDTH                     (13),
+		.S0_WRITE_ADDR_USER_WIDTH          (1),
+		.S0_READ_ADDR_USER_WIDTH           (1),
+		.M0_WRITE_ADDR_USER_WIDTH          (1),
+		.M0_READ_ADDR_USER_WIDTH           (1),
+		.S0_WRITE_DATA_USER_WIDTH          (1),
+		.S0_WRITE_RESPONSE_DATA_USER_WIDTH (1),
+		.S0_READ_DATA_USER_WIDTH           (1),
+		.M0_WRITE_DATA_USER_WIDTH          (1),
+		.M0_WRITE_RESPONSE_DATA_USER_WIDTH (1),
+		.M0_READ_DATA_USER_WIDTH           (1),
+		.S0_ADDR_WIDTH                     (13),
+		.USE_S0_AWUSER                     (1),
+		.USE_S0_ARUSER                     (1),
+		.USE_S0_WUSER                      (1),
+		.USE_S0_RUSER                      (1),
+		.USE_S0_BUSER                      (1),
+		.USE_M0_AWUSER                     (0),
+		.USE_M0_ARUSER                     (0),
+		.USE_M0_WUSER                      (0),
+		.USE_M0_RUSER                      (0),
+		.USE_M0_BUSER                      (0),
+		.M0_AXI_VERSION                    ("AXI4"),
+		.M0_BURST_LENGTH_WIDTH             (8),
+		.S0_BURST_LENGTH_WIDTH             (8),
+		.M0_LOCK_WIDTH                     (1),
+		.S0_LOCK_WIDTH                     (1),
+		.S0_AXI_VERSION                    ("AXI4")
+	) axi4slave7_0_altera_axi4_slave_translator (
+		.aclk        (clk_0_clk_clk),                                                   //       clk.clk
+		.aresetn     (~axi4Master2_0_reset_sink_reset_bridge_in_reset_reset),           // clk_reset.reset_n
+		.m0_awid     (axi4Slave7_0_altera_axi4_slave_awid),                             //        m0.awid
+		.m0_awaddr   (axi4Slave7_0_altera_axi4_slave_awaddr),                           //          .awaddr
+		.m0_awlen    (axi4Slave7_0_altera_axi4_slave_awlen),                            //          .awlen
+		.m0_awsize   (axi4Slave7_0_altera_axi4_slave_awsize),                           //          .awsize
+		.m0_awburst  (axi4Slave7_0_altera_axi4_slave_awburst),                          //          .awburst
+		.m0_awlock   (axi4Slave7_0_altera_axi4_slave_awlock),                           //          .awlock
+		.m0_awcache  (axi4Slave7_0_altera_axi4_slave_awcache),                          //          .awcache
+		.m0_awprot   (axi4Slave7_0_altera_axi4_slave_awprot),                           //          .awprot
+		.m0_awqos    (axi4Slave7_0_altera_axi4_slave_awqos),                            //          .awqos
+		.m0_awregion (axi4Slave7_0_altera_axi4_slave_awregion),                         //          .awregion
+		.m0_awvalid  (axi4Slave7_0_altera_axi4_slave_awvalid),                          //          .awvalid
+		.m0_awready  (axi4Slave7_0_altera_axi4_slave_awready),                          //          .awready
+		.m0_wdata    (axi4Slave7_0_altera_axi4_slave_wdata),                            //          .wdata
+		.m0_wstrb    (axi4Slave7_0_altera_axi4_slave_wstrb),                            //          .wstrb
+		.m0_wlast    (axi4Slave7_0_altera_axi4_slave_wlast),                            //          .wlast
+		.m0_wvalid   (axi4Slave7_0_altera_axi4_slave_wvalid),                           //          .wvalid
+		.m0_wready   (axi4Slave7_0_altera_axi4_slave_wready),                           //          .wready
+		.m0_bid      (axi4Slave7_0_altera_axi4_slave_bid),                              //          .bid
+		.m0_bresp    (axi4Slave7_0_altera_axi4_slave_bresp),                            //          .bresp
+		.m0_bvalid   (axi4Slave7_0_altera_axi4_slave_bvalid),                           //          .bvalid
+		.m0_bready   (axi4Slave7_0_altera_axi4_slave_bready),                           //          .bready
+		.m0_arid     (axi4Slave7_0_altera_axi4_slave_arid),                             //          .arid
+		.m0_araddr   (axi4Slave7_0_altera_axi4_slave_araddr),                           //          .araddr
+		.m0_arlen    (axi4Slave7_0_altera_axi4_slave_arlen),                            //          .arlen
+		.m0_arsize   (axi4Slave7_0_altera_axi4_slave_arsize),                           //          .arsize
+		.m0_arburst  (axi4Slave7_0_altera_axi4_slave_arburst),                          //          .arburst
+		.m0_arlock   (axi4Slave7_0_altera_axi4_slave_arlock),                           //          .arlock
+		.m0_arcache  (axi4Slave7_0_altera_axi4_slave_arcache),                          //          .arcache
+		.m0_arprot   (axi4Slave7_0_altera_axi4_slave_arprot),                           //          .arprot
+		.m0_arqos    (axi4Slave7_0_altera_axi4_slave_arqos),                            //          .arqos
+		.m0_arregion (axi4Slave7_0_altera_axi4_slave_arregion),                         //          .arregion
+		.m0_arvalid  (axi4Slave7_0_altera_axi4_slave_arvalid),                          //          .arvalid
+		.m0_arready  (axi4Slave7_0_altera_axi4_slave_arready),                          //          .arready
+		.m0_rid      (axi4Slave7_0_altera_axi4_slave_rid),                              //          .rid
+		.m0_rdata    (axi4Slave7_0_altera_axi4_slave_rdata),                            //          .rdata
+		.m0_rresp    (axi4Slave7_0_altera_axi4_slave_rresp),                            //          .rresp
+		.m0_rlast    (axi4Slave7_0_altera_axi4_slave_rlast),                            //          .rlast
+		.m0_rvalid   (axi4Slave7_0_altera_axi4_slave_rvalid),                           //          .rvalid
+		.m0_rready   (axi4Slave7_0_altera_axi4_slave_rready),                           //          .rready
+		.s0_awid     (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awid),     //        s0.awid
+		.s0_awaddr   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awaddr),   //          .awaddr
+		.s0_awlen    (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awlen),    //          .awlen
+		.s0_awsize   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awsize),   //          .awsize
+		.s0_awburst  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awburst),  //          .awburst
+		.s0_awlock   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awlock),   //          .awlock
+		.s0_awcache  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awcache),  //          .awcache
+		.s0_awprot   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awprot),   //          .awprot
+		.s0_awuser   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awuser),   //          .awuser
+		.s0_awqos    (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awqos),    //          .awqos
+		.s0_awregion (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awregion), //          .awregion
+		.s0_awvalid  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awvalid),  //          .awvalid
+		.s0_awready  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awready),  //          .awready
+		.s0_wdata    (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wdata),    //          .wdata
+		.s0_wstrb    (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wstrb),    //          .wstrb
+		.s0_wlast    (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wlast),    //          .wlast
+		.s0_wvalid   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wvalid),   //          .wvalid
+		.s0_wuser    (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wuser),    //          .wuser
+		.s0_wready   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wready),   //          .wready
+		.s0_bid      (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_bid),      //          .bid
+		.s0_bresp    (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_bresp),    //          .bresp
+		.s0_buser    (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_buser),    //          .buser
+		.s0_bvalid   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_bvalid),   //          .bvalid
+		.s0_bready   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_bready),   //          .bready
+		.s0_arid     (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arid),     //          .arid
+		.s0_araddr   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_araddr),   //          .araddr
+		.s0_arlen    (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arlen),    //          .arlen
+		.s0_arsize   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arsize),   //          .arsize
+		.s0_arburst  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arburst),  //          .arburst
+		.s0_arlock   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arlock),   //          .arlock
+		.s0_arcache  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arcache),  //          .arcache
+		.s0_arprot   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arprot),   //          .arprot
+		.s0_aruser   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_aruser),   //          .aruser
+		.s0_arqos    (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arqos),    //          .arqos
+		.s0_arregion (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arregion), //          .arregion
+		.s0_arvalid  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arvalid),  //          .arvalid
+		.s0_arready  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arready),  //          .arready
+		.s0_rid      (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rid),      //          .rid
+		.s0_rdata    (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rdata),    //          .rdata
+		.s0_rresp    (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rresp),    //          .rresp
+		.s0_rlast    (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rlast),    //          .rlast
+		.s0_rvalid   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rvalid),   //          .rvalid
+		.s0_rready   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rready),   //          .rready
+		.s0_ruser    (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_ruser),    //          .ruser
+		.m0_awuser   (),                                                                // (terminated)
+		.m0_wuser    (),                                                                // (terminated)
+		.m0_buser    (1'b0),                                                            // (terminated)
+		.m0_aruser   (),                                                                // (terminated)
+		.m0_ruser    (1'b0),                                                            // (terminated)
+		.s0_wid      (2'b00),                                                           // (terminated)
+		.m0_wid      ()                                                                 // (terminated)
+	);
+
+	altera_merlin_axi_master_ni #(
+		.ID_WIDTH                  (1),
+		.ADDR_WIDTH                (14),
+		.RDATA_WIDTH               (128),
+		.WDATA_WIDTH               (128),
+		.ADDR_USER_WIDTH           (1),
+		.DATA_USER_WIDTH           (1),
+		.AXI_BURST_LENGTH_WIDTH    (8),
+		.AXI_LOCK_WIDTH            (1),
+		.AXI_VERSION               ("AXI4"),
+		.WRITE_ISSUING_CAPABILITY  (1),
+		.READ_ISSUING_CAPABILITY   (1),
+		.PKT_BEGIN_BURST           (193),
+		.PKT_CACHE_H               (207),
+		.PKT_CACHE_L               (204),
+		.PKT_ADDR_SIDEBAND_H       (191),
+		.PKT_ADDR_SIDEBAND_L       (191),
+		.PKT_PROTECTION_H          (203),
+		.PKT_PROTECTION_L          (201),
+		.PKT_BURST_SIZE_H          (188),
+		.PKT_BURST_SIZE_L          (186),
+		.PKT_BURST_TYPE_H          (190),
+		.PKT_BURST_TYPE_L          (189),
+		.PKT_RESPONSE_STATUS_L     (208),
+		.PKT_RESPONSE_STATUS_H     (209),
+		.PKT_BURSTWRAP_H           (185),
+		.PKT_BURSTWRAP_L           (177),
+		.PKT_BYTE_CNT_H            (176),
+		.PKT_BYTE_CNT_L            (164),
+		.PKT_ADDR_H                (157),
+		.PKT_ADDR_L                (144),
+		.PKT_TRANS_EXCLUSIVE       (163),
+		.PKT_TRANS_LOCK            (162),
+		.PKT_TRANS_COMPRESSED_READ (158),
+		.PKT_TRANS_POSTED          (159),
+		.PKT_TRANS_WRITE           (160),
+		.PKT_TRANS_READ            (161),
+		.PKT_DATA_H                (127),
+		.PKT_DATA_L                (0),
+		.PKT_BYTEEN_H              (143),
+		.PKT_BYTEEN_L              (128),
+		.PKT_SRC_ID_H              (198),
+		.PKT_SRC_ID_L              (198),
+		.PKT_DEST_ID_H             (199),
+		.PKT_DEST_ID_L             (199),
+		.PKT_THREAD_ID_H           (200),
+		.PKT_THREAD_ID_L           (200),
+		.PKT_QOS_L                 (194),
+		.PKT_QOS_H                 (197),
+		.PKT_ORI_BURST_SIZE_L      (210),
+		.PKT_ORI_BURST_SIZE_H      (212),
+		.PKT_DATA_SIDEBAND_H       (192),
+		.PKT_DATA_SIDEBAND_L       (192),
+		.ST_DATA_W                 (213),
+		.ST_CHANNEL_W              (4),
+		.ID                        (1)
+	) axi4master2_0_altera_axi4_master_agent (
+		.aclk                   (clk_0_clk_clk),                                                 //              clk.clk
+		.aresetn                (~axi4Master2_0_reset_sink_reset_bridge_in_reset_reset),         //        clk_reset.reset_n
+		.write_cp_valid         (axi4master2_0_altera_axi4_master_agent_write_cp_valid),         //         write_cp.valid
+		.write_cp_data          (axi4master2_0_altera_axi4_master_agent_write_cp_data),          //                 .data
+		.write_cp_startofpacket (axi4master2_0_altera_axi4_master_agent_write_cp_startofpacket), //                 .startofpacket
+		.write_cp_endofpacket   (axi4master2_0_altera_axi4_master_agent_write_cp_endofpacket),   //                 .endofpacket
+		.write_cp_ready         (axi4master2_0_altera_axi4_master_agent_write_cp_ready),         //                 .ready
+		.write_rp_valid         (rsp_mux_src_valid),                                             //         write_rp.valid
+		.write_rp_data          (rsp_mux_src_data),                                              //                 .data
+		.write_rp_channel       (rsp_mux_src_channel),                                           //                 .channel
+		.write_rp_startofpacket (rsp_mux_src_startofpacket),                                     //                 .startofpacket
+		.write_rp_endofpacket   (rsp_mux_src_endofpacket),                                       //                 .endofpacket
+		.write_rp_ready         (rsp_mux_src_ready),                                             //                 .ready
+		.read_cp_valid          (axi4master2_0_altera_axi4_master_agent_read_cp_valid),          //          read_cp.valid
+		.read_cp_data           (axi4master2_0_altera_axi4_master_agent_read_cp_data),           //                 .data
+		.read_cp_startofpacket  (axi4master2_0_altera_axi4_master_agent_read_cp_startofpacket),  //                 .startofpacket
+		.read_cp_endofpacket    (axi4master2_0_altera_axi4_master_agent_read_cp_endofpacket),    //                 .endofpacket
+		.read_cp_ready          (axi4master2_0_altera_axi4_master_agent_read_cp_ready),          //                 .ready
+		.read_rp_valid          (rsp_mux_001_src_valid),                                         //          read_rp.valid
+		.read_rp_data           (rsp_mux_001_src_data),                                          //                 .data
+		.read_rp_channel        (rsp_mux_001_src_channel),                                       //                 .channel
+		.read_rp_startofpacket  (rsp_mux_001_src_startofpacket),                                 //                 .startofpacket
+		.read_rp_endofpacket    (rsp_mux_001_src_endofpacket),                                   //                 .endofpacket
+		.read_rp_ready          (rsp_mux_001_src_ready),                                         //                 .ready
+		.awid                   (axi4master2_0_altera_axi4_master_translator_m0_awid),           // altera_axi_slave.awid
+		.awaddr                 (axi4master2_0_altera_axi4_master_translator_m0_awaddr),         //                 .awaddr
+		.awlen                  (axi4master2_0_altera_axi4_master_translator_m0_awlen),          //                 .awlen
+		.awsize                 (axi4master2_0_altera_axi4_master_translator_m0_awsize),         //                 .awsize
+		.awburst                (axi4master2_0_altera_axi4_master_translator_m0_awburst),        //                 .awburst
+		.awlock                 (axi4master2_0_altera_axi4_master_translator_m0_awlock),         //                 .awlock
+		.awcache                (axi4master2_0_altera_axi4_master_translator_m0_awcache),        //                 .awcache
+		.awprot                 (axi4master2_0_altera_axi4_master_translator_m0_awprot),         //                 .awprot
+		.awuser                 (axi4master2_0_altera_axi4_master_translator_m0_awuser),         //                 .awuser
+		.awqos                  (axi4master2_0_altera_axi4_master_translator_m0_awqos),          //                 .awqos
+		.awregion               (axi4master2_0_altera_axi4_master_translator_m0_awregion),       //                 .awregion
+		.awvalid                (axi4master2_0_altera_axi4_master_translator_m0_awvalid),        //                 .awvalid
+		.awready                (axi4master2_0_altera_axi4_master_translator_m0_awready),        //                 .awready
+		.wdata                  (axi4master2_0_altera_axi4_master_translator_m0_wdata),          //                 .wdata
+		.wstrb                  (axi4master2_0_altera_axi4_master_translator_m0_wstrb),          //                 .wstrb
+		.wlast                  (axi4master2_0_altera_axi4_master_translator_m0_wlast),          //                 .wlast
+		.wvalid                 (axi4master2_0_altera_axi4_master_translator_m0_wvalid),         //                 .wvalid
+		.wuser                  (axi4master2_0_altera_axi4_master_translator_m0_wuser),          //                 .wuser
+		.wready                 (axi4master2_0_altera_axi4_master_translator_m0_wready),         //                 .wready
+		.bid                    (axi4master2_0_altera_axi4_master_translator_m0_bid),            //                 .bid
+		.bresp                  (axi4master2_0_altera_axi4_master_translator_m0_bresp),          //                 .bresp
+		.buser                  (axi4master2_0_altera_axi4_master_translator_m0_buser),          //                 .buser
+		.bvalid                 (axi4master2_0_altera_axi4_master_translator_m0_bvalid),         //                 .bvalid
+		.bready                 (axi4master2_0_altera_axi4_master_translator_m0_bready),         //                 .bready
+		.arid                   (axi4master2_0_altera_axi4_master_translator_m0_arid),           //                 .arid
+		.araddr                 (axi4master2_0_altera_axi4_master_translator_m0_araddr),         //                 .araddr
+		.arlen                  (axi4master2_0_altera_axi4_master_translator_m0_arlen),          //                 .arlen
+		.arsize                 (axi4master2_0_altera_axi4_master_translator_m0_arsize),         //                 .arsize
+		.arburst                (axi4master2_0_altera_axi4_master_translator_m0_arburst),        //                 .arburst
+		.arlock                 (axi4master2_0_altera_axi4_master_translator_m0_arlock),         //                 .arlock
+		.arcache                (axi4master2_0_altera_axi4_master_translator_m0_arcache),        //                 .arcache
+		.arprot                 (axi4master2_0_altera_axi4_master_translator_m0_arprot),         //                 .arprot
+		.aruser                 (axi4master2_0_altera_axi4_master_translator_m0_aruser),         //                 .aruser
+		.arqos                  (axi4master2_0_altera_axi4_master_translator_m0_arqos),          //                 .arqos
+		.arregion               (axi4master2_0_altera_axi4_master_translator_m0_arregion),       //                 .arregion
+		.arvalid                (axi4master2_0_altera_axi4_master_translator_m0_arvalid),        //                 .arvalid
+		.arready                (axi4master2_0_altera_axi4_master_translator_m0_arready),        //                 .arready
+		.rid                    (axi4master2_0_altera_axi4_master_translator_m0_rid),            //                 .rid
+		.rdata                  (axi4master2_0_altera_axi4_master_translator_m0_rdata),          //                 .rdata
+		.rresp                  (axi4master2_0_altera_axi4_master_translator_m0_rresp),          //                 .rresp
+		.rlast                  (axi4master2_0_altera_axi4_master_translator_m0_rlast),          //                 .rlast
+		.rvalid                 (axi4master2_0_altera_axi4_master_translator_m0_rvalid),         //                 .rvalid
+		.rready                 (axi4master2_0_altera_axi4_master_translator_m0_rready),         //                 .rready
+		.ruser                  (axi4master2_0_altera_axi4_master_translator_m0_ruser),          //                 .ruser
+		.wid                    (1'b0)                                                           //      (terminated)
+	);
+
+	altera_merlin_axi_master_ni #(
+		.ID_WIDTH                  (1),
+		.ADDR_WIDTH                (14),
+		.RDATA_WIDTH               (128),
+		.WDATA_WIDTH               (128),
+		.ADDR_USER_WIDTH           (1),
+		.DATA_USER_WIDTH           (1),
+		.AXI_BURST_LENGTH_WIDTH    (8),
+		.AXI_LOCK_WIDTH            (1),
+		.AXI_VERSION               ("AXI4"),
+		.WRITE_ISSUING_CAPABILITY  (1),
+		.READ_ISSUING_CAPABILITY   (1),
+		.PKT_BEGIN_BURST           (193),
+		.PKT_CACHE_H               (207),
+		.PKT_CACHE_L               (204),
+		.PKT_ADDR_SIDEBAND_H       (191),
+		.PKT_ADDR_SIDEBAND_L       (191),
+		.PKT_PROTECTION_H          (203),
+		.PKT_PROTECTION_L          (201),
+		.PKT_BURST_SIZE_H          (188),
+		.PKT_BURST_SIZE_L          (186),
+		.PKT_BURST_TYPE_H          (190),
+		.PKT_BURST_TYPE_L          (189),
+		.PKT_RESPONSE_STATUS_L     (208),
+		.PKT_RESPONSE_STATUS_H     (209),
+		.PKT_BURSTWRAP_H           (185),
+		.PKT_BURSTWRAP_L           (177),
+		.PKT_BYTE_CNT_H            (176),
+		.PKT_BYTE_CNT_L            (164),
+		.PKT_ADDR_H                (157),
+		.PKT_ADDR_L                (144),
+		.PKT_TRANS_EXCLUSIVE       (163),
+		.PKT_TRANS_LOCK            (162),
+		.PKT_TRANS_COMPRESSED_READ (158),
+		.PKT_TRANS_POSTED          (159),
+		.PKT_TRANS_WRITE           (160),
+		.PKT_TRANS_READ            (161),
+		.PKT_DATA_H                (127),
+		.PKT_DATA_L                (0),
+		.PKT_BYTEEN_H              (143),
+		.PKT_BYTEEN_L              (128),
+		.PKT_SRC_ID_H              (198),
+		.PKT_SRC_ID_L              (198),
+		.PKT_DEST_ID_H             (199),
+		.PKT_DEST_ID_L             (199),
+		.PKT_THREAD_ID_H           (200),
+		.PKT_THREAD_ID_L           (200),
+		.PKT_QOS_L                 (194),
+		.PKT_QOS_H                 (197),
+		.PKT_ORI_BURST_SIZE_L      (210),
+		.PKT_ORI_BURST_SIZE_H      (212),
+		.PKT_DATA_SIDEBAND_H       (192),
+		.PKT_DATA_SIDEBAND_L       (192),
+		.ST_DATA_W                 (213),
+		.ST_CHANNEL_W              (4),
+		.ID                        (0)
+	) axi4master1_0_altera_axi4_master_agent (
+		.aclk                   (clk_0_clk_clk),                                                 //              clk.clk
+		.aresetn                (~axi4Master2_0_reset_sink_reset_bridge_in_reset_reset),         //        clk_reset.reset_n
+		.write_cp_valid         (axi4master1_0_altera_axi4_master_agent_write_cp_valid),         //         write_cp.valid
+		.write_cp_data          (axi4master1_0_altera_axi4_master_agent_write_cp_data),          //                 .data
+		.write_cp_startofpacket (axi4master1_0_altera_axi4_master_agent_write_cp_startofpacket), //                 .startofpacket
+		.write_cp_endofpacket   (axi4master1_0_altera_axi4_master_agent_write_cp_endofpacket),   //                 .endofpacket
+		.write_cp_ready         (axi4master1_0_altera_axi4_master_agent_write_cp_ready),         //                 .ready
+		.write_rp_valid         (rsp_mux_002_src_valid),                                         //         write_rp.valid
+		.write_rp_data          (rsp_mux_002_src_data),                                          //                 .data
+		.write_rp_channel       (rsp_mux_002_src_channel),                                       //                 .channel
+		.write_rp_startofpacket (rsp_mux_002_src_startofpacket),                                 //                 .startofpacket
+		.write_rp_endofpacket   (rsp_mux_002_src_endofpacket),                                   //                 .endofpacket
+		.write_rp_ready         (rsp_mux_002_src_ready),                                         //                 .ready
+		.read_cp_valid          (axi4master1_0_altera_axi4_master_agent_read_cp_valid),          //          read_cp.valid
+		.read_cp_data           (axi4master1_0_altera_axi4_master_agent_read_cp_data),           //                 .data
+		.read_cp_startofpacket  (axi4master1_0_altera_axi4_master_agent_read_cp_startofpacket),  //                 .startofpacket
+		.read_cp_endofpacket    (axi4master1_0_altera_axi4_master_agent_read_cp_endofpacket),    //                 .endofpacket
+		.read_cp_ready          (axi4master1_0_altera_axi4_master_agent_read_cp_ready),          //                 .ready
+		.read_rp_valid          (rsp_mux_003_src_valid),                                         //          read_rp.valid
+		.read_rp_data           (rsp_mux_003_src_data),                                          //                 .data
+		.read_rp_channel        (rsp_mux_003_src_channel),                                       //                 .channel
+		.read_rp_startofpacket  (rsp_mux_003_src_startofpacket),                                 //                 .startofpacket
+		.read_rp_endofpacket    (rsp_mux_003_src_endofpacket),                                   //                 .endofpacket
+		.read_rp_ready          (rsp_mux_003_src_ready),                                         //                 .ready
+		.awid                   (axi4master1_0_altera_axi4_master_translator_m0_awid),           // altera_axi_slave.awid
+		.awaddr                 (axi4master1_0_altera_axi4_master_translator_m0_awaddr),         //                 .awaddr
+		.awlen                  (axi4master1_0_altera_axi4_master_translator_m0_awlen),          //                 .awlen
+		.awsize                 (axi4master1_0_altera_axi4_master_translator_m0_awsize),         //                 .awsize
+		.awburst                (axi4master1_0_altera_axi4_master_translator_m0_awburst),        //                 .awburst
+		.awlock                 (axi4master1_0_altera_axi4_master_translator_m0_awlock),         //                 .awlock
+		.awcache                (axi4master1_0_altera_axi4_master_translator_m0_awcache),        //                 .awcache
+		.awprot                 (axi4master1_0_altera_axi4_master_translator_m0_awprot),         //                 .awprot
+		.awuser                 (axi4master1_0_altera_axi4_master_translator_m0_awuser),         //                 .awuser
+		.awqos                  (axi4master1_0_altera_axi4_master_translator_m0_awqos),          //                 .awqos
+		.awregion               (axi4master1_0_altera_axi4_master_translator_m0_awregion),       //                 .awregion
+		.awvalid                (axi4master1_0_altera_axi4_master_translator_m0_awvalid),        //                 .awvalid
+		.awready                (axi4master1_0_altera_axi4_master_translator_m0_awready),        //                 .awready
+		.wdata                  (axi4master1_0_altera_axi4_master_translator_m0_wdata),          //                 .wdata
+		.wstrb                  (axi4master1_0_altera_axi4_master_translator_m0_wstrb),          //                 .wstrb
+		.wlast                  (axi4master1_0_altera_axi4_master_translator_m0_wlast),          //                 .wlast
+		.wvalid                 (axi4master1_0_altera_axi4_master_translator_m0_wvalid),         //                 .wvalid
+		.wuser                  (axi4master1_0_altera_axi4_master_translator_m0_wuser),          //                 .wuser
+		.wready                 (axi4master1_0_altera_axi4_master_translator_m0_wready),         //                 .wready
+		.bid                    (axi4master1_0_altera_axi4_master_translator_m0_bid),            //                 .bid
+		.bresp                  (axi4master1_0_altera_axi4_master_translator_m0_bresp),          //                 .bresp
+		.buser                  (axi4master1_0_altera_axi4_master_translator_m0_buser),          //                 .buser
+		.bvalid                 (axi4master1_0_altera_axi4_master_translator_m0_bvalid),         //                 .bvalid
+		.bready                 (axi4master1_0_altera_axi4_master_translator_m0_bready),         //                 .bready
+		.arid                   (axi4master1_0_altera_axi4_master_translator_m0_arid),           //                 .arid
+		.araddr                 (axi4master1_0_altera_axi4_master_translator_m0_araddr),         //                 .araddr
+		.arlen                  (axi4master1_0_altera_axi4_master_translator_m0_arlen),          //                 .arlen
+		.arsize                 (axi4master1_0_altera_axi4_master_translator_m0_arsize),         //                 .arsize
+		.arburst                (axi4master1_0_altera_axi4_master_translator_m0_arburst),        //                 .arburst
+		.arlock                 (axi4master1_0_altera_axi4_master_translator_m0_arlock),         //                 .arlock
+		.arcache                (axi4master1_0_altera_axi4_master_translator_m0_arcache),        //                 .arcache
+		.arprot                 (axi4master1_0_altera_axi4_master_translator_m0_arprot),         //                 .arprot
+		.aruser                 (axi4master1_0_altera_axi4_master_translator_m0_aruser),         //                 .aruser
+		.arqos                  (axi4master1_0_altera_axi4_master_translator_m0_arqos),          //                 .arqos
+		.arregion               (axi4master1_0_altera_axi4_master_translator_m0_arregion),       //                 .arregion
+		.arvalid                (axi4master1_0_altera_axi4_master_translator_m0_arvalid),        //                 .arvalid
+		.arready                (axi4master1_0_altera_axi4_master_translator_m0_arready),        //                 .arready
+		.rid                    (axi4master1_0_altera_axi4_master_translator_m0_rid),            //                 .rid
+		.rdata                  (axi4master1_0_altera_axi4_master_translator_m0_rdata),          //                 .rdata
+		.rresp                  (axi4master1_0_altera_axi4_master_translator_m0_rresp),          //                 .rresp
+		.rlast                  (axi4master1_0_altera_axi4_master_translator_m0_rlast),          //                 .rlast
+		.rvalid                 (axi4master1_0_altera_axi4_master_translator_m0_rvalid),         //                 .rvalid
+		.rready                 (axi4master1_0_altera_axi4_master_translator_m0_rready),         //                 .rready
+		.ruser                  (axi4master1_0_altera_axi4_master_translator_m0_ruser),          //                 .ruser
+		.wid                    (1'b0)                                                           //      (terminated)
+	);
+
+	altera_merlin_axi_slave_ni #(
+		.PKT_QOS_H                   (197),
+		.PKT_QOS_L                   (194),
+		.PKT_THREAD_ID_H             (200),
+		.PKT_THREAD_ID_L             (200),
+		.PKT_RESPONSE_STATUS_H       (209),
+		.PKT_RESPONSE_STATUS_L       (208),
+		.PKT_BEGIN_BURST             (193),
+		.PKT_CACHE_H                 (207),
+		.PKT_CACHE_L                 (204),
+		.PKT_DATA_SIDEBAND_H         (192),
+		.PKT_DATA_SIDEBAND_L         (192),
+		.PKT_ADDR_SIDEBAND_H         (191),
+		.PKT_ADDR_SIDEBAND_L         (191),
+		.PKT_BURST_TYPE_H            (190),
+		.PKT_BURST_TYPE_L            (189),
+		.PKT_PROTECTION_H            (203),
+		.PKT_PROTECTION_L            (201),
+		.PKT_BURST_SIZE_H            (188),
+		.PKT_BURST_SIZE_L            (186),
+		.PKT_BURSTWRAP_H             (185),
+		.PKT_BURSTWRAP_L             (177),
+		.PKT_BYTE_CNT_H              (176),
+		.PKT_BYTE_CNT_L              (164),
+		.PKT_ADDR_H                  (157),
+		.PKT_ADDR_L                  (144),
+		.PKT_TRANS_EXCLUSIVE         (163),
+		.PKT_TRANS_LOCK              (162),
+		.PKT_TRANS_COMPRESSED_READ   (158),
+		.PKT_TRANS_POSTED            (159),
+		.PKT_TRANS_WRITE             (160),
+		.PKT_TRANS_READ              (161),
+		.PKT_DATA_H                  (127),
+		.PKT_DATA_L                  (0),
+		.PKT_BYTEEN_H                (143),
+		.PKT_BYTEEN_L                (128),
+		.PKT_SRC_ID_H                (198),
+		.PKT_SRC_ID_L                (198),
+		.PKT_DEST_ID_H               (199),
+		.PKT_DEST_ID_L               (199),
+		.PKT_ORI_BURST_SIZE_L        (210),
+		.PKT_ORI_BURST_SIZE_H        (212),
+		.ADDR_USER_WIDTH             (1),
+		.DATA_USER_WIDTH             (1),
+		.ST_DATA_W                   (213),
+		.ADDR_WIDTH                  (13),
+		.RDATA_WIDTH                 (128),
+		.WDATA_WIDTH                 (128),
+		.ST_CHANNEL_W                (4),
+		.AXI_SLAVE_ID_W              (2),
+		.PASS_ID_TO_SLAVE            (1),
+		.AXI_VERSION                 ("AXI4"),
+		.WRITE_ACCEPTANCE_CAPABILITY (1),
+		.READ_ACCEPTANCE_CAPABILITY  (1)
+	) axi4slave5_0_altera_axi4_slave_agent (
+		.aclk                   (clk_0_clk_clk),                                                   //        clock_sink.clk
+		.aresetn                (~axi4Master2_0_reset_sink_reset_bridge_in_reset_reset),           //        reset_sink.reset_n
+		.read_cp_valid          (cmd_mux_001_src_valid),                                           //           read_cp.valid
+		.read_cp_ready          (cmd_mux_001_src_ready),                                           //                  .ready
+		.read_cp_data           (cmd_mux_001_src_data),                                            //                  .data
+		.read_cp_channel        (cmd_mux_001_src_channel),                                         //                  .channel
+		.read_cp_startofpacket  (cmd_mux_001_src_startofpacket),                                   //                  .startofpacket
+		.read_cp_endofpacket    (cmd_mux_001_src_endofpacket),                                     //                  .endofpacket
+		.write_cp_ready         (cmd_mux_src_ready),                                               //          write_cp.ready
+		.write_cp_valid         (cmd_mux_src_valid),                                               //                  .valid
+		.write_cp_data          (cmd_mux_src_data),                                                //                  .data
+		.write_cp_channel       (cmd_mux_src_channel),                                             //                  .channel
+		.write_cp_startofpacket (cmd_mux_src_startofpacket),                                       //                  .startofpacket
+		.write_cp_endofpacket   (cmd_mux_src_endofpacket),                                         //                  .endofpacket
+		.read_rp_ready          (axi4slave5_0_altera_axi4_slave_agent_read_rp_ready),              //           read_rp.ready
+		.read_rp_valid          (axi4slave5_0_altera_axi4_slave_agent_read_rp_valid),              //                  .valid
+		.read_rp_data           (axi4slave5_0_altera_axi4_slave_agent_read_rp_data),               //                  .data
+		.read_rp_startofpacket  (axi4slave5_0_altera_axi4_slave_agent_read_rp_startofpacket),      //                  .startofpacket
+		.read_rp_endofpacket    (axi4slave5_0_altera_axi4_slave_agent_read_rp_endofpacket),        //                  .endofpacket
+		.write_rp_ready         (axi4slave5_0_altera_axi4_slave_agent_write_rp_ready),             //          write_rp.ready
+		.write_rp_valid         (axi4slave5_0_altera_axi4_slave_agent_write_rp_valid),             //                  .valid
+		.write_rp_data          (axi4slave5_0_altera_axi4_slave_agent_write_rp_data),              //                  .data
+		.write_rp_startofpacket (axi4slave5_0_altera_axi4_slave_agent_write_rp_startofpacket),     //                  .startofpacket
+		.write_rp_endofpacket   (axi4slave5_0_altera_axi4_slave_agent_write_rp_endofpacket),       //                  .endofpacket
+		.awid                   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awid),     // altera_axi_master.awid
+		.awaddr                 (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awaddr),   //                  .awaddr
+		.awlen                  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awlen),    //                  .awlen
+		.awsize                 (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awsize),   //                  .awsize
+		.awburst                (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awburst),  //                  .awburst
+		.awlock                 (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awlock),   //                  .awlock
+		.awcache                (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awcache),  //                  .awcache
+		.awprot                 (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awprot),   //                  .awprot
+		.awuser                 (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awuser),   //                  .awuser
+		.awvalid                (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awvalid),  //                  .awvalid
+		.awready                (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awready),  //                  .awready
+		.wdata                  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wdata),    //                  .wdata
+		.wstrb                  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wstrb),    //                  .wstrb
+		.wlast                  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wlast),    //                  .wlast
+		.wvalid                 (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wvalid),   //                  .wvalid
+		.wready                 (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wready),   //                  .wready
+		.bid                    (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_bid),      //                  .bid
+		.bresp                  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_bresp),    //                  .bresp
+		.bvalid                 (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_bvalid),   //                  .bvalid
+		.bready                 (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_bready),   //                  .bready
+		.arid                   (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arid),     //                  .arid
+		.araddr                 (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_araddr),   //                  .araddr
+		.arlen                  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arlen),    //                  .arlen
+		.arsize                 (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arsize),   //                  .arsize
+		.arburst                (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arburst),  //                  .arburst
+		.arlock                 (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arlock),   //                  .arlock
+		.arcache                (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arcache),  //                  .arcache
+		.arprot                 (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arprot),   //                  .arprot
+		.aruser                 (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_aruser),   //                  .aruser
+		.arvalid                (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arvalid),  //                  .arvalid
+		.arready                (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arready),  //                  .arready
+		.rid                    (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rid),      //                  .rid
+		.rdata                  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rdata),    //                  .rdata
+		.rresp                  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rresp),    //                  .rresp
+		.rlast                  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rlast),    //                  .rlast
+		.rvalid                 (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rvalid),   //                  .rvalid
+		.rready                 (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_rready),   //                  .rready
+		.wuser                  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_wuser),    //                  .wuser
+		.awqos                  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awqos),    //                  .awqos
+		.awregion               (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_awregion), //                  .awregion
+		.ruser                  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_ruser),    //                  .ruser
+		.buser                  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_buser),    //                  .buser
+		.arqos                  (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arqos),    //                  .arqos
+		.arregion               (axi4slave5_0_altera_axi4_slave_agent_altera_axi_master_arregion)  //                  .arregion
+	);
+
+	altera_merlin_axi_slave_ni #(
+		.PKT_QOS_H                   (197),
+		.PKT_QOS_L                   (194),
+		.PKT_THREAD_ID_H             (200),
+		.PKT_THREAD_ID_L             (200),
+		.PKT_RESPONSE_STATUS_H       (209),
+		.PKT_RESPONSE_STATUS_L       (208),
+		.PKT_BEGIN_BURST             (193),
+		.PKT_CACHE_H                 (207),
+		.PKT_CACHE_L                 (204),
+		.PKT_DATA_SIDEBAND_H         (192),
+		.PKT_DATA_SIDEBAND_L         (192),
+		.PKT_ADDR_SIDEBAND_H         (191),
+		.PKT_ADDR_SIDEBAND_L         (191),
+		.PKT_BURST_TYPE_H            (190),
+		.PKT_BURST_TYPE_L            (189),
+		.PKT_PROTECTION_H            (203),
+		.PKT_PROTECTION_L            (201),
+		.PKT_BURST_SIZE_H            (188),
+		.PKT_BURST_SIZE_L            (186),
+		.PKT_BURSTWRAP_H             (185),
+		.PKT_BURSTWRAP_L             (177),
+		.PKT_BYTE_CNT_H              (176),
+		.PKT_BYTE_CNT_L              (164),
+		.PKT_ADDR_H                  (157),
+		.PKT_ADDR_L                  (144),
+		.PKT_TRANS_EXCLUSIVE         (163),
+		.PKT_TRANS_LOCK              (162),
+		.PKT_TRANS_COMPRESSED_READ   (158),
+		.PKT_TRANS_POSTED            (159),
+		.PKT_TRANS_WRITE             (160),
+		.PKT_TRANS_READ              (161),
+		.PKT_DATA_H                  (127),
+		.PKT_DATA_L                  (0),
+		.PKT_BYTEEN_H                (143),
+		.PKT_BYTEEN_L                (128),
+		.PKT_SRC_ID_H                (198),
+		.PKT_SRC_ID_L                (198),
+		.PKT_DEST_ID_H               (199),
+		.PKT_DEST_ID_L               (199),
+		.PKT_ORI_BURST_SIZE_L        (210),
+		.PKT_ORI_BURST_SIZE_H        (212),
+		.ADDR_USER_WIDTH             (1),
+		.DATA_USER_WIDTH             (1),
+		.ST_DATA_W                   (213),
+		.ADDR_WIDTH                  (13),
+		.RDATA_WIDTH                 (128),
+		.WDATA_WIDTH                 (128),
+		.ST_CHANNEL_W                (4),
+		.AXI_SLAVE_ID_W              (2),
+		.PASS_ID_TO_SLAVE            (1),
+		.AXI_VERSION                 ("AXI4"),
+		.WRITE_ACCEPTANCE_CAPABILITY (1),
+		.READ_ACCEPTANCE_CAPABILITY  (1)
+	) axi4slave7_0_altera_axi4_slave_agent (
+		.aclk                   (clk_0_clk_clk),                                                   //        clock_sink.clk
+		.aresetn                (~axi4Master2_0_reset_sink_reset_bridge_in_reset_reset),           //        reset_sink.reset_n
+		.read_cp_valid          (cmd_mux_003_src_valid),                                           //           read_cp.valid
+		.read_cp_ready          (cmd_mux_003_src_ready),                                           //                  .ready
+		.read_cp_data           (cmd_mux_003_src_data),                                            //                  .data
+		.read_cp_channel        (cmd_mux_003_src_channel),                                         //                  .channel
+		.read_cp_startofpacket  (cmd_mux_003_src_startofpacket),                                   //                  .startofpacket
+		.read_cp_endofpacket    (cmd_mux_003_src_endofpacket),                                     //                  .endofpacket
+		.write_cp_ready         (cmd_mux_002_src_ready),                                           //          write_cp.ready
+		.write_cp_valid         (cmd_mux_002_src_valid),                                           //                  .valid
+		.write_cp_data          (cmd_mux_002_src_data),                                            //                  .data
+		.write_cp_channel       (cmd_mux_002_src_channel),                                         //                  .channel
+		.write_cp_startofpacket (cmd_mux_002_src_startofpacket),                                   //                  .startofpacket
+		.write_cp_endofpacket   (cmd_mux_002_src_endofpacket),                                     //                  .endofpacket
+		.read_rp_ready          (axi4slave7_0_altera_axi4_slave_agent_read_rp_ready),              //           read_rp.ready
+		.read_rp_valid          (axi4slave7_0_altera_axi4_slave_agent_read_rp_valid),              //                  .valid
+		.read_rp_data           (axi4slave7_0_altera_axi4_slave_agent_read_rp_data),               //                  .data
+		.read_rp_startofpacket  (axi4slave7_0_altera_axi4_slave_agent_read_rp_startofpacket),      //                  .startofpacket
+		.read_rp_endofpacket    (axi4slave7_0_altera_axi4_slave_agent_read_rp_endofpacket),        //                  .endofpacket
+		.write_rp_ready         (axi4slave7_0_altera_axi4_slave_agent_write_rp_ready),             //          write_rp.ready
+		.write_rp_valid         (axi4slave7_0_altera_axi4_slave_agent_write_rp_valid),             //                  .valid
+		.write_rp_data          (axi4slave7_0_altera_axi4_slave_agent_write_rp_data),              //                  .data
+		.write_rp_startofpacket (axi4slave7_0_altera_axi4_slave_agent_write_rp_startofpacket),     //                  .startofpacket
+		.write_rp_endofpacket   (axi4slave7_0_altera_axi4_slave_agent_write_rp_endofpacket),       //                  .endofpacket
+		.awid                   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awid),     // altera_axi_master.awid
+		.awaddr                 (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awaddr),   //                  .awaddr
+		.awlen                  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awlen),    //                  .awlen
+		.awsize                 (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awsize),   //                  .awsize
+		.awburst                (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awburst),  //                  .awburst
+		.awlock                 (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awlock),   //                  .awlock
+		.awcache                (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awcache),  //                  .awcache
+		.awprot                 (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awprot),   //                  .awprot
+		.awuser                 (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awuser),   //                  .awuser
+		.awvalid                (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awvalid),  //                  .awvalid
+		.awready                (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awready),  //                  .awready
+		.wdata                  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wdata),    //                  .wdata
+		.wstrb                  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wstrb),    //                  .wstrb
+		.wlast                  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wlast),    //                  .wlast
+		.wvalid                 (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wvalid),   //                  .wvalid
+		.wready                 (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wready),   //                  .wready
+		.bid                    (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_bid),      //                  .bid
+		.bresp                  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_bresp),    //                  .bresp
+		.bvalid                 (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_bvalid),   //                  .bvalid
+		.bready                 (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_bready),   //                  .bready
+		.arid                   (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arid),     //                  .arid
+		.araddr                 (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_araddr),   //                  .araddr
+		.arlen                  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arlen),    //                  .arlen
+		.arsize                 (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arsize),   //                  .arsize
+		.arburst                (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arburst),  //                  .arburst
+		.arlock                 (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arlock),   //                  .arlock
+		.arcache                (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arcache),  //                  .arcache
+		.arprot                 (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arprot),   //                  .arprot
+		.aruser                 (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_aruser),   //                  .aruser
+		.arvalid                (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arvalid),  //                  .arvalid
+		.arready                (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arready),  //                  .arready
+		.rid                    (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rid),      //                  .rid
+		.rdata                  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rdata),    //                  .rdata
+		.rresp                  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rresp),    //                  .rresp
+		.rlast                  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rlast),    //                  .rlast
+		.rvalid                 (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rvalid),   //                  .rvalid
+		.rready                 (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_rready),   //                  .rready
+		.wuser                  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_wuser),    //                  .wuser
+		.awqos                  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awqos),    //                  .awqos
+		.awregion               (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_awregion), //                  .awregion
+		.ruser                  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_ruser),    //                  .ruser
+		.buser                  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_buser),    //                  .buser
+		.arqos                  (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arqos),    //                  .arqos
+		.arregion               (axi4slave7_0_altera_axi4_slave_agent_altera_axi_master_arregion)  //                  .arregion
+	);
+
+	Example3_mm_interconnect_0_router router (
+		.sink_ready         (axi4master2_0_altera_axi4_master_agent_write_cp_ready),         //      sink.ready
+		.sink_valid         (axi4master2_0_altera_axi4_master_agent_write_cp_valid),         //          .valid
+		.sink_data          (axi4master2_0_altera_axi4_master_agent_write_cp_data),          //          .data
+		.sink_startofpacket (axi4master2_0_altera_axi4_master_agent_write_cp_startofpacket), //          .startofpacket
+		.sink_endofpacket   (axi4master2_0_altera_axi4_master_agent_write_cp_endofpacket),   //          .endofpacket
+		.clk                (clk_0_clk_clk),                                                 //       clk.clk
+		.reset              (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset),          // clk_reset.reset
+		.src_ready          (router_src_ready),                                              //       src.ready
+		.src_valid          (router_src_valid),                                              //          .valid
+		.src_data           (router_src_data),                                               //          .data
+		.src_channel        (router_src_channel),                                            //          .channel
+		.src_startofpacket  (router_src_startofpacket),                                      //          .startofpacket
+		.src_endofpacket    (router_src_endofpacket)                                         //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_router_001 router_001 (
+		.sink_ready         (axi4master2_0_altera_axi4_master_agent_read_cp_ready),         //      sink.ready
+		.sink_valid         (axi4master2_0_altera_axi4_master_agent_read_cp_valid),         //          .valid
+		.sink_data          (axi4master2_0_altera_axi4_master_agent_read_cp_data),          //          .data
+		.sink_startofpacket (axi4master2_0_altera_axi4_master_agent_read_cp_startofpacket), //          .startofpacket
+		.sink_endofpacket   (axi4master2_0_altera_axi4_master_agent_read_cp_endofpacket),   //          .endofpacket
+		.clk                (clk_0_clk_clk),                                                //       clk.clk
+		.reset              (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset),         // clk_reset.reset
+		.src_ready          (router_001_src_ready),                                         //       src.ready
+		.src_valid          (router_001_src_valid),                                         //          .valid
+		.src_data           (router_001_src_data),                                          //          .data
+		.src_channel        (router_001_src_channel),                                       //          .channel
+		.src_startofpacket  (router_001_src_startofpacket),                                 //          .startofpacket
+		.src_endofpacket    (router_001_src_endofpacket)                                    //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_router router_002 (
+		.sink_ready         (axi4master1_0_altera_axi4_master_agent_write_cp_ready),         //      sink.ready
+		.sink_valid         (axi4master1_0_altera_axi4_master_agent_write_cp_valid),         //          .valid
+		.sink_data          (axi4master1_0_altera_axi4_master_agent_write_cp_data),          //          .data
+		.sink_startofpacket (axi4master1_0_altera_axi4_master_agent_write_cp_startofpacket), //          .startofpacket
+		.sink_endofpacket   (axi4master1_0_altera_axi4_master_agent_write_cp_endofpacket),   //          .endofpacket
+		.clk                (clk_0_clk_clk),                                                 //       clk.clk
+		.reset              (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset),          // clk_reset.reset
+		.src_ready          (router_002_src_ready),                                          //       src.ready
+		.src_valid          (router_002_src_valid),                                          //          .valid
+		.src_data           (router_002_src_data),                                           //          .data
+		.src_channel        (router_002_src_channel),                                        //          .channel
+		.src_startofpacket  (router_002_src_startofpacket),                                  //          .startofpacket
+		.src_endofpacket    (router_002_src_endofpacket)                                     //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_router_001 router_003 (
+		.sink_ready         (axi4master1_0_altera_axi4_master_agent_read_cp_ready),         //      sink.ready
+		.sink_valid         (axi4master1_0_altera_axi4_master_agent_read_cp_valid),         //          .valid
+		.sink_data          (axi4master1_0_altera_axi4_master_agent_read_cp_data),          //          .data
+		.sink_startofpacket (axi4master1_0_altera_axi4_master_agent_read_cp_startofpacket), //          .startofpacket
+		.sink_endofpacket   (axi4master1_0_altera_axi4_master_agent_read_cp_endofpacket),   //          .endofpacket
+		.clk                (clk_0_clk_clk),                                                //       clk.clk
+		.reset              (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset),         // clk_reset.reset
+		.src_ready          (router_003_src_ready),                                         //       src.ready
+		.src_valid          (router_003_src_valid),                                         //          .valid
+		.src_data           (router_003_src_data),                                          //          .data
+		.src_channel        (router_003_src_channel),                                       //          .channel
+		.src_startofpacket  (router_003_src_startofpacket),                                 //          .startofpacket
+		.src_endofpacket    (router_003_src_endofpacket)                                    //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_router_004 router_004 (
+		.sink_ready         (axi4slave5_0_altera_axi4_slave_agent_write_rp_ready),         //      sink.ready
+		.sink_valid         (axi4slave5_0_altera_axi4_slave_agent_write_rp_valid),         //          .valid
+		.sink_data          (axi4slave5_0_altera_axi4_slave_agent_write_rp_data),          //          .data
+		.sink_startofpacket (axi4slave5_0_altera_axi4_slave_agent_write_rp_startofpacket), //          .startofpacket
+		.sink_endofpacket   (axi4slave5_0_altera_axi4_slave_agent_write_rp_endofpacket),   //          .endofpacket
+		.clk                (clk_0_clk_clk),                                               //       clk.clk
+		.reset              (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset),        // clk_reset.reset
+		.src_ready          (router_004_src_ready),                                        //       src.ready
+		.src_valid          (router_004_src_valid),                                        //          .valid
+		.src_data           (router_004_src_data),                                         //          .data
+		.src_channel        (router_004_src_channel),                                      //          .channel
+		.src_startofpacket  (router_004_src_startofpacket),                                //          .startofpacket
+		.src_endofpacket    (router_004_src_endofpacket)                                   //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_router_005 router_005 (
+		.sink_ready         (axi4slave5_0_altera_axi4_slave_agent_read_rp_ready),         //      sink.ready
+		.sink_valid         (axi4slave5_0_altera_axi4_slave_agent_read_rp_valid),         //          .valid
+		.sink_data          (axi4slave5_0_altera_axi4_slave_agent_read_rp_data),          //          .data
+		.sink_startofpacket (axi4slave5_0_altera_axi4_slave_agent_read_rp_startofpacket), //          .startofpacket
+		.sink_endofpacket   (axi4slave5_0_altera_axi4_slave_agent_read_rp_endofpacket),   //          .endofpacket
+		.clk                (clk_0_clk_clk),                                              //       clk.clk
+		.reset              (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset),       // clk_reset.reset
+		.src_ready          (router_005_src_ready),                                       //       src.ready
+		.src_valid          (router_005_src_valid),                                       //          .valid
+		.src_data           (router_005_src_data),                                        //          .data
+		.src_channel        (router_005_src_channel),                                     //          .channel
+		.src_startofpacket  (router_005_src_startofpacket),                               //          .startofpacket
+		.src_endofpacket    (router_005_src_endofpacket)                                  //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_router_004 router_006 (
+		.sink_ready         (axi4slave7_0_altera_axi4_slave_agent_write_rp_ready),         //      sink.ready
+		.sink_valid         (axi4slave7_0_altera_axi4_slave_agent_write_rp_valid),         //          .valid
+		.sink_data          (axi4slave7_0_altera_axi4_slave_agent_write_rp_data),          //          .data
+		.sink_startofpacket (axi4slave7_0_altera_axi4_slave_agent_write_rp_startofpacket), //          .startofpacket
+		.sink_endofpacket   (axi4slave7_0_altera_axi4_slave_agent_write_rp_endofpacket),   //          .endofpacket
+		.clk                (clk_0_clk_clk),                                               //       clk.clk
+		.reset              (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset),        // clk_reset.reset
+		.src_ready          (router_006_src_ready),                                        //       src.ready
+		.src_valid          (router_006_src_valid),                                        //          .valid
+		.src_data           (router_006_src_data),                                         //          .data
+		.src_channel        (router_006_src_channel),                                      //          .channel
+		.src_startofpacket  (router_006_src_startofpacket),                                //          .startofpacket
+		.src_endofpacket    (router_006_src_endofpacket)                                   //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_router_005 router_007 (
+		.sink_ready         (axi4slave7_0_altera_axi4_slave_agent_read_rp_ready),         //      sink.ready
+		.sink_valid         (axi4slave7_0_altera_axi4_slave_agent_read_rp_valid),         //          .valid
+		.sink_data          (axi4slave7_0_altera_axi4_slave_agent_read_rp_data),          //          .data
+		.sink_startofpacket (axi4slave7_0_altera_axi4_slave_agent_read_rp_startofpacket), //          .startofpacket
+		.sink_endofpacket   (axi4slave7_0_altera_axi4_slave_agent_read_rp_endofpacket),   //          .endofpacket
+		.clk                (clk_0_clk_clk),                                              //       clk.clk
+		.reset              (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset),       // clk_reset.reset
+		.src_ready          (router_007_src_ready),                                       //       src.ready
+		.src_valid          (router_007_src_valid),                                       //          .valid
+		.src_data           (router_007_src_data),                                        //          .data
+		.src_channel        (router_007_src_channel),                                     //          .channel
+		.src_startofpacket  (router_007_src_startofpacket),                               //          .startofpacket
+		.src_endofpacket    (router_007_src_endofpacket)                                  //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_cmd_demux cmd_demux (
+		.clk                (clk_0_clk_clk),                                        //       clk.clk
+		.reset              (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset), // clk_reset.reset
+		.sink_ready         (router_src_ready),                                     //      sink.ready
+		.sink_channel       (router_src_channel),                                   //          .channel
+		.sink_data          (router_src_data),                                      //          .data
+		.sink_startofpacket (router_src_startofpacket),                             //          .startofpacket
+		.sink_endofpacket   (router_src_endofpacket),                               //          .endofpacket
+		.sink_valid         (router_src_valid),                                     //          .valid
+		.src0_ready         (cmd_demux_src0_ready),                                 //      src0.ready
+		.src0_valid         (cmd_demux_src0_valid),                                 //          .valid
+		.src0_data          (cmd_demux_src0_data),                                  //          .data
+		.src0_channel       (cmd_demux_src0_channel),                               //          .channel
+		.src0_startofpacket (cmd_demux_src0_startofpacket),                         //          .startofpacket
+		.src0_endofpacket   (cmd_demux_src0_endofpacket),                           //          .endofpacket
+		.src1_ready         (cmd_demux_src1_ready),                                 //      src1.ready
+		.src1_valid         (cmd_demux_src1_valid),                                 //          .valid
+		.src1_data          (cmd_demux_src1_data),                                  //          .data
+		.src1_channel       (cmd_demux_src1_channel),                               //          .channel
+		.src1_startofpacket (cmd_demux_src1_startofpacket),                         //          .startofpacket
+		.src1_endofpacket   (cmd_demux_src1_endofpacket)                            //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_cmd_demux cmd_demux_001 (
+		.clk                (clk_0_clk_clk),                                        //       clk.clk
+		.reset              (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset), // clk_reset.reset
+		.sink_ready         (router_001_src_ready),                                 //      sink.ready
+		.sink_channel       (router_001_src_channel),                               //          .channel
+		.sink_data          (router_001_src_data),                                  //          .data
+		.sink_startofpacket (router_001_src_startofpacket),                         //          .startofpacket
+		.sink_endofpacket   (router_001_src_endofpacket),                           //          .endofpacket
+		.sink_valid         (router_001_src_valid),                                 //          .valid
+		.src0_ready         (cmd_demux_001_src0_ready),                             //      src0.ready
+		.src0_valid         (cmd_demux_001_src0_valid),                             //          .valid
+		.src0_data          (cmd_demux_001_src0_data),                              //          .data
+		.src0_channel       (cmd_demux_001_src0_channel),                           //          .channel
+		.src0_startofpacket (cmd_demux_001_src0_startofpacket),                     //          .startofpacket
+		.src0_endofpacket   (cmd_demux_001_src0_endofpacket),                       //          .endofpacket
+		.src1_ready         (cmd_demux_001_src1_ready),                             //      src1.ready
+		.src1_valid         (cmd_demux_001_src1_valid),                             //          .valid
+		.src1_data          (cmd_demux_001_src1_data),                              //          .data
+		.src1_channel       (cmd_demux_001_src1_channel),                           //          .channel
+		.src1_startofpacket (cmd_demux_001_src1_startofpacket),                     //          .startofpacket
+		.src1_endofpacket   (cmd_demux_001_src1_endofpacket)                        //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_cmd_demux cmd_demux_002 (
+		.clk                (clk_0_clk_clk),                                        //       clk.clk
+		.reset              (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset), // clk_reset.reset
+		.sink_ready         (router_002_src_ready),                                 //      sink.ready
+		.sink_channel       (router_002_src_channel),                               //          .channel
+		.sink_data          (router_002_src_data),                                  //          .data
+		.sink_startofpacket (router_002_src_startofpacket),                         //          .startofpacket
+		.sink_endofpacket   (router_002_src_endofpacket),                           //          .endofpacket
+		.sink_valid         (router_002_src_valid),                                 //          .valid
+		.src0_ready         (cmd_demux_002_src0_ready),                             //      src0.ready
+		.src0_valid         (cmd_demux_002_src0_valid),                             //          .valid
+		.src0_data          (cmd_demux_002_src0_data),                              //          .data
+		.src0_channel       (cmd_demux_002_src0_channel),                           //          .channel
+		.src0_startofpacket (cmd_demux_002_src0_startofpacket),                     //          .startofpacket
+		.src0_endofpacket   (cmd_demux_002_src0_endofpacket),                       //          .endofpacket
+		.src1_ready         (cmd_demux_002_src1_ready),                             //      src1.ready
+		.src1_valid         (cmd_demux_002_src1_valid),                             //          .valid
+		.src1_data          (cmd_demux_002_src1_data),                              //          .data
+		.src1_channel       (cmd_demux_002_src1_channel),                           //          .channel
+		.src1_startofpacket (cmd_demux_002_src1_startofpacket),                     //          .startofpacket
+		.src1_endofpacket   (cmd_demux_002_src1_endofpacket)                        //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_cmd_demux cmd_demux_003 (
+		.clk                (clk_0_clk_clk),                                        //       clk.clk
+		.reset              (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset), // clk_reset.reset
+		.sink_ready         (router_003_src_ready),                                 //      sink.ready
+		.sink_channel       (router_003_src_channel),                               //          .channel
+		.sink_data          (router_003_src_data),                                  //          .data
+		.sink_startofpacket (router_003_src_startofpacket),                         //          .startofpacket
+		.sink_endofpacket   (router_003_src_endofpacket),                           //          .endofpacket
+		.sink_valid         (router_003_src_valid),                                 //          .valid
+		.src0_ready         (cmd_demux_003_src0_ready),                             //      src0.ready
+		.src0_valid         (cmd_demux_003_src0_valid),                             //          .valid
+		.src0_data          (cmd_demux_003_src0_data),                              //          .data
+		.src0_channel       (cmd_demux_003_src0_channel),                           //          .channel
+		.src0_startofpacket (cmd_demux_003_src0_startofpacket),                     //          .startofpacket
+		.src0_endofpacket   (cmd_demux_003_src0_endofpacket),                       //          .endofpacket
+		.src1_ready         (cmd_demux_003_src1_ready),                             //      src1.ready
+		.src1_valid         (cmd_demux_003_src1_valid),                             //          .valid
+		.src1_data          (cmd_demux_003_src1_data),                              //          .data
+		.src1_channel       (cmd_demux_003_src1_channel),                           //          .channel
+		.src1_startofpacket (cmd_demux_003_src1_startofpacket),                     //          .startofpacket
+		.src1_endofpacket   (cmd_demux_003_src1_endofpacket)                        //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_cmd_mux cmd_mux (
+		.clk                 (clk_0_clk_clk),                                        //       clk.clk
+		.reset               (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset), // clk_reset.reset
+		.src_ready           (cmd_mux_src_ready),                                    //       src.ready
+		.src_valid           (cmd_mux_src_valid),                                    //          .valid
+		.src_data            (cmd_mux_src_data),                                     //          .data
+		.src_channel         (cmd_mux_src_channel),                                  //          .channel
+		.src_startofpacket   (cmd_mux_src_startofpacket),                            //          .startofpacket
+		.src_endofpacket     (cmd_mux_src_endofpacket),                              //          .endofpacket
+		.sink0_ready         (cmd_demux_src0_ready),                                 //     sink0.ready
+		.sink0_valid         (cmd_demux_src0_valid),                                 //          .valid
+		.sink0_channel       (cmd_demux_src0_channel),                               //          .channel
+		.sink0_data          (cmd_demux_src0_data),                                  //          .data
+		.sink0_startofpacket (cmd_demux_src0_startofpacket),                         //          .startofpacket
+		.sink0_endofpacket   (cmd_demux_src0_endofpacket),                           //          .endofpacket
+		.sink1_ready         (cmd_demux_002_src0_ready),                             //     sink1.ready
+		.sink1_valid         (cmd_demux_002_src0_valid),                             //          .valid
+		.sink1_channel       (cmd_demux_002_src0_channel),                           //          .channel
+		.sink1_data          (cmd_demux_002_src0_data),                              //          .data
+		.sink1_startofpacket (cmd_demux_002_src0_startofpacket),                     //          .startofpacket
+		.sink1_endofpacket   (cmd_demux_002_src0_endofpacket)                        //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_cmd_mux cmd_mux_001 (
+		.clk                 (clk_0_clk_clk),                                        //       clk.clk
+		.reset               (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset), // clk_reset.reset
+		.src_ready           (cmd_mux_001_src_ready),                                //       src.ready
+		.src_valid           (cmd_mux_001_src_valid),                                //          .valid
+		.src_data            (cmd_mux_001_src_data),                                 //          .data
+		.src_channel         (cmd_mux_001_src_channel),                              //          .channel
+		.src_startofpacket   (cmd_mux_001_src_startofpacket),                        //          .startofpacket
+		.src_endofpacket     (cmd_mux_001_src_endofpacket),                          //          .endofpacket
+		.sink0_ready         (cmd_demux_001_src0_ready),                             //     sink0.ready
+		.sink0_valid         (cmd_demux_001_src0_valid),                             //          .valid
+		.sink0_channel       (cmd_demux_001_src0_channel),                           //          .channel
+		.sink0_data          (cmd_demux_001_src0_data),                              //          .data
+		.sink0_startofpacket (cmd_demux_001_src0_startofpacket),                     //          .startofpacket
+		.sink0_endofpacket   (cmd_demux_001_src0_endofpacket),                       //          .endofpacket
+		.sink1_ready         (cmd_demux_003_src0_ready),                             //     sink1.ready
+		.sink1_valid         (cmd_demux_003_src0_valid),                             //          .valid
+		.sink1_channel       (cmd_demux_003_src0_channel),                           //          .channel
+		.sink1_data          (cmd_demux_003_src0_data),                              //          .data
+		.sink1_startofpacket (cmd_demux_003_src0_startofpacket),                     //          .startofpacket
+		.sink1_endofpacket   (cmd_demux_003_src0_endofpacket)                        //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_cmd_mux cmd_mux_002 (
+		.clk                 (clk_0_clk_clk),                                        //       clk.clk
+		.reset               (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset), // clk_reset.reset
+		.src_ready           (cmd_mux_002_src_ready),                                //       src.ready
+		.src_valid           (cmd_mux_002_src_valid),                                //          .valid
+		.src_data            (cmd_mux_002_src_data),                                 //          .data
+		.src_channel         (cmd_mux_002_src_channel),                              //          .channel
+		.src_startofpacket   (cmd_mux_002_src_startofpacket),                        //          .startofpacket
+		.src_endofpacket     (cmd_mux_002_src_endofpacket),                          //          .endofpacket
+		.sink0_ready         (cmd_demux_src1_ready),                                 //     sink0.ready
+		.sink0_valid         (cmd_demux_src1_valid),                                 //          .valid
+		.sink0_channel       (cmd_demux_src1_channel),                               //          .channel
+		.sink0_data          (cmd_demux_src1_data),                                  //          .data
+		.sink0_startofpacket (cmd_demux_src1_startofpacket),                         //          .startofpacket
+		.sink0_endofpacket   (cmd_demux_src1_endofpacket),                           //          .endofpacket
+		.sink1_ready         (cmd_demux_002_src1_ready),                             //     sink1.ready
+		.sink1_valid         (cmd_demux_002_src1_valid),                             //          .valid
+		.sink1_channel       (cmd_demux_002_src1_channel),                           //          .channel
+		.sink1_data          (cmd_demux_002_src1_data),                              //          .data
+		.sink1_startofpacket (cmd_demux_002_src1_startofpacket),                     //          .startofpacket
+		.sink1_endofpacket   (cmd_demux_002_src1_endofpacket)                        //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_cmd_mux cmd_mux_003 (
+		.clk                 (clk_0_clk_clk),                                        //       clk.clk
+		.reset               (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset), // clk_reset.reset
+		.src_ready           (cmd_mux_003_src_ready),                                //       src.ready
+		.src_valid           (cmd_mux_003_src_valid),                                //          .valid
+		.src_data            (cmd_mux_003_src_data),                                 //          .data
+		.src_channel         (cmd_mux_003_src_channel),                              //          .channel
+		.src_startofpacket   (cmd_mux_003_src_startofpacket),                        //          .startofpacket
+		.src_endofpacket     (cmd_mux_003_src_endofpacket),                          //          .endofpacket
+		.sink0_ready         (cmd_demux_001_src1_ready),                             //     sink0.ready
+		.sink0_valid         (cmd_demux_001_src1_valid),                             //          .valid
+		.sink0_channel       (cmd_demux_001_src1_channel),                           //          .channel
+		.sink0_data          (cmd_demux_001_src1_data),                              //          .data
+		.sink0_startofpacket (cmd_demux_001_src1_startofpacket),                     //          .startofpacket
+		.sink0_endofpacket   (cmd_demux_001_src1_endofpacket),                       //          .endofpacket
+		.sink1_ready         (cmd_demux_003_src1_ready),                             //     sink1.ready
+		.sink1_valid         (cmd_demux_003_src1_valid),                             //          .valid
+		.sink1_channel       (cmd_demux_003_src1_channel),                           //          .channel
+		.sink1_data          (cmd_demux_003_src1_data),                              //          .data
+		.sink1_startofpacket (cmd_demux_003_src1_startofpacket),                     //          .startofpacket
+		.sink1_endofpacket   (cmd_demux_003_src1_endofpacket)                        //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_cmd_demux rsp_demux (
+		.clk                (clk_0_clk_clk),                                        //       clk.clk
+		.reset              (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset), // clk_reset.reset
+		.sink_ready         (router_004_src_ready),                                 //      sink.ready
+		.sink_channel       (router_004_src_channel),                               //          .channel
+		.sink_data          (router_004_src_data),                                  //          .data
+		.sink_startofpacket (router_004_src_startofpacket),                         //          .startofpacket
+		.sink_endofpacket   (router_004_src_endofpacket),                           //          .endofpacket
+		.sink_valid         (router_004_src_valid),                                 //          .valid
+		.src0_ready         (rsp_demux_src0_ready),                                 //      src0.ready
+		.src0_valid         (rsp_demux_src0_valid),                                 //          .valid
+		.src0_data          (rsp_demux_src0_data),                                  //          .data
+		.src0_channel       (rsp_demux_src0_channel),                               //          .channel
+		.src0_startofpacket (rsp_demux_src0_startofpacket),                         //          .startofpacket
+		.src0_endofpacket   (rsp_demux_src0_endofpacket),                           //          .endofpacket
+		.src1_ready         (rsp_demux_src1_ready),                                 //      src1.ready
+		.src1_valid         (rsp_demux_src1_valid),                                 //          .valid
+		.src1_data          (rsp_demux_src1_data),                                  //          .data
+		.src1_channel       (rsp_demux_src1_channel),                               //          .channel
+		.src1_startofpacket (rsp_demux_src1_startofpacket),                         //          .startofpacket
+		.src1_endofpacket   (rsp_demux_src1_endofpacket)                            //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_cmd_demux rsp_demux_001 (
+		.clk                (clk_0_clk_clk),                                        //       clk.clk
+		.reset              (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset), // clk_reset.reset
+		.sink_ready         (router_005_src_ready),                                 //      sink.ready
+		.sink_channel       (router_005_src_channel),                               //          .channel
+		.sink_data          (router_005_src_data),                                  //          .data
+		.sink_startofpacket (router_005_src_startofpacket),                         //          .startofpacket
+		.sink_endofpacket   (router_005_src_endofpacket),                           //          .endofpacket
+		.sink_valid         (router_005_src_valid),                                 //          .valid
+		.src0_ready         (rsp_demux_001_src0_ready),                             //      src0.ready
+		.src0_valid         (rsp_demux_001_src0_valid),                             //          .valid
+		.src0_data          (rsp_demux_001_src0_data),                              //          .data
+		.src0_channel       (rsp_demux_001_src0_channel),                           //          .channel
+		.src0_startofpacket (rsp_demux_001_src0_startofpacket),                     //          .startofpacket
+		.src0_endofpacket   (rsp_demux_001_src0_endofpacket),                       //          .endofpacket
+		.src1_ready         (rsp_demux_001_src1_ready),                             //      src1.ready
+		.src1_valid         (rsp_demux_001_src1_valid),                             //          .valid
+		.src1_data          (rsp_demux_001_src1_data),                              //          .data
+		.src1_channel       (rsp_demux_001_src1_channel),                           //          .channel
+		.src1_startofpacket (rsp_demux_001_src1_startofpacket),                     //          .startofpacket
+		.src1_endofpacket   (rsp_demux_001_src1_endofpacket)                        //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_cmd_demux rsp_demux_002 (
+		.clk                (clk_0_clk_clk),                                        //       clk.clk
+		.reset              (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset), // clk_reset.reset
+		.sink_ready         (router_006_src_ready),                                 //      sink.ready
+		.sink_channel       (router_006_src_channel),                               //          .channel
+		.sink_data          (router_006_src_data),                                  //          .data
+		.sink_startofpacket (router_006_src_startofpacket),                         //          .startofpacket
+		.sink_endofpacket   (router_006_src_endofpacket),                           //          .endofpacket
+		.sink_valid         (router_006_src_valid),                                 //          .valid
+		.src0_ready         (rsp_demux_002_src0_ready),                             //      src0.ready
+		.src0_valid         (rsp_demux_002_src0_valid),                             //          .valid
+		.src0_data          (rsp_demux_002_src0_data),                              //          .data
+		.src0_channel       (rsp_demux_002_src0_channel),                           //          .channel
+		.src0_startofpacket (rsp_demux_002_src0_startofpacket),                     //          .startofpacket
+		.src0_endofpacket   (rsp_demux_002_src0_endofpacket),                       //          .endofpacket
+		.src1_ready         (rsp_demux_002_src1_ready),                             //      src1.ready
+		.src1_valid         (rsp_demux_002_src1_valid),                             //          .valid
+		.src1_data          (rsp_demux_002_src1_data),                              //          .data
+		.src1_channel       (rsp_demux_002_src1_channel),                           //          .channel
+		.src1_startofpacket (rsp_demux_002_src1_startofpacket),                     //          .startofpacket
+		.src1_endofpacket   (rsp_demux_002_src1_endofpacket)                        //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_cmd_demux rsp_demux_003 (
+		.clk                (clk_0_clk_clk),                                        //       clk.clk
+		.reset              (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset), // clk_reset.reset
+		.sink_ready         (router_007_src_ready),                                 //      sink.ready
+		.sink_channel       (router_007_src_channel),                               //          .channel
+		.sink_data          (router_007_src_data),                                  //          .data
+		.sink_startofpacket (router_007_src_startofpacket),                         //          .startofpacket
+		.sink_endofpacket   (router_007_src_endofpacket),                           //          .endofpacket
+		.sink_valid         (router_007_src_valid),                                 //          .valid
+		.src0_ready         (rsp_demux_003_src0_ready),                             //      src0.ready
+		.src0_valid         (rsp_demux_003_src0_valid),                             //          .valid
+		.src0_data          (rsp_demux_003_src0_data),                              //          .data
+		.src0_channel       (rsp_demux_003_src0_channel),                           //          .channel
+		.src0_startofpacket (rsp_demux_003_src0_startofpacket),                     //          .startofpacket
+		.src0_endofpacket   (rsp_demux_003_src0_endofpacket),                       //          .endofpacket
+		.src1_ready         (rsp_demux_003_src1_ready),                             //      src1.ready
+		.src1_valid         (rsp_demux_003_src1_valid),                             //          .valid
+		.src1_data          (rsp_demux_003_src1_data),                              //          .data
+		.src1_channel       (rsp_demux_003_src1_channel),                           //          .channel
+		.src1_startofpacket (rsp_demux_003_src1_startofpacket),                     //          .startofpacket
+		.src1_endofpacket   (rsp_demux_003_src1_endofpacket)                        //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_rsp_mux rsp_mux (
+		.clk                 (clk_0_clk_clk),                                        //       clk.clk
+		.reset               (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset), // clk_reset.reset
+		.src_ready           (rsp_mux_src_ready),                                    //       src.ready
+		.src_valid           (rsp_mux_src_valid),                                    //          .valid
+		.src_data            (rsp_mux_src_data),                                     //          .data
+		.src_channel         (rsp_mux_src_channel),                                  //          .channel
+		.src_startofpacket   (rsp_mux_src_startofpacket),                            //          .startofpacket
+		.src_endofpacket     (rsp_mux_src_endofpacket),                              //          .endofpacket
+		.sink0_ready         (rsp_demux_src0_ready),                                 //     sink0.ready
+		.sink0_valid         (rsp_demux_src0_valid),                                 //          .valid
+		.sink0_channel       (rsp_demux_src0_channel),                               //          .channel
+		.sink0_data          (rsp_demux_src0_data),                                  //          .data
+		.sink0_startofpacket (rsp_demux_src0_startofpacket),                         //          .startofpacket
+		.sink0_endofpacket   (rsp_demux_src0_endofpacket),                           //          .endofpacket
+		.sink1_ready         (rsp_demux_002_src0_ready),                             //     sink1.ready
+		.sink1_valid         (rsp_demux_002_src0_valid),                             //          .valid
+		.sink1_channel       (rsp_demux_002_src0_channel),                           //          .channel
+		.sink1_data          (rsp_demux_002_src0_data),                              //          .data
+		.sink1_startofpacket (rsp_demux_002_src0_startofpacket),                     //          .startofpacket
+		.sink1_endofpacket   (rsp_demux_002_src0_endofpacket)                        //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_rsp_mux rsp_mux_001 (
+		.clk                 (clk_0_clk_clk),                                        //       clk.clk
+		.reset               (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset), // clk_reset.reset
+		.src_ready           (rsp_mux_001_src_ready),                                //       src.ready
+		.src_valid           (rsp_mux_001_src_valid),                                //          .valid
+		.src_data            (rsp_mux_001_src_data),                                 //          .data
+		.src_channel         (rsp_mux_001_src_channel),                              //          .channel
+		.src_startofpacket   (rsp_mux_001_src_startofpacket),                        //          .startofpacket
+		.src_endofpacket     (rsp_mux_001_src_endofpacket),                          //          .endofpacket
+		.sink0_ready         (rsp_demux_001_src0_ready),                             //     sink0.ready
+		.sink0_valid         (rsp_demux_001_src0_valid),                             //          .valid
+		.sink0_channel       (rsp_demux_001_src0_channel),                           //          .channel
+		.sink0_data          (rsp_demux_001_src0_data),                              //          .data
+		.sink0_startofpacket (rsp_demux_001_src0_startofpacket),                     //          .startofpacket
+		.sink0_endofpacket   (rsp_demux_001_src0_endofpacket),                       //          .endofpacket
+		.sink1_ready         (rsp_demux_003_src0_ready),                             //     sink1.ready
+		.sink1_valid         (rsp_demux_003_src0_valid),                             //          .valid
+		.sink1_channel       (rsp_demux_003_src0_channel),                           //          .channel
+		.sink1_data          (rsp_demux_003_src0_data),                              //          .data
+		.sink1_startofpacket (rsp_demux_003_src0_startofpacket),                     //          .startofpacket
+		.sink1_endofpacket   (rsp_demux_003_src0_endofpacket)                        //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_rsp_mux rsp_mux_002 (
+		.clk                 (clk_0_clk_clk),                                        //       clk.clk
+		.reset               (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset), // clk_reset.reset
+		.src_ready           (rsp_mux_002_src_ready),                                //       src.ready
+		.src_valid           (rsp_mux_002_src_valid),                                //          .valid
+		.src_data            (rsp_mux_002_src_data),                                 //          .data
+		.src_channel         (rsp_mux_002_src_channel),                              //          .channel
+		.src_startofpacket   (rsp_mux_002_src_startofpacket),                        //          .startofpacket
+		.src_endofpacket     (rsp_mux_002_src_endofpacket),                          //          .endofpacket
+		.sink0_ready         (rsp_demux_src1_ready),                                 //     sink0.ready
+		.sink0_valid         (rsp_demux_src1_valid),                                 //          .valid
+		.sink0_channel       (rsp_demux_src1_channel),                               //          .channel
+		.sink0_data          (rsp_demux_src1_data),                                  //          .data
+		.sink0_startofpacket (rsp_demux_src1_startofpacket),                         //          .startofpacket
+		.sink0_endofpacket   (rsp_demux_src1_endofpacket),                           //          .endofpacket
+		.sink1_ready         (rsp_demux_002_src1_ready),                             //     sink1.ready
+		.sink1_valid         (rsp_demux_002_src1_valid),                             //          .valid
+		.sink1_channel       (rsp_demux_002_src1_channel),                           //          .channel
+		.sink1_data          (rsp_demux_002_src1_data),                              //          .data
+		.sink1_startofpacket (rsp_demux_002_src1_startofpacket),                     //          .startofpacket
+		.sink1_endofpacket   (rsp_demux_002_src1_endofpacket)                        //          .endofpacket
+	);
+
+	Example3_mm_interconnect_0_rsp_mux rsp_mux_003 (
+		.clk                 (clk_0_clk_clk),                                        //       clk.clk
+		.reset               (axi4Master2_0_reset_sink_reset_bridge_in_reset_reset), // clk_reset.reset
+		.src_ready           (rsp_mux_003_src_ready),                                //       src.ready
+		.src_valid           (rsp_mux_003_src_valid),                                //          .valid
+		.src_data            (rsp_mux_003_src_data),                                 //          .data
+		.src_channel         (rsp_mux_003_src_channel),                              //          .channel
+		.src_startofpacket   (rsp_mux_003_src_startofpacket),                        //          .startofpacket
+		.src_endofpacket     (rsp_mux_003_src_endofpacket),                          //          .endofpacket
+		.sink0_ready         (rsp_demux_001_src1_ready),                             //     sink0.ready
+		.sink0_valid         (rsp_demux_001_src1_valid),                             //          .valid
+		.sink0_channel       (rsp_demux_001_src1_channel),                           //          .channel
+		.sink0_data          (rsp_demux_001_src1_data),                              //          .data
+		.sink0_startofpacket (rsp_demux_001_src1_startofpacket),                     //          .startofpacket
+		.sink0_endofpacket   (rsp_demux_001_src1_endofpacket),                       //          .endofpacket
+		.sink1_ready         (rsp_demux_003_src1_ready),                             //     sink1.ready
+		.sink1_valid         (rsp_demux_003_src1_valid),                             //          .valid
+		.sink1_channel       (rsp_demux_003_src1_channel),                           //          .channel
+		.sink1_data          (rsp_demux_003_src1_data),                              //          .data
+		.sink1_startofpacket (rsp_demux_003_src1_startofpacket),                     //          .startofpacket
+		.sink1_endofpacket   (rsp_demux_003_src1_endofpacket)                        //          .endofpacket
 	);
 
 endmodule

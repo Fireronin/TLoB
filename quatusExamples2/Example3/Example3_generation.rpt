@@ -2,10 +2,14 @@ Info: Starting: Create block symbol file (.bsf)
 Info: qsys-generate D:\Mega\Documents\CS\TLoB\quatusExamples2\Example3.qsys --block-symbol-file --output-directory=D:\Mega\Documents\CS\TLoB\quatusExamples2\Example3 --family="Cyclone V" --part=5CGXFC7C7F23C8
 Progress: Loading quatusExamples2/Example3.qsys
 Progress: Reading input file
-Progress: Adding axi4Slave_0 [axi4Slave 1.0]
-Progress: Parameterizing module axi4Slave_0
-Progress: Adding axiMaster_0 [axiMaster 1.0]
-Progress: Parameterizing module axiMaster_0
+Progress: Adding axi4Master1_0 [axi4Master1 1.0]
+Progress: Parameterizing module axi4Master1_0
+Progress: Adding axi4Master2_0 [axi4Master2 1.0]
+Progress: Parameterizing module axi4Master2_0
+Progress: Adding axi4Slave5_0 [axi4Slave5 1.0]
+Progress: Parameterizing module axi4Slave5_0
+Progress: Adding axi4Slave7_0 [axi4Slave7 1.0]
+Progress: Parameterizing module axi4Slave7_0
 Progress: Adding clk_0 [clock_source 21.1]
 Progress: Parameterizing module clk_0
 Progress: Building connections
@@ -19,10 +23,14 @@ Info: Starting: Create HDL design files for synthesis
 Info: qsys-generate D:\Mega\Documents\CS\TLoB\quatusExamples2\Example3.qsys --synthesis=VERILOG --output-directory=D:\Mega\Documents\CS\TLoB\quatusExamples2\Example3\synthesis --family="Cyclone V" --part=5CGXFC7C7F23C8
 Progress: Loading quatusExamples2/Example3.qsys
 Progress: Reading input file
-Progress: Adding axi4Slave_0 [axi4Slave 1.0]
-Progress: Parameterizing module axi4Slave_0
-Progress: Adding axiMaster_0 [axiMaster 1.0]
-Progress: Parameterizing module axiMaster_0
+Progress: Adding axi4Master1_0 [axi4Master1 1.0]
+Progress: Parameterizing module axi4Master1_0
+Progress: Adding axi4Master2_0 [axi4Master2 1.0]
+Progress: Parameterizing module axi4Master2_0
+Progress: Adding axi4Slave5_0 [axi4Slave5 1.0]
+Progress: Parameterizing module axi4Slave5_0
+Progress: Adding axi4Slave7_0 [axi4Slave7 1.0]
+Progress: Parameterizing module axi4Slave7_0
 Progress: Adding clk_0 [clock_source 21.1]
 Progress: Parameterizing module clk_0
 Progress: Building connections
@@ -30,15 +38,24 @@ Progress: Parameterizing connections
 Progress: Validating
 Progress: Done reading input file
 Info: Example3: Generating Example3 "Example3" for QUARTUS_SYNTH
-Info: Interconnect is inserted between master axiMaster_0.altera_axi4_master and slave axi4Slave_0.altera_axi4_slave because the master has arid signal 1 bit wide, but the slave is 2 bit wide.
-Info: Interconnect is inserted between master axiMaster_0.altera_axi4_master and slave axi4Slave_0.altera_axi4_slave because the master has awid signal 1 bit wide, but the slave is 2 bit wide.
-Info: Interconnect is inserted between master axiMaster_0.altera_axi4_master and slave axi4Slave_0.altera_axi4_slave because the master has bid signal 1 bit wide, but the slave is 2 bit wide.
-Info: Interconnect is inserted between master axiMaster_0.altera_axi4_master and slave axi4Slave_0.altera_axi4_slave because the master has rid signal 1 bit wide, but the slave is 2 bit wide.
-Info: axi4Slave_0: "Example3" instantiated axi4Slave "axi4Slave_0"
-Info: axiMaster_0: "Example3" instantiated axiMaster "axiMaster_0"
+Info: axi4Master1_0: "Example3" instantiated axi4Master1 "axi4Master1_0"
+Info: axi4Master2_0: "Example3" instantiated axi4Master2 "axi4Master2_0"
+Info: axi4Slave5_0: "Example3" instantiated axi4Slave5 "axi4Slave5_0"
+Info: axi4Slave7_0: "Example3" instantiated axi4Slave7 "axi4Slave7_0"
 Info: mm_interconnect_0: "Example3" instantiated altera_mm_interconnect "mm_interconnect_0"
 Info: rst_controller: "Example3" instantiated altera_reset_controller "rst_controller"
-Info: axiMaster_0_altera_axi4_master_translator: "mm_interconnect_0" instantiated altera_merlin_axi_translator "axiMaster_0_altera_axi4_master_translator"
-Info: Example3: Done "Example3" with 6 modules, 8 files
+Info: axi4Master2_0_altera_axi4_master_translator: "mm_interconnect_0" instantiated altera_merlin_axi_translator "axi4Master2_0_altera_axi4_master_translator"
+Info: axi4Master2_0_altera_axi4_master_agent: "mm_interconnect_0" instantiated altera_merlin_axi_master_ni "axi4Master2_0_altera_axi4_master_agent"
+Info: axi4Slave5_0_altera_axi4_slave_agent: "mm_interconnect_0" instantiated altera_merlin_axi_slave_ni "axi4Slave5_0_altera_axi4_slave_agent"
+Info: Reusing file D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_merlin_address_alignment.sv
+Info: router: "mm_interconnect_0" instantiated altera_merlin_router "router"
+Info: router_001: "mm_interconnect_0" instantiated altera_merlin_router "router_001"
+Info: router_004: "mm_interconnect_0" instantiated altera_merlin_router "router_004"
+Info: router_005: "mm_interconnect_0" instantiated altera_merlin_router "router_005"
+Info: cmd_demux: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "cmd_demux"
+Info: cmd_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "cmd_mux"
+Info: rsp_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "rsp_mux"
+Info: Reusing file D:/Mega/Documents/CS/TLoB/quatusExamples2/Example3/synthesis/submodules/altera_merlin_arbitrator.sv
+Info: Example3: Done "Example3" with 17 modules, 23 files
 Info: qsys-generate succeeded.
 Info: Finished: Create HDL design files for synthesis

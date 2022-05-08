@@ -141,15 +141,29 @@ module axiSlave#(Integer nr) (`SLAVE_T);
 endmodule
 
 (* synthesize *)
-module axiMaster_synth  (AXI4_Master_Sig#(`MPARAMS));
+module axiMaster1_synth  (AXI4_Master_Sig#(`MPARAMS));
   let master <- axiMaster(1);
   let axi_sig <- toAXI4_Master_Sig(master);
   return axi_sig;
 endmodule
 
 (* synthesize *)
-module axiSlave_synth  (AXI4_Slave_Sig#(`SPARAMS));
-  let slave <- axiSlave(1);
+module axiMaster2_synth  (AXI4_Master_Sig#(`MPARAMS));
+  let master <- axiMaster(2);
+  let axi_sig <- toAXI4_Master_Sig(master);
+  return axi_sig;
+endmodule
+
+(* synthesize *)
+module axiSlave5_synth  (AXI4_Slave_Sig#(`SPARAMS));
+  let slave <- axiSlave(5);
+  let axi_sig <- toAXI4_Slave_Sig(slave);
+  return axi_sig;
+endmodule
+
+(* synthesize *)
+module axiSlave7_synth  (AXI4_Slave_Sig#(`SPARAMS));
+  let slave <- axiSlave(7);
   let axi_sig <- toAXI4_Slave_Sig(slave);
   return axi_sig;
 endmodule

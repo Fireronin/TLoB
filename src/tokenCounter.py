@@ -9,7 +9,7 @@ FILES = {
     "example1": ["quatusExamples2/simpleFifo_hw.tcl","quatusExamples2/Example1.qsys"],
     "example1B": ["quatusExamples2/simpleFifo_hw.tcl","quatusExamples2/Example1B.qsys"],
     "example2": ["quatusExamples2/fake16550_hw.tcl","quatusExamples2/fluteCore_hw.tcl","quatusExamples2/Example2.qsys"],
-    "example3": []
+    "example3": ["quatusExamples2/axi4Master1_hw.tcl","quatusExamples2/axi4Master2_hw.tcl","quatusExamples2/axi4Slave5_hw.tcl","quatusExamples2/axi4Slave7_hw.tcl","quatusExamples2/Example3.qsys"]
 }
 FILESMyTOOL = {
     "example1":["exampleFIFOs.json"],
@@ -50,7 +50,7 @@ for tool,(lines,tokens) in results.items():
     for example,l in lines.items():
         df = df.append({"Tool":tool,"Example":example,"Lines":l,"Tokens":tokens[example]},ignore_index=True)
 
-display(df)
+#display(df)
         
 # %%
 #chart1 stacked bar chart of IQP and My example1, example1B 

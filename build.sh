@@ -8,7 +8,7 @@ export TOPFILE=./tutorial/ConnectedAXI4.bsv
 #export TOPFILE=./Flute/libs/BlueStuff/AXI/AXI4Lite.bsv
 export BSCFLAGS="-p .:./tutorial:./Flute/src_SSITH_P2/build_dir:+"
 export CFILES="Flute/libs/BlueStuff/BlueUtils/MemSim.c Flute/libs/BlueStuff/BlueUtils/SimUtils.c"
-
+bsc $BSCFLAGS -u -verilog -g $TOPMOD $TOPFILE
 echo $TOPMOD
 if [ "$SYNTH" = "1" ]; then
     bsc $BSCFLAGS -u -verilog -g $TOPMOD $TOPFILE

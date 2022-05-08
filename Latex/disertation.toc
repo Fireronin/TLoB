@@ -55,14 +55,13 @@
 \contentsline {subsection}{\numberline {4.1.1}Example 1: Deadly simple FIFOs}{34}{subsection.4.1.1}%
 \contentsline {subsection}{\numberline {4.1.2}Example 2: Weight of the AXI4}{34}{subsection.4.1.2}%
 \contentsline {subsection}{\numberline {4.1.3}Example 3: Simulation}{34}{subsection.4.1.3}%
-\contentsline {subsection}{\numberline {4.1.4}Polymorphism disclaimer}{34}{subsection.4.1.4}%
 \contentsline {section}{\numberline {4.2}Example 1: Deadly simple FIFOs}{35}{section.4.2}%
 \contentsline {subsection}{\numberline {4.2.1}Platform Designer}{35}{subsection.4.2.1}%
 \contentsline {subsection}{\numberline {4.2.2}The Legend of Bluespec: A Link to the components}{36}{subsection.4.2.2}%
 \contentsline {subsection}{\numberline {4.2.3}Conclusion}{37}{subsection.4.2.3}%
 \contentsline {section}{\numberline {4.3}Example 2: Weight of the AXI4}{37}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Platform Designer}{38}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}The Legend of Bluespec: A Link to the components}{39}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.1}Platform Designer}{37}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}The Legend of Bluespec: A Link to the components}{38}{subsection.4.3.2}%
 \contentsline {subsection}{\numberline {4.3.3}Conclusion}{39}{subsection.4.3.3}%
 \contentsline {subsection}{\numberline {4.3.4}Other differences}{39}{subsection.4.3.4}%
 \contentsline {section}{\numberline {4.4}Example 3 - Working AXI4 masters and slaves}{40}{section.4.4}%

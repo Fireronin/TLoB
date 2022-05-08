@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="Example3" kind="Example3" version="1.0" fabric="QSYS">
  <!-- Format version 21.1 842 (Future versions may contain additional information.) -->
- <!-- 2022.05.06.15:23:27 -->
+ <!-- 2022.05.08.14:33:52 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1651847007</value>
+  <value>1652016832</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -95,470 +95,11 @@
   <visible>true</visible>
   <valid>true</valid>
  </parameter>
- <module name="axi4Slave_0" kind="axi4Slave" version="1.0" path="axi4Slave_0">
-  <!-- Describes a single module. Module parameters are
-the requested settings for a module instance. -->
-  <parameter name="deviceFamily">
-   <type>java.lang.String</type>
-   <value>UNKNOWN</value>
-   <derived>false</derived>
-   <enabled>true</enabled>
-   <visible>true</visible>
-   <valid>true</valid>
-  </parameter>
-  <parameter name="generateLegacySim">
-   <type>boolean</type>
-   <value>false</value>
-   <derived>false</derived>
-   <enabled>true</enabled>
-   <visible>true</visible>
-   <valid>true</valid>
-  </parameter>
-  <interface name="clock" kind="clock_sink" version="21.1">
-   <!-- The connection points exposed by a module instance for the
-particular module parameters. Connection points and their
-parameters are a RESULT of the module parameters. -->
-   <parameter name="externallyDriven">
-    <type>boolean</type>
-    <value>false</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>false</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="ptfSchematicName">
-    <type>java.lang.String</type>
-    <value></value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>false</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="deviceFamily">
-    <type>java.lang.String</type>
-    <value>UNKNOWN</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>true</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="generateLegacySim">
-    <type>boolean</type>
-    <value>false</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>true</visible>
-    <valid>true</valid>
-   </parameter>
-   <type>clock</type>
-   <isStart>false</isStart>
-   <port>
-    <name>CLK</name>
-    <direction>Input</direction>
-    <width>1</width>
-    <role>clk</role>
-   </port>
-  </interface>
-  <interface name="altera_axi4_slave" kind="altera_axi4_slave" version="21.1">
-   <!-- The connection points exposed by a module instance for the
-particular module parameters. Connection points and their
-parameters are a RESULT of the module parameters. -->
-   <parameter name="associatedClock">
-    <type>java.lang.String</type>
-    <value>clock</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>true</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="associatedReset">
-    <type>java.lang.String</type>
-    <value>reset_sink</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>true</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="trustzoneAware">
-    <type>boolean</type>
-    <value>true</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>false</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="maximumOutstandingReads">
-    <type>java.lang.Integer</type>
-    <value>1</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>false</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="maximumOutstandingWrites">
-    <type>java.lang.Integer</type>
-    <value>1</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>false</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="maximumOutstandingTransactions">
-    <type>java.lang.Integer</type>
-    <value>1</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>false</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="readAcceptanceCapability">
-    <type>java.lang.Integer</type>
-    <value>1</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>true</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="writeAcceptanceCapability">
-    <type>java.lang.Integer</type>
-    <value>1</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>true</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="combinedAcceptanceCapability">
-    <type>java.lang.Integer</type>
-    <value>1</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>true</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="readDataReorderingDepth">
-    <type>java.lang.Integer</type>
-    <value>1</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>true</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="bridgesToMaster">
-    <type>com.altera.entityinterfaces.IConnectionPoint</type>
-    <value></value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>true</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="deviceFamily">
-    <type>java.lang.String</type>
-    <value>UNKNOWN</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>true</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="generateLegacySim">
-    <type>boolean</type>
-    <value>false</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>true</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="addressSpan">
-    <type>java.math.BigInteger</type>
-    <value>16384</value>
-    <derived>true</derived>
-    <enabled>true</enabled>
-    <visible>false</visible>
-    <valid>true</valid>
-   </parameter>
-   <type>axi4</type>
-   <isStart>false</isStart>
-   <port>
-    <name>araddr</name>
-    <direction>Input</direction>
-    <width>14</width>
-    <role>araddr</role>
-   </port>
-   <port>
-    <name>arburst</name>
-    <direction>Input</direction>
-    <width>2</width>
-    <role>arburst</role>
-   </port>
-   <port>
-    <name>arcache</name>
-    <direction>Input</direction>
-    <width>4</width>
-    <role>arcache</role>
-   </port>
-   <port>
-    <name>arid</name>
-    <direction>Input</direction>
-    <width>2</width>
-    <role>arid</role>
-   </port>
-   <port>
-    <name>arlen</name>
-    <direction>Input</direction>
-    <width>8</width>
-    <role>arlen</role>
-   </port>
-   <port>
-    <name>arlock</name>
-    <direction>Input</direction>
-    <width>1</width>
-    <role>arlock</role>
-   </port>
-   <port>
-    <name>arprot</name>
-    <direction>Input</direction>
-    <width>3</width>
-    <role>arprot</role>
-   </port>
-   <port>
-    <name>arqos</name>
-    <direction>Input</direction>
-    <width>4</width>
-    <role>arqos</role>
-   </port>
-   <port>
-    <name>arready</name>
-    <direction>Output</direction>
-    <width>1</width>
-    <role>arready</role>
-   </port>
-   <port>
-    <name>arregion</name>
-    <direction>Input</direction>
-    <width>4</width>
-    <role>arregion</role>
-   </port>
-   <port>
-    <name>arsize</name>
-    <direction>Input</direction>
-    <width>3</width>
-    <role>arsize</role>
-   </port>
-   <port>
-    <name>arvalid</name>
-    <direction>Input</direction>
-    <width>1</width>
-    <role>arvalid</role>
-   </port>
-   <port>
-    <name>awaddr</name>
-    <direction>Input</direction>
-    <width>14</width>
-    <role>awaddr</role>
-   </port>
-   <port>
-    <name>awburst</name>
-    <direction>Input</direction>
-    <width>2</width>
-    <role>awburst</role>
-   </port>
-   <port>
-    <name>awcache</name>
-    <direction>Input</direction>
-    <width>4</width>
-    <role>awcache</role>
-   </port>
-   <port>
-    <name>awid</name>
-    <direction>Input</direction>
-    <width>2</width>
-    <role>awid</role>
-   </port>
-   <port>
-    <name>awlen</name>
-    <direction>Input</direction>
-    <width>8</width>
-    <role>awlen</role>
-   </port>
-   <port>
-    <name>awlock</name>
-    <direction>Input</direction>
-    <width>1</width>
-    <role>awlock</role>
-   </port>
-   <port>
-    <name>awprot</name>
-    <direction>Input</direction>
-    <width>3</width>
-    <role>awprot</role>
-   </port>
-   <port>
-    <name>awqos</name>
-    <direction>Input</direction>
-    <width>4</width>
-    <role>awqos</role>
-   </port>
-   <port>
-    <name>awready</name>
-    <direction>Output</direction>
-    <width>1</width>
-    <role>awready</role>
-   </port>
-   <port>
-    <name>awregion</name>
-    <direction>Input</direction>
-    <width>4</width>
-    <role>awregion</role>
-   </port>
-   <port>
-    <name>awsize</name>
-    <direction>Input</direction>
-    <width>3</width>
-    <role>awsize</role>
-   </port>
-   <port>
-    <name>awvalid</name>
-    <direction>Input</direction>
-    <width>1</width>
-    <role>awvalid</role>
-   </port>
-   <port>
-    <name>bid</name>
-    <direction>Output</direction>
-    <width>2</width>
-    <role>bid</role>
-   </port>
-   <port>
-    <name>bready</name>
-    <direction>Input</direction>
-    <width>1</width>
-    <role>bready</role>
-   </port>
-   <port>
-    <name>bresp</name>
-    <direction>Output</direction>
-    <width>2</width>
-    <role>bresp</role>
-   </port>
-   <port>
-    <name>bvalid</name>
-    <direction>Output</direction>
-    <width>1</width>
-    <role>bvalid</role>
-   </port>
-   <port>
-    <name>rdata</name>
-    <direction>Output</direction>
-    <width>128</width>
-    <role>rdata</role>
-   </port>
-   <port>
-    <name>rid</name>
-    <direction>Output</direction>
-    <width>2</width>
-    <role>rid</role>
-   </port>
-   <port>
-    <name>rlast</name>
-    <direction>Output</direction>
-    <width>1</width>
-    <role>rlast</role>
-   </port>
-   <port>
-    <name>rready</name>
-    <direction>Input</direction>
-    <width>1</width>
-    <role>rready</role>
-   </port>
-   <port>
-    <name>rresp</name>
-    <direction>Output</direction>
-    <width>2</width>
-    <role>rresp</role>
-   </port>
-   <port>
-    <name>rvalid</name>
-    <direction>Output</direction>
-    <width>1</width>
-    <role>rvalid</role>
-   </port>
-   <port>
-    <name>wdata</name>
-    <direction>Input</direction>
-    <width>128</width>
-    <role>wdata</role>
-   </port>
-   <port>
-    <name>wlast</name>
-    <direction>Input</direction>
-    <width>1</width>
-    <role>wlast</role>
-   </port>
-   <port>
-    <name>wready</name>
-    <direction>Output</direction>
-    <width>1</width>
-    <role>wready</role>
-   </port>
-   <port>
-    <name>wstrb</name>
-    <direction>Input</direction>
-    <width>16</width>
-    <role>wstrb</role>
-   </port>
-   <port>
-    <name>wvalid</name>
-    <direction>Input</direction>
-    <width>1</width>
-    <role>wvalid</role>
-   </port>
-  </interface>
-  <interface name="reset_sink" kind="reset_sink" version="21.1">
-   <!-- The connection points exposed by a module instance for the
-particular module parameters. Connection points and their
-parameters are a RESULT of the module parameters. -->
-   <parameter name="associatedClock">
-    <type>java.lang.String</type>
-    <value>clock</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>true</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="synchronousEdges">
-    <type>com.altera.sopcmodel.reset.Reset$Edges</type>
-    <value>DEASSERT</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>true</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="deviceFamily">
-    <type>java.lang.String</type>
-    <value>UNKNOWN</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>true</visible>
-    <valid>true</valid>
-   </parameter>
-   <parameter name="generateLegacySim">
-    <type>boolean</type>
-    <value>false</value>
-    <derived>false</derived>
-    <enabled>true</enabled>
-    <visible>true</visible>
-    <valid>true</valid>
-   </parameter>
-   <type>reset</type>
-   <isStart>false</isStart>
-   <port>
-    <name>RST_N</name>
-    <direction>Input</direction>
-    <width>1</width>
-    <role>reset_n</role>
-   </port>
-  </interface>
- </module>
- <module name="axiMaster_0" kind="axiMaster" version="1.0" path="axiMaster_0">
+ <module
+   name="axi4Master1_0"
+   kind="axi4Master1"
+   version="1.0"
+   path="axi4Master1_0">
   <!-- Describes a single module. Module parameters are
 the requested settings for a module instance. -->
   <parameter name="deviceFamily">
@@ -952,12 +493,1413 @@ parameters are a RESULT of the module parameters. -->
    </port>
    <memoryBlock>
     <isBridge>false</isBridge>
-    <moduleName>axi4Slave_0</moduleName>
+    <moduleName>axi4Slave5_0</moduleName>
     <slaveName>altera_axi4_slave</slaveName>
-    <name>axi4Slave_0.altera_axi4_slave</name>
+    <name>axi4Slave5_0.altera_axi4_slave</name>
     <baseAddress>0</baseAddress>
-    <span>16384</span>
+    <span>8192</span>
    </memoryBlock>
+   <memoryBlock>
+    <isBridge>false</isBridge>
+    <moduleName>axi4Slave7_0</moduleName>
+    <slaveName>altera_axi4_slave</slaveName>
+    <name>axi4Slave7_0.altera_axi4_slave</name>
+    <baseAddress>8192</baseAddress>
+    <span>8192</span>
+   </memoryBlock>
+  </interface>
+  <interface name="reset_sink" kind="reset_sink" version="21.1">
+   <!-- The connection points exposed by a module instance for the
+particular module parameters. Connection points and their
+parameters are a RESULT of the module parameters. -->
+   <parameter name="associatedClock">
+    <type>java.lang.String</type>
+    <value>clock</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="synchronousEdges">
+    <type>com.altera.sopcmodel.reset.Reset$Edges</type>
+    <value>DEASSERT</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="deviceFamily">
+    <type>java.lang.String</type>
+    <value>UNKNOWN</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="generateLegacySim">
+    <type>boolean</type>
+    <value>false</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <type>reset</type>
+   <isStart>false</isStart>
+   <port>
+    <name>RST_N</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>reset_n</role>
+   </port>
+  </interface>
+ </module>
+ <module
+   name="axi4Master2_0"
+   kind="axi4Master2"
+   version="1.0"
+   path="axi4Master2_0">
+  <!-- Describes a single module. Module parameters are
+the requested settings for a module instance. -->
+  <parameter name="deviceFamily">
+   <type>java.lang.String</type>
+   <value>UNKNOWN</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="generateLegacySim">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <interface name="clock" kind="clock_sink" version="21.1">
+   <!-- The connection points exposed by a module instance for the
+particular module parameters. Connection points and their
+parameters are a RESULT of the module parameters. -->
+   <parameter name="externallyDriven">
+    <type>boolean</type>
+    <value>false</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="ptfSchematicName">
+    <type>java.lang.String</type>
+    <value></value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="deviceFamily">
+    <type>java.lang.String</type>
+    <value>UNKNOWN</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="generateLegacySim">
+    <type>boolean</type>
+    <value>false</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <type>clock</type>
+   <isStart>false</isStart>
+   <port>
+    <name>CLK</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>clk</role>
+   </port>
+  </interface>
+  <interface name="altera_axi4_master" kind="altera_axi4_master" version="21.1">
+   <!-- The connection points exposed by a module instance for the
+particular module parameters. Connection points and their
+parameters are a RESULT of the module parameters. -->
+   <parameter name="associatedClock">
+    <type>java.lang.String</type>
+    <value>clock</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="associatedReset">
+    <type>java.lang.String</type>
+    <value>reset_sink</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="trustzoneAware">
+    <type>boolean</type>
+    <value>true</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="maximumOutstandingReads">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="maximumOutstandingWrites">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="maximumOutstandingTransactions">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="readIssuingCapability">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="writeIssuingCapability">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="combinedIssuingCapability">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="deviceFamily">
+    <type>java.lang.String</type>
+    <value>UNKNOWN</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="generateLegacySim">
+    <type>boolean</type>
+    <value>false</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <type>axi4</type>
+   <isStart>true</isStart>
+   <port>
+    <name>araddr</name>
+    <direction>Output</direction>
+    <width>14</width>
+    <role>araddr</role>
+   </port>
+   <port>
+    <name>arburst</name>
+    <direction>Output</direction>
+    <width>2</width>
+    <role>arburst</role>
+   </port>
+   <port>
+    <name>arcache</name>
+    <direction>Output</direction>
+    <width>4</width>
+    <role>arcache</role>
+   </port>
+   <port>
+    <name>arid</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>arid</role>
+   </port>
+   <port>
+    <name>arlen</name>
+    <direction>Output</direction>
+    <width>8</width>
+    <role>arlen</role>
+   </port>
+   <port>
+    <name>arlock</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>arlock</role>
+   </port>
+   <port>
+    <name>arprot</name>
+    <direction>Output</direction>
+    <width>3</width>
+    <role>arprot</role>
+   </port>
+   <port>
+    <name>arqos</name>
+    <direction>Output</direction>
+    <width>4</width>
+    <role>arqos</role>
+   </port>
+   <port>
+    <name>arready</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>arready</role>
+   </port>
+   <port>
+    <name>arregion</name>
+    <direction>Output</direction>
+    <width>4</width>
+    <role>arregion</role>
+   </port>
+   <port>
+    <name>arsize</name>
+    <direction>Output</direction>
+    <width>3</width>
+    <role>arsize</role>
+   </port>
+   <port>
+    <name>arvalid</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>arvalid</role>
+   </port>
+   <port>
+    <name>awaddr</name>
+    <direction>Output</direction>
+    <width>14</width>
+    <role>awaddr</role>
+   </port>
+   <port>
+    <name>awburst</name>
+    <direction>Output</direction>
+    <width>2</width>
+    <role>awburst</role>
+   </port>
+   <port>
+    <name>awcache</name>
+    <direction>Output</direction>
+    <width>4</width>
+    <role>awcache</role>
+   </port>
+   <port>
+    <name>awid</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>awid</role>
+   </port>
+   <port>
+    <name>awlen</name>
+    <direction>Output</direction>
+    <width>8</width>
+    <role>awlen</role>
+   </port>
+   <port>
+    <name>awlock</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>awlock</role>
+   </port>
+   <port>
+    <name>awprot</name>
+    <direction>Output</direction>
+    <width>3</width>
+    <role>awprot</role>
+   </port>
+   <port>
+    <name>awqos</name>
+    <direction>Output</direction>
+    <width>4</width>
+    <role>awqos</role>
+   </port>
+   <port>
+    <name>awready</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>awready</role>
+   </port>
+   <port>
+    <name>awregion</name>
+    <direction>Output</direction>
+    <width>4</width>
+    <role>awregion</role>
+   </port>
+   <port>
+    <name>awsize</name>
+    <direction>Output</direction>
+    <width>3</width>
+    <role>awsize</role>
+   </port>
+   <port>
+    <name>awvalid</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>awvalid</role>
+   </port>
+   <port>
+    <name>bid</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>bid</role>
+   </port>
+   <port>
+    <name>bready</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>bready</role>
+   </port>
+   <port>
+    <name>bresp</name>
+    <direction>Input</direction>
+    <width>2</width>
+    <role>bresp</role>
+   </port>
+   <port>
+    <name>bvalid</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>bvalid</role>
+   </port>
+   <port>
+    <name>rdata</name>
+    <direction>Input</direction>
+    <width>128</width>
+    <role>rdata</role>
+   </port>
+   <port>
+    <name>rid</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>rid</role>
+   </port>
+   <port>
+    <name>rlast</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>rlast</role>
+   </port>
+   <port>
+    <name>rready</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>rready</role>
+   </port>
+   <port>
+    <name>rresp</name>
+    <direction>Input</direction>
+    <width>2</width>
+    <role>rresp</role>
+   </port>
+   <port>
+    <name>rvalid</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>rvalid</role>
+   </port>
+   <port>
+    <name>wdata</name>
+    <direction>Output</direction>
+    <width>128</width>
+    <role>wdata</role>
+   </port>
+   <port>
+    <name>wlast</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>wlast</role>
+   </port>
+   <port>
+    <name>wready</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>wready</role>
+   </port>
+   <port>
+    <name>wstrb</name>
+    <direction>Output</direction>
+    <width>16</width>
+    <role>wstrb</role>
+   </port>
+   <port>
+    <name>wvalid</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>wvalid</role>
+   </port>
+   <memoryBlock>
+    <isBridge>false</isBridge>
+    <moduleName>axi4Slave5_0</moduleName>
+    <slaveName>altera_axi4_slave</slaveName>
+    <name>axi4Slave5_0.altera_axi4_slave</name>
+    <baseAddress>0</baseAddress>
+    <span>8192</span>
+   </memoryBlock>
+   <memoryBlock>
+    <isBridge>false</isBridge>
+    <moduleName>axi4Slave7_0</moduleName>
+    <slaveName>altera_axi4_slave</slaveName>
+    <name>axi4Slave7_0.altera_axi4_slave</name>
+    <baseAddress>8192</baseAddress>
+    <span>8192</span>
+   </memoryBlock>
+  </interface>
+  <interface name="reset_sink" kind="reset_sink" version="21.1">
+   <!-- The connection points exposed by a module instance for the
+particular module parameters. Connection points and their
+parameters are a RESULT of the module parameters. -->
+   <parameter name="associatedClock">
+    <type>java.lang.String</type>
+    <value>clock</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="synchronousEdges">
+    <type>com.altera.sopcmodel.reset.Reset$Edges</type>
+    <value>DEASSERT</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="deviceFamily">
+    <type>java.lang.String</type>
+    <value>UNKNOWN</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="generateLegacySim">
+    <type>boolean</type>
+    <value>false</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <type>reset</type>
+   <isStart>false</isStart>
+   <port>
+    <name>RST_N</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>reset_n</role>
+   </port>
+  </interface>
+ </module>
+ <module
+   name="axi4Slave5_0"
+   kind="axi4Slave5"
+   version="1.0"
+   path="axi4Slave5_0">
+  <!-- Describes a single module. Module parameters are
+the requested settings for a module instance. -->
+  <parameter name="deviceFamily">
+   <type>java.lang.String</type>
+   <value>UNKNOWN</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="generateLegacySim">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <interface name="clock" kind="clock_sink" version="21.1">
+   <!-- The connection points exposed by a module instance for the
+particular module parameters. Connection points and their
+parameters are a RESULT of the module parameters. -->
+   <parameter name="externallyDriven">
+    <type>boolean</type>
+    <value>false</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="ptfSchematicName">
+    <type>java.lang.String</type>
+    <value></value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="deviceFamily">
+    <type>java.lang.String</type>
+    <value>UNKNOWN</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="generateLegacySim">
+    <type>boolean</type>
+    <value>false</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <type>clock</type>
+   <isStart>false</isStart>
+   <port>
+    <name>CLK</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>clk</role>
+   </port>
+  </interface>
+  <interface name="altera_axi4_slave" kind="altera_axi4_slave" version="21.1">
+   <!-- The connection points exposed by a module instance for the
+particular module parameters. Connection points and their
+parameters are a RESULT of the module parameters. -->
+   <parameter name="associatedClock">
+    <type>java.lang.String</type>
+    <value>clock</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="associatedReset">
+    <type>java.lang.String</type>
+    <value>reset_sink</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="trustzoneAware">
+    <type>boolean</type>
+    <value>true</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="maximumOutstandingReads">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="maximumOutstandingWrites">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="maximumOutstandingTransactions">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="readAcceptanceCapability">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="writeAcceptanceCapability">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="combinedAcceptanceCapability">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="readDataReorderingDepth">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="bridgesToMaster">
+    <type>com.altera.entityinterfaces.IConnectionPoint</type>
+    <value></value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="deviceFamily">
+    <type>java.lang.String</type>
+    <value>UNKNOWN</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="generateLegacySim">
+    <type>boolean</type>
+    <value>false</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="addressSpan">
+    <type>java.math.BigInteger</type>
+    <value>8192</value>
+    <derived>true</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <type>axi4</type>
+   <isStart>false</isStart>
+   <port>
+    <name>araddr</name>
+    <direction>Input</direction>
+    <width>13</width>
+    <role>araddr</role>
+   </port>
+   <port>
+    <name>arburst</name>
+    <direction>Input</direction>
+    <width>2</width>
+    <role>arburst</role>
+   </port>
+   <port>
+    <name>arcache</name>
+    <direction>Input</direction>
+    <width>4</width>
+    <role>arcache</role>
+   </port>
+   <port>
+    <name>arid</name>
+    <direction>Input</direction>
+    <width>2</width>
+    <role>arid</role>
+   </port>
+   <port>
+    <name>arlen</name>
+    <direction>Input</direction>
+    <width>8</width>
+    <role>arlen</role>
+   </port>
+   <port>
+    <name>arlock</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>arlock</role>
+   </port>
+   <port>
+    <name>arprot</name>
+    <direction>Input</direction>
+    <width>3</width>
+    <role>arprot</role>
+   </port>
+   <port>
+    <name>arqos</name>
+    <direction>Input</direction>
+    <width>4</width>
+    <role>arqos</role>
+   </port>
+   <port>
+    <name>arready</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>arready</role>
+   </port>
+   <port>
+    <name>arregion</name>
+    <direction>Input</direction>
+    <width>4</width>
+    <role>arregion</role>
+   </port>
+   <port>
+    <name>arsize</name>
+    <direction>Input</direction>
+    <width>3</width>
+    <role>arsize</role>
+   </port>
+   <port>
+    <name>arvalid</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>arvalid</role>
+   </port>
+   <port>
+    <name>awaddr</name>
+    <direction>Input</direction>
+    <width>13</width>
+    <role>awaddr</role>
+   </port>
+   <port>
+    <name>awburst</name>
+    <direction>Input</direction>
+    <width>2</width>
+    <role>awburst</role>
+   </port>
+   <port>
+    <name>awcache</name>
+    <direction>Input</direction>
+    <width>4</width>
+    <role>awcache</role>
+   </port>
+   <port>
+    <name>awid</name>
+    <direction>Input</direction>
+    <width>2</width>
+    <role>awid</role>
+   </port>
+   <port>
+    <name>awlen</name>
+    <direction>Input</direction>
+    <width>8</width>
+    <role>awlen</role>
+   </port>
+   <port>
+    <name>awlock</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>awlock</role>
+   </port>
+   <port>
+    <name>awprot</name>
+    <direction>Input</direction>
+    <width>3</width>
+    <role>awprot</role>
+   </port>
+   <port>
+    <name>awqos</name>
+    <direction>Input</direction>
+    <width>4</width>
+    <role>awqos</role>
+   </port>
+   <port>
+    <name>awready</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>awready</role>
+   </port>
+   <port>
+    <name>awregion</name>
+    <direction>Input</direction>
+    <width>4</width>
+    <role>awregion</role>
+   </port>
+   <port>
+    <name>awsize</name>
+    <direction>Input</direction>
+    <width>3</width>
+    <role>awsize</role>
+   </port>
+   <port>
+    <name>awvalid</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>awvalid</role>
+   </port>
+   <port>
+    <name>bid</name>
+    <direction>Output</direction>
+    <width>2</width>
+    <role>bid</role>
+   </port>
+   <port>
+    <name>bready</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>bready</role>
+   </port>
+   <port>
+    <name>bresp</name>
+    <direction>Output</direction>
+    <width>2</width>
+    <role>bresp</role>
+   </port>
+   <port>
+    <name>bvalid</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>bvalid</role>
+   </port>
+   <port>
+    <name>rdata</name>
+    <direction>Output</direction>
+    <width>128</width>
+    <role>rdata</role>
+   </port>
+   <port>
+    <name>rid</name>
+    <direction>Output</direction>
+    <width>2</width>
+    <role>rid</role>
+   </port>
+   <port>
+    <name>rlast</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>rlast</role>
+   </port>
+   <port>
+    <name>rready</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>rready</role>
+   </port>
+   <port>
+    <name>rresp</name>
+    <direction>Output</direction>
+    <width>2</width>
+    <role>rresp</role>
+   </port>
+   <port>
+    <name>rvalid</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>rvalid</role>
+   </port>
+   <port>
+    <name>wdata</name>
+    <direction>Input</direction>
+    <width>128</width>
+    <role>wdata</role>
+   </port>
+   <port>
+    <name>wlast</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>wlast</role>
+   </port>
+   <port>
+    <name>wready</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>wready</role>
+   </port>
+   <port>
+    <name>wstrb</name>
+    <direction>Input</direction>
+    <width>16</width>
+    <role>wstrb</role>
+   </port>
+   <port>
+    <name>wvalid</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>wvalid</role>
+   </port>
+  </interface>
+  <interface name="reset_sink" kind="reset_sink" version="21.1">
+   <!-- The connection points exposed by a module instance for the
+particular module parameters. Connection points and their
+parameters are a RESULT of the module parameters. -->
+   <parameter name="associatedClock">
+    <type>java.lang.String</type>
+    <value>clock</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="synchronousEdges">
+    <type>com.altera.sopcmodel.reset.Reset$Edges</type>
+    <value>DEASSERT</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="deviceFamily">
+    <type>java.lang.String</type>
+    <value>UNKNOWN</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="generateLegacySim">
+    <type>boolean</type>
+    <value>false</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <type>reset</type>
+   <isStart>false</isStart>
+   <port>
+    <name>RST_N</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>reset_n</role>
+   </port>
+  </interface>
+ </module>
+ <module
+   name="axi4Slave7_0"
+   kind="axi4Slave7"
+   version="1.0"
+   path="axi4Slave7_0">
+  <!-- Describes a single module. Module parameters are
+the requested settings for a module instance. -->
+  <parameter name="deviceFamily">
+   <type>java.lang.String</type>
+   <value>UNKNOWN</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="generateLegacySim">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <interface name="clock" kind="clock_sink" version="21.1">
+   <!-- The connection points exposed by a module instance for the
+particular module parameters. Connection points and their
+parameters are a RESULT of the module parameters. -->
+   <parameter name="externallyDriven">
+    <type>boolean</type>
+    <value>false</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="ptfSchematicName">
+    <type>java.lang.String</type>
+    <value></value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="deviceFamily">
+    <type>java.lang.String</type>
+    <value>UNKNOWN</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="generateLegacySim">
+    <type>boolean</type>
+    <value>false</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <type>clock</type>
+   <isStart>false</isStart>
+   <port>
+    <name>CLK</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>clk</role>
+   </port>
+  </interface>
+  <interface name="altera_axi4_slave" kind="altera_axi4_slave" version="21.1">
+   <!-- The connection points exposed by a module instance for the
+particular module parameters. Connection points and their
+parameters are a RESULT of the module parameters. -->
+   <parameter name="associatedClock">
+    <type>java.lang.String</type>
+    <value>clock</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="associatedReset">
+    <type>java.lang.String</type>
+    <value>reset_sink</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="trustzoneAware">
+    <type>boolean</type>
+    <value>true</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="maximumOutstandingReads">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="maximumOutstandingWrites">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="maximumOutstandingTransactions">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="readAcceptanceCapability">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="writeAcceptanceCapability">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="combinedAcceptanceCapability">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="readDataReorderingDepth">
+    <type>java.lang.Integer</type>
+    <value>1</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="bridgesToMaster">
+    <type>com.altera.entityinterfaces.IConnectionPoint</type>
+    <value></value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="deviceFamily">
+    <type>java.lang.String</type>
+    <value>UNKNOWN</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="generateLegacySim">
+    <type>boolean</type>
+    <value>false</value>
+    <derived>false</derived>
+    <enabled>true</enabled>
+    <visible>true</visible>
+    <valid>true</valid>
+   </parameter>
+   <parameter name="addressSpan">
+    <type>java.math.BigInteger</type>
+    <value>8192</value>
+    <derived>true</derived>
+    <enabled>true</enabled>
+    <visible>false</visible>
+    <valid>true</valid>
+   </parameter>
+   <type>axi4</type>
+   <isStart>false</isStart>
+   <port>
+    <name>araddr</name>
+    <direction>Input</direction>
+    <width>13</width>
+    <role>araddr</role>
+   </port>
+   <port>
+    <name>arburst</name>
+    <direction>Input</direction>
+    <width>2</width>
+    <role>arburst</role>
+   </port>
+   <port>
+    <name>arcache</name>
+    <direction>Input</direction>
+    <width>4</width>
+    <role>arcache</role>
+   </port>
+   <port>
+    <name>arid</name>
+    <direction>Input</direction>
+    <width>2</width>
+    <role>arid</role>
+   </port>
+   <port>
+    <name>arlen</name>
+    <direction>Input</direction>
+    <width>8</width>
+    <role>arlen</role>
+   </port>
+   <port>
+    <name>arlock</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>arlock</role>
+   </port>
+   <port>
+    <name>arprot</name>
+    <direction>Input</direction>
+    <width>3</width>
+    <role>arprot</role>
+   </port>
+   <port>
+    <name>arqos</name>
+    <direction>Input</direction>
+    <width>4</width>
+    <role>arqos</role>
+   </port>
+   <port>
+    <name>arready</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>arready</role>
+   </port>
+   <port>
+    <name>arregion</name>
+    <direction>Input</direction>
+    <width>4</width>
+    <role>arregion</role>
+   </port>
+   <port>
+    <name>arsize</name>
+    <direction>Input</direction>
+    <width>3</width>
+    <role>arsize</role>
+   </port>
+   <port>
+    <name>arvalid</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>arvalid</role>
+   </port>
+   <port>
+    <name>awaddr</name>
+    <direction>Input</direction>
+    <width>13</width>
+    <role>awaddr</role>
+   </port>
+   <port>
+    <name>awburst</name>
+    <direction>Input</direction>
+    <width>2</width>
+    <role>awburst</role>
+   </port>
+   <port>
+    <name>awcache</name>
+    <direction>Input</direction>
+    <width>4</width>
+    <role>awcache</role>
+   </port>
+   <port>
+    <name>awid</name>
+    <direction>Input</direction>
+    <width>2</width>
+    <role>awid</role>
+   </port>
+   <port>
+    <name>awlen</name>
+    <direction>Input</direction>
+    <width>8</width>
+    <role>awlen</role>
+   </port>
+   <port>
+    <name>awlock</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>awlock</role>
+   </port>
+   <port>
+    <name>awprot</name>
+    <direction>Input</direction>
+    <width>3</width>
+    <role>awprot</role>
+   </port>
+   <port>
+    <name>awqos</name>
+    <direction>Input</direction>
+    <width>4</width>
+    <role>awqos</role>
+   </port>
+   <port>
+    <name>awready</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>awready</role>
+   </port>
+   <port>
+    <name>awregion</name>
+    <direction>Input</direction>
+    <width>4</width>
+    <role>awregion</role>
+   </port>
+   <port>
+    <name>awsize</name>
+    <direction>Input</direction>
+    <width>3</width>
+    <role>awsize</role>
+   </port>
+   <port>
+    <name>awvalid</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>awvalid</role>
+   </port>
+   <port>
+    <name>bid</name>
+    <direction>Output</direction>
+    <width>2</width>
+    <role>bid</role>
+   </port>
+   <port>
+    <name>bready</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>bready</role>
+   </port>
+   <port>
+    <name>bresp</name>
+    <direction>Output</direction>
+    <width>2</width>
+    <role>bresp</role>
+   </port>
+   <port>
+    <name>bvalid</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>bvalid</role>
+   </port>
+   <port>
+    <name>rdata</name>
+    <direction>Output</direction>
+    <width>128</width>
+    <role>rdata</role>
+   </port>
+   <port>
+    <name>rid</name>
+    <direction>Output</direction>
+    <width>2</width>
+    <role>rid</role>
+   </port>
+   <port>
+    <name>rlast</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>rlast</role>
+   </port>
+   <port>
+    <name>rready</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>rready</role>
+   </port>
+   <port>
+    <name>rresp</name>
+    <direction>Output</direction>
+    <width>2</width>
+    <role>rresp</role>
+   </port>
+   <port>
+    <name>rvalid</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>rvalid</role>
+   </port>
+   <port>
+    <name>wdata</name>
+    <direction>Input</direction>
+    <width>128</width>
+    <role>wdata</role>
+   </port>
+   <port>
+    <name>wlast</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>wlast</role>
+   </port>
+   <port>
+    <name>wready</name>
+    <direction>Output</direction>
+    <width>1</width>
+    <role>wready</role>
+   </port>
+   <port>
+    <name>wstrb</name>
+    <direction>Input</direction>
+    <width>16</width>
+    <role>wstrb</role>
+   </port>
+   <port>
+    <name>wvalid</name>
+    <direction>Input</direction>
+    <width>1</width>
+    <role>wvalid</role>
+   </port>
   </interface>
   <interface name="reset_sink" kind="reset_sink" version="21.1">
    <!-- The connection points exposed by a module instance for the
@@ -1242,15 +2184,27 @@ parameters are a RESULT of the module parameters. -->
    </port>
    <clockDomainMember>
     <isBridge>false</isBridge>
-    <moduleName>axi4Slave_0</moduleName>
+    <moduleName>axi4Master1_0</moduleName>
     <slaveName>clock</slaveName>
-    <name>axi4Slave_0.clock</name>
+    <name>axi4Master1_0.clock</name>
    </clockDomainMember>
    <clockDomainMember>
     <isBridge>false</isBridge>
-    <moduleName>axiMaster_0</moduleName>
+    <moduleName>axi4Master2_0</moduleName>
     <slaveName>clock</slaveName>
-    <name>axiMaster_0.clock</name>
+    <name>axi4Master2_0.clock</name>
+   </clockDomainMember>
+   <clockDomainMember>
+    <isBridge>false</isBridge>
+    <moduleName>axi4Slave5_0</moduleName>
+    <slaveName>clock</slaveName>
+    <name>axi4Slave5_0.clock</name>
+   </clockDomainMember>
+   <clockDomainMember>
+    <isBridge>false</isBridge>
+    <moduleName>axi4Slave7_0</moduleName>
+    <slaveName>clock</slaveName>
+    <name>axi4Slave7_0.clock</name>
    </clockDomainMember>
   </interface>
   <interface name="clk_reset" kind="reset_source" version="21.1">
@@ -1316,11 +2270,11 @@ parameters are a RESULT of the module parameters. -->
   </interface>
  </module>
  <connection
-   name="axiMaster_0.altera_axi4_master/axi4Slave_0.altera_axi4_slave"
+   name="axi4Master2_0.altera_axi4_master/axi4Slave5_0.altera_axi4_slave"
    kind="avalon"
    version="21.1"
-   start="axiMaster_0.altera_axi4_master"
-   end="axi4Slave_0.altera_axi4_slave">
+   start="axi4Master2_0.altera_axi4_master"
+   end="axi4Slave5_0.altera_axi4_slave">
   <parameter name="arbitrationPriority">
    <type>int</type>
    <value>1</value>
@@ -1361,17 +2315,170 @@ parameters are a RESULT of the module parameters. -->
    <visible>true</visible>
    <valid>true</valid>
   </parameter>
-  <startModule>axiMaster_0</startModule>
+  <startModule>axi4Master2_0</startModule>
   <startConnectionPoint>altera_axi4_master</startConnectionPoint>
-  <endModule>axi4Slave_0</endModule>
+  <endModule>axi4Slave5_0</endModule>
   <endConnectionPoint>altera_axi4_slave</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk/axi4Slave_0.clock"
+   name="axi4Master2_0.altera_axi4_master/axi4Slave7_0.altera_axi4_slave"
+   kind="avalon"
+   version="21.1"
+   start="axi4Master2_0.altera_axi4_master"
+   end="axi4Slave7_0.altera_axi4_slave">
+  <parameter name="arbitrationPriority">
+   <type>int</type>
+   <value>1</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="baseAddress">
+   <type>java.math.BigInteger</type>
+   <value>0x2000</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="defaultConnection">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="deviceFamily">
+   <type>java.lang.String</type>
+   <value>UNKNOWN</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="generateLegacySim">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <startModule>axi4Master2_0</startModule>
+  <startConnectionPoint>altera_axi4_master</startConnectionPoint>
+  <endModule>axi4Slave7_0</endModule>
+  <endConnectionPoint>altera_axi4_slave</endConnectionPoint>
+ </connection>
+ <connection
+   name="axi4Master1_0.altera_axi4_master/axi4Slave5_0.altera_axi4_slave"
+   kind="avalon"
+   version="21.1"
+   start="axi4Master1_0.altera_axi4_master"
+   end="axi4Slave5_0.altera_axi4_slave">
+  <parameter name="arbitrationPriority">
+   <type>int</type>
+   <value>1</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="baseAddress">
+   <type>java.math.BigInteger</type>
+   <value>0x0000</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="defaultConnection">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="deviceFamily">
+   <type>java.lang.String</type>
+   <value>UNKNOWN</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="generateLegacySim">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <startModule>axi4Master1_0</startModule>
+  <startConnectionPoint>altera_axi4_master</startConnectionPoint>
+  <endModule>axi4Slave5_0</endModule>
+  <endConnectionPoint>altera_axi4_slave</endConnectionPoint>
+ </connection>
+ <connection
+   name="axi4Master1_0.altera_axi4_master/axi4Slave7_0.altera_axi4_slave"
+   kind="avalon"
+   version="21.1"
+   start="axi4Master1_0.altera_axi4_master"
+   end="axi4Slave7_0.altera_axi4_slave">
+  <parameter name="arbitrationPriority">
+   <type>int</type>
+   <value>1</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="baseAddress">
+   <type>java.math.BigInteger</type>
+   <value>0x2000</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="defaultConnection">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="deviceFamily">
+   <type>java.lang.String</type>
+   <value>UNKNOWN</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="generateLegacySim">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <startModule>axi4Master1_0</startModule>
+  <startConnectionPoint>altera_axi4_master</startConnectionPoint>
+  <endModule>axi4Slave7_0</endModule>
+  <endConnectionPoint>altera_axi4_slave</endConnectionPoint>
+ </connection>
+ <connection
+   name="clk_0.clk/axi4Master1_0.clock"
    kind="clock"
    version="21.1"
    start="clk_0.clk"
-   end="axi4Slave_0.clock">
+   end="axi4Master1_0.clock">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -1390,15 +2497,15 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk</startConnectionPoint>
-  <endModule>axi4Slave_0</endModule>
+  <endModule>axi4Master1_0</endModule>
   <endConnectionPoint>clock</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk/axiMaster_0.clock"
+   name="clk_0.clk/axi4Master2_0.clock"
    kind="clock"
    version="21.1"
    start="clk_0.clk"
-   end="axiMaster_0.clock">
+   end="axi4Master2_0.clock">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -1417,15 +2524,69 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk</startConnectionPoint>
-  <endModule>axiMaster_0</endModule>
+  <endModule>axi4Master2_0</endModule>
   <endConnectionPoint>clock</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk_reset/axi4Slave_0.reset_sink"
+   name="clk_0.clk/axi4Slave5_0.clock"
+   kind="clock"
+   version="21.1"
+   start="clk_0.clk"
+   end="axi4Slave5_0.clock">
+  <parameter name="deviceFamily">
+   <type>java.lang.String</type>
+   <value>UNKNOWN</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="generateLegacySim">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <startModule>clk_0</startModule>
+  <startConnectionPoint>clk</startConnectionPoint>
+  <endModule>axi4Slave5_0</endModule>
+  <endConnectionPoint>clock</endConnectionPoint>
+ </connection>
+ <connection
+   name="clk_0.clk/axi4Slave7_0.clock"
+   kind="clock"
+   version="21.1"
+   start="clk_0.clk"
+   end="axi4Slave7_0.clock">
+  <parameter name="deviceFamily">
+   <type>java.lang.String</type>
+   <value>UNKNOWN</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="generateLegacySim">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <startModule>clk_0</startModule>
+  <startConnectionPoint>clk</startConnectionPoint>
+  <endModule>axi4Slave7_0</endModule>
+  <endConnectionPoint>clock</endConnectionPoint>
+ </connection>
+ <connection
+   name="clk_0.clk_reset/axi4Master2_0.reset_sink"
    kind="reset"
    version="21.1"
    start="clk_0.clk_reset"
-   end="axi4Slave_0.reset_sink">
+   end="axi4Master2_0.reset_sink">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -1444,15 +2605,15 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk_reset</startConnectionPoint>
-  <endModule>axi4Slave_0</endModule>
+  <endModule>axi4Master2_0</endModule>
   <endConnectionPoint>reset_sink</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk_reset/axiMaster_0.reset_sink"
+   name="clk_0.clk_reset/axi4Master1_0.reset_sink"
    kind="reset"
    version="21.1"
    start="clk_0.clk_reset"
-   end="axiMaster_0.reset_sink">
+   end="axi4Master1_0.reset_sink">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -1471,19 +2632,73 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk_reset</startConnectionPoint>
-  <endModule>axiMaster_0</endModule>
+  <endModule>axi4Master1_0</endModule>
+  <endConnectionPoint>reset_sink</endConnectionPoint>
+ </connection>
+ <connection
+   name="clk_0.clk_reset/axi4Slave7_0.reset_sink"
+   kind="reset"
+   version="21.1"
+   start="clk_0.clk_reset"
+   end="axi4Slave7_0.reset_sink">
+  <parameter name="deviceFamily">
+   <type>java.lang.String</type>
+   <value>UNKNOWN</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="generateLegacySim">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <startModule>clk_0</startModule>
+  <startConnectionPoint>clk_reset</startConnectionPoint>
+  <endModule>axi4Slave7_0</endModule>
+  <endConnectionPoint>reset_sink</endConnectionPoint>
+ </connection>
+ <connection
+   name="clk_0.clk_reset/axi4Slave5_0.reset_sink"
+   kind="reset"
+   version="21.1"
+   start="clk_0.clk_reset"
+   end="axi4Slave5_0.reset_sink">
+  <parameter name="deviceFamily">
+   <type>java.lang.String</type>
+   <value>UNKNOWN</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="generateLegacySim">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <startModule>clk_0</startModule>
+  <startConnectionPoint>clk_reset</startConnectionPoint>
+  <endModule>axi4Slave5_0</endModule>
   <endConnectionPoint>reset_sink</endConnectionPoint>
  </connection>
  <plugin>
   <instanceCount>1</instanceCount>
-  <name>axi4Slave</name>
+  <name>axi4Master1</name>
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IModule</subtype>
-  <displayName>axi4Slave</displayName>
+  <displayName>axi4Master1</displayName>
   <version>1.0</version>
  </plugin>
  <plugin>
-  <instanceCount>2</instanceCount>
+  <instanceCount>4</instanceCount>
   <name>clock_sink</name>
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IMutableConnectionPoint</subtype>
@@ -1491,15 +2706,15 @@ parameters are a RESULT of the module parameters. -->
   <version>21.1</version>
  </plugin>
  <plugin>
-  <instanceCount>1</instanceCount>
-  <name>altera_axi4_slave</name>
+  <instanceCount>2</instanceCount>
+  <name>altera_axi4_master</name>
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IMutableConnectionPoint</subtype>
-  <displayName>AXI4 Slave</displayName>
+  <displayName>AXI4 Master</displayName>
   <version>21.1</version>
  </plugin>
  <plugin>
-  <instanceCount>2</instanceCount>
+  <instanceCount>4</instanceCount>
   <name>reset_sink</name>
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IMutableConnectionPoint</subtype>
@@ -1508,19 +2723,35 @@ parameters are a RESULT of the module parameters. -->
  </plugin>
  <plugin>
   <instanceCount>1</instanceCount>
-  <name>axiMaster</name>
+  <name>axi4Master2</name>
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IModule</subtype>
-  <displayName>axiMaster</displayName>
+  <displayName>axi4Master2</displayName>
   <version>1.0</version>
  </plugin>
  <plugin>
   <instanceCount>1</instanceCount>
-  <name>altera_axi4_master</name>
+  <name>axi4Slave5</name>
+  <type>com.altera.entityinterfaces.IElementClass</type>
+  <subtype>com.altera.entityinterfaces.IModule</subtype>
+  <displayName>axi4Slave5</displayName>
+  <version>1.0</version>
+ </plugin>
+ <plugin>
+  <instanceCount>2</instanceCount>
+  <name>altera_axi4_slave</name>
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IMutableConnectionPoint</subtype>
-  <displayName>AXI4 Master</displayName>
+  <displayName>AXI4 Slave</displayName>
   <version>21.1</version>
+ </plugin>
+ <plugin>
+  <instanceCount>1</instanceCount>
+  <name>axi4Slave7</name>
+  <type>com.altera.entityinterfaces.IElementClass</type>
+  <subtype>com.altera.entityinterfaces.IModule</subtype>
+  <displayName>axi4Slave7</displayName>
+  <version>1.0</version>
  </plugin>
  <plugin>
   <instanceCount>1</instanceCount>
@@ -1563,7 +2794,7 @@ parameters are a RESULT of the module parameters. -->
   <version>21.1</version>
  </plugin>
  <plugin>
-  <instanceCount>1</instanceCount>
+  <instanceCount>4</instanceCount>
   <name>avalon</name>
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IConnection</subtype>
@@ -1571,7 +2802,7 @@ parameters are a RESULT of the module parameters. -->
   <version>21.1</version>
  </plugin>
  <plugin>
-  <instanceCount>2</instanceCount>
+  <instanceCount>4</instanceCount>
   <name>clock</name>
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IConnection</subtype>
@@ -1579,7 +2810,7 @@ parameters are a RESULT of the module parameters. -->
   <version>21.1</version>
  </plugin>
  <plugin>
-  <instanceCount>2</instanceCount>
+  <instanceCount>4</instanceCount>
   <name>reset</name>
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IConnection</subtype>

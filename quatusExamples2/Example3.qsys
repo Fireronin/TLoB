@@ -9,7 +9,87 @@
    categories="System" />
  <parameter name="bonusData"><![CDATA[bonusData 
 {
-   element axi4Slave_0
+   element Example3
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
+   element Example3
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
+   element Example3
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
+   element Example3
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
+   element Example3
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
+   element Example3
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
+   element Example3
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
+   element Example3
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
+   element Example3
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
+   element axi4Master1_0
+   {
+      datum _sortIndex
+      {
+         value = "1";
+         type = "int";
+      }
+   }
+   element axi4Master2_0
    {
       datum _sortIndex
       {
@@ -17,12 +97,41 @@
          type = "int";
       }
    }
-   element axiMaster_0
+   element axi4Slave5_0
    {
       datum _sortIndex
       {
-         value = "1";
+         value = "3";
          type = "int";
+      }
+   }
+   element axi4Slave5_0.altera_axi4_slave
+   {
+      datum _lockedAddress
+      {
+         value = "0";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "0";
+         type = "String";
+      }
+   }
+   element axi4Slave7_0
+   {
+      datum _sortIndex
+      {
+         value = "4";
+         type = "int";
+      }
+   }
+   element axi4Slave7_0.altera_axi4_slave
+   {
+      datum baseAddress
+      {
+         value = "8192";
+         type = "String";
       }
    }
    element clk_0
@@ -56,8 +165,10 @@
  <instanceScript></instanceScript>
  <interface name="clk" internal="clk_0.clk_in" type="clock" dir="end" />
  <interface name="reset" internal="clk_0.clk_in_reset" type="reset" dir="end" />
- <module name="axi4Slave_0" kind="axi4Slave" version="1.0" enabled="1" />
- <module name="axiMaster_0" kind="axiMaster" version="1.0" enabled="1" />
+ <module name="axi4Master1_0" kind="axi4Master1" version="1.0" enabled="1" />
+ <module name="axi4Master2_0" kind="axi4Master2" version="1.0" enabled="1" />
+ <module name="axi4Slave5_0" kind="axi4Slave5" version="1.0" enabled="1" />
+ <module name="axi4Slave7_0" kind="axi4Slave7" version="1.0" enabled="1" />
  <module name="clk_0" kind="clock_source" version="21.1" enabled="1">
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="clockFrequencyKnown" value="true" />
@@ -67,24 +178,79 @@
  <connection
    kind="avalon"
    version="21.1"
-   start="axiMaster_0.altera_axi4_master"
-   end="axi4Slave_0.altera_axi4_slave">
+   start="axi4Master2_0.altera_axi4_master"
+   end="axi4Slave5_0.altera_axi4_slave">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
- <connection kind="clock" version="21.1" start="clk_0.clk" end="axi4Slave_0.clock" />
- <connection kind="clock" version="21.1" start="clk_0.clk" end="axiMaster_0.clock" />
+ <connection
+   kind="avalon"
+   version="21.1"
+   start="axi4Master2_0.altera_axi4_master"
+   end="axi4Slave7_0.altera_axi4_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x2000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="21.1"
+   start="axi4Master1_0.altera_axi4_master"
+   end="axi4Slave5_0.altera_axi4_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="21.1"
+   start="axi4Master1_0.altera_axi4_master"
+   end="axi4Slave7_0.altera_axi4_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x2000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="clock"
+   version="21.1"
+   start="clk_0.clk"
+   end="axi4Master1_0.clock" />
+ <connection
+   kind="clock"
+   version="21.1"
+   start="clk_0.clk"
+   end="axi4Master2_0.clock" />
+ <connection
+   kind="clock"
+   version="21.1"
+   start="clk_0.clk"
+   end="axi4Slave5_0.clock" />
+ <connection
+   kind="clock"
+   version="21.1"
+   start="clk_0.clk"
+   end="axi4Slave7_0.clock" />
  <connection
    kind="reset"
    version="21.1"
    start="clk_0.clk_reset"
-   end="axi4Slave_0.reset_sink" />
+   end="axi4Master2_0.reset_sink" />
  <connection
    kind="reset"
    version="21.1"
    start="clk_0.clk_reset"
-   end="axiMaster_0.reset_sink" />
+   end="axi4Master1_0.reset_sink" />
+ <connection
+   kind="reset"
+   version="21.1"
+   start="clk_0.clk_reset"
+   end="axi4Slave7_0.reset_sink" />
+ <connection
+   kind="reset"
+   version="21.1"
+   start="clk_0.clk_reset"
+   end="axi4Slave5_0.reset_sink" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.enableEccProtection" value="FALSE" />
  <interconnectRequirement for="$system" name="qsys_mm.insertDefaultSlave" value="FALSE" />

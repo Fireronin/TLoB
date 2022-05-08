@@ -1,7 +1,7 @@
 # Fdb version 3
-["pdflatex"] 1652021435 "/mnt/d/Mega/Documents/CS/TLoB/Latex/disertation.tex" "disertation.pdf" "disertation" 1652021440
+["pdflatex"] 1652023292 "/mnt/d/Mega/Documents/CS/TLoB/Latex/disertation.tex" "disertation.pdf" "disertation" 1652023296
   "/etc/texmf/web2c/texmf.cnf" 1635609237 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/mnt/d/Mega/Documents/CS/TLoB/Latex/disertation.tex" 1652021429 76041 0d323cbe3907f44b80cc8f6f167b75b8 ""
+  "/mnt/d/Mega/Documents/CS/TLoB/Latex/disertation.tex" 1652023286 76358 93d1539e0ea52a7d74e67ffe2934345d ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1200.tfm" 1136768653 1536 74b7293ec3713bb7fdca8dd1bd1f469c ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
@@ -169,10 +169,10 @@
   "charts/all_tokens.pdf" 1652018087 18606 66386c4dc18dc175a0b1ad2e028f91fd ""
   "charts/example1_lines.pdf" 1652018087 18477 f113e6f66440af386fbdc8f995c5f464 ""
   "charts/example1_tokens.pdf" 1652018086 18944 187d4df0b1dbfaa3b9e6dfd12445e2cf ""
-  "disertation.aux" 1652021439 14869 bd689a4a29bb58aa8485d66410854922 "pdflatex"
-  "disertation.out" 1652021439 4130 c89f0b4c9a57460f9329aa90308c5a73 "pdflatex"
-  "disertation.tex" 1652021429 76041 0d323cbe3907f44b80cc8f6f167b75b8 ""
-  "disertation.toc" 1652021439 6006 f974d61a81c9f44beceab50977742945 "pdflatex"
+  "disertation.aux" 1652023295 14867 34ad429b033182da0c757859bc48aff2 "pdflatex"
+  "disertation.out" 1652023296 4130 c89f0b4c9a57460f9329aa90308c5a73 "pdflatex"
+  "disertation.tex" 1652023286 76358 93d1539e0ea52a7d74e67ffe2934345d ""
+  "disertation.toc" 1652023296 6006 f974d61a81c9f44beceab50977742945 "pdflatex"
   "images/Example1AfterOrganization.png" 1651242024 51519 351ec08cbc86c983748ecc0ab59c9f41 ""
   "images/Example1BeforeOranization.png" 1651241128 12974 64d69c6c78a1cc54a811ee334298740b ""
   "images/Example1MySolution.png" 1652019315 189879 9bd3d3d6b601ec406d9daa5cadc91845 ""
@@ -192,8 +192,8 @@
   "pdfExports/LargeMapProcessing.pdf" 1651768194 25385 41ac221d518d69086c6eccf126924e0e ""
   "pdfExports/LargeMapResolve.pdf" 1651583880 22737 5a256a078b1168efde432a630027ceb5 ""
   (generated)
-  "disertation.pdf"
-  "disertation.toc"
-  "disertation.out"
-  "disertation.aux"
   "disertation.log"
+  "disertation.pdf"
+  "disertation.out"
+  "disertation.toc"
+  "disertation.aux"

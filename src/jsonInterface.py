@@ -57,8 +57,8 @@ def topLevelFromJSON(json_file,reload=False,output_dir=None,saveLocation=os.path
         for connection in json_file["connections"]:
             topLevel.addConnection(lookForKeyword("from",connection),lookForKeyword("to",connection))
 
-    if "busses" in json_file:
-        for bus in json_file["busses"]:
+    if "buses" in json_file:
+        for bus in json_file["buses"]:
             name = lookForKeyword("name",bus)
             function = lookForKeyword("function",bus)
             masters = lookForKeyword("masters",bus)

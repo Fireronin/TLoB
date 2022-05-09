@@ -19,7 +19,7 @@
             "function_params": []
         }
     ],
-    "busses": [
+    "buses": [
         {
             "name" : "mainBus",
             "function": "mkAXI4Bus",

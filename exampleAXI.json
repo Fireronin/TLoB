@@ -44,7 +44,7 @@
         }
     ],
     
-    "busses": [
+    "buses": [
         {
             "masters" : ["bf3"],
             "slaves" : ["bf4"],

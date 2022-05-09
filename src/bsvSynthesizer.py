@@ -64,8 +64,7 @@ class InstanceV2():
         self.creator_args = creator_args
         self.instance_name = instance_name
         self.module_args = module_args
-        self.input_context = {key:Variable(evaluateCustomStart(val)) for key,val in input_context.items()}
-        self.variables = self.input_context
+        self.variables = {key:Variable(evaluateCustomStart(val)) for key,val in input_context.items()}
         self.topLevel.addInstance(self,instance_name)
         if creator_args is not None:
             self.update()
@@ -93,16 +92,12 @@ class InstanceV2():
         creator_args = [self.topLevel.convertToTypeIde(arg,self.instance_name) for arg in self.creator_args]
         module_args = [self.topLevel.convertToTypeIde(arg,self.instance_name) for arg in self.module_args]
 
-        context = deepcopy(self.input_context)
         for i,pair in  enumerate( zip(self.creator.arguments.items(),creator_args)):
             arg,value = pair
             if type(value) == InstanceV2:
                 value = value.type_ide
             if isinstance(value, Type_ide):
                 self.db.merge(arg[1],value,self.variables) 
-                # for key,val in newVariables.items():
-                #     self.db.CAdd(context,key,val)
-            #this is just to check if everything is ok
             self.db.applyVariables(deepcopy(self.creator.arguments[arg[0]]),self.variables)
 
         ideCopy  = deepcopy(self.creator.return_type)
@@ -146,7 +141,7 @@ class VectorInstance():
     items: List[str]
     flit_type_ide:  Union[Type_ide,str]
     type_ide: Type_ide
-    instance_name: str = None
+    instance_name: str
 
     def __init__(self,topLevel,name):
         self.flit_type_ide= "flit"
@@ -164,11 +159,10 @@ class VectorInstance():
             self.flit_type_ide = "flit"
         self.type_ide = evaluateCustomStart(f"Vector::Vector#({len(self.items)},{self.flit_type_ide})","type_def_type")
 
-
     def add(self,item:str):
         itemType_ide = self.topLevel.convertToTypeIde(item,self.instance_name)
         try:
-            context = self.db.merge(self.flit_type_ide,itemType_ide,{})
+            self.db.merge(self.flit_type_ide,itemType_ide,{})
         except Exception as e:
             raise Exception("Adding item to vector failed types don't match")
         if len(self.items) == 0:
@@ -192,13 +186,12 @@ class VectorInstance():
         out =[]
         for name,value in proposed:
             try:
-                vars = self.db.merge(self.flit_type_ide,value,{})
+                self.db.merge(self.flit_type_ide,value,{})
             except Exception as e:
                 continue
             out.append(name)
         return out
         
-
     def __str__(self):
         output_str = []
         output_str.append(f"\t{self.type_ide} {self.instance_name};\n")
@@ -220,12 +213,10 @@ class BusInstanceV3(InstanceV2):
         for master in self.masters:
             self.mastersV.add(master)
         self.mastersV.update(silent=False)
-        #addName(self.instance_name,self.type_ide)
         for slave in self.slaves:
             self.slavesV.add(slave[0])
         self.slavesV.update(silent=False)
         self.variables = {}
-        #addName(self.instance_name,self.type_ide)
         self.creator_args = [f"route_{self.instance_name}",self.mastersV.type_ide,self.slavesV.type_ide]
         self.module_args = []
         self.input_context = {}
@@ -309,23 +300,23 @@ class BusInstanceV3(InstanceV2):
 
 class TopLevelModule():
     db: TypeDatabase
-    possibleConnections: Dict[str,List[str]] = {}
-    accessableInterfaces: List[AccessTuple] = []
-    cashed_considered_instances: Dict[str,AccessTuple] = {}
-
-    modules: Dict[str,InstanceV2] = {}
-    connections: Dict[str,InstanceV2] = {}
-    buses: Dict[str,BusInstanceV3] = {}
+    possibleConnections: Dict[str,List[str]]
+    accessableInterfaces: List[AccessTuple]
+    cashed_considered_instances: Dict[str,AccessTuple]
+    modules: Dict[str,InstanceV2]
+    connections: Dict[str,InstanceV2] 
+    buses: Dict[str,BusInstanceV3] 
     name: str
     package_name: str
-    typedefs: Dict[str,ExAlias] = {}
-    instances:Dict[str,InstanceV2] = {}
-    knownNames:Dict[str,Type_ide] = {}
-    subscribers:Dict[str,Set[str]] = {}
+    typedefs: Dict[str,ExAlias]
+    instances:Dict[str,InstanceV2]
+    knownNames:Dict[str,Type_ide]
+    subscribers:Dict[str,Set[str]]
     exported_interface: ExInterface
-    interface_members: Dict[str,str] = {}
+    interface_members: Dict[str,str]
 
     def __init__(self,name,db,package_name=None) -> None:
+        self.interface_members = {}
         self.possibleConnections = {}
         self.accessableInterfaces = []
         self.cashed_considered_instances = {}
@@ -437,6 +428,7 @@ class TopLevelModule():
             raise Exception("Instance name must start with lowercase character")
         if type(creator_func) == str:
             creator_func = self.db.getFunctionByName(creator_func)
+        #this produces more detailed exceptions but makes it harder to debug
         #try:
         start_time = time.time()
         newModule = InstanceV2(self,creator_func,func_args,interface_args,instance_name,input_context=input_context)
@@ -521,7 +513,6 @@ class TopLevelModule():
             self.exported_interface = ExInterface(Type_ide(deepcopy(name)),{})
             for name,value in members:
                 self.exported_interface.members[name] = self.knownNames[value]
-            #self.db.types[name] = self.exported_interface
             self.interface_members = {}
             for name,value in members:
                 if name == '':

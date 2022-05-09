@@ -332,7 +332,7 @@ Building a top-level module can be broken down into a few operations.
    \item Connecting modules using buses, using functions of certain characteristics. 
    \item Specifying exported interfaces and methods. 
 \end{itemize}  
-Operations of Instantiating new modules, Connecting and Creation of Busses are quite similar, so I will start by describing instantiating new modules and then how it fits with other operations. 
+Operations of Instantiating new modules, Connecting and Creation of buses are quite similar, so I will start by describing instantiating new modules and then how it fits with other operations. 
 \subsection{Instantiating new modules} 
 To instantiate the new module, we need to do the following things: 
 \begin{enumerate} 
@@ -349,7 +349,7 @@ Given $n$ \emph{input values} (number of interfaces and methods in instantiated 
 Unfortunately, Prolog is a turing complete language, and it's hard to do much better than naive brute force.
 This sounds like a lot of work, but thanks to look-up dictionaries, usually I need to check only a few \emph{programs}. I also spread out the work over subsequent additions of new modules and did not recompute already known results. This way, the user will perceive lag roughly proportional to the number of modules already instantiated. I also noticed that with a larger number of modules, PyPy's JIT compiler will step in and it will produce more optimized code, therefore keeping computation time low. 
  
-\subsection{Busses}
+\subsection{buses}
 When it comes to buses, most logic goes to synthesizing code for them, and not figuring out whether given data is valid, because of this I can fall back on logic designed to instantiate modules. To synthesize a bus, I need to synthesize a routing function.
 A routing function is a function that takes a route and produces a one-hot vector that specifies which slave is used for a given address. 
 To create a routing function, two things must be created. First, I need to create a new function and add it to the database of known functions. To do this, I just reused my parsing tooling. As for creating a code for it, I generate a user template and fill it with \verb!if! statements for each address region (I don't need to do fancier logic as in hardware, it will be optimized anyway). I also generate comments giving information about which slaves occupy which address region.
@@ -478,12 +478,12 @@ More detailed descriptions of keywords:
    \item \verb!connections! - list of dictionaries containing definitions of connections 
    \item \verb!connections[i].from! - lowercase string with access path of a left side of the connection 
    \item \verb!connections[i].to! - lowercase string with access path of a right side of the connection  
-   \item \verb!buses! - list of dictionaries describing busses 
-   \item \verb!busses[i].function! - lowercase name of a function used to create a bus 
-   \item \verb!busses[i].masters! - list of access paths of interfaces to use as masters 
-   \item \verb!busses[i].slaves! - list of dictionaries describing slaves 
-   \item \verb!busses[i].slaves[j].name! - access path of an interface used as slave 
-   \item \verb!busses[i].slaves[j].routes! - list of lists length two of integers describing starts and ends of address ranges on which slaves will be accessible. Starts of ranges are inclusive, and are exclusive. (This data is used to generate routing function) 
+   \item \verb!buses! - list of dictionaries describing buses 
+   \item \verb!buses[i].function! - lowercase name of a function used to create a bus 
+   \item \verb!buses[i].masters! - list of access paths of interfaces to use as masters 
+   \item \verb!buses[i].slaves! - list of dictionaries describing slaves 
+   \item \verb!buses[i].slaves[j].name! - access path of an interface used as slave 
+   \item \verb!buses[i].slaves[j].routes! - list of lists length two of integers describing starts and ends of address ranges on which slaves will be accessible. Starts of ranges are inclusive, and are exclusive. (This data is used to generate routing function) 
    \item \verb!interface! - either a string describing an access path of an interface to be exposed by a module or a dictionary describing a more complex interface made out of multiple member interfaces and methods 
    \item \verb!interface.name! - name of a type of the interface, if one is not present in loaded packages a new interface will be synthesized 
    \item \verb!interface.members! - list of members methods and subinterfaces of this interface 

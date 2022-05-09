@@ -55,7 +55,7 @@
         }
     ],
     
-    "busses": [
+    "buses": [
         {
             "name" : "mainBus",
             "function": "mkAXI4Bus",

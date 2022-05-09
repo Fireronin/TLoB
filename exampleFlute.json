@@ -55,7 +55,7 @@
             "interface_params": ["ID","ADDR","DATA","AWUSER","WUSER","BUSER","ARUSER","RUSER"]
         }
     ],
-    "busses": [
+    "buses": [
         {
             "name" : "mainBus",
             "function": "mkAXI4Bus",

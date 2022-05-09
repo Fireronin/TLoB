@@ -16,7 +16,6 @@
 \usepackage{csvsimple}
 \usepackage{float}
 \captionsetup{compatibility=false}
-\newcommand\todo[1]{\textcolor{red}{#1}}
 \title{The Legend of Bluespec: A Link to the components \\
 \large Computer Science Tripos - Part II \\
 Churchill College}
@@ -73,15 +72,23 @@ Name:               & \bf Krzysztof Rymski                      \\
 College:            & \bf Churchill College                     \\
 Project Title:      & \bf The Legend of Bluespec: A Link to the components \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2022  \\
-Word Count:         & \bf 10793 (TODO)\footnotemark[1]  \\
-Line Count:         & \bf 10793 (TODO)\footnotemark[1]  \\
+Word Count:         & \bf 10793 \footnotemark[1]  \\
+Line Count:         & \bf 4449=2670(Python backend)+1779(JS GUI) \footnotemark[2]  \\
 Project Originator: & Jonathan Woodruff                   \\
 Supervisor:         & Jonathan Woodruff                    \\ 
 \end{tabular}
 }
-\footnotetext[1]{This word count was computed.
-by \texttt{detex diss.tex | tr -cd '0-9A-Za-z $\tt\backslash$n' | wc -w}
+\footnotetext[1]{This word count was computed using:
+
+\texttt{detex diss.tex | tr -cd '0-9A-Za-z $\tt\backslash$n' | wc -w}
 }
+\footnotetext[2]{Calculated using cloc (from ubuntu apt)
+
+Backend \texttt{cloc src/*.py src/tlob/gui/urls.py src/tlob/gui/views.py}
+\\
+GUI \texttt{cloc src/components src/App.js}
+}
+
 \stepcounter{footnote}
 
 
@@ -745,6 +752,8 @@ IQP is a gigantic tool, and it would be dishonest to say that my tool is strictl
 \chapter{Conclusion} 
 \section{Results} 
 I hope that I demonstrated how \emph{The Legend of Bluespec: A Link to the components} can be used to speed up the prototyping of high-level modules in Bluespec. It can provide the same basic functionality of allowing for connection and easy creation of buses as a comparable tool made by Intel. At the same time, thanks to being Bluespec native it can drastically cut downtime needed to import modules, especially in cases where one wants to use polymorphic modules. While my tool is not commercial grade, thanks to the easy ability to synthesize interfaces for export, it allows for a workflow where everything Bluespec native can be connected using it, and then this part of the system can be imported to a tool like a Platform designer for connection to modules not available as a Bluespec library and connection of wires I/O on the FPGA etc. 
+\section{Lessons learned}
+During this project I tried to move out of my comfort bubble. My grammar and types were not my strong suit (looking at my performance at relevant courses). One of the big mistakes was misjudging the complexity of the grammar of Bluespec, and during the project there was a time when I planned to have vastly more limited scope in my ability to process types. Fortunately, I managed to push through and settled at what you are seeing. It was also my first contact with JavaScript and the web ecosystem, especially from the applied side. I am certain that the ability to produce web-applications in such a portable technology will be useful in the future, but at the same time I'm disappointed with how much overhead is needed to move data between systems.  
 \section{Future work} 
 This tool can be extended in many ways, but the most interesting would include: 
 \begin{itemize} 
@@ -755,14 +764,15 @@ This tool can be extended in many ways, but the most interesting would include:
 \end{itemize} 
 \begin{thebibliography}{9}
    \bibitem{BscReference}
-   Bluespec SystemVerilog Reference Guide
+   Bluespec SystemVerilog Reference Guide \\
    \href{http://csg.csail.mit.edu/6.S078/6\_S078\_2012\_www/resources/reference-guide.pdf}{http://csg.csail.mit.edu/6.S078/6\_S078\_2012\_www/resources/reference-guide.pdf}
    \bibitem{BscUserGuide}
-   Bluespec SystemVerilog User Guide
+   Bluespec SystemVerilog User Guide \\
    \href{https://web.ece.ucsb.edu/its/bluespec/doc/BSV/user-guide.pdf}{https://web.ece.ucsb.edu/its/bluespec/doc/BSV/user-guide.pdf}
    \bibitem{MindMap}
-   Template project using React Flow (I don't think there is more than few lines from the original left in my code, but it was useful as a starting point)
-   https://github.com/recoding-io/react-mind-node
+   Template project using React Flow (I don't think there is more than few lines from the original left in my code, but it was useful as a starting point) \\
+   \href{https://github.com/recoding-io/react-mind-node}{https://github.com/recoding-io/react-mind-node}
+   
    \end{thebibliography}
 \includepdf[pages=-]{Project_Proposal.pdf}
 

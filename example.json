@@ -57,7 +57,6 @@
     
     "buses": [
         {
-            "name" : "mainBus",
             "function": "mkAXI4Bus",
             "masters" : ["core.core_mem_master"],
             "slaves" : [{

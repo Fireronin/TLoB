@@ -85,9 +85,9 @@ def showPossibleConnections(topLevel):
         print(f"{start} -> {[end for end in ends]}")
     for busName,busInstance in topLevel.buses.items():
         print(f"Possible masters for {busName} {busInstance.mastersV.flit_type_ide}:")
-        print(topLevel.buses['mainBus'].mastersV.listAddable(topLevel.knownNames.items()))
+        print(topLevel.buses[busName].mastersV.listAddable(topLevel.knownNames.items()))
         print(f"Possible slaves for {busName} {busInstance.slavesV.flit_type_ide}:")
-        print(topLevel.buses['mainBus'].slavesV.listAddable(topLevel.knownNames.items()))
+        print(topLevel.buses[busName].slavesV.listAddable(topLevel.knownNames.items()))
 
 def showTypes(topLevel):
     print(Fore.BLUE + "Infered Interfaces:"+ Fore.RESET)

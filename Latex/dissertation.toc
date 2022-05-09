@@ -26,10 +26,10 @@
 \contentsline {section}{\numberline {3.3}Building the top level module}{17}{section.3.3}%
 \contentsline {subsection}{\numberline {3.3.1}Instantiating new modules}{18}{subsection.3.3.1}%
 \contentsline {subsection}{\numberline {3.3.2}Connections}{18}{subsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.3.3}buses}{18}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.3}Buses}{18}{subsection.3.3.3}%
 \contentsline {subsection}{\numberline {3.3.4}Specifying exported interfaces and methods}{19}{subsection.3.3.4}%
 \contentsline {section}{\numberline {3.4}Resolving types}{19}{section.3.4}%
-\contentsline {subsubsection}{How those functions can are used}{20}{section*.13}%
+\contentsline {subsubsection}{How those functions can be used}{20}{section*.13}%
 \contentsline {subsubsection}{Merge function}{21}{section*.14}%
 \contentsline {subsubsection}{Apply variables function}{21}{section*.15}%
 \contentsline {subsubsection}{Preprocess typeclass function}{21}{section*.16}%

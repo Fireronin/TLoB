@@ -87,7 +87,7 @@ by \texttt{detex diss.tex | tr -cd '0-9A-Za-z $\tt\backslash$n' | wc -w}
 
 \section*{Original Aims of the Project}
 
-Create a tool to build top-level hardware modules. Made out of connected high-level Bluespec components via direct connections and buses. The main interface to this tool was to be a text format that is more concise than \verb!.qsys!, produced by Intel's Quartus Prime. There was also an optional goal of creating a GUI. Evaluation would qualitatively compare the usability of my tool against Intel's Platform designer and quantitatively in terms of the number of tokens and lines against Intel's text format.
+Create a tool to build top-level hardware modules. Comprised of connected high-level Bluespec components via direct connections and buses. The main interface to this tool was to be a text format that is more concise than \verb!.qsys!, produced by Intel's Quartus Prime. There was also an optional goal of creating a GUI. Evaluation would qualitatively compare the usability of my tool against Intel's Platform designer, as well as quantitatively in terms of the number of tokens and lines against Intel's text format.
 
 \section*{Work Completed}
 
@@ -103,7 +103,7 @@ None.
 \tableofcontents
 
 \chapter{Introduction}
-Making hardware is hard, and similarly to other problems in computer science, we make it easier by adding layers of abstraction. There are many layers, and the diagram below shows a simplified overview of them. The layer this project focuses on is going from modules to integrated systems. In this layer, we already have code for modules like memory, CPU cores, interconnects etc. There we need an ability to compose them in such a way that they create a whole device. My project will focus on doing that.
+Making hardware is hard, and similarly to other problems in computer science, we make it easier by adding layers of abstraction. There are many layers, and the diagram below shows a simplified overview of them. The layer this project focuses on is going from modules to integrated systems. In this layer, we already have code for modules like memory, CPU cores, interconnects etc. What we need is an ability to compose them in such a way that they create a whole device. My project will focus on doing that.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.5\columnwidth]{pdfExports/LargeMapLayersOfAbstraction.pdf}
@@ -144,7 +144,7 @@ But to truly appreciate the work I have done during this project, I also impleme
 One can think of it as a Bluespec native high-level integration tool that uses a simple language server in the backend. This way Bluespec users can do high-level integration in the domain of untranspiled Bluespec code. Then after a satisfactory top-level module is created, it can be transpiled to Verilog and then imported into IQP. 
 
 \chapter{Preparation}
-This section will give you a basic understanding of the concepts found in Bluespec (most importantly provisos and typeclasses). It will explain the language I used. Finally, it will talk about grammar needed to parse information about types.
+This section will give you a basic understanding of the concepts found in Bluespec (most importantly \emph{provisos} and \emph{typeclasses}). It will explain my reasoning behind the choice of language I used to develop this project in. Finally, it will talk about grammar needed to parse information about types.
 \section{Understanding Bluespec}
 Before I started this project, my only knowledge about Bluespec came from \href{https://www-bluespec.cl.cam.ac.uk/}{Cambridge Bluespec Tutor} which covers basics, and it was completed by me a few weeks before the start of this project. To understand this project, I have learned about most of the type system of Bluespec, but for you, the reader, most of it is not relevant. Therefore, I prepared a short tour of things that will be important to understand in this project. 
 \subsection{Rules}
@@ -276,7 +276,7 @@ Before I explain how top modules are built, I will first explain how Bluespec pa
 
     \includegraphics[width=1.0\columnwidth]{pdfExports/LargeMap-Crawling.drawio.pdf}
 \end{figure}
-To interact with Bluetcl, I have written a script using the Pexpect library. This script works by creating a subprocess of Bluetcl and exposes functions that allow for the performing of quarries. The core of this script is a function called \verb!call! that takes as input a string that is a command and returns the output stripped of warnings or raises an exception if an error occurred (for example: in the case where a package was not found). To remove warnings, I make some assumptions. 
+To interact with Bluetcl, I have written a script using the Pexpect library. This script works by creating a subprocess of Bluetcl and exposes functions that allow for the performing of queries? The core of this script is a function called \verb!call! that takes as input a string that is a command and returns the output stripped of warnings or raises an exception if an error occurred (for example: in the case where a package was not found). To remove warnings, I make some assumptions. 
 \begin{itemize}
     \item I only use a fixed set of commands (like list packages, describe a type).  
     \item For those commands the important output is always on the last line. (This was checked empirically)   
@@ -349,8 +349,8 @@ Given $n$ \emph{input values} (number of interfaces and methods in instantiated 
 Unfortunately, Prolog is a turing complete language, and it's hard to do much better than naive brute force.
 This sounds like a lot of work, but thanks to look-up dictionaries, usually I need to check only a few \emph{programs}. I also spread out the work over subsequent additions of new modules and did not recompute already known results. This way, the user will perceive lag roughly proportional to the number of modules already instantiated. I also noticed that with a larger number of modules, PyPy's JIT compiler will step in and it will produce more optimized code, therefore keeping computation time low. 
  
-\subsection{buses}
-When it comes to buses, most logic goes to synthesizing code for them, and not figuring out whether given data is valid, because of this I can fall back on logic designed to instantiate modules. To synthesize a bus, I need to synthesize a routing function.
+\subsection{Buses}
+When it comes to buses, most logic goes to synthesizing code for them, and not figuring out whether given data is valid. Because of this I can fall back on logic designed to instantiate modules. To synthesize a bus, I need to synthesize a routing function.
 A routing function is a function that takes a route and produces a one-hot vector that specifies which slave is used for a given address. 
 To create a routing function, two things must be created. First, I need to create a new function and add it to the database of known functions. To do this, I just reused my parsing tooling. As for creating a code for it, I generate a user template and fill it with \verb!if! statements for each address region (I don't need to do fancier logic as in hardware, it will be optimized anyway). I also generate comments giving information about which slaves occupy which address region.
 
@@ -365,7 +365,7 @@ This functionality utilizes data generated previously, and most of the logic beh
     \includegraphics[width=0.5\columnwidth]{pdfExports/LargeMapResolve.pdf}
 \end{figure}
 This section assumes that one has read about typeclasses and provisos from \hyperref[sec:Typeclasses]{previous chapter}.
-Functionality described here is what enables this whole project to do more than just string comparisons and formation. It's one of the most 
+Functionality described here is what enables this whole project to do more than just string comparisons and formation. 
 \par
 Types of most things can be represented by a type identifier.
 Type identifiers can be thought of as a tree data structure where every non leaf node is another type identifier, and leaf nodes are values (integers) or variables. 
@@ -379,7 +379,7 @@ For example: \verb!Bit#(b) boo(Bit#(a) arg)! where,
     \includegraphics[width=0.7\columnwidth]{pdfExports/LargeMap-FunctionBreakDown.drawio.pdf}
 \end{figure}
 \par
-In my code there are 4 main functions that combined allow for type resolution:
+In my code there are 4 main functions that, combined, allow for type resolution:
 \begin{itemize}
     \item \verb!merge! function takes two type identifiers and returns a dictionary (map) from names of variables to their values. It's similar to Prolog's unification operator.
     \item \verb!applyVariables! function takes a dictionary and a type identifier and returns a type identifier with all variables replaced by their values. This is more of a utility function.
@@ -388,7 +388,7 @@ In my code there are 4 main functions that combined allow for type resolution:
     \item \verb!preprocessTypeclass! function that takes a typeclass and produces a look-up dictionary of typeclass instances for a given group of names present in the instance of the typeclass.
     \item \verb!solveNumerical! function that takes a list of size relationship provisos and returns a dictionary of learned variables.
 \end{itemize}
-\subsubsection{How those functions can are used}
+\subsubsection{How those functions can be used}
 Using all of those functions, I can answer many questions like:
 \begin{itemize}
     \item What known thing can be used as \emph{nth} argument of a given function?
@@ -403,7 +403,7 @@ This function needs to account for quite a lot of special cases as each node can
 \begin{itemize} 
    \item If one of the nodes is a variable, and the other is a value or another type identifier, then we set the value of the variable to a value of the other. 
    \item If both nodes are values, we check if they are equal. 
-   \item If both nodes are the same kind of type identifier, we recursively compare their children. (If there are not of a function kind, we also compare their names) 
+   \item If both nodes have the same kind of type identifier, we recursively compare their children. (If they are not functions, we also compare their names) 
    \item If both nodes are variables, then we need to check if it's possible to unify the values of those variables. If so, we assign the value of those variables to the result of unification. 
    \item In other cases, like when we need to unify type identifiers with value, we raise an exception. 
 \end{itemize} 
@@ -436,7 +436,7 @@ One big problem is the lack of order in which provisos must be solved. Therefore
 
 
 \section{Synthesizing the module}
-This is probably the simplest part of the project. I just iterate over various kinds of things defined by the user and run some string formatting code. Even for buses, thanks to polymorphism in the Bluespec I can quite easily write a routing function. 
+This is probably the simplest part of the project. I just iterate over various kinds of things defined by the user and run some string formatting code. Even for buses, thanks to polymorphism in the Bluespec, I can quite easily write a routing function. 
   
   
 The main goal of the project is to be able to take a JSON with some data and synthesize a top module in the Bluespec language from it. This goal is more like a justification to create a language server like API. With this approach, I have some simple core goals, but in the later sections, we will see how thanks to all the work I have done, this API can be used to support a GUI that aids the user in creating a top module. Therefore, I will focus in this section on how the API works, and only later, on how it is used when reading JSON or as a backend to the GUI based app. 
@@ -760,7 +760,9 @@ This tool can be extended in many ways, but the most interesting would include:
    \bibitem{BscUserGuide}
    Bluespec SystemVerilog User Guide
    \href{https://web.ece.ucsb.edu/its/bluespec/doc/BSV/user-guide.pdf}{https://web.ece.ucsb.edu/its/bluespec/doc/BSV/user-guide.pdf}
-   
+   \bibitem{MindMap}
+   Template project using React Flow (I don't think there is more than few lines from the original left in my code, but it was useful as a starting point)
+   https://github.com/recoding-io/react-mind-node
    \end{thebibliography}
 \includepdf[pages=-]{Project_Proposal.pdf}
 

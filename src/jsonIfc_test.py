@@ -2,8 +2,6 @@ import sys
 sys.path.append("src")
 import jsonInterface
 import json
-import mock
-import pytest
 from parsingFormating import *
 from crawler import *
 from bsvSynthesizer import *

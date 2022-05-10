@@ -7,8 +7,6 @@ from crawler import *
 import argparse
 import os
 from colorama import Fore
-import mock
-import pytest
 
 def lookForKeyword(keyword,dictionary):
     if keyword in dictionary:
@@ -103,7 +101,7 @@ def showValidArguments(topLevel):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Convert a json file to a bsv file')
-    parser.add_argument('-json_file', default="test.json", type=str, help='The json file to convert')
+    parser.add_argument('-json_file', type=str, help='The json file to convert')
     parser.add_argument('-of','--output_folder', type=str, help='The folder of output',default="./tutorial")
     # argument reload values True of False
     parser.add_argument("-reload",type=bool,default=False,help="If packages haven't changed since last run, use false to skip reloading")

@@ -72,15 +72,14 @@ Name:               & \bf Krzysztof Rymski                      \\
 College:            & \bf Churchill College                     \\
 Project Title:      & \bf The Legend of Bluespec: A Link to the components \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2022  \\
-Word Count:         & \bf 10793 \footnotemark[1]  \\
-Line Count:         & \bf 4449=2670(Python backend)+1779(JS GUI) \footnotemark[2]  \\
+Word Count:         & \bf 10725 \footnotemark[1]  \\
+Line Count:         & \bf 4442=2663(Python backend)+1779(JS GUI) \footnotemark[2]  \\
 Project Originator: & Jonathan Woodruff                   \\
 Supervisor:         & Jonathan Woodruff                    \\ 
 \end{tabular}
 }
-\footnotetext[1]{This word count was computed using:
-
-\texttt{detex diss.tex | tr -cd '0-9A-Za-z $\tt\backslash$n' | wc -w}
+\footnotetext[1]{This word count was computed using extension to the VS Code editor. It also includes some words that are in bibliography title etc, but number of them negligible. Things like project proposal are not counted as they are included as a nested PDF. 
+\href{https://marketplace.visualstudio.com/items?itemName=geoffkaile.latex-count}{https://marketplace.visualstudio.com/items?itemName=geoffkaile.latex-count}
 }
 \footnotetext[2]{Calculated using cloc (from ubuntu apt)
 
@@ -94,11 +93,11 @@ GUI \texttt{cloc src/components src/App.js}
 
 \section*{Original Aims of the Project}
 
-Create a tool to build top-level hardware modules. Comprised of connected high-level Bluespec components via direct connections and buses. The main interface to this tool was to be a text format that is more concise than \verb!.qsys!, produced by Intel's Quartus Prime. There was also an optional goal of creating a GUI. Evaluation would qualitatively compare the usability of my tool against Intel's Platform designer, as well as quantitatively in terms of the number of tokens and lines against Intel's text format.
+Create a tool for building top-level hardware modules. Comprised of connected high-level Bluespec components via direct connections and buses. The main interface to this tool was to be a text format that is more concise than \verb!.qsys!, produced by Intel's Quartus Prime. There was also an optional goal of creating a GUI. Evaluation would qualitatively compare the usability of my tool against Intel's Platform designer, as well as quantitatively in terms of the number of tokens and lines against Intel's text format.
 
 \section*{Work Completed}
 
-I created a Python tool that extracts data from packages using \verb!bluetcl! a Tcl interface to the compiler of Bluespec. It can perform operations on types and modules found in packages, allowing for inference and correctness checking of user input. I developed an interface that can synthesize top-level modules from concise JSONs. Finally, I created a web-based GUI using the React-Flow library that allows users to define a graph of connections between modules and features many types of autocompletion based on type relationships. This tool can produce Bluespec code representing a designed top-level module.
+I created a Python tool that extracts data from packages using \verb!bluetcl!, a Tcl interface to the compiler of Bluespec. It can perform operations on types and modules found in packages, allowing for inference and correctness checking of the user input. I developed an interface that can synthesize top-level modules from concise JSONs. Finally, I created a web-based GUI using the React-Flow library that allows users to define a graph of connections between modules and features many types of autocompletion based on type relationships. This tool can produce Bluespec code representing a designed top-level module.
 
 \section*{Special Difficulties}
 
@@ -171,7 +170,7 @@ Module is a unit of organization of logic. Modules don't have types, instead the
 
 \subsection{Typeclasses}
 \label{sec:Typeclasses}
-Typesclasses in Bluespec are used to group types for which specific functions or modules are implemented. The typeclass instance is (TODO describes what it is) and it can have provisos attached to it.
+Typesclasses in Bluespec are used to group types for which specific functions or modules are implemented. The typeclass instance is effectively a type identifier, and it can have provisos attached to it.
 
 \subsection{Provisos}
 \label{sec:Provisos}
@@ -248,11 +247,14 @@ Unfortunately, this grammar is not documented anywhere, so I had to reverse engi
 Here are other reasons to justify this approach:  
 \begin{itemize}  
    \item Heaps' law suggests that the number of unique words in a given body of the text is proportional to approximately the square root of the number of words in the text. Therefore, it is fair to assume that something similar will be true if we consider the number of unique grammar rules.  
-   \item This grammar, while different from the grammar of Bluespec language, maps a subset of Bluespec grammar, so we can supplement our deductions with a reference guide for Bluespec language. Therefore, accounting for cases we have not seen, but are possible.  
+   \item This grammar, while different from the grammar of Bluespec language, maps a subset of Bluespec grammar, so we can supplement our deductions with a reference guide for Bluespec language. Therefore, accounting for cases we have not seen, but are possible.
    \item It's also unlikely that exotic things will be needed as a part of top-level modules. 
 \end{itemize}
+\begin{tcolorbox}
+   During the process of the creation of this grammar, I found a bug in the Reference Guide of the Bluespec language. The bug involved using the wrong order of curly and square brackets. Therefore, making grammar inconsistent with the compiler. \href{https://github.com/BSVLang/Main/issues/6}{Link to github issue}
+\end{tcolorbox}
 \subsection{Technical aspects of the grammar}
-This is EBNF grammar, I parse it using Lark library for Python, and I am using Earley parser, as it is capable of arbitrary length lookahead. The grammar I created contains roughly 90 rules, and I will not include all of them here, but I will show an example to give a feel of what is happening. (TODO: Think about dumping them into an appendix)   
+This is EBNF grammar, I parse it using Lark library for Python, and I am using Earley parser, as it is capable of arbitrary length lookahead. The grammar I created contains roughly 90 rules, and I will not include all of them here, but I will show an example to give a feel of what is happening. If you want to see all of them look in the file \verb!grammar/type.lark!.
 \\   
 A useful feature supported by Lark is the ability to have regular expressions in the grammar. I am mentioning this as it is effectively like having a parser inside a parser. It is also worth mentioning that there exists a handy tool for debugging and creating grammar. It is located at this website: \href{https://www.lark-parser.org/ide/}{https://www.lark-parser.org/ide/} and it can run the parser online and show the created AST tree. 
 \begin{tcolorbox}[title = Example of a paring rule and the resulting AST]
@@ -515,7 +517,7 @@ I know this because my initial iterations were doing this. However, my tool can 
 All this data can be useful when using complex modules from foreign packages, like a CPU core that does not have any direct connections, but has many subinterfaces that can be connected to things like memory, external devices, etc.
 
 \section{GUI}
-\hyperref[fig:Overview]{Click here to jump to the overview of the GUI. (Page \pageref{fig:Overview})}
+\hyperref[fig:Overview]{Click here to jump to the overview of the GUI. (Page \pageref{fig:Overview}) or you can watch the video attached to the source files.}
 \\
 Adding GUI was an optional goal mentioned in the project proposal. I originally intended to use a game engine, but the Bluespec compiler is a Linux tool and game engines like Unreal Engine 4 or Unity3d are optimized to be used on Windows, so I decided against that idea. Instead, I found a library called React Flow, that provided a simple API for creating graph-based user interfaces. Therefore, I decided to create a GUI as a website. This was quite an adventure as it was effectively my first contact with web development. (I have done backend in .NET and \verb!C#! for a group project last year, but it was mostly focused on writing queries to the database and I had no contact with frontend development)
 
@@ -679,7 +681,7 @@ Whereas, my tool can understand that FIFOs are connectable (according to the typ
 As explained before, this example is about creating a simple SOC. 
 \subsection{Platform Designer} 
 Again, we will start by importing our modules.  
-This time we need to import two of them, one for fake 16550 interfaces and one for flute core.  
+This time we need to import two of them, one for fake 16550 interfaces and one for Flute core \cite{Flute core}.  
 As for the memory module, we will use one from the IQP library to save time and effort. 
 \par 
 Even though AXI4 is an interface supported by IQP, the Platform designer is not able to recognize groups of wires that make up AXI4 masters and slaves on the imported modules. 
@@ -709,7 +711,9 @@ When I create buses, I am limited by the typing system, and the way functions fo
 \par 
 Another slight difference is the fact that in Platform designer, each master has its own bus, and while slaves can be connected to any number of masters they need to be connected individually. Forcing the user to specify $O(n^2)$ connections. 
 \section{Example 3 - Working AXI4 masters and slaves} 
-This example follows similarly to example 2, where the process of importing modules is a hassle using Intel's tool, especially as I made it so each master and slave takes a single integer as a parameter, this is meant to represent some configuration data. Importing modules using my tool is again as simple as providing the location and name of the library with those modules. After this, both systems allow for easy connection of modules. To check whether what I generated is correct, I have run the simulation using \verb!bluesim! tool included with the Bluespec compiler. I also noticed a few differences between the two systems when it came to assigning addresses. For example, in Bluespec it is assumed that masters and slaves share the same with of the wire for address, whereas in Platform designer it is assumed that the address space of the master is greater or equal to the sum of the address space of all slaves. (TODO will check with supervisors the implications of this) 
+This example follows similarly to example 2, where the process of importing modules is a hassle using Intel's tool, especially as I made it so each master and slave takes a single integer as a parameter, this is meant to represent some configuration data. Importing modules using my tool is again as simple as providing the location and name of the library with those modules. After this, both systems allow for easy connection of modules. To check whether what I generated is correct, I have run the simulation using \verb!bluesim! tool included with the Bluespec compiler. 
+\par
+I also noticed a few differences between the two systems when it came to assigning addresses. For example, in Bluespec it is assumed that masters and slaves share the same with of the wire for address, whereas in Platform designer it is assumed that the address space of the master is greater or equal to the sum of the address space of all slaves.
  
 \section{Numbers} 
 This section presents a quantitative comparison of text formats used by both systems. Sometimes one might not want to bother with using GUI and wants to quickly edit some variables or connections. To facilitate this, the text file format should be short and simple, otherwise, the user will be forced to sift through a lot of fluff. Therefore, I will compare those file formats using line and token counts. 
@@ -772,7 +776,9 @@ This tool can be extended in many ways, but the most interesting would include:
    \bibitem{MindMap}
    Template project using React Flow (I don't think there is more than few lines from the original left in my code, but it was useful as a starting point) \\
    \href{https://github.com/recoding-io/react-mind-node}{https://github.com/recoding-io/react-mind-node}
-   
+   \bibitem{Flute core}
+   Flute core
+   \href{https://github.com/CTSRD-CHERI/Flute}{https://github.com/CTSRD-CHERI/Flute}
    \end{thebibliography}
 \includepdf[pages=-]{Project_Proposal.pdf}
 

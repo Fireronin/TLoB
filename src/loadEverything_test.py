@@ -75,7 +75,6 @@ if __name__ == "__main__":
 
 def test_loadEverything():
     sO =loadAllAndDoQuickRun()
-    assert(sO != "","OK")
     return
 
 # %%

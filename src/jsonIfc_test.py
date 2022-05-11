@@ -15,7 +15,6 @@ def test_example():
             jsonInterface.showTypes(topLevel)
             jsonInterface.showPossibleConnections(topLevel)
             jsonInterface.showValidArguments(topLevel)
-            assert(True)
 
 
 def test_buildAndRun():
@@ -47,8 +46,6 @@ def test_buildAndRun():
     print("bO:",bO)
     print("sBO:",sBO)
     print("sO:",sO)
-
-    assert(sO != "","No output")
 
 # test_example()
 # test_buildAndRun()

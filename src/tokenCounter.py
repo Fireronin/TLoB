@@ -6,10 +6,10 @@ import plotly.express as px
 import pandas as pd
 os.chdir("/mnt/d/Mega/Documents/CS/TLoB/")
 FILES = {
-    "example1": ["quatusExamples2/simpleFifo_hw.tcl","quatusExamples2/Example1.qsys"],
-    "example1B": ["quatusExamples2/simpleFifo_hw.tcl","quatusExamples2/Example1B.qsys"],
-    "example2": ["quatusExamples2/fake16550_hw.tcl","quatusExamples2/fluteCore_hw.tcl","quatusExamples2/Example2.qsys"],
-    "example3": ["quatusExamples2/axi4Master1_hw.tcl","quatusExamples2/axi4Master2_hw.tcl","quatusExamples2/axi4Slave5_hw.tcl","quatusExamples2/axi4Slave7_hw.tcl","quatusExamples2/Example3.qsys"]
+    "example1": ["quartus/simpleFifo_hw.tcl","quartus/Example1.qsys"],
+    "example1B": ["quartus/simpleFifo_hw.tcl","quartus/Example1B.qsys"],
+    "example2": ["quartus/fake16550_hw.tcl","quartus/fluteCore_hw.tcl","quartus/Example2.qsys"],
+    "example3": ["quartus/axi4Master1_hw.tcl","quartus/axi4Master2_hw.tcl","quartus/axi4Slave5_hw.tcl","quartus/axi4Slave7_hw.tcl","quartus/Example3.qsys"]
 }
 FILESMyTOOL = {
     "example1":["exampleFIFOs.json"],

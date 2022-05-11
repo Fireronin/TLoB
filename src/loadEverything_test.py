@@ -16,7 +16,7 @@ from typeDatabase import TypeDatabase as tdb
 def loadAllAndDoQuickRun():
     #%% initalize bluetcl
     start_time = time.time()
-    load = True
+    load = False
     db = tdb(load=load)
     if not load:
         db.addLibraryFolder("./Flute/src_SSITH_P2/build_dir")
@@ -40,7 +40,7 @@ def loadAllAndDoQuickRun():
 
 
         db.addPackages(packages_to_load)
-
+    db.writeToFile()
     print("Time to load libraries: " + str(time.time()-start_time))
     # todo read json file
     # %% Build bluespcefile

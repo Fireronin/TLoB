@@ -61,18 +61,14 @@ I, Krzysztof Rymski of Churchill College, being a candidate for Part II of the C
 
 \newpage
 % Proforma, table of contents and list of figures
-
-\pagestyle{plain}
-
 \chapter*{Proforma}
-
-{\large
+{
 \begin{tabular}{ll}
-Name:               & \bf Krzysztof Rymski                      \\
+BGN:               & \bf 2359A                      \\
 College:            & \bf Churchill College                     \\
 Project Title:      & \bf The Legend of Bluespec: A Link to the components \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2022  \\
-Word Count:         & \bf 10725 \footnotemark[1]  \\
+Word Count:         & \bf 11394 \footnotemark[1]  \\
 Line Count:         & \bf 4442=2663(Python backend)+1779(JS GUI) \footnotemark[2]  \\
 Project Originator: & Jonathan Woodruff                   \\
 Supervisor:         & Jonathan Woodruff                    \\ 
@@ -93,11 +89,11 @@ GUI \texttt{cloc src/components src/App.js}
 
 \section*{Original Aims of the Project}
 
-Create a tool for building top-level hardware modules. Comprised of connected high-level Bluespec components via direct connections and buses. The main interface to this tool was to be a text format that is more concise than \verb!.qsys!, produced by Intel's Quartus Prime. There was also an optional goal of creating a GUI. Evaluation would qualitatively compare the usability of my tool against Intel's Platform designer, as well as quantitatively in terms of the number of tokens and lines against Intel's text format.
+Create a tool for building top-level hardware modules. Comprised of connected high-level Bluespec components via direct connections and buses. The tool's primary interface was to be a text format more concise than \verb!.qsys!, produced by Intel's Quartus Prime. There was also an optional goal of creating a GUI. Evaluation would qualitatively compare the usability of my tool against Intel's Platform Designer and quantitatively in terms of the number of tokens and lines against Intel's text format.
 
 \section*{Work Completed}
 
-I created a Python tool that extracts data from packages using \verb!bluetcl!, a Tcl interface to the compiler of Bluespec. It can perform operations on types and modules found in packages, allowing for inference and correctness checking of the user input. I developed an interface that can synthesize top-level modules from concise JSONs. Finally, I created a web-based GUI using the React-Flow library that allows users to define a graph of connections between modules and features many types of autocompletion based on type relationships. This tool can produce Bluespec code representing a designed top-level module.
+I created a Python tool that extracts data from packages using \verb!bluetcl!, a Tcl interface to the compiler of Bluespec. It can perform operations on types and modules found in packages, allowing for inference and checking the user input for correctness. I developed an interface for synthesizing top-level modules from concise JSONs. Finally, I created a web-based GUI using the React-Flow library that allows users to define a graph of connections between modules and features many types of autocompletion based on type relationships. This tool can produce Bluespec code representing a designed top-level module.
 
 \section*{Special Difficulties}
 
@@ -109,7 +105,7 @@ None.
 \tableofcontents
 
 \chapter{Introduction}
-Making hardware is hard, and similarly to other problems in computer science, we make it easier by adding layers of abstraction. There are many layers, and the diagram below shows a simplified overview of them. The layer this project focuses on is going from modules to integrated systems. In this layer, we already have code for modules like memory, CPU cores, interconnects etc. What we need is an ability to compose them in such a way that they create a whole device. My project will focus on doing that.
+Designing hardware is challenging, and similarly to other workflows in computer science, we simplify it by adding layers of abstraction. The diagram below shows a simplified overview of the layers currently in use. This project focuses on the transition from modules to integrated systems. At this layer, we already have code for modules like memory, CPU cores, interconnects, etc., and we need an ability to compose them into a functional device. This is the task my project focuses on.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.5\columnwidth]{pdfExports/LargeMapLayersOfAbstraction.pdf}
@@ -123,36 +119,35 @@ Making hardware is hard, and similarly to other problems in computer science, we
 \section{Motivation}
 \begin{tcolorbox}[title=Vocabulary]
     \begin{itemize}
-        \item Verilog - Hardware description language
-        \item Bluespec - Hardware description language
-        \item Intel Quartus Prime (IQP) - programmable logic device design software produced by Intel. (source \href{https://en.wikipedia.org/wiki/Intel_Quartus_Prime}{Wikipedia})
-        \item Platform Designer - Tool inside IQP used to connect high level components.
+      \item Verilog - an IEEE standard hardware description language.
+      \item Bluespec - a hardware description language created by Bluespec, Inc.
+      \item Intel Quartus Prime (IQP) - a programmable logic device design software produced by Intel. (source: \href{https://en.wikipedia.org/wiki/Intel_Quartus_Prime}{Wikipedia})
+      \item Platform Designer - a tool inside IQP used to connect high level components.
     \end{itemize}
 \end{tcolorbox}
-Verilog is an old language with a minimal type system. It forces people to encode more complex interfaces using finicky naming conventions. To simplify the process of connecting components with many wires, people tend to use high-level tools like Platform Designer, which has built-in logic allowing for easy connection of components. This approach is not perfect and as we will see during the evaluation, a better option might be to move away from Verilog and use a more modern language like Bluespec. Bluespec's type system allows us to detect connectable things in a systematic manner and allows us to define how to connect them. In fact, large bodies of Bluespec modules are already defined in this manner. Currently, there are no tools for automated system composition for native Bluespec modules. If we want to do this high level integration of Bluespec components then we need to transpile Bluespec code into Verilog to make them importable to tools like IQP. Unfortunately, because of the typing richness of Bluespec (comparable to Haskell), arbitrary code cannot be transpiled, and before code can be transpiled, it needs to be stripped of any arguments or other kinds of polymorphism. This process of transpilation also destroys high-level interfaces, and they must be recreated manually after importing Verilog code into IQP.
+Verilog is a relatively dated language with a minimal type system. It forces people to encode more complex interfaces using finicky naming conventions. To simplify the process of connecting components with many wires, designers tend to use high-level tools like Platform Designer, which has built-in logic for easy connection of components. This approach is not perfect and, as we will see during the evaluation, a better option might be to move away from Verilog and use a more modern language like Bluespec. Bluespec's type system allows us to detect connectable things in a systematic manner, and lets us define how to connect them. In fact, large bodies of Bluespec modules are already defined in this manner. Currently, there are no tools for automated system composition for native Bluespec modules. If we want to do such high level integration of Bluespec components, we need to transpile Bluespec code into Verilog to make the components importable to tools like IQP. Unfortunately, due to the typing richness of Bluespec (comparable to Haskell), arbitrary code cannot be transpiled, and before transpilation, it needs to be stripped of any arguments or other kinds of polymorphism. This process of transpilation also destroys high-level interfaces, and they must be recreated manually after importing Verilog code into IQP.
 
-\section{Already existing tools}
-During evaluation of this I will compare my tool with Platform designer from IQP. 
-Platform Designer is a GUI tool for high-level integration, designs generated by it are kept in verbose text file format. Unfortunately, those files tend to be megabytes long for larger projects, making them hard to read and edit, for humans. 
-There are other problems with using Platform Designer, like the cumbersomeness of importing new components.
+\section{Existing tools}
+During evaluation, I will compare my tool with IQP Platform Designer.
+Platform Designer is a GUI tool for high-level integration; designs generated with it are kept in verbose text file format. Unfortunately, those files tend to be megabytes long for larger projects, making them hard to read and edit by humans. Platform Designer has other shortcomings as well, such as the cumbersomeness of importing new components.
 
 \begin{tcolorbox}[title=Market share and justification for focusing entirely on comparisons with Intel Quartus Prime]
-    It is a bit difficult to accurately judge the market share of the IQP, but it is produced by one of the biggest designers and manufacturers in the world, and it is also used by Qualcomm, according to \href{https://discovery.hgdata.com/product/intel-quartus-prime}{HG Insights}. Using Google trends we can see that in recent years (since 2016) competitor Xilinx Vivado has overtaken IQP in interest at the global scale, in most developed countries like the US, Europe, and parts of Asia. There is roughly a 50/50 split between IQP and Vivado. My personal observations suggest that Xilinx Vivado became highly popular in India which is a large country with a history of chip design, and this might be strongly skewing data in favor of Xilinx's product. I chose to compare against IQP because we learned to use it in our course.
+   It is quite difficult to accurately judge the market share of IQP. However, IQP is maintained by one of the largest hardware designers and manufacturers in the world, and it is also used by Qualcomm according to \href{https://discovery.hgdata.com/product/intel-quartus-prime}{HG Insights}. Using Google Trends, we can see that since 2016, competitor Xilinx Vivado has overtaken IQP in interest at the global scale, in most developed regions like the US, Europe, and parts of Asia. There is roughly a 50/50 split between IQP and Vivado. My personal observations suggest that Xilinx Vivado became highly popular in India, a large country with a history of chip design, which might explain the data being in favour of Xilinx's product. I chose to compare my tool against IQP because we learned it as part of our degree curriculum.
 \end{tcolorbox}
 
 \section{Proposed solution}
 During my project, I created a system for finding connectable things and supplying some other data for high level GUI applications. There are two main ways of interacting with this system. The first one uses the JSON files describing the systems. Those JSONs are simpler and more human-readable than comparable files used by IQP. 
 
-The reading of such JSONs is rather unimpressive on its own, and one might argue that it would be better to use Bluespec code instead. The interesting part of this project lies in the backend that can verify the correctness of this file and produce a set of typing information about produced Bluespec code.  
+The reading of such JSONs is rather unimpressive on its own, and one might argue that it would be better to use Bluespec code instead. The interesting part of this project lies in the backend that can verify correctness of these files and produce a set of typing information about the resultant Bluespec code.  
 
-But to truly appreciate the work I have done during this project, I also implemented GUI, which uses the same backend as the one used to interpret JSON files and is able to supply the user with typing information and possible choices when connecting components.  
+To truly appreciate the work done during this project, I also implemented a GUI, which uses the same backend as the one used to interpret JSON files, and can provide the user with typing information and possible choices when connecting components.  
 
-One can think of it as a Bluespec native high-level integration tool that uses a simple language server in the backend. This way Bluespec users can do high-level integration in the domain of untranspiled Bluespec code. Then after a satisfactory top-level module is created, it can be transpiled to Verilog and then imported into IQP. 
+One can think of it as a Bluespec native high-level integration tool that uses a simple language server in the backend. This way, Bluespec users can do high-level integration in the domain of untranspiled Bluespec code. Then, after a satisfactory top-level module is created, it can be transpiled to Verilog and imported into IQP. 
 
 \chapter{Preparation}
 This section will give you a basic understanding of the concepts found in Bluespec (most importantly \emph{provisos} and \emph{typeclasses}). It will explain my reasoning behind the choice of language I used to develop this project in. Finally, it will talk about grammar needed to parse information about types.
 \section{Understanding Bluespec}
-Before I started this project, my only knowledge about Bluespec came from \href{https://www-bluespec.cl.cam.ac.uk/}{Cambridge Bluespec Tutor} which covers basics, and it was completed by me a few weeks before the start of this project. To understand this project, I have learned about most of the type system of Bluespec, but for you, the reader, most of it is not relevant. Therefore, I prepared a short tour of things that will be important to understand in this project. 
+Before I started this project, my only knowledge about Bluespec came from \href{https://www-bluespec.cl.cam.ac.uk/}{Cambridge Bluespec Tutor}\cite{CambridgeBluespecTutor} which covers basics, which I completed a few weeks before the start of this project. To understand the requirements for this project, I have learned about most of the type system of Bluespec, but for you, the reader, most of it is not relevant. Therefore, I prepared a short tour of things important to understand in this project. 
 \subsection{Rules}
 In Bluespec, all computations are done in the form of rules.  
 Each cycle we will take a subset of all the rules that we are going to execute this cycle. The rule is fired (executed) in the cycle only if it is ready (or will be ready) and it is not conflicting with other rules (If this happens, the compiler must issue a warning and pick an arbitrary rule to fire from a subset of conflicting rules). Each rule can fire at most one-time per cycle.  
@@ -170,7 +165,9 @@ Module is a unit of organization of logic. Modules don't have types, instead the
 
 \subsection{Typeclasses}
 \label{sec:Typeclasses}
-Typesclasses in Bluespec are used to group types for which specific functions or modules are implemented. The typeclass instance is effectively a type identifier, and it can have provisos attached to it.
+Typesclasses in Bluespec are used to group types for which specific functions or modules are implemented. They are made up of typeclass instances that are effectively type identifiers, they can have provisos attached to it. Example of the typeclass instance: \\
+ \verb!Connectable#(Vector#(n, a),Vector#(n, b))   provisos (Connectable#(a, b))! \\
+Using it we can infer that there we can call member (of the typeclass \verb!Connectable!) function \verb!mkConnection! on two vectors of the same length \verb!n! as long as types of things stored in those vectors are also \verb!Connectable!. 
 
 \subsection{Provisos}
 \label{sec:Provisos}
@@ -188,7 +185,22 @@ In my project, I will often check if there exists an instance of the \verb!Conne
 All of this can be a bit confusing, but if one looks closely, the system of provisos and typeclasses is remarkably similar to Prolog, the programming language. We have variables that are effectively the same as in Prolog, we have values that are integers, and we have parametric types and functions that are like Prolog's compound terms. Typeclasses are like groups of rules with the same name, and provisos attached to Typeclass instances are like predicates attached to rules.  
 
 One significant difference is that provisos can be solved in arbitrary order, which means that unlike in the Prolog, we need the ability to solve sets of equations on integers to resolve them.
-
+\section{Software engineering}
+At the start of this project, I didn't have a concrete idea on the exact structure of the data and code. The whole field of typing and web development (needed for GUI) was foreign to me. Therefore, I wanted to be as flexible as possible, and not pay a large price for mistakes coming from my lack of understanding during early stages of the project. I decided on an iterative approach. I was expecting changes, because before this project my understanding of Bluespec was negligible, and I knew that only with practice my understanding would grow, and I couldn't depend on trying to understand the whole Bluespec in one go then designing requirements etc, for something like a waterfall model.
+\subsection{Backup}
+I used git+GitHub as my main version control / backup software. That said, most of the development happened inside folders that were synchronized using Mega cloud.
+\subsection{Environment}
+Bluespec compiler is a Linux tool, therefore I need it for my development to happen under Linux kernel.
+That said, I'm a Windows user.
+I decided to develop it using WSL 2.0 (Windows Subsystem for Linux).
+Use of it went quite smoothly until I needed to develop my GUI.
+The problem that I encountered was that the performance of the file system would have hugely decreased if a folder was inside a mounted Windows native partition.
+Because my GUI is a web application using JavaScript, I needed to download node modules.
+Such modules are composed of many small files. To resolve this problem I decided to create a separate repository for my GUI that would reside in the home directory of the subsystem.
+I could also have just moved the original repository to the subsystem, but because there were no shared files, and some files needed to be on Windows partition, like project files of IQP needed for evaluation.
+I decided that keeping them separate would be cleaner.
+\par
+I also encountered slight annoyance with Windows file names being case-insensitive by default. Some libraries that used to compile Flute \cite{Flute core} required case-sensitive file names. This was resolved by tweaking some folder settings within Windows.
 \section{Choosing tools}
 I effectively had 3 choices for a language to write this project in. Here are some justifications for why I have chosen Python.   
 
@@ -207,7 +219,7 @@ But there are also a few particularly good reasons why I did not use Haskell.
 
    \item I never used Bluespec before, and my experience is limited to completing the Bluespec tutor provided by the computer science department.  
 
-   \item Even though I knew Haskell and Bluespec, industrial compilers are rather large and complicated. I also received advice to avoid modifying/extending them as a part of the project.  
+   \item Even if I knew Haskell and Bluespec, industrial compilers are rather large and complicated. I also received advice to avoid modifying/extending them as a part of the project.  
 
 \end{itemize}  
 
@@ -220,8 +232,8 @@ Firstly, this is a language I have experience working with. Secondly, it is wide
 Other reasons for using Python are:  
 \begin{itemize}  
   \item I will have many interesting problems to solve. Like creating and interpreting grammar.  
-  \item Code written in it can be used by a large community of python developers.  
-  \item I can use many tools like Lark (for grammar), Django (as a backend server), and SymPy (to solve size relationship provisos) that will speed up the process.  
+  \item Code written in it can be used by a large community of Python developers.  
+  \item I can use many tools like Lark (for grammar), Django (as a backend server), and SymPy (to solve size relationship provisos) that will speed up the development process.  
 \end{itemize}  
 The two arguments against using Python are:  
 \begin{itemize}  
@@ -229,7 +241,7 @@ The two arguments against using Python are:
   \item Python is usually slow. Fortunately, this is not a big issue thanks to caching and the use of PyPy (implementation of Python using JIT compiler).  
 \end{itemize} 
 \subsection{Postmortem}
-Looking at those choices now (after finishing the project and knowing all encountered difficulties), I could have also considered \verb!C#!, due to its speed and similar typing flexibility to Python. I also think Haskell would be a better choice if this were more like my pet project on which I would work for a few years to make it a commercially viable product.
+Looking at those choices now (after finishing the project and knowing all encountered difficulties), I could have also considered \verb!C#!, due to its speed and similar typing flexibility to Python. I also think Haskell would be a better choice if this were more like my pet project on which I would work on it for a few years with an intention of making a commercially viable product.
   
 \section{Creating a grammar}  
   
@@ -243,15 +255,15 @@ While synthesizing commands is easy, parsing outputs is a bit more difficult, an
 To do this, I need the grammar of all possible outputs that I am interested in.  
 Bluetcl produces a range of outputs, but two of them that are particularly useful are descriptions of functions and descriptions of types.  
 \subsection{Where to find this grammar?}  
-Unfortunately, this grammar is not documented anywhere, so I had to reverse engineer it. This approach might not be perfect and might not cover every input, but it is good enough to parse every standard package and all packages used to compile Flute (RISC-V CPU with 5 stage pipeline).  
+Unfortunately, this grammar is not documented anywhere, so I had to reverse engineer it. This approach might not be perfect and might not cover every input, but it is good enough to parse every standard package and all packages used to compile Flute (RISC-V CPU with 5 stage pipeline) \cite{Flute core}.  
 Here are other reasons to justify this approach:  
 \begin{itemize}  
    \item Heaps' law suggests that the number of unique words in a given body of the text is proportional to approximately the square root of the number of words in the text. Therefore, it is fair to assume that something similar will be true if we consider the number of unique grammar rules.  
-   \item This grammar, while different from the grammar of Bluespec language, maps a subset of Bluespec grammar, so we can supplement our deductions with a reference guide for Bluespec language. Therefore, accounting for cases we have not seen, but are possible.
+   \item This grammar, while different from the grammar of Bluespec language, maps a subset of Bluespec grammar, so we can supplement our deductions with a reference guide for Bluespec language\cite{BscReference}. Therefore, accounting for cases we have not seen, but are possible.
    \item It's also unlikely that exotic things will be needed as a part of top-level modules. 
 \end{itemize}
 \begin{tcolorbox}
-   During the process of the creation of this grammar, I found a bug in the Reference Guide of the Bluespec language. The bug involved using the wrong order of curly and square brackets. Therefore, making grammar inconsistent with the compiler. \href{https://github.com/BSVLang/Main/issues/6}{Link to github issue}
+   During the process of the creation of this grammar, I found a bug in the Reference Guide of the Bluespec language. The bug involved using the wrong order of curly and square brackets. Therefore, making grammar inconsistent with the compiler. \href{https://github.com/BSVLang/Main/issues/6}{Link to github issue I have opened}
 \end{tcolorbox}
 \subsection{Technical aspects of the grammar}
 This is EBNF grammar, I parse it using Lark library for Python, and I am using Earley parser, as it is capable of arbitrary length lookahead. The grammar I created contains roughly 90 rules, and I will not include all of them here, but I will show an example to give a feel of what is happening. If you want to see all of them look in the file \verb!grammar/type.lark!.
@@ -277,15 +289,26 @@ tcl_path: ["%/"] /((\.{1,2})|(\w|-|\s)+)/
 
 
 \chapter{Implementation}
-Before I explain how top modules are built, I will first explain how Bluespec packages are crawled to extract typing information as it is essential for building top level modules. 
+\section{Repository Overview}
+If you look at the uploaded code you will see that it contains two tarballs with full repositories.
+Those tar balls contain most of the things needed to run the project, and some auxiliary files. There are also README files that contain detailed information about file structure, contents and how to install and run the project.
+\par
+If you just want to look at the code I have written, then there is also a \say{code\slash src} folder attached.
+In it, you will find all and only the files that make up the lines of code I claim I have written. In the \say{code} folder there will also be a \say{grammar\slash type.lark} file with the \emph{grammar} mentioned in the previous chapter.
+\par
+Just to make sure there are no misunderstandings: I am not the author of any files inside the \say{Flute} folder (it's in one of the tar balls). It contains a copy of the repository with dependencies from \cite{Flute core}, but I included it as it contains compiled (and the source code of) libraries that I'm using during evaluation. I'm including stuff like this and a tarball version of the Bluespec compiler to simplify the gathering of dependencies for this project.
+Most of the other files you will find in those tarballs are either automatically generated or are auxiliary files needed for evaluation.
+There is also a short video that shows example use of this project, you can skim through it now if you want a tease, and I would recommend watching it after you get to the GUI section. (there will be reminder)
+
 \section{Crawling the packages}
+Before I explain how top modules are built, I will first explain how Bluespec packages are crawled to extract typing information as it is essential for building top-level modules. 
 \begin{figure}[!h]
     \centering
     \caption{Overview of process of crawling packages}
 
     \includegraphics[width=1.0\columnwidth]{pdfExports/LargeMap-Crawling.drawio.pdf}
 \end{figure}
-To interact with Bluetcl, I have written a script using the Pexpect library. This script works by creating a subprocess of Bluetcl and exposes functions that allow for the performing of queries? The core of this script is a function called \verb!call! that takes as input a string that is a command and returns the output stripped of warnings or raises an exception if an error occurred (for example: in the case where a package was not found). To remove warnings, I make some assumptions. 
+To interact with Bluetcl, I have written a script using the Pexpect library. This script works by creating a subprocess of Bluetcl and exposes functions that allow to perform queries. The core of this script is a function called \verb!call! that takes as input a string that is a command and returns the output stripped of warnings or raises an exception if an error occurred (for example: in the case where a package was not found). To remove warnings, I make some assumptions. 
 \begin{itemize}
     \item I only use a fixed set of commands (like list packages, describe a type).  
     \item For those commands the important output is always on the last line. (This was checked empirically)   
@@ -319,7 +342,7 @@ I decided to use the Lark library for lexical and syntactic analysis. This libra
 
 Given AST I needed to turn it into a more useful form. To do this I used \verb!Transformer! the class provided by Lark. The way it worked is that I created a subclass of \verb!Transformer! that implement a function for each non-terminal / rule (Each non-terminal can have multiple rules and Lark allows for renaming of individual rules, for example, this allows parsing of different non-terminals using the same function or parsing single non-terminal using different functions depending on the rule that was used). \verb!Transformer! will then perform a bottom-up transformation of AST, and for each rule, it will call the respective member function, with parsed children (non-terminals used by rule) as arguments. At the end of the transformation process, I have a list of objects that represent data from Blutecl.  
 \par
-One of the bigger inconveniences I encounter is the fact that Lark passes parsed children, as a simple list. This does not provide information about what exactly each child is, this is not a problem if the rule contains a fixed number of non-terminals, but otherwise, I employ a mix of length-based inference, and wrapping of data from children into tuples, to remove ambiguity.  
+One of the bigger inconveniences I encountered, was the fact that Lark passes parsed children, as a simple list. This does not provide information about what exactly each child is, this is not a problem if the rule contains a fixed number of non-terminals, but otherwise, I employ a mix of length-based inference, and wrapping of data from children into tuples, to remove ambiguity.  
 \par
 What was quite useful at this stage is Python's type system flexibility, I was able to gradually build up \verb!Transformer! class and added typing information only after I had a firm understanding of what type something needs to be. For some things, it was not immediately obvious what is the best way to represent them, and what often happens is I would first leave them as lists of unparsed things. Then after I got to the point where I needed to use them, I would decide what is an optimal way to represent them. 
 
@@ -345,23 +368,23 @@ Operations of Instantiating new modules, Connecting and Creation of buses are qu
 \subsection{Instantiating new modules} 
 To instantiate the new module, we need to do the following things: 
 \begin{enumerate} 
-   \item Convert inputted by user strings to type identifiers. This includes converting the names of interfaces and their members to their type identifiers. 
+   \item Convert inputted by user strings to type identifiers. This includes converting the names previously instantiated interfaces and their members to theirs corresponding type identifiers. 
    \item Checking if the arguments provided are of valid types. 
    \item Checking if typing information satisfies provisos. 
    \item Add newly created interfaces and methods to the namespace of known names. 
 \end{enumerate} 
-From this list items 1 and 4 are implemented using a few dictionaries that keep track of known names and their types. I also have a system that keeps track of which instantiated things depend on which other instantiated things. Thanks to this system, I am able to create a graph of dependencies, which is used to order things in the right order. As for the things mentioned in points 2,3, they are completed using the later described functions for type resolution. 
+From this list items 1 and 4 are implemented using a few dictionaries that keep track of known names and their types. I also have a system that keeps track of which instantiated things depend on which other instantiated things. Thanks to this system, I am able to create a graph of dependencies, which is then topologically sorted to sensibly order things. As for the things mentioned in points 2,3, they are completed using the later described functions for type resolution. 
 \subsection{Connections}
 Adding a new connection is easy, as this can be done using the same logic as \emph{instantiating new modules}. What is more interesting is that I keep track of all possible connections that can be made. This is later used to supply autocompletion in GUI (If the user uses JSON based interface, I can just print this data). Tracking of those connections is done in a naive way by simply checking all possible $O(n^2)$ connections. A question that arises is: "Can I do better?". While I do not have concrete proof of this, execution of programs written in Prolog can be reduced quite nicely to checking whether two types are connectable. Therefore the whole problem of finding all pairs of connectable things can be reduced to the following problem.
 \par
 Given $n$ \emph{input values} (number of interfaces and methods in instantiated modules) and $k$ input \emph{programs} (number of instances of typeclass \verb!Connectable!) find all pairs of two \emph{input values} for which at least one \emph{program} halts with the resulting value being true.
 Unfortunately, Prolog is a turing complete language, and it's hard to do much better than naive brute force.
-This sounds like a lot of work, but thanks to look-up dictionaries, usually I need to check only a few \emph{programs}. I also spread out the work over subsequent additions of new modules and did not recompute already known results. This way, the user will perceive lag roughly proportional to the number of modules already instantiated. I also noticed that with a larger number of modules, PyPy's JIT compiler will step in and it will produce more optimized code, therefore keeping computation time low. 
+This sounds like a lot of work, but thanks to look-up dictionaries, usually I need to check only few \emph{programs}. I also spread out the work over subsequent additions of new modules and do not recompute already known results. This way, the user will perceive lag roughly proportional to the number of modules already instantiated. I also noticed that with a larger number of modules, PyPy's JIT compiler will step in, and it will produce more optimized code, therefore keeping computation time low. 
  
 \subsection{Buses}
 When it comes to buses, most logic goes to synthesizing code for them, and not figuring out whether given data is valid. Because of this I can fall back on logic designed to instantiate modules. To synthesize a bus, I need to synthesize a routing function.
-A routing function is a function that takes a route and produces a one-hot vector that specifies which slave is used for a given address. 
-To create a routing function, two things must be created. First, I need to create a new function and add it to the database of known functions. To do this, I just reused my parsing tooling. As for creating a code for it, I generate a user template and fill it with \verb!if! statements for each address region (I don't need to do fancier logic as in hardware, it will be optimized anyway). I also generate comments giving information about which slaves occupy which address region.
+A routing function is a function that takes an address and produces a one-hot vector that specifies slave. 
+To create a routing function, two things must be created. First, I need to create a new function and add it to the database of known functions. To do this, I just reused my parsing tooling. As for creating a code for it, I generate it using a template and fill it with \verb!if! statements for each address region (I don't need to do fancier logic as in hardware, it will be optimized anyway). I also generate comments giving information about which slaves occupy which address region.
 
 \subsection{Specifying exported interfaces and methods}
 This functionality utilizes data generated previously, and most of the logic behind it focuses on supporting a few special cases that are meant to keep produced code clean.
@@ -374,7 +397,7 @@ This functionality utilizes data generated previously, and most of the logic beh
     \includegraphics[width=0.5\columnwidth]{pdfExports/LargeMapResolve.pdf}
 \end{figure}
 This section assumes that one has read about typeclasses and provisos from \hyperref[sec:Typeclasses]{previous chapter}.
-Functionality described here is what enables this whole project to do more than just string comparisons and formation. 
+Functionality described here is what enables this whole project to do more than just string comparisons and string formatting. 
 \par
 Types of most things can be represented by a type identifier.
 Type identifiers can be thought of as a tree data structure where every non leaf node is another type identifier, and leaf nodes are values (integers) or variables. 
@@ -388,7 +411,7 @@ For example: \verb!Bit#(b) boo(Bit#(a) arg)! where,
     \includegraphics[width=0.7\columnwidth]{pdfExports/LargeMap-FunctionBreakDown.drawio.pdf}
 \end{figure}
 \par
-In my code there are 4 main functions that, combined, allow for type resolution:
+In my code there are 6 main functions that, combined, allow for type resolution:
 \begin{itemize}
     \item \verb!merge! function takes two type identifiers and returns a dictionary (map) from names of variables to their values. It's similar to Prolog's unification operator.
     \item \verb!applyVariables! function takes a dictionary and a type identifier and returns a type identifier with all variables replaced by their values. This is more of a utility function.
@@ -423,7 +446,7 @@ This function is quite simple. It simply recursively traverses a type identifier
 Earlier, I compared typeclasses to groups of Prolog rules with the same name, one thing I did not mention is that typeclasses can also contain something called dependencies, they are something like marking inputs and outputs in Prolog. Those dependencies are used in typeclasses like \verb!Bits#(a,b)! which are used to determine something, and they make sure that the resolution of a typeclass is always unambiguous. \\ 
 For example, typeclass \verb!Bits#(a,b)! has a dependency \verb!a determines b! which means that you can use it to determine \verb!b! from \verb!a!, but if you know only \verb!b! then you cannot use it to determine \verb!a! because there may be multiple types that can be packed to the bit vector of the same length \verb!b!. An example of a determinable pair of \verb!a! and \verb!b! would be  \verb!a = Bit#(32)! from which we can determine that \verb!b = 32!. It is also worth mentioning that we can have multiple tuples of dependencies. For example, we can have typeclass \verb!Boo#(a,b,c,d)! with dependencies \verb!(a,b,d) determines c! and \verb!(a,d) determines (b,c)!. They mean that we need to know either variables \verb!(a,b,c)! or \verb!(a,d)!. From an implementation perspective, this is just extra complexity.   
 \par  
-Now, I observed that most typeclass instances use non-function type identifiers, so I can create a look-up dictionary for every tuple of names of type identifiers in the instance. This way I find a set of typeclass instances that can be used to resolve a typeclass. I also need to account for instances that have functioned as one of their parameters as this introduces nasty polymorphism and I decided simply to put those instances in a special group called universal instances that are always checked in the resolve typeclass function.  
+Now, I observed that most typeclass instances use non-function type identifiers, so I can create a look-up dictionary for every tuple of names of type identifiers in the instance. I then use it to find a set of typeclass instances that can be used to resolve a typeclass. I also need to account for instances that have function as one of their parameters as this introduces nasty polymorphism and I decided simply to put those instances in a special group called universal instances that are always checked in the resolve typeclass function.  
 \subsubsection{Resolve typeclass function}
 This function in Prolog terms is like taking a predicate of a rule and then trying to check if it can be satisfied. This can be quite slow if there are many rules, but thanks to the lookup dictionary created during preprocessing. We can narrow down the set of rules to check. 
 Then we can iterate over all typeclass instances (rules) and apply the following algorithm: 
@@ -433,27 +456,26 @@ Then we can iterate over all typeclass instances (rules) and apply the following
    \item If provisos were successfully solved, return the dictionary of resolved variables, otherwise continue iteration. 
    \item If all iterations have failed, fail. 
 \end{enumerate} 
-This procedure is a bit slow, so I speed it up by creating lookup dictionaries that take as a key a dictionary and as a value a typeclass instance. This method can cut down search time significantly, but there are still rules that use polymorphic functions, and those cannot be preprocessed away so easily. Therefore, I call them universal instances and search through them every time. I could invent many heuristics to speed up this process. In general, this is still as difficult as the halting problem. 
+This procedure is a bit slow, but thanks to the creation of lookup dictionaries that take as a key a dictionary and as a value a typeclass instance. Search time for relevant typeclass instance is almost constant. There are still instances that use polymorphic functions, and those cannot be preprocessed away so easily. Therefore, I call them \say{universal instances} and search through them every time. I could invent many heuristics to speed up this process even more, but in general, this is still as difficult as the halting problem. 
 
 \subsubsection{Solve numerical function} 
 
 This function takes a set of size relationship provisos and a dictionary of variables. Then it converts those provisos into a set of equations on natural numbers. If the set is unsolvable, this function raises an exception. Solving is done using the SymPy library. 
-From an implementation standpoint, I just need to traverse the tree of type identifiers describing proviso and for each \hyperref[sec:Provisos]{name of proviso}, I convert it into a mathematical expression. Exact expressions were taken from the Bluespec reference manual\cite{BscReference}. 
+From an implementation standpoint, I just need to traverse the forest of type identifiers describing provisos and for each, I convert it into a mathematical expression according to \hyperref[sec:Provisos]{the name of a proviso}. Exact mathematical expressions were taken from the Bluespec reference manual\cite{BscReference}. 
 \subsubsection{Solve provisos function} 
 As established earlier, provisos can be of two types, one is based on typeclasses and those can be resolved using \verb!resolveTypeclass!, and the other ones are size-based and require solving sets of equations on integers and this can be done using \verb!solveNumerical! function. 
 One big problem is the lack of order in which provisos must be solved. Therefore, I handle this by creating a set of provisos to be solved. Then I repeatedly iterate over this set and remove the solved provisos. If the set does not change after iteration, and it is not empty, this means no further progress can be made, and the function raises an exception. 
 
 
 \section{Synthesizing the module}
-This is probably the simplest part of the project. I just iterate over various kinds of things defined by the user and run some string formatting code. Even for buses, thanks to polymorphism in the Bluespec, I can quite easily write a routing function. 
+This is probably the simplest part of the project. I just iterate over various kinds of things defined by the user and run some string formatting code. Even for buses, thanks to polymorphism in the Bluespec, I can quite easily generate a routing function. 
   
   
-The main goal of the project is to be able to take a JSON with some data and synthesize a top module in the Bluespec language from it. This goal is more like a justification to create a language server like API. With this approach, I have some simple core goals, but in the later sections, we will see how thanks to all the work I have done, this API can be used to support a GUI that aids the user in creating a top module. Therefore, I will focus in this section on how the API works, and only later, on how it is used when reading JSON or as a backend to the GUI based app. 
-  
+The main goal of the project is to be able to take a JSON with some data and synthesize a top-level module in the Bluespec language from it. This goal is more like a justification to create a language server like API. With this approach, I have some simple core goals, but in the later sections, we will see how thanks to all the work I have done, this API can be used to support a GUI that aids the user in creating a top-level module.
   
 \subsection{JSON interface}
-I have decided that my \say{human-readable format} will be JSON. This format is simple, and support built-in in many languages.
-The only problem with JSON is that it is more verbose than in some aspects Bluespec, and in theory, it would make more sense to use Bluespec.
+I have decided that my \say{human-readable format} will be JSON. This format is simple, and has support built-in in many languages.
+The only problem with JSON is that it is more verbose than Bluespec, in some aspects, and in theory, it would make more sense to use Bluespec.
 However, this could introduce user confusion as I am not able to support arbitrary Bluespec features in my backend.
 My understanding is that supporting something only partially could lead users to think that my tool is broken because it does not match their assumptions about what it can do.
 While it can be argued that if I had written this project as an extension of the Bluespec compiler, I could have supported all features of Bluespec (thanks to already written logic in the compiler).
@@ -466,7 +488,7 @@ At the same time, using JSON allows me to support simplified semantics for thing
     \centering
 \includegraphics[width=0.70\columnwidth]{pdfExports/LargeMapJSON.pdf}
 
-\caption{Disclaimer: In this diagram, I am using uppercase names but the JSON file uses lowercase ones also all spaces are replaced with underscores. I am also using s in the name to signify a list of dictionaries with those keywords}
+\caption{Disclaimer: In this diagram, I am using uppercase names but the JSON file uses lowercase ones also all spaces are replaced with underscores. I am also using "s"s in the names to signify lists of dictionaries.}
 
 \end{figure}
 \newpage
@@ -517,16 +539,16 @@ I know this because my initial iterations were doing this. However, my tool can 
 All this data can be useful when using complex modules from foreign packages, like a CPU core that does not have any direct connections, but has many subinterfaces that can be connected to things like memory, external devices, etc.
 
 \section{GUI}
-\hyperref[fig:Overview]{Click here to jump to the overview of the GUI. (Page \pageref{fig:Overview}) or you can watch the video attached to the source files.}
+\hyperref[fig:Overview]{Click here to jump to the overview of the GUI(Page \pageref{fig:Overview}).} Alternatively, you can watch a video attached to the source files.
 \\
-Adding GUI was an optional goal mentioned in the project proposal. I originally intended to use a game engine, but the Bluespec compiler is a Linux tool and game engines like Unreal Engine 4 or Unity3d are optimized to be used on Windows, so I decided against that idea. Instead, I found a library called React Flow, that provided a simple API for creating graph-based user interfaces. Therefore, I decided to create a GUI as a website. This was quite an adventure as it was effectively my first contact with web development. (I have done backend in .NET and \verb!C#! for a group project last year, but it was mostly focused on writing queries to the database and I had no contact with frontend development)
+Adding GUI was an optional goal mentioned in the project proposal. I originally intended to use a game engine, but the Bluespec compiler is a Linux tool and game engines like Unreal Engine 4 or Unity are optimized to be used on Windows, so I decided against that idea. Instead, I found a library called React Flow, that provided a simple API for creating graph-based user interfaces. Therefore, I decided to create a GUI as a website. This was quite an adventure as it was effectively my first contact with web development. (I have done backend in .NET and \verb!C#! for a group project last year, but it was mostly focused on writing queries to the database and I had no contact with frontend development.)
 
 \subsection{Backend}
-For the backend, I had a choice between Django and Flask (as those are the main python libraries for backend development). After reading about them in theory, Flask was supposed to be better for small projects, like this one. However, I decided to use Django because I wanted to learn techniques that will be more useful in the future. I followed an official tutorial on Django and after initial pain with security, adding new functionality was easy.
+For the backend, I had a choice between Django and Flask (as those are the main python libraries for backend development). After reading about them, in theory, Flask was supposed to be better for small projects, like this one. However, I decided to use Django because I wanted to learn technologies that will be more useful in the future. I followed an official tutorial \href{https://docs.djangoproject.com/en/4.0/intro/tutorial01/}{\say{Writing your first Django app}}\cite{DjangoTut}, and after initial pain with security, adding new functionality was easy.
 
 \subsection{Frontend (React)}
 
-The frontend was written in React.js as you might have guessed from the name of the library I wanted to use. According to \href{https://insights.stackoverflow.com/survey/2021#most-popular-technologies-webframe}{Stack Overflow 2021 survey}, React.js is the most popular frontend technology in 2021, so again I considered time spent on learning it to be a worthwhile investment. One thing that took me quite a bit to get used to is everything being a function (React.js supports classes, but it is an old paradigm and I wanted to learn to do things the \say{correct} way). This makes working with variables a bit tricky, as changes to state variables cause re-rendering of the whole component, and if a variable is not a state variable, then its value is going to be lost after re-rendering. If not careful, it is easy to cause a feedback loop causing infinite re-rendering and subsequent crash of the application.
+The frontend was written in React.js as you might have guessed from the name of the library I wanted to use. According to \href{https://insights.stackoverflow.com/survey/2021#most-popular-technologies-webframe}{Stack Overflow 2021 survey}\cite{StackSurvey}, React.js is the most popular frontend technology in 2021, so again I considered time spent on learning it to be a worthwhile investment. One thing that took me quite a bit to get used to is everything being a function (React.js supports classes, but it is an old paradigm and I wanted to learn to do things the \say{correct} way). This makes working with variables a bit tricky, as changes to state variables cause re-rendering of the whole component, and if a variable is not a state variable, then its value is going to be lost after re-rendering. If not careful, it is easy to cause a feedback loop causing infinite re-rendering and subsequent crash of the application. I also found it helpful to maintain the data in form of global variables using the React Redux library.
 \subsection{Frontend (React Flow)}
 
 \begin{tcolorbox}[title=Vocabulary]
@@ -540,11 +562,11 @@ Therefore, I needed to write some finicky CSS to align the handle with text disp
 Another thing that is problematic about React Flow is that it will cause the node component to update every time it is moved.
 What I found is that if you wrap larger subcomponents of a node in \verb!memo! from React, then performance stays quite good even if multiple nodes are moving, as React will cache rendered subcomponents.
 \\
-On the bright side, after I figured out workarounds for those issues, I was left with many other things being handled by the library. This included automatic graph formatting and pretty Bézier curves for edges. 
+On the bright side, after I figured out workarounds for those issues, I was left with many other things being handled by the library. This included automatic graph formatting and pretty Bézier curves for edges. To speed up the learning process I used the Mind map project\cite{MindMap} as a base. I don't think I left a single thing from the original code base, but it was much easier to start with working Ship of Theseus\cite{Ship}  and then replace every part of it. 
 
 \subsection{Frontend (MUI)}
 
-Default HTML buttons and text boxes are ugly. So, I decided to use the React UI component library called MUI (previously Material UI). I do not have much to say about it except that use of it was frictionless, at least in my humble opinion it made my application look modern. I am mentioning this as one of my complaints about Intel's platform designer was that its UI is decades old.
+Default HTML buttons and text boxes are ugly. So, I decided to use the React UI component library called MUI (previously Material UI). I do not have much to say about it except that use of it was frictionless, and at least in my humble opinion it made my application look modern. I am mentioning this as one of my complaints about Intel's Platform Designer was that its UI is decades old.
  
 \subsection{Functionality} 
 After teasing how I did things, let us talk about the features of my GUI.  
@@ -555,9 +577,9 @@ Using this GUI, a user can do the following things:
    \item Create a bus. 
    \item Select methods and interfaces to be exported as part of a created module. 
    \item Look at the created Bluespec file. 
-   \item Run compilation followed the simulation and looked at the output of both.  
+   \item Run compilation followed the simulation and look at the output of both.  
 \end{itemize} 
-To do all those things, the user will need to interact with the graph building tool. Below is an overview of the components users can choose from that will describe the top-level module. 
+To do all those things, the user will need to interact with the graph building tool. Below is an overview of the components users can choose from, to describe the top-level module. 
 \subsubsection{Instance node} 
 This node is most important as by using it the user can instantiate new modules, convert between interfaces, and use functions in general. It can be in 3 main stages. During the first one, it is an empty vessel, using which one can specify its name and function/module that will be used. In the second stage, a user specifies inputs and typing information. Finally, after clicking \emph{confirm update} node transitions into stage three and the interfaces and methods of a created object become usable. 
 \newpage 
@@ -568,9 +590,8 @@ This node is most important as by using it the user can instantiate new modules,
    \caption{Stage one of the nodes used to instantiate new modules} 
 \end{figure} 
 At stage one we will see the first field with autocomplete, it is the simplest one and simply lists all the functions/modules users can use. It contains stand-alone functions as well as functions found as part of typeclasses. The node will transition to stage two when one of those is picked. 
-\begin{figure}[!h] 
-   \ centring 
-    
+\begin{figure}[H] 
+   \centering 
    \includegraphics[width=1\columnwidth]{pdfExports/LargeMap-InstanceNodePart2.drawio.pdf} 
    \caption{Fully instantiated node with descriptions of features, divided into stages two and three} 
 \end{figure} 
@@ -629,8 +650,8 @@ They are usually the first thing implemented when learning hardware design.
 This example is meant to show inflexibility, and the problems that arise due to lost information when working with transpiled Bluespec. 
 \subsection{Example 2: Weight of the AXI4} 
 In this example, we will design a quite simple System-on-chip (SOC). 
-The SOC will be composed of a Flute core (5 Stage RISC-V CPU), a memory module, and a fake 16550 interface that is meant to represent an I/O. 
-This example will show the best scenario for the Platform designer as connections will use the AXI4 interface which is fully supported by IQP.
+The SOC will be composed of a Flute core (5 Stage RISC-V CPU)\cite{Flute core}, a memory module, and a fake 16550 interface that is meant to represent an I/O. 
+This example will show the best scenario for the Platform Designer as connections will use the AXI4 interface which is fully supported by IQP.
 \subsection{Example 3: Simulation} 
 This example is more of a formality. 
 For this example, I created a simple AXI4 master and AXI4 slave, that communicate via the bus. 
@@ -642,6 +663,7 @@ To create a system with two connected FIFOs, we first need to import the FIFO mo
 Here we encounter the first problem. 
 As mentioned before, Bluespec cannot generate Verilog code for polymorphic functions. 
 Therefore, we must decide on the width of the data stored in such FIFO before transpiling to Verilog. 
+\par
 After exporting the Verilog file, it needs to be imported into the Platform designer. 
 This tool performs an analysis of a file, which results in the decision that all wires found are parts of the Avalon slave interface. 
 This is an obvious error, and we need to correct it by hand. 
@@ -762,11 +784,14 @@ During this project I tried to move out of my comfort bubble. My grammar and typ
 This tool can be extended in many ways, but the most interesting would include: 
 \begin{itemize} 
    \item Upgrade of the backend to be a fully functional language server. 
-   \item Ability to add comments that partition the graph (like in UE4).
+   \item Ability to add comments that partition the graph (like in UE4), and general support for nested graphs.
    \item Ability to map arbitrary Bluespec code into graphs like this. 
    \item Integration with a debugger to visualize the flow of data, and values of data. 
 \end{itemize} 
 \begin{thebibliography}{9}
+   \bibitem{CambridgeBluespecTutor}
+   Cambridge Bluespec Tutor \\
+   \href{https://www-bluespec.cl.cam.ac.uk/}{https://www-bluespec.cl.cam.ac.uk/}
    \bibitem{BscReference}
    Bluespec SystemVerilog Reference Guide \\
    \href{http://csg.csail.mit.edu/6.S078/6\_S078\_2012\_www/resources/reference-guide.pdf}{http://csg.csail.mit.edu/6.S078/6\_S078\_2012\_www/resources/reference-guide.pdf}
@@ -779,7 +804,17 @@ This tool can be extended in many ways, but the most interesting would include:
    \bibitem{Flute core}
    Flute core
    \href{https://github.com/CTSRD-CHERI/Flute}{https://github.com/CTSRD-CHERI/Flute}
-   \end{thebibliography}
-\includepdf[pages=-]{Project_Proposal.pdf}
+   
+   \bibitem{DjangoTut}
+   Official Django tutorial \say{Writing your first Django app} \\
+   \href{https://docs.djangoproject.com/en/4.0/intro/tutorial01/}{https://docs.djangoproject.com/en/4.0/intro/tutorial01/}
+   \bibitem{StackSurvey}
+   Stack Overflow 2021 survey \\
+   \href{https://insights.stackoverflow.com/survey/2021#most-popular-technologies-webframe}{https://insights.stackoverflow.com/survey/2021\#most-popular-technologies-webframe}
+   \bibitem{Ship}
+   Ship of Theseus \\
+   \href{https://en.wikipedia.org/wiki/Ship_of_Theseus}{https://en.wikipedia.org/wiki/Ship\_of\_Theseus}
+\end{thebibliography}
+\includepdf[pages=-]{Project_Proposal NoCover.pdf}
 
 \end{document} 

@@ -246,18 +246,6 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr17.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmex10.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmtt10.tfm
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmtt12.tfm
-INPUT dissertation.toc
-INPUT dissertation.toc
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr8.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr6.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm
@@ -269,12 +257,21 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmex10.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmtt10.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmtt12.tfm
+INPUT dissertation.toc
+INPUT dissertation.toc
 OUTPUT dissertation.toc
 INPUT pdfExports/LargeMapLayersOfAbstraction.pdf
 INPUT ./pdfExports/LargeMapLayersOfAbstraction.pdf
 INPUT ./pdfExports/LargeMapLayersOfAbstraction.pdf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1200.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmti12.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT Rulemapping.png
 INPUT ./Rulemapping.png
 INPUT ./Rulemapping.png
@@ -341,46 +338,39 @@ INPUT ./charts/all_tokens.pdf
 INPUT charts/all_lines.pdf
 INPUT ./charts/all_lines.pdf
 INPUT ./charts/all_lines.pdf
-INPUT Project_Proposal.pdf
-INPUT Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
-INPUT Project_Proposal.pdf
-INPUT ./Project_Proposal.pdf
+INPUT Project_Proposal NoCover.pdf
+INPUT Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
+INPUT Project_Proposal NoCover.pdf
+INPUT ./Project_Proposal NoCover.pdf
 INPUT dissertation.aux
 INPUT ./dissertation.out
 INPUT ./dissertation.out
